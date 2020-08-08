@@ -16,6 +16,7 @@ repositories {
     // Use jcenter for resolving dependencies.
     // You can declare any Maven/Ivy/file repository here.
     jcenter()
+    maven("https://kotlin.bintray.com/kotlinx")
 }
 
 dependencies {
@@ -30,6 +31,8 @@ dependencies {
 
     // Use the Kotlin JUnit integration.
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
+
+    implementation("org.jetbrains.kotlinx", "kotlinx-cli", "0.2.1")
 }
 
 application {
