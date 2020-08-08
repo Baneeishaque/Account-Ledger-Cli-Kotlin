@@ -8,17 +8,25 @@ import kotlinx.cli.ArgType
 import kotlinx.cli.default
 
 object App {
+
     const val appName = "Sample CLI App"
     const val version = "0.0.1"
 }
 
 fun main(args: Array<String>) {
 
-    val parser = ArgParser("${App.appName}:: ${App.version}")
-    val version by parser.option(ArgType.Boolean, shortName = "V", description = "Version").default(false)
+    val parser = ArgParser(programName = "${App.appName}:: ${App.version}")
+    val version by parser.option(type = ArgType.Boolean, shortName = "V", description = "Version").default(false)
 
-    // Add all input to parser
-    parser.parse(args)
+    if (args.isEmpty()) {
 
-    if (version) println(App.version)
+        println()
+
+    } else {
+
+        // Add all input to parser
+        parser.parse(args)
+
+        if (version) println(App.version)
+    }
 }
