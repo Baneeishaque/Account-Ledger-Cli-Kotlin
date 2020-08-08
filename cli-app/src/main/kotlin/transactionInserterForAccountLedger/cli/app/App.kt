@@ -3,13 +3,11 @@
  */
 package transactionInserterForAccountLedger.cli.app
 
-class App {
-    val greeting: String
-        get() {
-            return "Hello world."
-        }
+object App {
+    const val appName = "Sample CLI App"
+    const val version = "0.0.1"
 }
 
 fun main(args: Array<String>) {
-    println(App().greeting)
+    println("${App.appName}:: ${App.version}")
 }
