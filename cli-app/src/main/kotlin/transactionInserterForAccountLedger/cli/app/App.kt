@@ -20,7 +20,7 @@ fun main(args: Array<String>) {
 
     if (args.isEmpty()) {
 
-        println()
+        println("No options...")
 
     } else {
 
