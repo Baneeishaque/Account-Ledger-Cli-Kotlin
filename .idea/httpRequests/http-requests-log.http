@@ -1,0 +1,14 @@
+GET http://account-ledger-server.herokuapp.com/http_API/select_User.php?username=banee&password=banee
+Accept: application/json
+
+<> 2020-08-10T123937.200.html
+
+###
+
+GET http://account-ledger-server.herokuapp.com/http_API/select_User?username=banee&password=banee
+Accept: application/json
+
+<> 2020-08-10T123923.404.html
+
+###
+
