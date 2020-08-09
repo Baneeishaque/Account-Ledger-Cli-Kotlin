@@ -10,7 +10,7 @@ import kotlin.test.assertNotNull
 class AppTest {
     @Test
     fun testAppProperties() {
-        assertEquals(App.appName, "Sample CLI App")
+        assertEquals(App.appName, "Account Ledger CLI App")
         assertNotNull(App.version, "0.0.1")
     }
 }

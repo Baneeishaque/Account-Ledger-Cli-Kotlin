@@ -33,6 +33,9 @@ dependencies {
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
 
     implementation("org.jetbrains.kotlinx", "kotlinx-cli", "0.2.1")
+    implementation("org.jetbrains.kotlinx", "kotlinx-coroutines-core", "1.3.8")
+    implementation("com.squareup.retrofit2","retrofit","2.9.0")
+    implementation("com.squareup.retrofit2","converter-gson","2.9.0")
 }
 
 application {
