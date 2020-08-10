@@ -1,4 +1,4 @@
-package transactionInserterForAccountLedger.cli.app
+package transactionInserterForAccountLedger.to_utils
 
 object ApiUtils {
 

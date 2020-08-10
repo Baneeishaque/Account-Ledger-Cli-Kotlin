@@ -9,3 +9,6 @@
 //        jcenter()
 //    }
 //}
+//TODO : Customize distTar task to customize distribution file name
+//TODO : Create windows, mac, linux, etc. installation files
+//TODO : Include jre in distribution & executable files

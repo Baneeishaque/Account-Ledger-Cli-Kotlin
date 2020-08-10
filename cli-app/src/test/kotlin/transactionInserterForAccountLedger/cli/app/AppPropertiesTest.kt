@@ -5,12 +5,11 @@ package transactionInserterForAccountLedger.cli.app
 
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertNotNull
 
-class AppTest {
+class AppPropertiesTest {
     @Test
     fun testAppProperties() {
-        assertEquals(App.appName, "Account Ledger CLI App")
-        assertEquals(App.version, "0.0.1")
+        assertEquals(AppProperties.appName, "Account Ledger CLI App")
+        assertEquals(AppProperties.version, "0.0.1")
     }
 }

@@ -1,0 +1,35 @@
+package transactionInserterForAccountLedger.retrofit.data
+
+import retrofit2.Response
+import transactionInserterForAccountLedger.api.response.AccountsResponse
+import transactionInserterForAccountLedger.retrofit.ProjectRetrofitClient
+import transactionInserterForAccountLedger.retrofit.ResponseHolder
+import java.io.IOException
+
+class AccountsDataSource {
+
+    private val retrofitClient = ProjectRetrofitClient.retrofitClient
+
+    internal suspend fun selectUserAccounts(userId: Int,
+                                            parentAccountId: Int = 0): ResponseHolder<AccountsResponse> {
+
+        return processApiResponse(retrofitClient.selectUserAccounts(userId = userId, parentAccountId = parentAccountId))
+    }
+
+    //    TODO : Rewrite as general function for all responses
+    private fun processApiResponse(apiResponse: Response<AccountsResponse>): ResponseHolder<AccountsResponse> {
+
+        if (apiResponse.isSuccessful) {
+            val loginApiResponseBody = apiResponse.body()
+            return if (loginApiResponseBody != null) {
+
+                ResponseHolder.Success(loginApiResponseBody)
+
+            } else {
+
+                ResponseHolder.Error(Exception("Invalid Response Body - $loginApiResponseBody"))
+            }
+        }
+        return ResponseHolder.Error(IOException("Exception Code - ${apiResponse.code()}, Message - ${apiResponse.message()}"))
+    }
+}

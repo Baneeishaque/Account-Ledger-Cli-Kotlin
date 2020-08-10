@@ -1,0 +1,10 @@
+package transactionInserterForAccountLedger.api
+
+object ApiConstants {
+
+    const val serverApiAddress = "http://account-ledger-server.herokuapp.com/http_API/"
+    const val serverFileExtension = "php"
+
+    const val selectUserMethod = "select_User"
+    const val selectUserAccountsV2Method = "select_User_Accounts_v2"
+}
