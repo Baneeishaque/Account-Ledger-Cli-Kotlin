@@ -11,6 +11,6 @@ class AppTest {
     @Test
     fun testAppProperties() {
         assertEquals(App.appName, "Account Ledger CLI App")
-        assertNotNull(App.version, "0.0.1")
+        assertEquals(App.version, "0.0.1")
     }
 }

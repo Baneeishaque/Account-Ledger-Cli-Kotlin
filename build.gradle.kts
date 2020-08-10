@@ -4,18 +4,8 @@
  * This is a general purpose Gradle build.
  * Learn how to create Gradle builds at https://guides.gradle.org/creating-new-gradle-builds
  */
-allprojects {
-    repositories {
-        jcenter() 
-    }
-}
-subprojects {
-    tasks.register<Copy>("packageDistribution") {
-        dependsOn("jar")
-        from("${project.rootDir}/scripts/sample_cli.cmd")
-        from("${project.projectDir}/build/libs/${project.name}.jar") {
-            into("lib")
-        }
-        into("${project.rootDir}/dist")
-    }
-}
+//allprojects {
+//    repositories {
+//        jcenter()
+//    }
+//}

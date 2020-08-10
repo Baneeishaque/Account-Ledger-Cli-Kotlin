@@ -6,5 +6,3 @@ object AccountLedgerApiConstants {
     const val serverFileExtension = "php"
     const val selectUserServerApiMethodName = "select_User"
 }
-
-
