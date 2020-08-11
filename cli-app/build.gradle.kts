@@ -40,5 +40,5 @@ dependencies {
 
 application {
     // Define the main class for the application.
-    mainClassName = "transactionInserterForAccountLedger.cli.app.AppKt"
+    mainClassName = "transactionInserterForAccountLedger.cli.app.Main"
 }

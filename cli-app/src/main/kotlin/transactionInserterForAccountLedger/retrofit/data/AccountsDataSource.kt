@@ -11,9 +11,14 @@ class AccountsDataSource {
     private val retrofitClient = ProjectRetrofitClient.retrofitClient
 
     internal suspend fun selectUserAccounts(userId: Int,
-                                            parentAccountId: Int = 0): ResponseHolder<AccountsResponse> {
+                                            parentAccountId: Int? = 0): ResponseHolder<AccountsResponse> {
 
         return processApiResponse(retrofitClient.selectUserAccounts(userId = userId, parentAccountId = parentAccountId))
+    }
+
+    internal suspend fun selectUserAccountsFull(userId: Int): ResponseHolder<AccountsResponse> {
+
+        return processApiResponse(retrofitClient.selectUserAccountsFull(userId = userId))
     }
 
     //    TODO : Rewrite as general function for all responses

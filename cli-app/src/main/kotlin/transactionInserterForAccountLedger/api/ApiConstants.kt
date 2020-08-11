@@ -7,4 +7,6 @@ object ApiConstants {
 
     const val selectUserMethod = "select_User"
     const val selectUserAccountsV2Method = "select_User_Accounts_v2"
+    const val selectUserAccountsFull = "select_User_Accounts_full"
+    const val insertTransaction = "insert_Transaction_v2"
 }
