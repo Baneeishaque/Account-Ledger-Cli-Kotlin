@@ -27,7 +27,7 @@ private object App {
 }
 
 private val reader = Scanner(System.`in`)
-private var dateTimeString: String = LocalDateTime.now().format(normalPattern).toString()
+private var dateTimeString = LocalDateTime.now().format(normalPattern)
 
 fun main(args: Array<String>) {
 
