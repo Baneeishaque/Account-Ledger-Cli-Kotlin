@@ -21,7 +21,7 @@ interface Api {
 
     @FormUrlEncoded
     @POST("${ApiConstants.insertTransaction}.${ApiConstants.serverFileExtension}")
-    suspend fun insertTransaction(@Field("event_date_time") eventDateTime: String,
+    suspend fun insertTransaction(@Field("event_date_time") eventDateTimeString: String,
                                   @Field("user_id") userId: Int?,
                                   @Field("particulars") particulars: String?,
                                   @Field("amount") amount: Float,

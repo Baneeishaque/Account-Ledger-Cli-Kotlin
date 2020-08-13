@@ -5,7 +5,15 @@ object PrintUtils {
     fun printMenu(listOfCommands: List<String>) {
 
         listOfCommands.forEach { command ->
-            println(command)
+
+            if (command.contains("Enter", ignoreCase = true)) {
+
+                print(command)
+
+            } else {
+
+                println(command)
+            }
         }
     }
 }

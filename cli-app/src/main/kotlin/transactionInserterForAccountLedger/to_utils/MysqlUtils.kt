@@ -5,10 +5,10 @@ import java.time.format.DateTimeFormatter
 
 object MysqlUtils {
 
-    val dateTimePattern= DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")!!
+    val mysqlDateTimePattern= DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")!!
 
-    fun normalDateTimeToMysqlDateTime(dateTime: String): String {
+    fun normalDateTimeStringToMysqlDateTimeString(normalDateTimeString: String): String {
 
-        return LocalDateTime.parse(dateTime, DateTimeUtils.normalPattern).format(dateTimePattern)
+        return (LocalDateTime.parse(normalDateTimeString, DateTimeUtils.normalPattern) as LocalDateTime).format(mysqlDateTimePattern)
     }
 }

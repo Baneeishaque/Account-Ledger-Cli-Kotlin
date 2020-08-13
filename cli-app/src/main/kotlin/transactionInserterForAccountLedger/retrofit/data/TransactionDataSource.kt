@@ -12,14 +12,13 @@ class TransactionDataSource {
     private val retrofitClient = ProjectRetrofitClient.retrofitClient
 
     internal suspend fun insertTransaction(userId: Int,
-                                           eventDateTime: String,
+                                           eventDateTimeString: String,
                                            particulars: String?,
                                            amount: Float,
                                            fromAccountId: Int,
                                            toAccountId: Int?): ResponseHolder<InsertionResponse> {
 
-        val mysqlEventTime=MysqlUtils.normalDateTimeToMysqlDateTime(eventDateTime)
-        return processApiResponse(retrofitClient.insertTransaction(userId = userId, eventDateTime = mysqlEventTime, particulars = particulars, amount = amount, fromAccountId = fromAccountId, toAccountId = toAccountId))
+        return processApiResponse(retrofitClient.insertTransaction(userId = userId, eventDateTimeString = MysqlUtils.normalDateTimeStringToMysqlDateTimeString(eventDateTimeString), particulars = particulars, amount = amount, fromAccountId = fromAccountId, toAccountId = toAccountId))
     }
 
     //    TODO : Rewrite as general function for all responses
