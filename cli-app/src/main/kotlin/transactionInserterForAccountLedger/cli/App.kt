@@ -17,7 +17,7 @@ import transactionInserterForAccountLedger.to_utils.PrintUtils
 import transactionInserterForAccountLedger.to_utils.ToDoUtils
 import java.time.LocalDateTime
 import java.time.format.DateTimeParseException
-import java.util.*
+import java.util.Scanner
 import kotlin.collections.LinkedHashMap
 
 internal object App {
