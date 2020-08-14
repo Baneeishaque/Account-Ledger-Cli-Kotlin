@@ -20,7 +20,7 @@ import java.time.format.DateTimeParseException
 import java.util.*
 import kotlin.collections.LinkedHashMap
 
-private object App {
+internal object App {
 
     internal const val appName = "Account Ledger CLI App"
     internal const val version = "0.0.1"
