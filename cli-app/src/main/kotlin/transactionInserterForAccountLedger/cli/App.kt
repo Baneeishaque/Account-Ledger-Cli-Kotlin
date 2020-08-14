@@ -417,19 +417,19 @@ private fun addTransactionStep2(
         dateTimeString = LocalDateTime.now().format(normalPattern).toString()
         return false
     }
-    println("Enter Particulars : ")
+    print("Enter Particulars : ")
     //TODO : Back to fields, or complete back
     val particulars = readLine()
-    println("Enter Amount : ")
+    print("Enter Amount : ")
     val amount = reader.nextFloat()
 
     do {
-        PrintUtils.printMenu(listOf("Time - $dateTimeString",
+        PrintUtils.printMenu(listOf("\nTime - $dateTimeString",
                 "Account - $fromAccountId : $toAccountName",
                 "Deposit Account - ${depositAccount?.id} : ${depositAccount?.fullName}",
                 "Particulars - $particulars",
                 "Amount - $amount",
-                "\nCorrect ? (Y/N), B to back, Ex to exchange accounts : "
+                "\nCorrect ? (Y/N), Enter B to back, Ex to exchange accounts : "
         ))
         val isCorrect = readLine()
         when (isCorrect) {
@@ -621,7 +621,7 @@ private fun searchAccount(userAccountsMap: LinkedHashMap<Int, AccountResponse>):
 
         do {
             PrintUtils.printMenu(listOf("No Matches....",
-                    "\n 1 - Try Again",
+                    "1 - Try Again",
                     "0 - Back",
                     "",
                     "Enter Your Choice : "))
