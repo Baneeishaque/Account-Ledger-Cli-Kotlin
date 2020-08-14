@@ -416,6 +416,11 @@ private fun addTransactionStep2(
 
         dateTimeString = LocalDateTime.now().format(normalPattern).toString()
         return false
+    
+    }else if(dateTimeString == "Ex"){
+
+        // return(addTransactionStep2(userId=userId,username=username,fromAccountId=AccountResponse.id,))
+        return false
     }
     print("Enter Particulars : ")
     //TODO : Back to fields, or complete back
@@ -466,7 +471,7 @@ private fun addTransactionStep2(
 
 private fun enterDateWithTime(): String {
 
-    print("$dateTimeString Correct? (Y/N), or B to Back : ")
+    print("$dateTimeString Correct? (Y/N), B to Back or Ex to exchange accounts : ")
     when (readLine()) {
         "Y" -> {
 
@@ -480,6 +485,10 @@ private fun enterDateWithTime(): String {
         "B" -> {
 
             return "B"
+        }
+        "Ex" -> {
+
+            return "Ex"
         }
         else -> {
 
