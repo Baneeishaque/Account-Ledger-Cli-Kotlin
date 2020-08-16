@@ -19,8 +19,6 @@ import transactionInserterForAccountLedger.to_utils.ToDoUtils
 import transactionInserterForAccountLedger.utils.AccountUtils
 import java.time.LocalDateTime
 import java.time.format.DateTimeParseException
-import java.util.*
-import kotlin.collections.LinkedHashMap
 
 internal object App {
 
@@ -28,7 +26,6 @@ internal object App {
     internal const val version = "0.0.1"
 }
 
-private val reader by lazy { Scanner(System.`in`) }
 internal var dateTimeString = LocalDateTime.now().format(normalPattern)
 private var fromAccount = AccountUtils.getBlankAccount()
 private var toAccount = AccountUtils.getBlankAccount()
@@ -60,15 +57,15 @@ fun main(args: Array<String>) {
                     "0 : Exit",
                     "",
                     "Enter Your Choice : "))
-            val choice = reader.nextInt()
+            val choice = readLine()
             when (choice) {
 
-                1 -> login()
-                2 -> register()
-                0 -> println("Thanks...")
+                "1" -> login()
+                "2" -> register()
+                "0" -> println("Thanks...")
                 else -> println("Invalid option, try again...")
             }
-        } while (choice != 0)
+        } while (choice != "0")
 
     } else {
 
@@ -133,17 +130,17 @@ private fun userScreen(username: String, userId: Int) {
                 "0 - Logout",
                 "",
                 "Enter Your Choice : "))
-        val choice = reader.nextInt()
+        val choice = readLine()
         when (choice) {
 
-            1 -> listAccountsTop(username = username, userId = userId)
-            2 -> insertQuickTransactionWallet(userId = userId, username = username)
-            3 -> insertQuickTransactionBank(userId = userId, username = username)
-            4 -> listAccountsFull(username = username, userId = userId)
-            0 -> return
+            "1" -> listAccountsTop(username = username, userId = userId)
+            "2" -> insertQuickTransactionWallet(userId = userId, username = username)
+            "3" -> insertQuickTransactionBank(userId = userId, username = username)
+            "4" -> listAccountsFull(username = username, userId = userId)
+            "0" -> return
             else -> println("Invalid option, try again...")
         }
-    } while (choice != 0)
+    } while (choice != "0")
 }
 
 private fun insertQuickTransactionBank(userId: Int, username: String) {
@@ -180,7 +177,7 @@ fun handleAccountsResponseAndPrintMenu(apiResponse: ResponseHolder<AccountsRespo
                     "Enter Your Choice : "))
 
             val choice = processChildAccountScreenInput(userAccountsMap, userId, username)
-        } while (choice != 0)
+        } while (choice != "0")
     }
 }
 
@@ -271,11 +268,16 @@ private fun chooseAccountByIndex(userAccountsMap: LinkedHashMap<Int, AccountResp
     PrintUtils.printMenu(listOf("\nAccounts",
             userAccountsToStringFromLinkedHashMap(userAccountsMap = userAccountsMap),
             "Enter Account Index, or O to back : A"))
-    val accountIdInput = reader.nextInt()
-    if (accountIdInput == 0) return 0
-    if (userAccountsMap.containsKey(accountIdInput)) {
+    val accountIdInput = readLine()!!
+    if (accountIdInput == "0") return 0
+    try {
 
-        return accountIdInput
+        val accountId = accountIdInput.toInt()
+        if (userAccountsMap.containsKey(accountId)) {
+
+            return accountId
+        }
+    } catch (exception: NumberFormatException) {
     }
     PrintUtils.printMenu(listOf("Invalid Account Index, Try again ? (Y/N) : "))
     return when (readLine()) {
@@ -305,22 +307,22 @@ private fun accountHome(userId: Int, username: String) {
                 "0 - Back",
                 "",
                 "Enter Your Choice : "))
-        val choiceInput = reader.nextInt()
+        val choiceInput = readLine()
         when (choiceInput) {
 
-            1 -> viewTransactions(accountId = fromAccount.id)
-            2 -> addTransaction(
+            "1" -> viewTransactions(accountId = fromAccount.id)
+            "2" -> addTransaction(
                     userId = userId,
                     username = username
             )
-            3 -> viewChildAccounts(
+            "3" -> viewChildAccounts(
                     username = username,
                     userId = userId
             )
-            0 -> return
+            "0" -> return
             else -> println("Invalid option, try again...")
         }
-    } while (choiceInput != 0)
+    } while (choiceInput != "0")
 }
 
 private fun viewChildAccounts(username: String, userId: Int) {
@@ -358,18 +360,18 @@ private fun viewChildAccounts(username: String, userId: Int) {
                         "Enter Your Choice : "))
 
                 val choice = processChildAccountScreenInput(userAccountsMap, userId, username)
-            } while (choice != 0)
+            } while (choice != "0")
         }
     }
 
 }
 
-private fun processChildAccountScreenInput(userAccountsMap: LinkedHashMap<Int, AccountResponse>, userId: Int, username: String): Int {
+private fun processChildAccountScreenInput(userAccountsMap: LinkedHashMap<Int, AccountResponse>, userId: Int, username: String): String? {
 
-    val choice = reader.nextInt()
+    val choice = readLine()
     when (choice) {
 
-        1 -> {
+        "1" -> {
             handleFromAccountSelection(
                     accountId = chooseAccountByIndex(userAccountsMap = userAccountsMap),
                     userAccountsMap = userAccountsMap,
@@ -377,7 +379,7 @@ private fun processChildAccountScreenInput(userAccountsMap: LinkedHashMap<Int, A
                     username = username
             )
         }
-        2 -> {
+        "2" -> {
             handleFromAccountSelection(
                     accountId = searchAccount(userAccountsMap = userAccountsMap),
                     userAccountsMap = userAccountsMap,
@@ -385,8 +387,8 @@ private fun processChildAccountScreenInput(userAccountsMap: LinkedHashMap<Int, A
                     username = username
             )
         }
-        3 -> addAccount()
-        0 -> {
+        "3" -> addAccount()
+        "0" -> {
         }
         else -> println("Invalid option, try again...")
     }
@@ -416,10 +418,10 @@ private fun addTransaction(userId: Int, username: String) {
                 "0 - Back",
                 "",
                 "Enter Your Choice : "))
-        val choice = reader.nextInt()
+        val choice = readLine()
         when (choice) {
 
-            1 -> {
+            "1" -> {
                 if (chooseDepositTop(userId)) {
 
                     addTransactionWithAccountAvailabilityCheck(
@@ -429,7 +431,7 @@ private fun addTransaction(userId: Int, username: String) {
                     return
                 }
             }
-            2 -> {
+            "2" -> {
                 if (chooseDepositFull(userId)) {
 
                     addTransactionWithAccountAvailabilityCheck(
@@ -439,7 +441,7 @@ private fun addTransaction(userId: Int, username: String) {
                     return
                 }
             }
-            3 -> {
+            "3" -> {
 
                 addTransactionWithAccountAvailabilityCheck(
                         userId = userId,
@@ -447,7 +449,7 @@ private fun addTransaction(userId: Int, username: String) {
                 )
                 return
             }
-            4 -> {
+            "4" -> {
                 exchangeAccounts()
                 addTransaction(
                         userId = userId,
@@ -455,7 +457,7 @@ private fun addTransaction(userId: Int, username: String) {
                 )
                 return
             }
-            5 -> {
+            "5" -> {
 
                 exchangeAccounts()
                 addTransactionWithAccountAvailabilityCheck(
@@ -464,10 +466,10 @@ private fun addTransaction(userId: Int, username: String) {
                 )
                 return
             }
-            0 -> return
+            "0" -> return
             else -> println("Invalid option, try again...")
         }
-    } while (choice != 0)
+    } while (choice != "0")
 }
 
 private fun addTransactionWithAccountAvailabilityCheck(userId: Int, username: String) {
@@ -755,26 +757,26 @@ private fun handleDepositAccountsResponse(apiResponse: ResponseHolder<AccountsRe
                         "0 - Back",
                         "",
                         "Enter Your Choice : "))
-                val choice = reader.nextInt()
+                val choice = readLine()
                 when (choice) {
 
-                    1 -> {
+                    "1" -> {
                         if (handleToAccountSelection(chooseAccountByIndex(userAccountsMap), userAccountsMap)) {
 
                             return true
                         }
                     }
-                    2 -> {
+                    "2" -> {
                         if (handleToAccountSelection(searchAccount(userAccountsMap), userAccountsMap)) {
 
                             return true
                         }
                     }
-                    0 -> {
+                    "0" -> {
                     }
                     else -> println("Invalid option, try again...")
                 }
-            } while (choice != 0)
+            } while (choice != "0")
         }
     }
     return false
@@ -816,13 +818,13 @@ private fun searchAccount(userAccountsMap: LinkedHashMap<Int, AccountResponse>):
                     "0 - Back",
                     "",
                     "Enter Your Choice : "))
-            val input = reader.nextInt()
-            if (input == 1)
+            val input = readLine()
+            if (input == "1")
                 return searchAccount(userAccountsMap = userAccountsMap)
-            else if (input != 0)
+            else if (input != "0")
                 println("Invalid option, try again...")
 
-        } while (input != 0)
+        } while (input != "0")
 
     } else {
 
@@ -833,13 +835,13 @@ private fun searchAccount(userAccountsMap: LinkedHashMap<Int, AccountResponse>):
                     "0 - Back",
                     "",
                     "Enter Your Choice : "))
-            val input = reader.nextInt()
-            if (input == 1)
+            val input = readLine()
+            if (input == "1")
                 return chooseAccountByIndex(searchResult)
-            else if (input != 0)
+            else if (input != "0")
                 println("Invalid option, try again...")
 
-        } while (input != 0)
+        } while (input != "0")
     }
     return 0
 }
