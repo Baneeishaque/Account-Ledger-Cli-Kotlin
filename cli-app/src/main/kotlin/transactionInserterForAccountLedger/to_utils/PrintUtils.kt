@@ -16,4 +16,9 @@ object PrintUtils {
             }
         }
     }
+
+    internal fun printMenuWithTryPrompt(listOfCommands: List<String>) {
+
+        printMenu(listOfCommands = listOfCommands, promptWord = "Try")
+    }
 }

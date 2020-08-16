@@ -279,7 +279,7 @@ private fun chooseAccountByIndex(userAccountsMap: LinkedHashMap<Int, AccountResp
         }
     } catch (exception: NumberFormatException) {
     }
-    PrintUtils.printMenu(listOf("Invalid Account Index, Try again ? (Y/N) : "))
+    PrintUtils.printMenuWithTryPrompt(listOf("Invalid Account Index, Try again ? (Y/N) : "))
     return when (readLine()) {
         "Y" -> {
 
@@ -290,6 +290,7 @@ private fun chooseAccountByIndex(userAccountsMap: LinkedHashMap<Int, AccountResp
             0
         }
         else -> {
+
             PrintUtils.printMenu(listOf("Invalid Entry..."))
             chooseAccountByIndex(userAccountsMap = userAccountsMap)
         }
@@ -573,7 +574,7 @@ private fun addTransactionStep2(
                         "Deposit Account - ${toAccount.id} : ${toAccount.fullName}",
                         "Particulars - $transactionParticulars",
                         "Amount - $transactionAmount",
-                        "\nCorrect ? (Y/N), Ex to exchange accounts or Enter B to back : "
+                        "\nCorrect ? (Y/N), Enter Ex to exchange accounts or B to back : "
                 ))
                 val isCorrect = readLine()
                 when (isCorrect) {
