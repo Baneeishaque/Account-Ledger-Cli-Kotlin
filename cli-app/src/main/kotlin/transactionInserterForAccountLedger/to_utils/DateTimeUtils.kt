@@ -1,7 +1,6 @@
 package transactionInserterForAccountLedger.to_utils
 
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeFormatter.ofPattern
 
 object DateTimeUtils {

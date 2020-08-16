@@ -17,12 +17,9 @@ import transactionInserterForAccountLedger.to_utils.DateTimeUtils.normalPattern
 import transactionInserterForAccountLedger.to_utils.PrintUtils
 import transactionInserterForAccountLedger.to_utils.ToDoUtils
 import transactionInserterForAccountLedger.utils.AccountUtils
-import java.lang.NumberFormatException
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-import java.time.format.DateTimeFormatter.ofPattern
 import java.time.format.DateTimeParseException
-import java.util.Scanner
+import java.util.*
 import kotlin.collections.LinkedHashMap
 
 internal object App {
