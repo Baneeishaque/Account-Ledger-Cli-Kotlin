@@ -19,6 +19,8 @@ import transactionInserterForAccountLedger.to_utils.ToDoUtils
 import transactionInserterForAccountLedger.utils.AccountUtils
 import java.lang.NumberFormatException
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeFormatter.ofPattern
 import java.time.format.DateTimeParseException
 import java.util.Scanner
 import kotlin.collections.LinkedHashMap
@@ -66,9 +68,7 @@ fun main(args: Array<String>) {
 
                 1 -> login()
                 2 -> register()
-                0 -> {
-                    println("Thanks...")
-                }
+                0 -> println("Thanks...")
                 else -> println("Invalid option, try again...")
             }
         } while (choice != 0)
@@ -113,21 +113,13 @@ private fun login() {
 
         val loginResponseResult = apiResponse.getValue() as LoginResponse
         when (loginResponseResult.userCount) {
-            0 -> {
-
-                println("Invalid Credentials...")
-
-            }
+            0 -> println("Invalid Credentials...")
             1 -> {
 
                 println("Login Success...")
                 userScreen(username = username, userId = loginResponseResult.id)
-
             }
-            else -> {
-
-                println("Server Execution Error...")
-            }
+            else -> println("Server Execution Error...")
         }
     }
 }
@@ -151,6 +143,7 @@ private fun userScreen(username: String, userId: Int) {
             2 -> insertQuickTransactionWallet(userId = userId, username = username)
             3 -> insertQuickTransactionBank(userId = userId, username = username)
             4 -> listAccountsFull(username = username, userId = userId)
+            0 -> return
             else -> println("Invalid option, try again...")
         }
     } while (choice != 0)
@@ -222,15 +215,15 @@ private fun handleAccountsResponse(apiResponse: ResponseHolder<AccountsResponse>
     } else {
 
         val localAccountsResponseWithStatus = apiResponse.getValue() as AccountsResponse
-        if (localAccountsResponseWithStatus.status == 1) {
+        return if (localAccountsResponseWithStatus.status == 1) {
 
             println("No Accounts...")
-            return false
+            false
 
         } else {
 
             prepareUserAccountsMap(localAccountsResponseWithStatus.accounts)
-            return true
+            true
         }
     }
 }
@@ -327,6 +320,7 @@ private fun accountHome(userId: Int, username: String) {
                     username = username,
                     userId = userId
             )
+            0 -> return
             else -> println("Invalid option, try again...")
         }
     } while (choiceInput != 0)
@@ -395,6 +389,8 @@ private fun processChildAccountScreenInput(userAccountsMap: LinkedHashMap<Int, A
             )
         }
         3 -> addAccount()
+        0 -> {
+        }
         else -> println("Invalid option, try again...")
     }
     return choice
@@ -471,6 +467,7 @@ private fun addTransaction(userId: Int, username: String) {
                 )
                 return
             }
+            0 -> return
             else -> println("Invalid option, try again...")
         }
     } while (choice != 0)
@@ -487,7 +484,6 @@ private fun addTransactionWithAccountAvailabilityCheck(userId: Int, username: St
 
             dateTimeString = ((LocalDateTime.parse(dateTimeString, normalPattern) as LocalDateTime).plusMinutes(5) as LocalDateTime).format(normalPattern)
         }
-
     } else {
 
         addTransaction(
@@ -645,13 +641,29 @@ private fun enterDateWithTime(): String {
 
             return inputDateTime()
         }
-        "B" -> {
+        "D+Tr" -> {
 
-            return "B"
+            return "D+Tr"
+        }
+        "D+" -> {
+
+            return "D+"
+        }
+        "D2+Tr" -> {
+
+            return "D2+Tr"
+        }
+        "D2+" -> {
+
+            return "D2+"
         }
         "Ex" -> {
 
             return "Ex"
+        }
+        "B" -> {
+
+            return "B"
         }
         else -> {
 
@@ -663,10 +675,15 @@ private fun enterDateWithTime(): String {
 
 private fun inputDateTime(): String {
 
+    //TODO : Implement Back
     print("Enter Time (MM/DD/YYYY HH:MM:SS) : ")
+    //TODO : To Utils
     try {
 
-        return (LocalDateTime.parse(readLine(), normalPattern) as LocalDateTime).format(normalPattern)
+//        val normalMonthDay = ofPattern("dd")!!
+//        val dateTimeInput= readLine()!!
+//        while (dateTimeInput.isEmpty())
+        return LocalDateTime.parse(readLine(), normalPattern).format(normalPattern)
 
     } catch (e: DateTimeParseException) {
 
@@ -755,6 +772,8 @@ private fun handleDepositAccountsResponse(apiResponse: ResponseHolder<AccountsRe
 
                             return true
                         }
+                    }
+                    0 -> {
                     }
                     else -> println("Invalid option, try again...")
                 }

@@ -2,10 +2,11 @@ package transactionInserterForAccountLedger.to_utils
 
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeFormatter.ofPattern
 
 object DateTimeUtils {
 
-    internal val normalPattern = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")!!
+    internal val normalPattern = ofPattern("dd/MM/yyyy HH:mm:ss")!!
     @Suppress("MemberVisibilityCanBePrivate")
     internal const val resetHour = 9
     @Suppress("MemberVisibilityCanBePrivate")
