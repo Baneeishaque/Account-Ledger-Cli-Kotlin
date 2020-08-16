@@ -2,11 +2,11 @@ package transactionInserterForAccountLedger.to_utils
 
 object PrintUtils {
 
-    fun printMenu(listOfCommands: List<String>) {
+    internal fun printMenu(listOfCommands: List<String>, promptWord: String = "Enter") {
 
         listOfCommands.forEach { command ->
 
-            if (command.contains("Enter", ignoreCase = true)) {
+            if (command.contains(promptWord, ignoreCase = true)) {
 
                 print(command)
 

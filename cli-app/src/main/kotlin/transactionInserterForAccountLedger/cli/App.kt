@@ -12,6 +12,7 @@ import transactionInserterForAccountLedger.retrofit.ResponseHolder
 import transactionInserterForAccountLedger.retrofit.data.AccountsDataSource
 import transactionInserterForAccountLedger.retrofit.data.TransactionDataSource
 import transactionInserterForAccountLedger.retrofit.data.UserDataSource
+import transactionInserterForAccountLedger.to_utils.DateTimeUtils
 import transactionInserterForAccountLedger.to_utils.DateTimeUtils.normalPattern
 import transactionInserterForAccountLedger.to_utils.PrintUtils
 import transactionInserterForAccountLedger.to_utils.ToDoUtils
@@ -29,7 +30,7 @@ internal object App {
 }
 
 private val reader by lazy { Scanner(System.`in`) }
-private var dateTimeString = LocalDateTime.now().format(normalPattern)
+internal var dateTimeString = LocalDateTime.now().format(normalPattern)
 private var fromAccount = AccountUtils.getBlankAccount()
 private var toAccount = AccountUtils.getBlankAccount()
 private var transactionParticulars = ""
@@ -522,16 +523,35 @@ private fun addTransactionStep2(
             //TODO : Complete back
             "Enter Time : "
     ))
-    val inputDateTimeString = enterDateWithTime()
-    when (inputDateTimeString) {
-        "B" -> {
+    when (val inputDateTimeString = enterDateWithTime()) {
+        "D+Tr" -> {
 
-            return false
+            dateTimeString = DateTimeUtils.add1DayWith9ClockTimeToDateTimeString(dateTimeString = dateTimeString)
+            return addTransactionStep2(userId = userId, username = username)
+        }
+        "D+" -> {
+
+            dateTimeString = DateTimeUtils.add1DayToDateTimeString(dateTimeString = dateTimeString)
+            return addTransactionStep2(userId = userId, username = username)
+        }
+        "D2+Tr" -> {
+
+            dateTimeString = DateTimeUtils.add2DaysWith9ClockTimeToDateTimeString(dateTimeString = dateTimeString)
+            return addTransactionStep2(userId = userId, username = username)
+        }
+        "D2+" -> {
+
+            dateTimeString = DateTimeUtils.add2DaysToDateTimeString(dateTimeString = dateTimeString)
+            return addTransactionStep2(userId = userId, username = username)
         }
         "Ex" -> {
 
             exchangeAccounts()
             return addTransactionStep2(userId = userId, username = username)
+        }
+        "B" -> {
+
+            return false
         }
         else -> {
 
@@ -558,7 +578,7 @@ private fun addTransactionStep2(
                         "Deposit Account - ${toAccount.id} : ${toAccount.fullName}",
                         "Particulars - $transactionParticulars",
                         "Amount - $transactionAmount",
-                        "\nCorrect ? (Y/N), Enter B to back, Ex to exchange accounts : "
+                        "\nCorrect ? (Y/N), Ex to exchange accounts or Enter B to back : "
                 ))
                 val isCorrect = readLine()
                 when (isCorrect) {
@@ -614,7 +634,7 @@ private fun exchangeAccounts() {
 
 private fun enterDateWithTime(): String {
 
-    print("$dateTimeString Correct? (Y/N), B to Back or Ex to exchange accounts : ")
+    print("$dateTimeString Correct? (Y/N), D+Tr to increase 1 Day with Time Reset, D+ to increase 1 Day, D2+Tr to increase 2 Days with Time Reset, D2+ to increase 2 Days, Ex to exchange accounts or B to Back : ")
     when (readLine()) {
         "Y" -> {
 
