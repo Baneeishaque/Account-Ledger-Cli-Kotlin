@@ -4,11 +4,12 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-				if (isUnix()) {
-					sh "./gradlew build"
-				}
-				else {
-					bat "gradlew.bat build"
+				withEnv() {
+					if (isUnix()) {
+						sh "./gradlew build"
+					} else {
+						bat "gradlew.bat build"
+					}
 				}
             }
         }
