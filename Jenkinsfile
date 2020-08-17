@@ -1,9 +1,15 @@
 pipeline {
     agent any
+	
     stages {
         stage('Build') {
             steps {
-                gradlew.bat build
+				if (isUnix()) {
+					sh "./gradlew build"
+				}
+				else {
+					bat "gradlew.bat build"
+				}
             }
         }
     }
