@@ -40,12 +40,12 @@ dependencies {
 
 application {
     // Define the main class for the application.
-    mainClassName = "transactionInserterForAccountLedger.cli.AppKt"
+    mainClassName = "accountLedgerCli.cli.AppKt"
 }
 
 val jar by tasks.getting(Jar::class) {
     manifest {
-        attributes["Main-Class"] = "transactionInserterForAccountLedger.cli.AppKt"
+        attributes["Main-Class"] = "accountLedgerCli.cli.AppKt"
     }
     from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) }) {
         exclude("META-INF/*.RSA", "META-INF/*.SF", "META-INF/*.DSA")

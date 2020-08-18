@@ -7,6 +7,6 @@
  * in the user manual at https://docs.gradle.org/6.6-rc-6/userguide/multi_project_builds.html
  */
 
-rootProject.name = "transactionInserterForAccountLedger"
+rootProject.name = "accountLedgerCli"
 
 include("cli-app")
