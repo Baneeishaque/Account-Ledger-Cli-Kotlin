@@ -37,6 +37,12 @@ private const val baneePassword = "9895204814"
 private const val baneeWalletAccountId = 6
 private const val baneeBankAccountId = 11
 private const val baneeBankAccountName = "Punjab National Bank, Tirur"
+private const val baneeFrequent1AccountName = "Hisham Banee Ishaque K Brother"
+private const val baneeFrequent2AccountName = "Ismail K Father Banee Ishaque K"
+private const val baneeFrequent3AccountName = "Account Shortages"
+private const val baneeFrequent1AccountId = 688
+private const val baneeFrequent2AccountId = 38
+private const val baneeFrequent3AccountId = 367
 
 private var userAccountsMap = LinkedHashMap<Int, AccountResponse>()
 private val accountsResponseResult = AccountsResponse(1, listOf(AccountUtils.getBlankAccount()))
@@ -102,6 +108,19 @@ private fun login() {
     if (apiResponse.isError()) {
 
         println("Error : ${(apiResponse.getValue() as Exception).localizedMessage}")
+        do {
+            print("Retry (Y/N) ? : ")
+            val input = readLine()
+            when (input) {
+                "Y", "" -> {
+                    login()
+                    return
+                }
+                "N" -> {
+                }
+                else -> println("Invalid option, try again...")
+            }
+        } while (input != "N")
 
     } else {
 
@@ -124,9 +143,18 @@ private fun userScreen(username: String, userId: Int) {
     do {
         PrintUtils.printMenu(listOf("\nUser : $username",
                 "1 - List Accounts : Top Levels",
-                "2 - Insert Quick Transaction : Wallet",
-                "3 - Insert Quick Transaction : Bank : $baneeBankAccountName",
-                "4 - List Accounts : Full Names",
+                "2 - Insert Quick Transaction On : Wallet",
+                "3 - Insert Quick Transaction On : Wallet To : $baneeFrequent1AccountName",
+                "4 - Insert Quick Transaction On : Wallet To : $baneeFrequent2AccountName",
+                "5 - Insert Quick Transaction On : Wallet To : $baneeFrequent3AccountName",
+                "6 - Insert Quick Transaction On : Bank : $baneeBankAccountName",
+                "7 - Insert Quick Transaction On : Bank : $baneeBankAccountName To : $baneeFrequent1AccountName",
+                "8 - Insert Quick Transaction On : Bank : $baneeBankAccountName To : $baneeFrequent2AccountName",
+                "9 - Insert Quick Transaction On : Bank : $baneeBankAccountName To : $baneeFrequent3AccountName",
+                "10 - Insert Quick Transaction On : $baneeFrequent1AccountName",
+                "11 - Insert Quick Transaction On : $baneeFrequent2AccountName",
+                "12 - Insert Quick Transaction On : $baneeFrequent3AccountName",
+                "13 - List Accounts : Full Names",
                 "0 - Logout",
                 "",
                 "Enter Your Choice : "))
@@ -135,12 +163,48 @@ private fun userScreen(username: String, userId: Int) {
 
             "1" -> listAccountsTop(username = username, userId = userId)
             "2" -> insertQuickTransactionWallet(userId = userId, username = username)
-            "3" -> insertQuickTransactionBank(userId = userId, username = username)
-            "4" -> listAccountsFull(username = username, userId = userId)
+            "3" -> insertQuickTransactionWalletToFrequent1(userId = userId, username = username)
+            "4" -> insertQuickTransactionWalletToFrequent2(userId = userId, username = username)
+            "5" -> insertQuickTransactionWalletToFrequent3(userId = userId, username = username)
+            "6" -> insertQuickTransactionBank(userId = userId, username = username)
+            "7" -> insertQuickTransactionBankToFrequent1(userId = userId, username = username)
+            "8" -> insertQuickTransactionBankToFrequent2(userId = userId, username = username)
+            "9" -> insertQuickTransactionBankToFrequent3(userId = userId, username = username)
+            "10" -> insertQuickTransactionFrequent1(userId = userId, username = username)
+            "11" -> insertQuickTransactionFrequent2(userId = userId, username = username)
+            "12" -> insertQuickTransactionFrequent3(userId = userId, username = username)
+            "13" -> listAccountsFull(username = username, userId = userId)
             "0" -> return
             else -> println("Invalid option, try again...")
         }
     } while (choice != "0")
+}
+
+private fun insertQuickTransactionFrequent1(userId: Int, username: String) {
+
+    if (handleAccountsResponse(getAccountsFull(userId = userId))) {
+
+        fromAccount = userAccountsMap[baneeFrequent1AccountId]!!
+        accountHome(userId = userId, username = username)
+    }
+}
+
+private fun insertQuickTransactionFrequent2(userId: Int, username: String) {
+
+    if (handleAccountsResponse(getAccountsFull(userId = userId))) {
+
+        fromAccount = userAccountsMap[baneeFrequent2AccountId]!!
+        accountHome(userId = userId, username = username)
+    }
+}
+
+private fun insertQuickTransactionFrequent3(userId: Int, username: String) {
+
+    if (handleAccountsResponse(getAccountsFull(userId = userId))) {
+
+        fromAccount = userAccountsMap[baneeFrequent3AccountId]!!
+        accountHome(userId = userId, username = username)
+    }
 }
 
 private fun insertQuickTransactionBank(userId: Int, username: String) {
@@ -149,6 +213,45 @@ private fun insertQuickTransactionBank(userId: Int, username: String) {
 
         fromAccount = userAccountsMap[baneeBankAccountId]!!
         accountHome(userId = userId, username = username)
+    }
+}
+
+private fun insertQuickTransactionBankToFrequent1(userId: Int, username: String) {
+
+    if (handleAccountsResponse(getAccountsFull(userId = userId))) {
+
+        fromAccount = userAccountsMap[baneeBankAccountId]!!
+        toAccount = userAccountsMap[baneeFrequent1AccountId]!!
+        transactionContinueCheck(
+                userId = userId,
+                username = username
+        )
+    }
+}
+
+private fun insertQuickTransactionBankToFrequent2(userId: Int, username: String) {
+
+    if (handleAccountsResponse(getAccountsFull(userId = userId))) {
+
+        fromAccount = userAccountsMap[baneeBankAccountId]!!
+        toAccount = userAccountsMap[baneeFrequent2AccountId]!!
+        transactionContinueCheck(
+                userId = userId,
+                username = username
+        )
+    }
+}
+
+private fun insertQuickTransactionBankToFrequent3(userId: Int, username: String) {
+
+    if (handleAccountsResponse(getAccountsFull(userId = userId))) {
+
+        fromAccount = userAccountsMap[baneeBankAccountId]!!
+        toAccount = userAccountsMap[baneeFrequent3AccountId]!!
+        transactionContinueCheck(
+                userId = userId,
+                username = username
+        )
     }
 }
 
@@ -190,6 +293,45 @@ private fun insertQuickTransactionWallet(userId: Int, username: String) {
     }
 }
 
+private fun insertQuickTransactionWalletToFrequent1(userId: Int, username: String) {
+
+    if (handleAccountsResponse(getAccountsFull(userId = userId))) {
+
+        fromAccount = userAccountsMap[baneeWalletAccountId]!!
+        toAccount = userAccountsMap[baneeFrequent1AccountId]!!
+        transactionContinueCheck(
+                userId = userId,
+                username = username
+        )
+    }
+}
+
+private fun insertQuickTransactionWalletToFrequent2(userId: Int, username: String) {
+
+    if (handleAccountsResponse(getAccountsFull(userId = userId))) {
+
+        fromAccount = userAccountsMap[baneeWalletAccountId]!!
+        toAccount = userAccountsMap[baneeFrequent2AccountId]!!
+        transactionContinueCheck(
+                userId = userId,
+                username = username
+        )
+    }
+}
+
+private fun insertQuickTransactionWalletToFrequent3(userId: Int, username: String) {
+
+    if (handleAccountsResponse(getAccountsFull(userId = userId))) {
+
+        fromAccount = userAccountsMap[baneeWalletAccountId]!!
+        toAccount = userAccountsMap[baneeFrequent3AccountId]!!
+        transactionContinueCheck(
+                userId = userId,
+                username = username
+        )
+    }
+}
+
 private fun listAccountsTop(username: String, userId: Int) {
 
     handleAccountsResponseAndPrintMenu(
@@ -204,6 +346,18 @@ private fun handleAccountsResponse(apiResponse: ResponseHolder<AccountsResponse>
     if (apiResponse.isError()) {
 
         println("Error : ${(apiResponse.getValue() as Exception).localizedMessage}")
+//        do {
+//            print("Retry (Y/N) ? : ")
+//            val input = readLine()
+//            when (input) {
+//                "Y", "" -> {
+//                    return handleAccountsResponse(apiResponse)
+//                }
+//                "N" -> {
+//                }
+//                else -> println("Invalid option, try again...")
+//            }
+//        } while (input != "N")
         return false
 
     } else {
@@ -281,7 +435,7 @@ private fun chooseAccountByIndex(userAccountsMap: LinkedHashMap<Int, AccountResp
     }
     PrintUtils.printMenuWithTryPrompt(listOf("Invalid Account Index, Try again ? (Y/N) : "))
     return when (readLine()) {
-        "Y" -> {
+        "Y", "" -> {
 
             chooseAccountByIndex(userAccountsMap = userAccountsMap)
         }
@@ -333,6 +487,22 @@ private fun viewChildAccounts(username: String, userId: Int) {
     if (apiResponse.isError()) {
 
         println("Error : ${(apiResponse.getValue() as Exception).localizedMessage}")
+        do {
+            print("Retry (Y/N) ? : ")
+            val input = readLine()
+            when (input) {
+                "Y", "" -> {
+                    viewChildAccounts(
+                            username = username,
+                            userId = userId
+                    )
+                    return
+                }
+                "N" -> {
+                }
+                else -> println("Invalid option, try again...")
+            }
+        } while (input != "N")
 
     } else {
 
@@ -409,13 +579,15 @@ private fun addTransaction(userId: Int, username: String) {
 
     do {
         PrintUtils.printMenu(listOf("\nUser : $username",
-                "Account - ${fromAccount.id} : ${fromAccount.fullName}",
-                "Deposit Account - ${toAccount.id} : ${toAccount.fullName}",
-                "1 - Choose Deposit Account From List - Top Levels",
-                "2 - Choose Deposit Account From List - Full Names",
-                "3 - Continue Transaction",
-                "4 - Exchange Accounts",
-                "5 - Exchange Accounts,Then Continue Transaction",
+                "From Account - ${fromAccount.id} : ${fromAccount.fullName}",
+                "To Account - ${toAccount.id} : ${toAccount.fullName}",
+                "1 - Choose To Account From List - Top Levels",
+                "2 - Choose To Account From List - Full Names",
+                "3 - Choose From Account From List - Top Levels",
+                "4 - Choose From Account From List - Full Names",
+                "5 - Continue Transaction",
+                "6 - Exchange Accounts",
+                "7 - Exchange Accounts, Then Continue Transaction",
                 "0 - Back",
                 "",
                 "Enter Your Choice : "))
@@ -425,32 +597,37 @@ private fun addTransaction(userId: Int, username: String) {
             "1" -> {
                 if (chooseDepositTop(userId)) {
 
-                    addTransactionWithAccountAvailabilityCheck(
-                            userId = userId,
-                            username = username
-                    )
+                    transactionContinueCheck(userId, username)
                     return
                 }
             }
             "2" -> {
                 if (chooseDepositFull(userId)) {
 
-                    addTransactionWithAccountAvailabilityCheck(
-                            userId = userId,
-                            username = username
-                    )
+                    transactionContinueCheck(userId, username)
                     return
                 }
             }
             "3" -> {
+                if (chooseFromAccountTop(userId)) {
 
-                addTransactionWithAccountAvailabilityCheck(
-                        userId = userId,
-                        username = username
-                )
-                return
+                    transactionContinueCheck(userId, username)
+                    return
+                }
             }
             "4" -> {
+                if (chooseFromAccountFull(userId)) {
+
+                    transactionContinueCheck(userId, username)
+                    return
+                }
+            }
+            "5" -> {
+
+                transactionContinueCheck(userId, username)
+                return
+            }
+            "6" -> {
                 exchangeAccounts()
                 addTransaction(
                         userId = userId,
@@ -458,19 +635,44 @@ private fun addTransaction(userId: Int, username: String) {
                 )
                 return
             }
-            "5" -> {
+            "7" -> {
 
                 exchangeAccounts()
-                addTransactionWithAccountAvailabilityCheck(
-                        userId = userId,
-                        username = username
-                )
+                transactionContinueCheck(userId, username)
                 return
             }
             "0" -> return
             else -> println("Invalid option, try again...")
         }
     } while (choice != "0")
+}
+
+private fun transactionContinueCheck(userId: Int, username: String) {
+
+    do {
+
+        PrintUtils.printMenuWithContinuePrompt(listOf("\nUser : $username",
+                "From Account - ${fromAccount.id} : ${fromAccount.fullName}",
+                "To Account - ${toAccount.id} : ${toAccount.fullName}",
+                "",
+                "Continue (Y/N) : "))
+
+        val input = readLine()
+        when (input) {
+
+            "Y", "" -> {
+
+                addTransactionWithAccountAvailabilityCheck(
+                        userId = userId,
+                        username = username
+                )
+                return
+            }
+            "N" -> {
+            }
+            else -> println("Invalid option, try again...")
+        }
+    } while (input != "N")
 }
 
 private fun addTransactionWithAccountAvailabilityCheck(userId: Int, username: String) {
@@ -579,7 +781,7 @@ private fun addTransactionStep2(
                 val isCorrect = readLine()
                 when (isCorrect) {
 
-                    "Y" -> {
+                    "Y", "" -> {
                         if (insertTransaction(
                                         userid = userId,
                                         eventDateTime = dateTimeString,
@@ -632,7 +834,7 @@ private fun enterDateWithTime(): String {
 
     print("$dateTimeString Correct? (Y/N), D+Tr to increase 1 Day with Time Reset, D+ to increase 1 Day, D2+Tr to increase 2 Days with Time Reset, D2+ to increase 2 Days, Ex to exchange accounts or B to Back : ")
     when (readLine()) {
-        "Y" -> {
+        "Y", "" -> {
 
             return dateTimeString
 
@@ -712,6 +914,19 @@ private fun insertTransaction(userid: Int, eventDateTime: String, particulars: S
     if (apiResponse.isError()) {
 
         println("Error : ${(apiResponse.getValue() as Exception).localizedMessage}")
+//        do {
+//            print("Retry (Y/N) ? : ")
+//            val input = readLine()
+//            when (input) {
+//                "Y", "" -> {
+//                    login()
+//                    return
+//                }
+//                "N" -> {
+//                }
+//                else -> println("Invalid option, try again...")
+//            }
+//        } while (input != "N")
 
     } else {
 
@@ -734,11 +949,29 @@ private fun chooseDepositFull(userId: Int): Boolean {
     return handleDepositAccountsResponse(getAccountsFull(userId))
 }
 
+private fun chooseFromAccountFull(userId: Int): Boolean {
+
+    return handleFromAccountsResponse(getAccountsFull(userId))
+}
+
 private fun handleDepositAccountsResponse(apiResponse: ResponseHolder<AccountsResponse>): Boolean {
 
     if (apiResponse.isError()) {
 
         println("Error : ${(apiResponse.getValue() as Exception).localizedMessage}")
+//        do {
+//            print("Retry (Y/N) ? : ")
+//            val input = readLine()
+//            when (input) {
+//                "Y", "" -> {
+//                    login()
+//                    return
+//                }
+//                "N" -> {
+//                }
+//                else -> println("Invalid option, try again...")
+//            }
+//        } while (input != "N")
 
     } else {
 
@@ -783,11 +1016,83 @@ private fun handleDepositAccountsResponse(apiResponse: ResponseHolder<AccountsRe
     return false
 }
 
+private fun handleFromAccountsResponse(apiResponse: ResponseHolder<AccountsResponse>): Boolean {
+
+    if (apiResponse.isError()) {
+
+        println("Error : ${(apiResponse.getValue() as Exception).localizedMessage}")
+//        do {
+//            print("Retry (Y/N) ? : ")
+//            val input = readLine()
+//            when (input) {
+//                "Y", "" -> {
+//                    login()
+//                    return
+//                }
+//                "N" -> {
+//                }
+//                else -> println("Invalid option, try again...")
+//            }
+//        } while (input != "N")
+
+    } else {
+
+        val accountsResponseResult = apiResponse.getValue() as AccountsResponse
+        if (accountsResponseResult.status == 1) {
+
+            println("No Accounts...")
+
+        } else {
+
+            prepareUserAccountsMap(accountsResponseResult.accounts)
+            do {
+                PrintUtils.printMenu(listOf("\nAccounts",
+                        userAccountsToStringFromLinkedHashMap(userAccountsMap = userAccountsMap),
+                        "1 - Choose From Account - By Index Number",
+                        "2 - Search From Account - By Part Of Name",
+                        "0 - Back",
+                        "",
+                        "Enter Your Choice : "))
+                val choice = readLine()
+                when (choice) {
+
+                    "1" -> {
+                        if (handleFromAccountSelection(chooseAccountByIndex(userAccountsMap), userAccountsMap)) {
+
+                            return true
+                        }
+                    }
+                    "2" -> {
+                        if (handleFromAccountSelection(searchAccount(userAccountsMap), userAccountsMap)) {
+
+                            return true
+                        }
+                    }
+                    "0" -> {
+                    }
+                    else -> println("Invalid option, try again...")
+                }
+            } while (choice != "0")
+        }
+    }
+    return false
+}
+
 private fun handleToAccountSelection(depositAccountId: Int, userAccountsMap: LinkedHashMap<Int, AccountResponse>): Boolean {
 
     if (depositAccountId != 0) {
 
         toAccount = userAccountsMap[depositAccountId]!!
+        return true
+    }
+    return false
+}
+
+private fun handleFromAccountSelection(fromAccountId: Int, userAccountsMap: LinkedHashMap<Int, AccountResponse>): Boolean {
+
+    if (fromAccountId != 0) {
+
+        fromAccount = userAccountsMap[fromAccountId]!!
         return true
     }
     return false
@@ -872,6 +1177,11 @@ private fun userAccountsToStringFromLinkedHashMap(userAccountsMap: LinkedHashMap
 private fun chooseDepositTop(userId: Int): Boolean {
 
     return handleDepositAccountsResponse(getAccounts(userId))
+}
+
+private fun chooseFromAccountTop(userId: Int): Boolean {
+
+    return handleFromAccountsResponse(getAccounts(userId))
 }
 
 @Suppress("UNUSED_PARAMETER")

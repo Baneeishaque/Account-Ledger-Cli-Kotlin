@@ -17,8 +17,14 @@ class TransactionDataSource {
                                            amount: Float,
                                            fromAccountId: Int,
                                            toAccountId: Int?): ResponseHolder<InsertionResponse> {
+        return try {
 
-        return processApiResponse(retrofitClient.insertTransaction(userId = userId, eventDateTimeString = MysqlUtils.normalDateTimeStringToMysqlDateTimeString(eventDateTimeString), particulars = particulars, amount = amount, fromAccountId = fromAccountId, toAccountId = toAccountId))
+            processApiResponse(retrofitClient.insertTransaction(userId = userId, eventDateTimeString = MysqlUtils.normalDateTimeStringToMysqlDateTimeString(eventDateTimeString), particulars = particulars, amount = amount, fromAccountId = fromAccountId, toAccountId = toAccountId))
+
+        } catch (exception: java.lang.Exception) {
+
+            ResponseHolder.Error(Exception("Exception - ${exception.localizedMessage}"))
+        }
     }
 
     //    TODO : Rewrite as general function for all responses

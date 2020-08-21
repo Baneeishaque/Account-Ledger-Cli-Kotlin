@@ -12,13 +12,26 @@ class AccountsDataSource {
 
     internal suspend fun selectUserAccounts(userId: Int,
                                             parentAccountId: Int? = 0): ResponseHolder<AccountsResponse> {
+        return try {
 
-        return processApiResponse(retrofitClient.selectUserAccounts(userId = userId, parentAccountId = parentAccountId))
+            processApiResponse(retrofitClient.selectUserAccounts(userId = userId, parentAccountId = parentAccountId))
+
+        } catch (exception: java.lang.Exception) {
+
+            ResponseHolder.Error(Exception("Exception - ${exception.localizedMessage}"))
+        }
     }
 
     internal suspend fun selectUserAccountsFull(userId: Int): ResponseHolder<AccountsResponse> {
 
-        return processApiResponse(retrofitClient.selectUserAccountsFull(userId = userId))
+        return try {
+
+            processApiResponse(retrofitClient.selectUserAccountsFull(userId = userId))
+
+        } catch (exception: java.lang.Exception) {
+
+            ResponseHolder.Error(Exception("Exception - ${exception.localizedMessage}"))
+        }
     }
 
     //    TODO : Rewrite as general function for all responses

@@ -13,25 +13,31 @@ class UserDataSource {
 
     internal suspend fun selectUser(username: String?,
                                     password: String?): ResponseHolder<LoginResponse> {
+        return try {
 
-        return processApiResponse(retrofitClient.selectUser(username = username, password = password))
-    }
+            processApiResponse(retrofitClient.selectUser(username = username, password = password))
 
-    //    TODO : Rewrite as general function for all responses
-    private fun processApiResponse(apiResponse: Response<LoginResponse>): ResponseHolder<LoginResponse> {
+        } catch (exception: Exception) {
 
-        if (apiResponse.isSuccessful) {
-
-            val loginApiResponseBody = apiResponse.body()
-            return if (loginApiResponseBody != null) {
-
-                ResponseHolder.Success(loginApiResponseBody)
-
-            } else {
-
-                ResponseHolder.Error(Exception("Invalid Response Body - $loginApiResponseBody"))
-            }
+            ResponseHolder.Error(Exception("Exception - ${exception.localizedMessage}"))
         }
-        return ResponseHolder.Error(IOException("Exception Code - ${apiResponse.code()}, Message - ${apiResponse.message()}"))
     }
+}
+
+//    TODO : Rewrite as general function for all responses
+private fun processApiResponse(apiResponse: Response<LoginResponse>): ResponseHolder<LoginResponse> {
+
+    if (apiResponse.isSuccessful) {
+
+        val loginApiResponseBody = apiResponse.body()
+        return if (loginApiResponseBody != null) {
+
+            ResponseHolder.Success(loginApiResponseBody)
+
+        } else {
+
+            ResponseHolder.Error(Exception("Invalid Response Body - $loginApiResponseBody"))
+        }
+    }
+    return ResponseHolder.Error(IOException("Exception Code - ${apiResponse.code()}, Message - ${apiResponse.message()}"))
 }

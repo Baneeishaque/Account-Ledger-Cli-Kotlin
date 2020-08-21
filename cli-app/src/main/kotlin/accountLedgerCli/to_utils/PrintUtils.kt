@@ -21,4 +21,9 @@ object PrintUtils {
 
         printMenu(listOfCommands = listOfCommands, promptWord = "Try")
     }
+
+    internal fun printMenuWithContinuePrompt(listOfCommands: List<String>) {
+
+        printMenu(listOfCommands = listOfCommands, promptWord = "Continue")
+    }
 }
