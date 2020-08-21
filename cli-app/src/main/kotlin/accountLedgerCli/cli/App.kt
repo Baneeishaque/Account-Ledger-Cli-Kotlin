@@ -155,6 +155,8 @@ private fun userScreen(username: String, userId: Int) {
                 "11 - Insert Quick Transaction On : $baneeFrequent2AccountName",
                 "12 - Insert Quick Transaction On : $baneeFrequent3AccountName",
                 "13 - List Accounts : Full Names",
+                "14 - Import Transactions To : Bank : $baneeBankAccountName From CSV",
+                "15 - Import Transactions To : Bank : $baneeBankAccountName From XLX",
                 "0 - Logout",
                 "",
                 "Enter Your Choice : "))
@@ -174,10 +176,22 @@ private fun userScreen(username: String, userId: Int) {
             "11" -> insertQuickTransactionFrequent2(userId = userId, username = username)
             "12" -> insertQuickTransactionFrequent3(userId = userId, username = username)
             "13" -> listAccountsFull(username = username, userId = userId)
+            "14" -> importBankFromCsv()
+            "15" -> importBankFromXlx()
             "0" -> return
             else -> println("Invalid option, try again...")
         }
     } while (choice != "0")
+}
+
+fun importBankFromXlx() {
+
+    ToDoUtils.showTodo()
+}
+
+fun importBankFromCsv() {
+
+    ToDoUtils.showTodo()
 }
 
 private fun insertQuickTransactionFrequent1(userId: Int, username: String) {
