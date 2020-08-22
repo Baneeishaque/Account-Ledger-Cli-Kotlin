@@ -60,4 +60,6 @@ tasks.jacocoTestReport {
     }
 }
 
-check.dependsOn jacocoTestReport
+tasks.register("check") {
+    dependsOn("jacocoTestReport)
+}
