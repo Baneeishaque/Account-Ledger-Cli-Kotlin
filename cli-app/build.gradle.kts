@@ -53,7 +53,7 @@ val jar by tasks.getting(Jar::class) {
     }
 }
 
-jacocoTestReport {
+tasks.jacocoTestReport {
     reports {
         xml.enabled true
         html.enabled false
