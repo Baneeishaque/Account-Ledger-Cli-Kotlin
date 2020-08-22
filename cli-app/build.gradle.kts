@@ -5,6 +5,7 @@
  */
 
 plugins {
+
     // Apply the Kotlin JVM plugin to add support for Kotlin.
     id("org.jetbrains.kotlin.jvm") version "1.4.0"
 
@@ -14,6 +15,7 @@ plugins {
 }
 
 repositories {
+
     // Use jcenter for resolving dependencies.
     // You can declare any Maven/Ivy/file repository here.
     jcenter()
@@ -21,6 +23,7 @@ repositories {
 }
 
 dependencies {
+
     // Align versions of all Kotlin components
     implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
 
@@ -35,31 +38,39 @@ dependencies {
 
     implementation("org.jetbrains.kotlinx", "kotlinx-cli", "0.2.1")
     implementation("org.jetbrains.kotlinx", "kotlinx-coroutines-core", "1.3.8")
-    implementation("com.squareup.retrofit2","retrofit","2.9.0")
-    implementation("com.squareup.retrofit2","converter-gson","2.9.0")
+    implementation("com.squareup.retrofit2", "retrofit", "2.9.0")
+    implementation("com.squareup.retrofit2", "converter-gson", "2.9.0")
+    implementation("com.github.doyaaaaaken:kotlin-csv-jvm:0.7.3")
 }
 
 application {
+
     // Define the main class for the application.
     mainClassName = "accountLedgerCli.cli.AppKt"
 }
 
 val jar by tasks.getting(Jar::class) {
+
     manifest {
+
         attributes["Main-Class"] = "accountLedgerCli.cli.AppKt"
     }
     from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) }) {
+
         exclude("META-INF/*.RSA", "META-INF/*.SF", "META-INF/*.DSA")
     }
 }
 
 tasks.jacocoTestReport {
+
     reports {
-        xml.enabled true
-        html.enabled false
+
+        xml.isEnabled = true
+        html.isEnabled = true
     }
 }
 
-tasks.register("check") {
-    dependsOn("jacocoTestReport)
+tasks.check {
+
+    dependsOn(tasks.jacocoTestReport)
 }
