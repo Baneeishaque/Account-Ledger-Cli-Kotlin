@@ -1,9 +1,5 @@
 package accountLedgerCli.cli
 
-import kotlinx.cli.ArgParser
-import kotlinx.cli.ArgType
-import kotlinx.cli.default
-import kotlinx.coroutines.runBlocking
 import accountLedgerCli.api.response.AccountResponse
 import accountLedgerCli.api.response.AccountsResponse
 import accountLedgerCli.api.response.InsertionResponse
@@ -17,8 +13,13 @@ import accountLedgerCli.to_utils.DateTimeUtils.normalPattern
 import accountLedgerCli.to_utils.PrintUtils
 import accountLedgerCli.to_utils.ToDoUtils
 import accountLedgerCli.utils.AccountUtils
+import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import java.time.LocalDateTime
 import java.time.format.DateTimeParseException
+import kotlinx.cli.ArgParser
+import kotlinx.cli.ArgType
+import kotlinx.cli.default
+import kotlinx.coroutines.runBlocking
 
 internal object App {
 
@@ -49,6 +50,9 @@ private val accountsResponseResult = AccountsResponse(1, listOf(AccountUtils.get
 
 fun main(args: Array<String>) {
 
+    readCsv()
+    return
+
     val parser = ArgParser(programName = "${App.appName}:: ${App.version}")
     val version by parser.option(type = ArgType.Boolean, shortName = "V", description = "Version").default(value = false)
 
@@ -72,13 +76,25 @@ fun main(args: Array<String>) {
                 else -> println("Invalid option, try again...")
             }
         } while (choice != "0")
-
     } else {
 
         // Add all input to parser
         parser.parse(args)
 
         if (version) println(App.version)
+    }
+}
+
+fun readCsv() {
+
+    // @v Input file path from user
+    // @cr Hardcoded file path
+    val filePath = "E:\\To_DK\\4356XXXXXXXXX854522-08-2020.xls"
+    csvReader().open(filePath) {
+        readAllAsSequence().forEach { row ->
+            // Do something
+            println(row) // [a, b, c]
+        }
     }
 }
 
@@ -121,7 +137,6 @@ private fun login() {
                 else -> println("Invalid option, try again...")
             }
         } while (input != "N")
-
     } else {
 
         val loginResponseResult = apiResponse.getValue() as LoginResponse
@@ -373,7 +388,6 @@ private fun handleAccountsResponse(apiResponse: ResponseHolder<AccountsResponse>
 //            }
 //        } while (input != "N")
         return false
-
     } else {
 
         val localAccountsResponseWithStatus = apiResponse.getValue() as AccountsResponse
@@ -381,7 +395,6 @@ private fun handleAccountsResponse(apiResponse: ResponseHolder<AccountsResponse>
 
             println("No Accounts...")
             false
-
         } else {
 
             prepareUserAccountsMap(localAccountsResponseWithStatus.accounts)
@@ -427,7 +440,7 @@ private fun userAccountsToStringFromList(accounts: List<AccountResponse>): Strin
 
 private fun addAccount() {
 
-    //Use all accounts for general account addition, or from account for child account addition
+    // Use all accounts for general account addition, or from account for child account addition
     ToDoUtils.showTodo()
 }
 
@@ -517,14 +530,12 @@ private fun viewChildAccounts(username: String, userId: Int) {
                 else -> println("Invalid option, try again...")
             }
         } while (input != "N")
-
     } else {
 
         val accountsResponseResult = apiResponse.getValue() as AccountsResponse
         if (accountsResponseResult.status == 1) {
 
             println("No Child Accounts...")
-
         } else {
 
             val userAccountsMap = LinkedHashMap<Int, AccountResponse>()
@@ -548,7 +559,6 @@ private fun viewChildAccounts(username: String, userId: Int) {
             } while (choice != "0")
         }
     }
-
 }
 
 private fun processChildAccountScreenInput(userAccountsMap: LinkedHashMap<Int, AccountResponse>, userId: Int, username: String): String? {
@@ -715,7 +725,6 @@ private fun isAccountsAreAvailable(): Boolean {
 
         println("Please choose deposit account...")
         return false
-
     } else if (fromAccount.id == 0) {
 
         println("Please choose from account...")
@@ -732,7 +741,7 @@ private fun addTransactionStep2(
     PrintUtils.printMenu(listOf("\nUser : $username",
             "Account - ${fromAccount.id} : ${fromAccount.fullName}",
             "Deposit Account - ${toAccount.id} : ${toAccount.fullName}",
-            //TODO : Complete back
+            // TODO : Complete back
             "Enter Time : "
     ))
     when (val inputDateTimeString = enterDateWithTime()) {
@@ -770,7 +779,7 @@ private fun addTransactionStep2(
             dateTimeString = inputDateTimeString
 
             print("Enter Particulars (Current Value - $transactionParticulars): ")
-            //TODO : Back to fields, or complete back
+            // TODO : Back to fields, or complete back
             val transactionParticularsInput = readLine()!!
             if (transactionParticularsInput.isNotEmpty()) {
 
@@ -806,7 +815,7 @@ private fun addTransactionStep2(
                             return true
                         }
                     }
-                    //TODO : Back to fields
+                    // TODO : Back to fields
                     "N" -> return addTransactionStep2(
                             userId = userId,
                             username = username
@@ -829,7 +838,6 @@ fun getValidAmount(transactionAmountInput: String): Float {
     try {
 
         return transactionAmountInput.toFloat()
-
     } catch (exception: NumberFormatException) {
 
         println("Invalid Amount : Try Again")
@@ -851,7 +859,6 @@ private fun enterDateWithTime(): String {
         "Y", "" -> {
 
             return dateTimeString
-
         }
         "N" -> {
 
@@ -891,16 +898,15 @@ private fun enterDateWithTime(): String {
 
 private fun inputDateTime(): String {
 
-    //TODO : Implement Back
+    // TODO : Implement Back
     print("Enter Time (MM/DD/YYYY HH:MM:SS) : ")
-    //TODO : To Utils
+    // TODO : To Utils
     try {
 
 //        val normalMonthDay = ofPattern("dd")!!
 //        val dateTimeInput= readLine()!!
 //        while (dateTimeInput.isEmpty())
         return LocalDateTime.parse(readLine(), normalPattern).format(normalPattern)
-
     } catch (e: DateTimeParseException) {
 
         println("Invalid Date...")
@@ -941,7 +947,6 @@ private fun insertTransaction(userid: Int, eventDateTime: String, particulars: S
 //                else -> println("Invalid option, try again...")
 //            }
 //        } while (input != "N")
-
     } else {
 
         val insertionResponseResult = apiResponse.getValue() as InsertionResponse
@@ -949,7 +954,6 @@ private fun insertTransaction(userid: Int, eventDateTime: String, particulars: S
 
             println("OK...")
             return true
-
         } else {
 
             println("Server Execution Error : ${insertionResponseResult.error}")
@@ -960,15 +964,21 @@ private fun insertTransaction(userid: Int, eventDateTime: String, particulars: S
 
 private fun chooseDepositFull(userId: Int): Boolean {
 
-    return handleDepositAccountsResponse(getAccountsFull(userId))
+    return handleAccountsApiResponse(
+            apiResponse = getAccountsFull(userId = userId),
+            purpose = "To"
+    )
 }
 
 private fun chooseFromAccountFull(userId: Int): Boolean {
 
-    return handleFromAccountsResponse(getAccountsFull(userId))
+    return handleAccountsApiResponse(
+            apiResponse = getAccountsFull(userId),
+            purpose = "From"
+    )
 }
 
-private fun handleDepositAccountsResponse(apiResponse: ResponseHolder<AccountsResponse>): Boolean {
+private fun handleAccountsApiResponse(apiResponse: ResponseHolder<AccountsResponse>, purpose: String): Boolean {
 
     if (apiResponse.isError()) {
 
@@ -986,22 +996,20 @@ private fun handleDepositAccountsResponse(apiResponse: ResponseHolder<AccountsRe
 //                else -> println("Invalid option, try again...")
 //            }
 //        } while (input != "N")
-
     } else {
 
         val accountsResponseResult = apiResponse.getValue() as AccountsResponse
         if (accountsResponseResult.status == 1) {
 
             println("No Accounts...")
-
         } else {
 
             prepareUserAccountsMap(accountsResponseResult.accounts)
             do {
                 PrintUtils.printMenu(listOf("\nAccounts",
                         userAccountsToStringFromLinkedHashMap(userAccountsMap = userAccountsMap),
-                        "1 - Choose Deposit Account - By Index Number",
-                        "2 - Search Deposit Account - By Part Of Name",
+                        "1 - Choose $purpose Account - By Index Number",
+                        "2 - Search $purpose Account - By Part Of Name",
                         "0 - Back",
                         "",
                         "Enter Your Choice : "))
@@ -1009,77 +1017,33 @@ private fun handleDepositAccountsResponse(apiResponse: ResponseHolder<AccountsRe
                 when (choice) {
 
                     "1" -> {
-                        if (handleToAccountSelection(chooseAccountByIndex(userAccountsMap), userAccountsMap)) {
+                        if (purpose == "To") {
 
-                            return true
+                            if (handleToAccountSelection(chooseAccountByIndex(userAccountsMap), userAccountsMap)) {
+
+                                return true
+                            }
+                        } else if (purpose == "From") {
+
+                            if (handleFromAccountSelection(chooseAccountByIndex(userAccountsMap), userAccountsMap)) {
+
+                                return true
+                            }
                         }
                     }
                     "2" -> {
-                        if (handleToAccountSelection(searchAccount(userAccountsMap), userAccountsMap)) {
+                        if (purpose == "To") {
 
-                            return true
-                        }
-                    }
-                    "0" -> {
-                    }
-                    else -> println("Invalid option, try again...")
-                }
-            } while (choice != "0")
-        }
-    }
-    return false
-}
+                            if (handleToAccountSelection(searchAccount(userAccountsMap), userAccountsMap)) {
 
-private fun handleFromAccountsResponse(apiResponse: ResponseHolder<AccountsResponse>): Boolean {
+                                return true
+                            }
+                        } else if (purpose == "From") {
 
-    if (apiResponse.isError()) {
+                            if (handleFromAccountSelection(searchAccount(userAccountsMap), userAccountsMap)) {
 
-        println("Error : ${(apiResponse.getValue() as Exception).localizedMessage}")
-//        do {
-//            print("Retry (Y/N) ? : ")
-//            val input = readLine()
-//            when (input) {
-//                "Y", "" -> {
-//                    login()
-//                    return
-//                }
-//                "N" -> {
-//                }
-//                else -> println("Invalid option, try again...")
-//            }
-//        } while (input != "N")
-
-    } else {
-
-        val accountsResponseResult = apiResponse.getValue() as AccountsResponse
-        if (accountsResponseResult.status == 1) {
-
-            println("No Accounts...")
-
-        } else {
-
-            prepareUserAccountsMap(accountsResponseResult.accounts)
-            do {
-                PrintUtils.printMenu(listOf("\nAccounts",
-                        userAccountsToStringFromLinkedHashMap(userAccountsMap = userAccountsMap),
-                        "1 - Choose From Account - By Index Number",
-                        "2 - Search From Account - By Part Of Name",
-                        "0 - Back",
-                        "",
-                        "Enter Your Choice : "))
-                val choice = readLine()
-                when (choice) {
-
-                    "1" -> {
-                        if (handleFromAccountSelection(chooseAccountByIndex(userAccountsMap), userAccountsMap)) {
-
-                            return true
-                        }
-                    }
-                    "2" -> {
-                        if (handleFromAccountSelection(searchAccount(userAccountsMap), userAccountsMap)) {
-
-                            return true
+                                return true
+                            }
                         }
                     }
                     "0" -> {
@@ -1143,9 +1107,7 @@ private fun searchAccount(userAccountsMap: LinkedHashMap<Int, AccountResponse>):
                 return searchAccount(userAccountsMap = userAccountsMap)
             else if (input != "0")
                 println("Invalid option, try again...")
-
         } while (input != "0")
-
     } else {
 
         do {
@@ -1160,7 +1122,6 @@ private fun searchAccount(userAccountsMap: LinkedHashMap<Int, AccountResponse>):
                 return chooseAccountByIndex(searchResult)
             else if (input != "0")
                 println("Invalid option, try again...")
-
         } while (input != "0")
     }
     return 0
@@ -1190,12 +1151,18 @@ private fun userAccountsToStringFromLinkedHashMap(userAccountsMap: LinkedHashMap
 
 private fun chooseDepositTop(userId: Int): Boolean {
 
-    return handleDepositAccountsResponse(getAccounts(userId))
+    return handleAccountsApiResponse(
+            apiResponse = getAccounts(userId = userId),
+            purpose = "To"
+    )
 }
 
 private fun chooseFromAccountTop(userId: Int): Boolean {
 
-    return handleFromAccountsResponse(getAccounts(userId))
+    return handleAccountsApiResponse(
+            apiResponse = getAccounts(userId = userId),
+            purpose = "From"
+    )
 }
 
 @Suppress("UNUSED_PARAMETER")
