@@ -10,6 +10,7 @@ plugins {
 
     // Apply the application plugin to add support for building a CLI application.
     application
+    jacoco
 }
 
 repositories {
@@ -50,4 +51,15 @@ val jar by tasks.getting(Jar::class) {
     from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) }) {
         exclude("META-INF/*.RSA", "META-INF/*.SF", "META-INF/*.DSA")
     }
+}
+
+tasks.jacocoTestReport {
+    reports {
+        xml.enabled true
+        html.enabled false
+    }
+}
+
+tasks.register("check") {
+    dependsOn("jacocoTestReport)
 }
