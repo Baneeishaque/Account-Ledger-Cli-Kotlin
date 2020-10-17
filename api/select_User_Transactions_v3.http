@@ -1,0 +1,14 @@
+GET https://{{host}}/{{http_API_folder}}/select_User_Transactions_v3.{{file_extension}}?user_id=12&account_id=854
+Accept: application/json
+
+###
+GET https://{{host}}/{{http_API_folder}}/select_User_Transactions_v3.{{file_extension}}?user_id=12&account_id=671
+Accept: application/json
+
+###
+GET https://{{host}}/{{http_API_folder}}/select_User_Transactions_v3.{{file_extension}}?user_id=12&account_id=684
+Accept: application/json
+
+###
+GET https://{{host}}/{{http_API_folder}}/select_User_Transactions_v3.{{file_extension}}?user_id=12&account_id=852
+Accept: application/json

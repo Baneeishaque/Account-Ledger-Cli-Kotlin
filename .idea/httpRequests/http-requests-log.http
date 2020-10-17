@@ -1,3 +1,45 @@
+GET https://account-ledger-server.herokuapp.com/http_API/select_User_Transactions_v2m.php?user_id=13&account_id=16
+Accept: application/json
+
+<> 2020-10-03T102031.200.html
+
+###
+
+GET https://adgarage.co/http_API/select_User_Transactions_v2m.php?user_id=13&account_id=16
+Accept: application/json
+
+<> 2020-10-03T102022.403.html
+
+###
+
+GET https://account-ledger-server.herokuapp.com/http_API/select_User_Transactions_v2.php?user_id=13&account_id=6
+Accept: application/json
+
+<> 2020-10-03T093224.200.html
+
+###
+
+GET http://account-ledger-server.herokuapp.com/http_API/select_User_Accounts_v2.php?user_id=13&parent_account_id=0
+Accept: application/json
+
+<> 2020-10-03T093201.200.html
+
+###
+
+GET https://account-ledger-server.herokuapp.com/http_API/select_User_Transactions_v2.php?user_id=13&account_id=6
+Accept: application/json
+
+<> 2020-10-03T093130.200.html
+
+###
+
+GET https://account-ledger-server.herokuapp.com/http_API/select_User_Transactions_v2.php?user_id=13&account_id=16
+Accept: application/json
+
+<> 2020-10-03T092724.200.html
+
+###
+
 GET http://account-ledger-server.herokuapp.com/http_API/select_User_Accounts.php?user_id=13&parent_account_id=0
 Accept: application/json
 

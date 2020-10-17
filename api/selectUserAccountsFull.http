@@ -1,2 +1,2 @@
-GET http://account-ledger-server.herokuapp.com/http_API/select_User_Accounts_full.php?user_id=13
+GET https://{{host}}/{{http_API_folder}}/select_User_Accounts_full.{{file_extension}}?user_id=13
 Accept: application/json

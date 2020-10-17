@@ -1,0 +1,6 @@
+GET https://{{host}}/{{http_API_folder}}/select_User.{{file_extension}}?username=banee&password=banee
+Accept: application/json
+
+###
+GET https://{{host}}/{{http_API_folder}}/select_User.{{file_extension}}?username=banee_ishaque_k_10_04_2019&password=9895204814
+Accept: application/json

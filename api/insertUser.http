@@ -1,0 +1,12 @@
+POST https://{{host}}/{{http_API_folder}}/insertUser.{{file_extension}}
+Content-Type: application/x-www-form-urlencoded
+
+username=kiran&passcode=kiran
+
+###
+POST https://{{host}}/{{http_API_folder}}/insertUser.{{file_extension}}
+Content-Type: application/x-www-form-urlencoded
+
+username=mash&passcode=mash
+
+###

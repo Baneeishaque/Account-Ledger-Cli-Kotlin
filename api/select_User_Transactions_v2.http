@@ -1,0 +1,2 @@
+GET https://{{host}}/{{http_API_folder}}/select_User_Transactions_v2.{{file_extension}}?user_id=13&account_id=16
+Accept: application/json

@@ -1,2 +1,0 @@
-GET http://account-ledger-server.herokuapp.com/http_API/select_User.php?username=banee&password=banee
-Accept: application/json
