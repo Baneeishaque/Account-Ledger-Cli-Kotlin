@@ -25,7 +25,8 @@
                 "clean",
                 "build"
             ],
-            "dependsOrder": "sequence"
+            "dependsOrder": "sequence",
+            "command": ""
         },
         {
             "label": "jar",
