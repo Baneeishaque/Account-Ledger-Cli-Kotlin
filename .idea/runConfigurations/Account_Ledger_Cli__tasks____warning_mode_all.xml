@@ -1,21 +1,23 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="AppPropertiesTest" type="GradleRunConfiguration" factoryName="Gradle">
+  <configuration default="false" name="Account_Ledger_Cli [tasks] --warning-mode all" type="GradleRunConfiguration" factoryName="Gradle">
     <ExternalSystemSettings>
       <option name="executionName" />
       <option name="externalProjectPath" value="$PROJECT_DIR$" />
       <option name="externalSystemIdString" value="GRADLE" />
-      <option name="scriptParameters" value="--tests &quot;transactionInserterForAccountLedger.cli.AppPropertiesTest&quot;" />
+      <option name="scriptParameters" value="--warning-mode all" />
       <option name="taskDescriptions">
         <list />
       </option>
       <option name="taskNames">
         <list>
-          <option value=":cli-app:test" />
+          <option value="tasks" />
         </list>
       </option>
       <option name="vmOptions" value="" />
     </ExternalSystemSettings>
-    <GradleScriptDebugEnabled>false</GradleScriptDebugEnabled>
+    <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+    <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+    <DebugAllEnabled>false</DebugAllEnabled>
     <method v="2" />
   </configuration>
 </component>

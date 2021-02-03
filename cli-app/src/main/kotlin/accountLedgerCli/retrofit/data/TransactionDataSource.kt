@@ -2,6 +2,7 @@ package accountLedgerCli.retrofit.data
 
 import retrofit2.Response
 import accountLedgerCli.api.response.InsertionResponse
+import accountLedgerCli.api.response.TransactionsResponse
 import accountLedgerCli.retrofit.ProjectRetrofitClient
 import accountLedgerCli.retrofit.ResponseHolder
 import accountLedgerCli.to_utils.MysqlUtils

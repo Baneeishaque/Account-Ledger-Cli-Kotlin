@@ -5,6 +5,7 @@ import retrofit2.http.*
 import accountLedgerCli.api.response.AccountsResponse
 import accountLedgerCli.api.response.InsertionResponse
 import accountLedgerCli.api.response.LoginResponse
+import accountLedgerCli.api.response.TransactionsResponse
 
 interface Api {
 
@@ -18,6 +19,10 @@ interface Api {
 
     @GET("${ApiConstants.selectUserAccountsFull}.${ApiConstants.serverFileExtension}")
     suspend fun selectUserAccountsFull(@Query("user_id") userId: Int?): Response<AccountsResponse>
+
+    @GET("${ApiConstants.selectUserTransactionsV2M}.${ApiConstants.serverFileExtension}")
+    suspend fun selectUserTransactionsV2M(@Query("user_id") userId: Int,
+                                          @Query("account_id") accountId: Int): Response<TransactionsResponse>
 
     @FormUrlEncoded
     @POST("${ApiConstants.insertTransaction}.${ApiConstants.serverFileExtension}")
