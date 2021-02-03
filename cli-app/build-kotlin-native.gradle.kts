@@ -116,7 +116,7 @@ kotlin {
   sourceSets {
     val commonMain by getting {
         kotlin.srcDir("src/main")
-        dependencies {            
+        dependencies {
             // Align versions of all Kotlin components
             implementation("org.jetbrains.kotlin:kotlin-bom")
 

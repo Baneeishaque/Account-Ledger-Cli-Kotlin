@@ -16,7 +16,7 @@ dependencies {
 
     // Use the Kotlin JDK 8 standard library.
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-    implementation("com.google.guava:guava:29.0-jre") 
+    implementation("com.google.guava:guava:29.0-jre")
 
     // Use the Kotlin test library.
     testImplementation("org.jetbrains.kotlin:kotlin-test")
@@ -36,13 +36,13 @@ application {
     mainClass.set("accountLedgerCli.cli.AppKt")
 }
 
-val jar by tasks.getting(Jar::class) {	
-    manifest {	
-        attributes["Main-Class"] = "accountLedgerCli.cli.AppKt"	
-    }	
-    from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) }) {	
-        exclude("META-INF/*.RSA", "META-INF/*.SF", "META-INF/*.DSA")	
-    }	
+val jar by tasks.getting(Jar::class) {
+    manifest {
+        attributes["Main-Class"] = "accountLedgerCli.cli.AppKt"
+    }
+    from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) }) {
+        exclude("META-INF/*.RSA", "META-INF/*.SF", "META-INF/*.DSA")
+    }
 }
 
 tasks.jacocoTestReport {
