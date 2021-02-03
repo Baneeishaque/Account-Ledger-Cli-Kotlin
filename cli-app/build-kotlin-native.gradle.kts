@@ -123,7 +123,7 @@ kotlin {
             // Use the Kotlin JDK 8 standard library.
             implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
-            implementation("org.jetbrains.kotlinx:kotlinx-cli:0.2.1")
+            implementation("org.jetbrains.kotlinx:kotlinx-cli:0.3.1")
             implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.8")
             implementation("com.squareup.retrofit2:retrofit:2.9.0")
             implementation("com.squareup.retrofit2:converter-gson:2.9.0")
