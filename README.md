@@ -9,3 +9,6 @@
 https://codecov.io/gh/Baneeishaque/Account-Ledger-Cli-Kotlin-Gradle/branch/master/graphs/icicle.svg
 https://codecov.io/gh/Baneeishaque/Account-Ledger-Cli-Kotlin-Gradle/branch/master/graphs/tree.svg
 https://codecov.io/gh/Baneeishaque/Account-Ledger-Cli-Kotlin-Gradle/branch/master/graphs/commits.svg -->
+
+## To Build Native Image Via. GraalVM Native Image Builder
+**`native-image --static --no-fallback --allow-incomplete-classpath -H:+AddAllCharsets -H:EnableURLProtocols=http,https -H:DynamicProxyConfigurationFiles="dynamic-proxies.json" -H:+ReportExceptionStackTraces -jar cli-app/build/libs/cli-app.jar AccountLedgerCli.bin`**
