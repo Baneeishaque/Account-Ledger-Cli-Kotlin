@@ -123,11 +123,11 @@ kotlin {
             // Use the Kotlin JDK 8 standard library.
             implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
-            implementation("org.jetbrains.kotlinx:kotlinx-cli:0.2.1")
+            implementation("org.jetbrains.kotlinx:kotlinx-cli:0.3.1")
             implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2")
             implementation("com.squareup.retrofit2:retrofit:2.9.0")
             implementation("com.squareup.retrofit2:converter-gson:2.9.0")
-            implementation("com.github.doyaaaaaken:kotlin-csv-jvm:0.7.3")
+            implementation("com.github.doyaaaaaken:kotlin-csv-jvm:0.14.0")
             // implementation("com.massisframework:j-text-utils:0.3.4")
         }
     }
