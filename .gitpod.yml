@@ -16,6 +16,8 @@ github:
     addBadge: true
     # add a label once the prebuild is ready to pull requests (defaults to false)
     addLabel: true
+    
 vscode:
   extensions:
     - fwcd.kotlin@0.2.20:vYQW1XXhVzV0iDlY3MO2bw==
+    - mathiasfrohlich.kotlin@1.7.1:2Uw0hH38NcpgInldjuwF3g==
