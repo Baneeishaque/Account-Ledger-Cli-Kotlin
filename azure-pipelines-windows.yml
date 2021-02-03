@@ -1,0 +1,62 @@
+# Gradle
+# Build your Java project and run tests with Gradle using a Gradle wrapper script.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/java
+
+trigger:
+- master
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+  GRADLE_USER_HOME: $(Pipeline.Workspace)/.gradle
+  # KONAN_USER_HOME: 'C:/Users/VssAdministrator/.konan'
+  repositoryName: Account-Ledger-Cli-Kotlin-Gradle
+  # Secret Variables
+  MAPPED_FTP_HOST: $(FTP_HOST)
+  MAPPED_FTP_USER: $(FTP_USER)
+  MAPPED_FTP_PWD: $(FTP_PWD)
+
+steps:
+- task: Cache@2
+  inputs:
+    key: 'gradle | "$(Agent.OS)"'
+    restoreKeys: gradle
+    path: $(GRADLE_USER_HOME)
+  displayName: Gradle Build Cache
+
+# - task: Cache@2
+#   inputs:
+#     key: 'konan | "$(Agent.OS)"'
+#     restoreKeys: konan
+#     path: $(KONAN_USER_HOME)
+#   displayName: Konan Build Cache
+
+- task: Gradle@2
+  displayName: 'Gradle Build : Kotlin JVM'
+  inputs:
+    gradleOptions: '-Xmx3072m'
+    tasks: jar
+
+# - task: Gradle@2
+#   displayName: 'Gradle Build : Kotlin Native'
+#   inputs:
+#     options: '--build-file app/build-kotlin-native.gradle.kts'
+#     gradleOptions: '-Xmx3072m'
+
+- script: 'gradlew --stop'    
+  displayName: Stop Gradle Daemon
+
+# Upload Executable Jar File
+- task: FtpUpload@2
+  displayName: 'FTP Upload $(repositoryName) Jar File'
+  inputs:
+    credentialsOption: inputs
+    serverUrl: 'ftp://$(MAPPED_FTP_HOST)'
+    username: $(MAPPED_FTP_USER)
+    password: $(MAPPED_FTP_PWD)
+    # TODO : Add option for file instead of directory
+    rootDirectory: '.'
+    remoteDirectory: '/public_html/files/$(repositoryName)/$(Build.SourceVersion)'
+    filePatterns: 'cli-app/build/libs/cli-app.jar'
