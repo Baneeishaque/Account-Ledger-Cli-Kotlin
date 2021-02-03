@@ -48,8 +48,8 @@ private val accountsResponseResult = AccountsResponse(1, listOf(AccountUtils.get
 
 fun main(args: Array<String>) {
 
-//    readCsv()
-//    return
+    // readCsv()
+    // return
 
     val parser = ArgParser(programName = "${App.appName}:: ${App.version}")
     val version by parser.option(type = ArgType.Boolean, shortName = "V", description = "Version")

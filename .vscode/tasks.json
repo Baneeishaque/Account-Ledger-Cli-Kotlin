@@ -6,7 +6,10 @@
         {
             "label": "build",
             "type": "shell",
-            "command": "gradlew.bat build --warning-mode all",
+            "command": "./gradlew build --warning-mode all",
+            "windows": {
+                "command": "gradlew.bat build --warning-mode all"
+            },
             "problemMatcher": [],
             "group": {
                 "kind": "build",
@@ -16,7 +19,10 @@
         {
             "label": "clean",
             "type": "shell",
-            "command": "gradlew.bat clean"
+            "command": "./gradlew clean --warning-mode all",
+            "windows": {
+                "command": "gradlew.bat clean --warning-mode all"
+            }
         },
         {
             "label": "Rebuild",
@@ -25,12 +31,16 @@
                 "clean",
                 "build"
             ],
-            "dependsOrder": "sequence"
+            "dependsOrder": "sequence",
+            "command": "echo Rebuild Task"
         },
         {
             "label": "jar",
             "type": "shell",
-            "command": "gradlew.bat jar",
+            "command": "./gradlew jar --warning-mode all",
+            "windows": {
+                "command": "gradlew.bat jar --warning-mode all"
+            },
             "dependsOn": "build"
         },
         {
