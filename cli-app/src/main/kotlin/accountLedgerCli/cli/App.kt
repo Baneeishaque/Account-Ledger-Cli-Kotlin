@@ -110,12 +110,12 @@ private fun register() {
 private fun login() {
 
     println("\nAccount Ledger Authentication")
-//    print("Enter Your Username : ")
-//    val username = readLine()
-    val username = baneeUserName
-//    print("Enter Your Password : ")
-//    val password = readLine()
-    val password = baneePassword
+	print("Enter Your Username : ")
+	val username = readLine()
+    // val username = baneeUserName
+	print("Enter Your Password : ")
+	val password = readLine()
+    // val password = baneePassword
 
     val user = UserDataSource()
     println("Contacting Server...")
