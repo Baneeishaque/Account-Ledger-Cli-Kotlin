@@ -8,7 +8,10 @@ import accountLedgerCli.retrofit.data.TransactionsDataSource
 import accountLedgerCli.retrofit.data.UserDataSource
 import accountLedgerCli.to_utils.DateTimeUtils
 import accountLedgerCli.to_utils.DateTimeUtils.normalPattern
-import accountLedgerCli.to_utils.PrintUtils
+import accountLedgerCli.to_utils.CommandLinePrintMenu
+import accountLedgerCli.to_utils.CommandLinePrintMenuWithEnterPrompt
+import accountLedgerCli.to_utils.CommandLinePrintMenuWithTryPrompt
+import accountLedgerCli.to_utils.CommandLinePrintMenuWithContinuePrompt
 import accountLedgerCli.to_utils.ToDoUtils
 import accountLedgerCli.utils.AccountUtils
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
@@ -19,11 +22,11 @@ import kotlinx.cli.ArgType
 import kotlinx.cli.default
 import kotlinx.coroutines.runBlocking
 
-internal object App {
+// internal object App {
 
-    internal const val appName = "Account Ledger CLI App"
-    internal const val version = "0.0.1"
-}
+//     internal const val appName = "Account Ledger CLI App"
+//     internal const val version = "0.0.1"
+// }
 
 internal var dateTimeString = LocalDateTime.now().format(normalPattern)
 private var fromAccount = AccountUtils.getBlankAccount()
@@ -46,23 +49,30 @@ private const val baneeFrequent3AccountId = 367
 private var userAccountsMap = LinkedHashMap<Int, AccountResponse>()
 private val accountsResponseResult = AccountsResponse(1, listOf(AccountUtils.getBlankAccount()))
 
-fun main(args: Array<String>) {
+private val commandLinePrintMenu = CommandLinePrintMenu()
+private val commandLinePrintMenuWithEnterPrompt = CommandLinePrintMenuWithEnterPrompt(commandLinePrintMenu)
+private val commandLinePrintMenuWithTryPrompt = CommandLinePrintMenuWithTryPrompt(commandLinePrintMenu)
+private val commandLinePrintMenuWithContinuePrompt = CommandLinePrintMenuWithContinuePrompt(commandLinePrintMenu)
+
+fun main() {
+// fun main(args: Array<String>) {
 
     // readCsv()
     // return
 
-    val parser = ArgParser(programName = "${App.appName}:: ${App.version}")
-    val version by parser.option(type = ArgType.Boolean, shortName = "V", description = "Version")
-        .default(value = false)
+    // val parser = ArgParser(programName = "${App.appName}:: ${App.version}")
+    // val version by parser.option(type = ArgType.Boolean, shortName = "V", description = "Version")
+    //     .default(value = false)
 
-    if (args.isEmpty()) {
+    // if (args.isEmpty()) {
 
 //        println("No options...")
 //        TODO : Implement common back & exit for menus
         do {
-            PrintUtils.printMenu(
+            commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
                 listOf(
-                    "\nAccount Ledger",
+                    "Account Ledger",
+                    "---------------",
                     "1 : Login",
                     "2 : Registration",
                     "0 : Exit",
@@ -80,13 +90,13 @@ fun main(args: Array<String>) {
             }
         } while (choice != "0")
 
-    } else {
+    // } else {
 
-        // Add all input to parser
-        parser.parse(args)
+    //     // Add all input to parser
+    //     parser.parse(args)
 
-        if (version) println(App.version)
-    }
+    //     if (version) println(App.version)
+    // }
 }
 
 fun readCsv() {
@@ -160,7 +170,7 @@ private fun login() {
 private fun userScreen(username: String, userId: Int) {
 
     do {
-        PrintUtils.printMenu(
+        commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
             listOf(
                 "\nUser : $username",
                 "1 - List Accounts : Top Levels",
@@ -306,7 +316,7 @@ fun handleAccountsResponseAndPrintMenu(apiResponse: ResponseHolder<AccountsRespo
     if (handleAccountsResponse(apiResponse)) {
 
         do {
-            PrintUtils.printMenu(
+            commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
                 listOf(
                     "\nUser : $username",
                     "Accounts",
@@ -464,7 +474,7 @@ private fun addAccount() {
 
 private fun chooseAccountByIndex(userAccountsMap: LinkedHashMap<Int, AccountResponse>): Int {
 
-    PrintUtils.printMenu(
+    commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
         listOf(
             "\nAccounts",
             userAccountsToStringFromLinkedHashMap(userAccountsMap = userAccountsMap),
@@ -482,7 +492,7 @@ private fun chooseAccountByIndex(userAccountsMap: LinkedHashMap<Int, AccountResp
         }
     } catch (exception: NumberFormatException) {
     }
-    PrintUtils.printMenuWithTryPrompt(listOf("Invalid Account Index, Try again ? (Y/N) : "))
+    commandLinePrintMenuWithTryPrompt.printMenuWithTryPromptFromListOfCommands(listOf("Invalid Account Index, Try again ? (Y/N) : "))
     return when (readLine()) {
         "Y", "" -> {
 
@@ -494,7 +504,7 @@ private fun chooseAccountByIndex(userAccountsMap: LinkedHashMap<Int, AccountResp
         }
         else -> {
 
-            PrintUtils.printMenu(listOf("Invalid Entry..."))
+            commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(listOf("Invalid Entry..."))
             chooseAccountByIndex(userAccountsMap = userAccountsMap)
         }
     }
@@ -503,7 +513,7 @@ private fun chooseAccountByIndex(userAccountsMap: LinkedHashMap<Int, AccountResp
 private fun accountHome(userId: Int, username: String) {
 
     do {
-        PrintUtils.printMenu(
+        commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
             listOf(
                 "\nUser : $username",
                 "Account - ${fromAccount.fullName}",
@@ -571,7 +581,7 @@ private fun viewChildAccounts(username: String, userId: Int) {
                 userAccountsMap[currentAccount.id] = currentAccount
             }
             do {
-                PrintUtils.printMenu(
+                commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
                     listOf(
                         "\nUser : $username",
                         "${fromAccount.fullName} - Child Accounts",
@@ -641,7 +651,7 @@ private fun handleFromAccountSelection(
 private fun addTransaction(userId: Int, username: String) {
 
     do {
-        PrintUtils.printMenu(
+        commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
             listOf(
                 "\nUser : $username",
                 "From Account - ${fromAccount.id} : ${fromAccount.fullName}",
@@ -718,7 +728,7 @@ private fun transactionContinueCheck(userId: Int, username: String) {
 
     do {
 
-        PrintUtils.printMenuWithContinuePrompt(
+        commandLinePrintMenuWithContinuePrompt.printMenuWithContinuePromptFromListOfCommands(
             listOf(
                 "\nUser : $username",
                 "From Account - ${fromAccount.id} : ${fromAccount.fullName}",
@@ -789,7 +799,7 @@ private fun addTransactionStep2(
     username: String
 ): Boolean {
 
-    PrintUtils.printMenu(
+    commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
         listOf(
             "\nUser : $username",
             "Account - ${fromAccount.id} : ${fromAccount.fullName}",
@@ -848,7 +858,7 @@ private fun addTransactionStep2(
             }
 
             do {
-                PrintUtils.printMenu(
+                commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
                     listOf(
                         "\nTime - $dateTimeString",
                         "Account - ${fromAccount.id} : ${fromAccount.fullName}",
@@ -1065,7 +1075,7 @@ private fun handleAccountsApiResponse(apiResponse: ResponseHolder<AccountsRespon
 
             prepareUserAccountsMap(accountsResponseResult.accounts)
             do {
-                PrintUtils.printMenu(
+                commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
                     listOf(
                         "\nAccounts",
                         userAccountsToStringFromLinkedHashMap(userAccountsMap = userAccountsMap),
@@ -1160,13 +1170,13 @@ private fun getAccountsFull(userId: Int): ResponseHolder<AccountsResponse> {
 
 private fun searchAccount(userAccountsMap: LinkedHashMap<Int, AccountResponse>): Int {
 
-    PrintUtils.printMenu(listOf("\nEnter Search Key : "))
+    commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(listOf("\nEnter Search Key : "))
     val searchKeyInput = readLine()
     val searchResult = searchOnHashMapValues(hashMap = userAccountsMap, searchKey = searchKeyInput!!)
     if (searchResult.isEmpty()) {
 
         do {
-            PrintUtils.printMenu(
+            commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
                 listOf(
                     "No Matches....",
                     "1 - Try Again",
@@ -1184,7 +1194,7 @@ private fun searchAccount(userAccountsMap: LinkedHashMap<Int, AccountResponse>):
     } else {
 
         do {
-            PrintUtils.printMenu(
+            commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
                 listOf(
                     "\nSearch Results",
                     userAccountsToStringFromLinkedHashMap(userAccountsMap = searchResult),
@@ -1280,7 +1290,7 @@ private fun viewTransactions(userId: Int, accountId: Int, username: String) {
         } else {
 
             do {
-                PrintUtils.printMenu(
+                commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
                     listOf(
                         "\nUser : $username",
                         "${fromAccount.fullName} - Transactions",
