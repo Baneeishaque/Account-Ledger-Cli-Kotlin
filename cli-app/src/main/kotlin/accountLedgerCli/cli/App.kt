@@ -31,7 +31,7 @@ private var toAccount = AccountUtils.getBlankAccount()
 private var transactionParticulars = ""
 private var transactionAmount = 0F
 
-private const val baneeUserName = "banee_ishaque_k_10_04_2019"
+private const val baneeUserName = "banee_ishaque_k_06_02_2021"
 private const val baneePassword = "9895204814"
 private const val baneeWalletAccountId = 6
 private const val baneeBankAccountId = 11
