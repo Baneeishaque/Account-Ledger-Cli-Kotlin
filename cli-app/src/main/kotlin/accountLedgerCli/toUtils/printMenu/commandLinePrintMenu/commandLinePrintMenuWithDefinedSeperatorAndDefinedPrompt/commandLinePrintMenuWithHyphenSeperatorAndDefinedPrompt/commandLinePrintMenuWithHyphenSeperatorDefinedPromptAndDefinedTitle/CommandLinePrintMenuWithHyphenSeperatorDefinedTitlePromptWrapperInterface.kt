@@ -1,0 +1,5 @@
+package accountLedgerCli.toUtils.printMenu.commandLinePrintMenu.commandLinePrintMenuWithDefinedSeperatorAndDefinedPrompt.commandLinePrintMenuWithHyphenSeperatorAndDefinedPrompt.commandLinePrintMenuWithHyphenSeperatorDefinedPromptAndDefinedTitle
+
+public interface CommandLinePrintMenuWithHyphenSeperatorDefinedTitlePromptWrapperInterface {
+    
+}

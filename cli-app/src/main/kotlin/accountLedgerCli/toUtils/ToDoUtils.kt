@@ -1,4 +1,4 @@
-package accountLedgerCli.to_utils
+package accountLedgerCli.toUtils
 
 object ToDoUtils {
 

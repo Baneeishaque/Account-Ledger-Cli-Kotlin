@@ -1,0 +1,8 @@
+package accountLedgerCli.toUtils.printMenu.commandLinePrintMenu.commandLinePrintMenuWithDefinedSeperatorAndDefinedPrompt.commandLinePrintMenuWithHyphenSeperatorAndDefinedPrompt
+
+import accountLedgerCli.toUtils.printMenu.commandLinePrintMenu.prompt.ContinuePromptInterface
+
+public interface CommandLinePrintMenuWithHyphenSeperatorAndContinuePromptInterface: CommandLinePrintMenuWithHyphenSeperatorAndDefinedPromptInterface, ContinuePromptInterface {
+    override val promptWord: String
+        get() = promptWord
+}

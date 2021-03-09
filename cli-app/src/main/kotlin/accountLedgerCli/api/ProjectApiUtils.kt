@@ -1,6 +1,6 @@
 package accountLedgerCli.api
 
-import accountLedgerCli.to_utils.ApiUtils
+import accountLedgerCli.toUtils.ApiUtils
 
 @Suppress("unused")
 object ProjectApiUtils {

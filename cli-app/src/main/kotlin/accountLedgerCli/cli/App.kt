@@ -6,13 +6,13 @@ import accountLedgerCli.retrofit.data.AccountsDataSource
 import accountLedgerCli.retrofit.data.TransactionDataSource
 import accountLedgerCli.retrofit.data.TransactionsDataSource
 import accountLedgerCli.retrofit.data.UserDataSource
-import accountLedgerCli.to_utils.DateTimeUtils
-import accountLedgerCli.to_utils.DateTimeUtils.normalPattern
-import accountLedgerCli.to_utils.CommandLinePrintMenu
-import accountLedgerCli.to_utils.CommandLinePrintMenuWithEnterPrompt
-import accountLedgerCli.to_utils.CommandLinePrintMenuWithTryPrompt
-import accountLedgerCli.to_utils.CommandLinePrintMenuWithContinuePrompt
-import accountLedgerCli.to_utils.ToDoUtils
+import accountLedgerCli.toUtils.DateTimeUtils
+import accountLedgerCli.toUtils.DateTimeUtils.normalPattern
+// import accountLedgerCli.toUtils.CommandLinePrintMenu
+// import accountLedgerCli.toUtils.CommandLinePrintMenuWithEnterPrompt
+// import accountLedgerCli.toUtils.CommandLinePrintMenuWithTryPrompt
+// import accountLedgerCli.toUtils.CommandLinePrintMenuWithContinuePrompt
+import accountLedgerCli.toUtils.ToDoUtils
 import accountLedgerCli.utils.AccountUtils
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import java.time.LocalDateTime
@@ -49,10 +49,10 @@ private const val baneeFrequent3AccountId = 367
 private var userAccountsMap = LinkedHashMap<Int, AccountResponse>()
 private val accountsResponseResult = AccountsResponse(1, listOf(AccountUtils.getBlankAccount()))
 
-private val commandLinePrintMenu = CommandLinePrintMenu()
-private val commandLinePrintMenuWithEnterPrompt = CommandLinePrintMenuWithEnterPrompt(commandLinePrintMenu)
-private val commandLinePrintMenuWithTryPrompt = CommandLinePrintMenuWithTryPrompt(commandLinePrintMenu)
-private val commandLinePrintMenuWithContinuePrompt = CommandLinePrintMenuWithContinuePrompt(commandLinePrintMenu)
+// private val commandLinePrintMenu = CommandLinePrintMenu()
+// private val commandLinePrintMenuWithEnterPrompt = CommandLinePrintMenuWithEnterPrompt(commandLinePrintMenu)
+// private val commandLinePrintMenuWithTryPrompt = CommandLinePrintMenuWithTryPrompt(commandLinePrintMenu)
+// private val commandLinePrintMenuWithContinuePrompt = CommandLinePrintMenuWithContinuePrompt(commandLinePrintMenu)
 
 fun main() {
 // fun main(args: Array<String>) {
@@ -69,17 +69,17 @@ fun main() {
 //        println("No options...")
 //        TODO : Implement common back & exit for menus
         do {
-            commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
-                listOf(
-                    "Account Ledger",
-                    "---------------",
-                    "1 : Login",
-                    "2 : Registration",
-                    "0 : Exit",
-                    "",
-                    "Enter Your Choice : "
-                )
-            )
+            // commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
+            //     listOf(
+            //         "Account Ledger",
+            //         "---------------",
+            //         "1 : Login",
+            //         "2 : Registration",
+            //         "0 : Exit",
+            //         "",
+            //         "Enter Your Choice : "
+            //     )
+            // )
             val choice = readLine()
             when (choice) {
 
@@ -170,29 +170,29 @@ private fun login() {
 private fun userScreen(username: String, userId: Int) {
 
     do {
-        commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
-            listOf(
-                "\nUser : $username",
-                "1 - List Accounts : Top Levels",
-                "2 - Insert Quick Transaction On : Wallet",
-                "3 - Insert Quick Transaction On : Wallet To : $baneeFrequent1AccountName",
-                "4 - Insert Quick Transaction On : Wallet To : $baneeFrequent2AccountName",
-                "5 - Insert Quick Transaction On : Wallet To : $baneeFrequent3AccountName",
-                "6 - Insert Quick Transaction On : Bank : $baneeBankAccountName",
-                "7 - Insert Quick Transaction On : Bank : $baneeBankAccountName To : $baneeFrequent1AccountName",
-                "8 - Insert Quick Transaction On : Bank : $baneeBankAccountName To : $baneeFrequent2AccountName",
-                "9 - Insert Quick Transaction On : Bank : $baneeBankAccountName To : $baneeFrequent3AccountName",
-                "10 - Insert Quick Transaction On : $baneeFrequent1AccountName",
-                "11 - Insert Quick Transaction On : $baneeFrequent2AccountName",
-                "12 - Insert Quick Transaction On : $baneeFrequent3AccountName",
-                "13 - List Accounts : Full Names",
-                "14 - Import Transactions To : Bank : $baneeBankAccountName From CSV",
-                "15 - Import Transactions To : Bank : $baneeBankAccountName From XLX",
-                "0 - Logout",
-                "",
-                "Enter Your Choice : "
-            )
-        )
+        // commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
+        //     listOf(
+        //         "\nUser : $username",
+        //         "1 - List Accounts : Top Levels",
+        //         "2 - Insert Quick Transaction On : Wallet",
+        //         "3 - Insert Quick Transaction On : Wallet To : $baneeFrequent1AccountName",
+        //         "4 - Insert Quick Transaction On : Wallet To : $baneeFrequent2AccountName",
+        //         "5 - Insert Quick Transaction On : Wallet To : $baneeFrequent3AccountName",
+        //         "6 - Insert Quick Transaction On : Bank : $baneeBankAccountName",
+        //         "7 - Insert Quick Transaction On : Bank : $baneeBankAccountName To : $baneeFrequent1AccountName",
+        //         "8 - Insert Quick Transaction On : Bank : $baneeBankAccountName To : $baneeFrequent2AccountName",
+        //         "9 - Insert Quick Transaction On : Bank : $baneeBankAccountName To : $baneeFrequent3AccountName",
+        //         "10 - Insert Quick Transaction On : $baneeFrequent1AccountName",
+        //         "11 - Insert Quick Transaction On : $baneeFrequent2AccountName",
+        //         "12 - Insert Quick Transaction On : $baneeFrequent3AccountName",
+        //         "13 - List Accounts : Full Names",
+        //         "14 - Import Transactions To : Bank : $baneeBankAccountName From CSV",
+        //         "15 - Import Transactions To : Bank : $baneeBankAccountName From XLX",
+        //         "0 - Logout",
+        //         "",
+        //         "Enter Your Choice : "
+        //     )
+        // )
         val choice = readLine()
         when (choice) {
 
@@ -316,19 +316,19 @@ fun handleAccountsResponseAndPrintMenu(apiResponse: ResponseHolder<AccountsRespo
     if (handleAccountsResponse(apiResponse)) {
 
         do {
-            commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
-                listOf(
-                    "\nUser : $username",
-                    "Accounts",
-                    userAccountsToStringFromLinkedHashMap(userAccountsMap = userAccountsMap),
-                    "1 - Choose Account - By Index Number",
-                    "2 - Choose Account - By Search",
-                    "3 - Add Account",
-                    "0 - Back",
-                    "",
-                    "Enter Your Choice : "
-                )
-            )
+            // commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
+            //     listOf(
+            //         "\nUser : $username",
+            //         "Accounts",
+            //         userAccountsToStringFromLinkedHashMap(userAccountsMap = userAccountsMap),
+            //         "1 - Choose Account - By Index Number",
+            //         "2 - Choose Account - By Search",
+            //         "3 - Add Account",
+            //         "0 - Back",
+            //         "",
+            //         "Enter Your Choice : "
+            //     )
+            // )
 
             val choice = processChildAccountScreenInput(
                 userAccountsMap = userAccountsMap,
@@ -474,13 +474,13 @@ private fun addAccount() {
 
 private fun chooseAccountByIndex(userAccountsMap: LinkedHashMap<Int, AccountResponse>): Int {
 
-    commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
-        listOf(
-            "\nAccounts",
-            userAccountsToStringFromLinkedHashMap(userAccountsMap = userAccountsMap),
-            "Enter Account Index, or O to back : A"
-        )
-    )
+    // commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
+    //     listOf(
+    //         "\nAccounts",
+    //         userAccountsToStringFromLinkedHashMap(userAccountsMap = userAccountsMap),
+    //         "Enter Account Index, or O to back : A"
+    //     )
+    // )
     val accountIdInput = readLine()!!
     if (accountIdInput == "0") return 0
     try {
@@ -492,7 +492,7 @@ private fun chooseAccountByIndex(userAccountsMap: LinkedHashMap<Int, AccountResp
         }
     } catch (exception: NumberFormatException) {
     }
-    commandLinePrintMenuWithTryPrompt.printMenuWithTryPromptFromListOfCommands(listOf("Invalid Account Index, Try again ? (Y/N) : "))
+    // commandLinePrintMenuWithTryPrompt.printMenuWithTryPromptFromListOfCommands(listOf("Invalid Account Index, Try again ? (Y/N) : "))
     return when (readLine()) {
         "Y", "" -> {
 
@@ -503,8 +503,7 @@ private fun chooseAccountByIndex(userAccountsMap: LinkedHashMap<Int, AccountResp
             0
         }
         else -> {
-
-            commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(listOf("Invalid Entry..."))
+            // commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(listOf("Invalid Entry..."))
             chooseAccountByIndex(userAccountsMap = userAccountsMap)
         }
     }
@@ -513,18 +512,18 @@ private fun chooseAccountByIndex(userAccountsMap: LinkedHashMap<Int, AccountResp
 private fun accountHome(userId: Int, username: String) {
 
     do {
-        commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
-            listOf(
-                "\nUser : $username",
-                "Account - ${fromAccount.fullName}",
-                "1 - View Transactions",
-                "2 - Add Transaction",
-                "3 - View Child Accounts",
-                "0 - Back",
-                "",
-                "Enter Your Choice : "
-            )
-        )
+        // commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
+        //     listOf(
+        //         "\nUser : $username",
+        //         "Account - ${fromAccount.fullName}",
+        //         "1 - View Transactions",
+        //         "2 - Add Transaction",
+        //         "3 - View Child Accounts",
+        //         "0 - Back",
+        //         "",
+        //         "Enter Your Choice : "
+        //     )
+        // )
         val choiceInput = readLine()
         when (choiceInput) {
 
@@ -581,19 +580,19 @@ private fun viewChildAccounts(username: String, userId: Int) {
                 userAccountsMap[currentAccount.id] = currentAccount
             }
             do {
-                commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
-                    listOf(
-                        "\nUser : $username",
-                        "${fromAccount.fullName} - Child Accounts",
-                        userAccountsToStringFromList(accounts = accountsResponseResult.accounts),
-                        "1 - Choose Account - By Index Number",
-                        "2 - Choose Account - By Search",
-                        "3 - Add Child Account",
-                        "0 - Back",
-                        "",
-                        "Enter Your Choice : "
-                    )
-                )
+                // commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
+                //     listOf(
+                //         "\nUser : $username",
+                //         "${fromAccount.fullName} - Child Accounts",
+                //         userAccountsToStringFromList(accounts = accountsResponseResult.accounts),
+                //         "1 - Choose Account - By Index Number",
+                //         "2 - Choose Account - By Search",
+                //         "3 - Add Child Account",
+                //         "0 - Back",
+                //         "",
+                //         "Enter Your Choice : "
+                //     )
+                // )
 
                 val choice = processChildAccountScreenInput(userAccountsMap, userId, username)
             } while (choice != "0")
@@ -651,23 +650,23 @@ private fun handleFromAccountSelection(
 private fun addTransaction(userId: Int, username: String) {
 
     do {
-        commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
-            listOf(
-                "\nUser : $username",
-                "From Account - ${fromAccount.id} : ${fromAccount.fullName}",
-                "To Account - ${toAccount.id} : ${toAccount.fullName}",
-                "1 - Choose To Account From List - Top Levels",
-                "2 - Choose To Account From List - Full Names",
-                "3 - Choose From Account From List - Top Levels",
-                "4 - Choose From Account From List - Full Names",
-                "5 - Continue Transaction",
-                "6 - Exchange Accounts",
-                "7 - Exchange Accounts, Then Continue Transaction",
-                "0 - Back",
-                "",
-                "Enter Your Choice : "
-            )
-        )
+        // commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
+        //     listOf(
+        //         "\nUser : $username",
+        //         "From Account - ${fromAccount.id} : ${fromAccount.fullName}",
+        //         "To Account - ${toAccount.id} : ${toAccount.fullName}",
+        //         "1 - Choose To Account From List - Top Levels",
+        //         "2 - Choose To Account From List - Full Names",
+        //         "3 - Choose From Account From List - Top Levels",
+        //         "4 - Choose From Account From List - Full Names",
+        //         "5 - Continue Transaction",
+        //         "6 - Exchange Accounts",
+        //         "7 - Exchange Accounts, Then Continue Transaction",
+        //         "0 - Back",
+        //         "",
+        //         "Enter Your Choice : "
+        //     )
+        // )
         val choice = readLine()
         when (choice) {
 
@@ -727,16 +726,15 @@ private fun addTransaction(userId: Int, username: String) {
 private fun transactionContinueCheck(userId: Int, username: String) {
 
     do {
-
-        commandLinePrintMenuWithContinuePrompt.printMenuWithContinuePromptFromListOfCommands(
-            listOf(
-                "\nUser : $username",
-                "From Account - ${fromAccount.id} : ${fromAccount.fullName}",
-                "To Account - ${toAccount.id} : ${toAccount.fullName}",
-                "",
-                "Continue (Y/N) : "
-            )
-        )
+        // commandLinePrintMenuWithContinuePrompt.printMenuWithContinuePromptFromListOfCommands(
+        //     listOf(
+        //         "\nUser : $username",
+        //         "From Account - ${fromAccount.id} : ${fromAccount.fullName}",
+        //         "To Account - ${toAccount.id} : ${toAccount.fullName}",
+        //         "",
+        //         "Continue (Y/N) : "
+        //     )
+        // )
 
         val input = readLine()
         when (input) {
@@ -798,16 +796,15 @@ private fun addTransactionStep2(
     userId: Int,
     username: String
 ): Boolean {
-
-    commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
-        listOf(
-            "\nUser : $username",
-            "Account - ${fromAccount.id} : ${fromAccount.fullName}",
-            "Deposit Account - ${toAccount.id} : ${toAccount.fullName}",
-            // TODO : Complete back
-            "Enter Time : "
-        )
-    )
+    // commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
+    //     listOf(
+    //         "\nUser : $username",
+    //         "Account - ${fromAccount.id} : ${fromAccount.fullName}",
+    //         "Deposit Account - ${toAccount.id} : ${toAccount.fullName}",
+    //         // TODO : Complete back
+    //         "Enter Time : "
+    //     )
+    // )
     when (val inputDateTimeString = enterDateWithTime()) {
         "D+Tr" -> {
 
@@ -856,18 +853,17 @@ private fun addTransactionStep2(
 
                 transactionAmount = getValidAmount(transactionAmountInput)
             }
-
             do {
-                commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
-                    listOf(
-                        "\nTime - $dateTimeString",
-                        "Account - ${fromAccount.id} : ${fromAccount.fullName}",
-                        "Deposit Account - ${toAccount.id} : ${toAccount.fullName}",
-                        "Particulars - $transactionParticulars",
-                        "Amount - $transactionAmount",
-                        "\nCorrect ? (Y/N), Enter Ex to exchange accounts or B to back : "
-                    )
-                )
+                // commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
+                //     listOf(
+                //         "\nTime - $dateTimeString",
+                //         "Account - ${fromAccount.id} : ${fromAccount.fullName}",
+                //         "Deposit Account - ${toAccount.id} : ${toAccount.fullName}",
+                //         "Particulars - $transactionParticulars",
+                //         "Amount - $transactionAmount",
+                //         "\nCorrect ? (Y/N), Enter Ex to exchange accounts or B to back : "
+                //     )
+                // )
                 val isCorrect = readLine()
                 when (isCorrect) {
 
@@ -1075,17 +1071,17 @@ private fun handleAccountsApiResponse(apiResponse: ResponseHolder<AccountsRespon
 
             prepareUserAccountsMap(accountsResponseResult.accounts)
             do {
-                commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
-                    listOf(
-                        "\nAccounts",
-                        userAccountsToStringFromLinkedHashMap(userAccountsMap = userAccountsMap),
-                        "1 - Choose $purpose Account - By Index Number",
-                        "2 - Search $purpose Account - By Part Of Name",
-                        "0 - Back",
-                        "",
-                        "Enter Your Choice : "
-                    )
-                )
+                // commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
+                //     listOf(
+                //         "\nAccounts",
+                //         userAccountsToStringFromLinkedHashMap(userAccountsMap = userAccountsMap),
+                //         "1 - Choose $purpose Account - By Index Number",
+                //         "2 - Search $purpose Account - By Part Of Name",
+                //         "0 - Back",
+                //         "",
+                //         "Enter Your Choice : "
+                //     )
+                // )
                 val choice = readLine()
                 when (choice) {
 
@@ -1169,22 +1165,21 @@ private fun getAccountsFull(userId: Int): ResponseHolder<AccountsResponse> {
 }
 
 private fun searchAccount(userAccountsMap: LinkedHashMap<Int, AccountResponse>): Int {
-
-    commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(listOf("\nEnter Search Key : "))
+    // commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(listOf("\nEnter Search Key : "))
     val searchKeyInput = readLine()
     val searchResult = searchOnHashMapValues(hashMap = userAccountsMap, searchKey = searchKeyInput!!)
     if (searchResult.isEmpty()) {
 
         do {
-            commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
-                listOf(
-                    "No Matches....",
-                    "1 - Try Again",
-                    "0 - Back",
-                    "",
-                    "Enter Your Choice : "
-                )
-            )
+            // commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
+            //     listOf(
+            //         "No Matches....",
+            //         "1 - Try Again",
+            //         "0 - Back",
+            //         "",
+            //         "Enter Your Choice : "
+            //     )
+            // )
             val input = readLine()
             if (input == "1")
                 return searchAccount(userAccountsMap = userAccountsMap)
@@ -1192,18 +1187,17 @@ private fun searchAccount(userAccountsMap: LinkedHashMap<Int, AccountResponse>):
                 println("Invalid option, try again...")
         } while (input != "0")
     } else {
-
         do {
-            commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
-                listOf(
-                    "\nSearch Results",
-                    userAccountsToStringFromLinkedHashMap(userAccountsMap = searchResult),
-                    "1 - Choose Deposit Account - By Index Number",
-                    "0 - Back",
-                    "",
-                    "Enter Your Choice : "
-                )
-            )
+            // commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
+            //     listOf(
+            //         "\nSearch Results",
+            //         userAccountsToStringFromLinkedHashMap(userAccountsMap = searchResult),
+            //         "1 - Choose Deposit Account - By Index Number",
+            //         "0 - Back",
+            //         "",
+            //         "Enter Your Choice : "
+            //     )
+            // )
             val input = readLine()
             if (input == "1")
                 return chooseAccountByIndex(searchResult)
@@ -1288,26 +1282,25 @@ private fun viewTransactions(userId: Int, accountId: Int, username: String) {
             println("No Transactions...")
 
         } else {
-
             do {
-                commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
-                    listOf(
-                        "\nUser : $username",
-                        "${fromAccount.fullName} - Transactions",
-                        printAccountLedger(
-                            transactions = userTransactionsResponseResult.transactions,
-                            currentAccountId = accountId
-                        ),
-                        "1 - Delete Transaction - By Index Number",
-                        "2 - Delete Transaction - By Search",
-                        "3 - Edit Transaction - By Index Number",
-                        "4 - Edit Transaction - By Search",
-                        "5 - Add Transaction",
-                        "0 - Back",
-                        "",
-                        "Enter Your Choice : "
-                    )
-                )
+                // commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
+                //     listOf(
+                //         "\nUser : $username",
+                //         "${fromAccount.fullName} - Transactions",
+                //         printAccountLedger(
+                //             transactions = userTransactionsResponseResult.transactions,
+                //             currentAccountId = accountId
+                //         ),
+                //         "1 - Delete Transaction - By Index Number",
+                //         "2 - Delete Transaction - By Search",
+                //         "3 - Edit Transaction - By Index Number",
+                //         "4 - Edit Transaction - By Search",
+                //         "5 - Add Transaction",
+                //         "0 - Back",
+                //         "",
+                //         "Enter Your Choice : "
+                //     )
+                // )
 
                 val choice = readLine()
                 when (choice) {
