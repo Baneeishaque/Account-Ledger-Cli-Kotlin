@@ -94,18 +94,14 @@ private fun login() {
 
     println("\nAccount Ledger Authentication")
     println("--------------------------------")
-    print("Enter Your Username : ")
-    // val username = readLine().toString()
     val username = baneeUserName
-    print("Enter Your Password : ")
-    // val password = readLine().toString()
     val password = baneePassword
 
     val user = UserDataSource()
     println("Contacting Server...")
     val apiResponse: ResponseHolder<LoginResponse>
     runBlocking { apiResponse = user.selectUser(username = username, password = password) }
-    println("Response : $apiResponse")
+    // println("Response : $apiResponse")
     if (apiResponse.isError()) {
 
         println("Error : ${(apiResponse.getValue() as Exception).localizedMessage}")
