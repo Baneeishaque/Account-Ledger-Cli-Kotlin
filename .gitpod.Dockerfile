@@ -49,6 +49,6 @@ RUN cd $HOME \
  && wget -O ".oh-my-zsh/custom/plugins/git-completion/git-completion.plugin.zsh" "https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.zsh" \
  && wget -P ".oh-my-zsh/custom/plugins/git-completion/" "https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh"
 
-RUN sed -i 's/plugins=(git)/plugins=(git gradle gradle-completion adb sdk common-aliases dircycle dirhistory dirpersist history copydir copyfile autojump fd git-completion git-auto-status git-prompt gitignore git-flow git-flow-completion git-flow-avh git-hubflow git-lfs git-extras last-working-dir per-directory-history perms wd safe-paste thefuck systemadmin scd pj magic-enter man command-not-found jump timer colored-man-pages jsontools grc colorize ripgrep httpie sprunge nmap transfer universalarchive catimg extract)/g' ~/.zshrc
+RUN sed -i 's/plugins=(git)/plugins=(git gradle gradle-completion adb sdk common-aliases dircycle dirhistory dirpersist history copydir copyfile autojump fd git-completion git-auto-status git-prompt gitignore git-flow git-flow-completion git-flow-avh git-lfs git-extras last-working-dir per-directory-history perms wd safe-paste thefuck systemadmin scd pj magic-enter man command-not-found jump timer colored-man-pages jsontools grc colorize ripgrep httpie sprunge nmap transfer universalarchive catimg extract)/g' ~/.zshrc
 
 CMD ["/usr/bin/zsh"]
