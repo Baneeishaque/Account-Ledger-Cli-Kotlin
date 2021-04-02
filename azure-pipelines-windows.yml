@@ -4,10 +4,10 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/java
 
 trigger:
-- '*'
+  - "*"
 
 pool:
-  vmImage: 'windows-latest'
+  vmImage: "windows-latest"
 
 variables:
   GRADLE_USER_HOME: $(Pipeline.Workspace)/.gradle
@@ -18,31 +18,31 @@ variables:
   MAPPED_FTP_PWD: $(FTP_PWD)
 
 steps:
-- task: Cache@2
-  inputs:
-    key: 'gradle | "$(Agent.OS)"'
-    restoreKeys: gradle
-    path: $(GRADLE_USER_HOME)
-  displayName: Gradle Build Cache
+  - task: Cache@2
+    inputs:
+      key: 'gradle | "$(Agent.OS)"'
+      restoreKeys: gradle
+      path: $(GRADLE_USER_HOME)
+    displayName: Gradle Build Cache
 
-- task: Gradle@2
-  displayName: 'Gradle Build : Tar Distribution'
-  inputs:
-    gradleOptions: '-Xmx3072m'
-    tasks: distTar
+  - task: Gradle@2
+    displayName: "Gradle Build : Tar Distribution"
+    inputs:
+      gradleOptions: "-Xmx3072m"
+      tasks: distTar
 
-- script: 'gradlew --stop'    
-  displayName: Stop Gradle Daemon
+  - script: "gradlew --stop"
+    displayName: Stop Gradle Daemon
 
-# Upload Executable Tar File
-- task: FtpUpload@2
-  displayName: 'FTP Upload $(repositoryName) Tar File'
-  inputs:
-    credentialsOption: inputs
-    serverUrl: 'ftp://$(MAPPED_FTP_HOST)'
-    username: $(MAPPED_FTP_USER)
-    password: $(MAPPED_FTP_PWD)
-    # TODO : Add option for file instead of directory
-    rootDirectory: '.'
-    remoteDirectory: '/public_html/files/$(repositoryName)/$(Build.SourceVersion)'
-    filePatterns: 'cli-app/build/distributions/cli-app.tar'
+  # Upload Executable Tar File
+  - task: FtpUpload@2
+    displayName: "FTP Upload $(repositoryName) Tar File"
+    inputs:
+      credentialsOption: inputs
+      serverUrl: "ftp://$(MAPPED_FTP_HOST)"
+      username: $(MAPPED_FTP_USER)
+      password: $(MAPPED_FTP_PWD)
+      # TODO : Add option for file instead of directory
+      rootDirectory: "."
+      remoteDirectory: "/public_html/files/$(repositoryName)/$(Build.SourceVersion)"
+      filePatterns: "cli-app/build/distributions/cli-app.tar"
