@@ -32,10 +32,6 @@ private var transactionParticulars = ""
 
 private var transactionAmount = 0F
 
-// private const val baneeUserName = "banee_ishaque_k_06_02_2021"
-
-// private const val baneePassword = "9895204814"
-
 private const val baneeWalletAccountId = 6
 
 private const val baneeBankAccountId = 11
@@ -96,10 +92,8 @@ private fun login() {
     println("--------------------------------")
     print("Enter Your Username : ")
     val username = readLine().toString()
-    // val username = baneeUserName
     print("Enter Your Password : ")
     val password = readLine().toString()
-    // val password = baneePassword
 
     val user = UserDataSource()
     println("Contacting Server...")
