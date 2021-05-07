@@ -1,0 +1,7 @@
+exclude: 
+  - master
+  - 10-04-2019
+  - 06-02-2021
+  - solid
+  - cmd-args
+delete_closed_pr: false
