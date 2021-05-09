@@ -1363,7 +1363,7 @@ public fun getLast10ItemsFromLinkedHashMap(userAccountsMap: LinkedHashMap<Int, A
 
     if(userAccountsMap.size > 10){
 
-        userAccountsMap.toList().takeLast(10)
+        return userAccountsMap.toList().takeLast(10)
     }
     return userAccountsMap.toList()
 }
