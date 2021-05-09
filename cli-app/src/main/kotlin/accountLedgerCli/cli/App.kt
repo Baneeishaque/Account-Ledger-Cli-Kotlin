@@ -133,7 +133,7 @@ private fun login() {
     }
 }
 
-@Suppress("SameParameterValue")
+// @Suppress("SameParameterValue")
 private fun userScreen(username: String, userId: Int) {
 
     do {
@@ -297,7 +297,7 @@ fun handleAccountsResponseAndPrintMenu(
                 listOf(
                     "\nUser : $username",
                     "Accounts",
-                    userAccountsToStringFromLinkedHashMap(
+                    userAccountsToStringFromLinkedHashMapLimitedTo10(
                         userAccountsMap = userAccountsMap
                     ),
                     "1 - Choose Account - By Index Number",
@@ -1343,17 +1343,30 @@ private fun userAccountsToStringFromLinkedHashMap(
     return result
 }
 
-/*public fun getLast10ItemsFromLinkedHashMap(userAccountsMap: LinkedHashMap<Int, AccountResponse>): LinkedHashMap<Int, AccountResponse> {
+private fun userAccountsToStringFromLinkedHashMapLimitedTo10(
+    userAccountsMap: LinkedHashMap<Int, AccountResponse>
+): String {
 
-    if(userAccountsMap.size < 11){
+    return userAccountsToStringFromList(getLast10ItemsFromLinkedHashMap(userAccountsMap))
+}
 
-        return userAccountsMap
+private fun userAccountsToStringFromList(
+    userAccountsList: List<Pair<Int, AccountResponse>>
+): String {
 
-    } else{
+    var result = ""
+    userAccountsList.forEach { accountEntry -> result += "A${accountEntry.first} - ${accountEntry.second.fullName}\n" }
+    return result
+}
 
-        return userAccountsMap.toList().takeLast(10)
+public fun getLast10ItemsFromLinkedHashMap(userAccountsMap: LinkedHashMap<Int, AccountResponse>): List<Pair<Int, AccountResponse>> {
+
+    if(userAccountsMap.size > 10){
+
+        userAccountsMap.toList().takeLast(10)
     }
-}*/
+    return userAccountsMap.toList()
+}
 
 private fun chooseDepositTop(userId: Int): Boolean {
 
