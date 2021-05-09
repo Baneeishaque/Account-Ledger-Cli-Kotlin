@@ -1,7 +1,7 @@
 package accountLedgerCli.api.response
 
-data class InsertionResponse(
+internal data class InsertionResponse(
 
-    val status: Int,
-    val error: String
+    internal val status: Int,
+    internal val error: String
 )

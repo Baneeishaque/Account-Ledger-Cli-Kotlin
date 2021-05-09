@@ -1,6 +1,7 @@
 package accountLedgerCli.to_utils
 
-public class CommandLinePrintMenu : CommandLinePrintMenuInterface {
+class CommandLinePrintMenu : CommandLinePrintMenuInterface {
+
     override fun printMenuFromListOfCommands(listOfCommands: List<String>, promptWord: String) {
 
         listOfCommands.forEach { command ->

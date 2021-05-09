@@ -5,19 +5,14 @@ import java.time.format.DateTimeFormatter.ofPattern
 
 object DateTimeUtils {
 
-    internal val normalPattern = ofPattern("dd/MM/yyyy HH:mm:ss")!!
+    val normalPattern = ofPattern("dd/MM/yyyy HH:mm:ss")!!
 
-    @Suppress("MemberVisibilityCanBePrivate")
-    internal const val resetHour = 9
+    //TODO : extract into function
+    private const val resetHour = 9
+    private const val resetMinute = 0
+    private const val resetSecond = 0
 
-    @Suppress("MemberVisibilityCanBePrivate")
-    internal const val resetMinute = 0
-
-    @Suppress("MemberVisibilityCanBePrivate")
-    internal const val resetSecond = 0
-
-    @Suppress("MemberVisibilityCanBePrivate")
-    internal fun addDaysToDateTimeString(
+    fun addDaysToDateTimeString(
         dateTimeString: String,
         days: Int
     ): String {
@@ -28,8 +23,7 @@ object DateTimeUtils {
         ).format(normalPattern)
     }
 
-    @Suppress("MemberVisibilityCanBePrivate")
-    internal fun addDaysToDateTimeStringAsDateTime(
+    fun addDaysToDateTimeStringAsDateTime(
         dateTimeString: String,
         days: Int
     ): LocalDateTime {
@@ -40,7 +34,7 @@ object DateTimeUtils {
         ).plusDays(days.toLong())
     }
 
-    internal fun add1DayToDateTimeString(dateTimeString: String): String {
+    fun add1DayToDateTimeString(dateTimeString: String): String {
 
         return addDaysToDateTimeString(
             dateTimeString = dateTimeString,
@@ -48,8 +42,7 @@ object DateTimeUtils {
         )
     }
 
-    @Suppress("MemberVisibilityCanBePrivate")
-    internal fun add1DayToDateTimeStringAsDateTime(dateTimeString: String): LocalDateTime {
+    fun add1DayToDateTimeStringAsDateTime(dateTimeString: String): LocalDateTime {
 
         return addDaysToDateTimeStringAsDateTime(
             dateTimeString = dateTimeString,
@@ -57,7 +50,7 @@ object DateTimeUtils {
         )
     }
 
-    internal fun add2DaysToDateTimeString(dateTimeString: String): String {
+    fun add2DaysToDateTimeString(dateTimeString: String): String {
 
         return addDaysToDateTimeString(
             dateTimeString = dateTimeString,
@@ -65,8 +58,7 @@ object DateTimeUtils {
         )
     }
 
-    @Suppress("MemberVisibilityCanBePrivate")
-    internal fun add2DaysToDateTimeStringAsDateTime(dateTimeString: String): LocalDateTime {
+    fun add2DaysToDateTimeStringAsDateTime(dateTimeString: String): LocalDateTime {
 
         return addDaysToDateTimeStringAsDateTime(
             dateTimeString = dateTimeString,
@@ -74,26 +66,24 @@ object DateTimeUtils {
         )
     }
 
-    internal fun add1DayWith9ClockTimeToDateTimeString(dateTimeString: String): String {
+    fun add1DayWith9ClockTimeToDateTimeString(dateTimeString: String): String {
 
         return add1DayWith9ClockTimeToDateTimeStringAsDateTime(dateTimeString = dateTimeString).format(normalPattern)
     }
 
-    @Suppress("MemberVisibilityCanBePrivate")
-    internal fun add1DayWith9ClockTimeToDateTimeStringAsDateTime(dateTimeString: String): LocalDateTime {
+    fun add1DayWith9ClockTimeToDateTimeStringAsDateTime(dateTimeString: String): LocalDateTime {
 
         return add1DayToDateTimeStringAsDateTime(dateTimeString = dateTimeString).withHour(resetHour)
             .withMinute(resetMinute).withSecond(resetSecond)
     }
 
-    @Suppress("MemberVisibilityCanBePrivate")
-    internal fun add2DaysWith9ClockTimeToDateTimeStringAsDateTime(dateTimeString: String): LocalDateTime {
+    fun add2DaysWith9ClockTimeToDateTimeStringAsDateTime(dateTimeString: String): LocalDateTime {
 
         return add2DaysToDateTimeStringAsDateTime(dateTimeString = dateTimeString).withHour(resetHour)
             .withMinute(resetMinute).withSecond(resetSecond)
     }
 
-    internal fun add2DaysWith9ClockTimeToDateTimeString(dateTimeString: String): String {
+    fun add2DaysWith9ClockTimeToDateTimeString(dateTimeString: String): String {
 
         return add2DaysWith9ClockTimeToDateTimeStringAsDateTime(dateTimeString = dateTimeString).format(normalPattern)
     }

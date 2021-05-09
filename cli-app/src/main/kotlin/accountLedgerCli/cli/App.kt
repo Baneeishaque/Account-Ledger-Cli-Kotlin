@@ -1,7 +1,11 @@
 package accountLedgerCli.cli
 
-import accountLedgerCli.api.response.*
 import accountLedgerCli.api.response.AccountResponse
+import accountLedgerCli.api.response.LoginResponse
+import accountLedgerCli.api.response.AccountsResponse
+import accountLedgerCli.api.response.InsertionResponse
+import accountLedgerCli.api.response.TransactionResponse
+import accountLedgerCli.api.response.TransactionsResponse
 import accountLedgerCli.retrofit.ResponseHolder
 import accountLedgerCli.retrofit.data.AccountsDataSource
 import accountLedgerCli.retrofit.data.TransactionDataSource
@@ -15,6 +19,8 @@ import accountLedgerCli.to_utils.DateTimeUtils
 import accountLedgerCli.to_utils.DateTimeUtils.normalPattern
 import accountLedgerCli.to_utils.ToDoUtils
 import accountLedgerCli.utils.AccountUtils
+import accountLedgerCli.utils.ApiUtils
+import accountLedgerCli.utils.ChooseAccountUtils
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import java.time.LocalDateTime
 import java.time.format.DateTimeParseException
@@ -213,7 +219,7 @@ fun importBankFromCsv() {
 
 private fun insertQuickTransactionFrequent1(userId: Int, username: String) {
 
-    if (handleAccountsResponse(getAccountsFull(userId = userId))) {
+    if (handleAccountsResponse(ApiUtils.getAccountsFull(userId = userId))) {
 
         fromAccount = userAccountsMap[baneeFrequent1AccountId]!!
         accountHome(userId = userId, username = username)
@@ -222,7 +228,7 @@ private fun insertQuickTransactionFrequent1(userId: Int, username: String) {
 
 private fun insertQuickTransactionFrequent2(userId: Int, username: String) {
 
-    if (handleAccountsResponse(getAccountsFull(userId = userId))) {
+    if (handleAccountsResponse(ApiUtils.getAccountsFull(userId = userId))) {
 
         fromAccount = userAccountsMap[baneeFrequent2AccountId]!!
         accountHome(userId = userId, username = username)
@@ -231,7 +237,7 @@ private fun insertQuickTransactionFrequent2(userId: Int, username: String) {
 
 private fun insertQuickTransactionFrequent3(userId: Int, username: String) {
 
-    if (handleAccountsResponse(getAccountsFull(userId = userId))) {
+    if (handleAccountsResponse(ApiUtils.getAccountsFull(userId = userId))) {
 
         fromAccount = userAccountsMap[baneeFrequent3AccountId]!!
         accountHome(userId = userId, username = username)
@@ -240,7 +246,7 @@ private fun insertQuickTransactionFrequent3(userId: Int, username: String) {
 
 private fun insertQuickTransactionBank(userId: Int, username: String) {
 
-    if (handleAccountsResponse(getAccountsFull(userId = userId))) {
+    if (handleAccountsResponse(ApiUtils.getAccountsFull(userId = userId))) {
 
         fromAccount = userAccountsMap[baneeBankAccountId]!!
         accountHome(userId = userId, username = username)
@@ -249,7 +255,7 @@ private fun insertQuickTransactionBank(userId: Int, username: String) {
 
 private fun insertQuickTransactionBankToFrequent1(userId: Int, username: String) {
 
-    if (handleAccountsResponse(getAccountsFull(userId = userId))) {
+    if (handleAccountsResponse(ApiUtils.getAccountsFull(userId = userId))) {
 
         fromAccount = userAccountsMap[baneeBankAccountId]!!
         toAccount = userAccountsMap[baneeFrequent1AccountId]!!
@@ -259,7 +265,7 @@ private fun insertQuickTransactionBankToFrequent1(userId: Int, username: String)
 
 private fun insertQuickTransactionBankToFrequent2(userId: Int, username: String) {
 
-    if (handleAccountsResponse(getAccountsFull(userId = userId))) {
+    if (handleAccountsResponse(ApiUtils.getAccountsFull(userId = userId))) {
 
         fromAccount = userAccountsMap[baneeBankAccountId]!!
         toAccount = userAccountsMap[baneeFrequent2AccountId]!!
@@ -269,7 +275,7 @@ private fun insertQuickTransactionBankToFrequent2(userId: Int, username: String)
 
 private fun insertQuickTransactionBankToFrequent3(userId: Int, username: String) {
 
-    if (handleAccountsResponse(getAccountsFull(userId = userId))) {
+    if (handleAccountsResponse(ApiUtils.getAccountsFull(userId = userId))) {
 
         fromAccount = userAccountsMap[baneeBankAccountId]!!
         toAccount = userAccountsMap[baneeFrequent3AccountId]!!
@@ -280,11 +286,11 @@ private fun insertQuickTransactionBankToFrequent3(userId: Int, username: String)
 private fun listAccountsFull(username: String, userId: Int) {
 
     handleAccountsResponseAndPrintMenu(
-        apiResponse = getAccountsFull(userId = userId), username = username, userId = userId
+        apiResponse = ApiUtils.getAccountsFull(userId = userId), username = username, userId = userId
     )
 }
 
-fun handleAccountsResponseAndPrintMenu(
+private fun handleAccountsResponseAndPrintMenu(
     apiResponse: ResponseHolder<AccountsResponse>,
     username: String,
     userId: Int
@@ -319,7 +325,7 @@ fun handleAccountsResponseAndPrintMenu(
 
 private fun insertQuickTransactionWallet(userId: Int, username: String) {
 
-    if (handleAccountsResponse(getAccountsFull(userId = userId))) {
+    if (handleAccountsResponse(ApiUtils.getAccountsFull(userId = userId))) {
 
         fromAccount = userAccountsMap[baneeWalletAccountId]!!
         accountHome(userId = userId, username = username)
@@ -328,7 +334,7 @@ private fun insertQuickTransactionWallet(userId: Int, username: String) {
 
 private fun insertQuickTransactionWalletToFrequent1(userId: Int, username: String) {
 
-    if (handleAccountsResponse(getAccountsFull(userId = userId))) {
+    if (handleAccountsResponse(ApiUtils.getAccountsFull(userId = userId))) {
 
         fromAccount = userAccountsMap[baneeWalletAccountId]!!
         toAccount = userAccountsMap[baneeFrequent1AccountId]!!
@@ -338,7 +344,7 @@ private fun insertQuickTransactionWalletToFrequent1(userId: Int, username: Strin
 
 private fun insertQuickTransactionWalletToFrequent2(userId: Int, username: String) {
 
-    if (handleAccountsResponse(getAccountsFull(userId = userId))) {
+    if (handleAccountsResponse(ApiUtils.getAccountsFull(userId = userId))) {
 
         fromAccount = userAccountsMap[baneeWalletAccountId]!!
         toAccount = userAccountsMap[baneeFrequent2AccountId]!!
@@ -348,7 +354,7 @@ private fun insertQuickTransactionWalletToFrequent2(userId: Int, username: Strin
 
 private fun insertQuickTransactionWalletToFrequent3(userId: Int, username: String) {
 
-    if (handleAccountsResponse(getAccountsFull(userId = userId))) {
+    if (handleAccountsResponse(ApiUtils.getAccountsFull(userId = userId))) {
 
         fromAccount = userAccountsMap[baneeWalletAccountId]!!
         toAccount = userAccountsMap[baneeFrequent3AccountId]!!
@@ -388,18 +394,13 @@ private fun handleAccountsResponse(apiResponse: ResponseHolder<AccountsResponse>
 
             println("No Accounts...")
             false
+
         } else {
 
-            prepareUserAccountsMap(localAccountsResponseWithStatus.accounts)
+            userAccountsMap = AccountUtils.prepareUserAccountsMap(localAccountsResponseWithStatus.accounts)
             true
         }
     }
-}
-
-private fun prepareUserAccountsMap(accounts: List<AccountResponse>) {
-
-    userAccountsMap = LinkedHashMap()
-    accounts.forEach { currentAccount -> userAccountsMap[currentAccount.id] = currentAccount }
 }
 
 private fun getAccounts(userId: Int, parentAccountId: Int = 0): ResponseHolder<AccountsResponse> {
@@ -621,14 +622,17 @@ private fun addTransaction(userId: Int, username: String, transactionType: Strin
                 "Via. Account - ${viaAccount.id} : ${viaAccount.fullName}",
                 "1 - Choose To Account From List - Top Levels",
                 "2 - Choose To Account From List - Full Names",
-                "3 - Choose From Account From List - Top Levels",
-                "4 - Choose From Account From List - Full Names",
-                "5 - Continue Transaction",
-                "6 - Exchange Accounts",
-                "7 - Exchange Accounts, Then Continue Transaction",
+                "3 - Input To Account ID Directly",
+                "4 - Choose From Account From List - Top Levels",
+                "5 - Choose From Account From List - Full Names",
+                "6 - Input From Account ID Directly",
+                "7 - Continue Transaction",
+                "8 - Exchange Accounts",
+                "9 - Exchange Accounts, Then Continue Transaction",
                 // (transactionType == "Via." ? "8 - Choose Via. Account From List - Full
                 // Names" : ""),
-                "8 - Choose Via. Account From List - Full Names",
+                "10 - Choose Via. Account From List - Full Names",
+                "11 - Input Via. Account ID Directly",
                 "0 - Back",
                 "",
                 "Enter Your Choice : "
@@ -651,36 +655,56 @@ private fun addTransaction(userId: Int, username: String, transactionType: Strin
                 }
             }
             "3" -> {
+
+                val chooseAccountResult= ChooseAccountUtils.chooseAccountById(userId)
+                if(chooseAccountResult.choosedAccountId != 0) {
+
+                    toAccount=chooseAccountResult.choosedAccount
+                    transactionContinueCheck(userId, username)
+                    return
+                }
+            }
+            "4" -> {
                 if (chooseFromAccountTop(userId)) {
 
                     transactionContinueCheck(userId, username)
                     return
                 }
             }
-            "4" -> {
+            "5" -> {
                 if (chooseFromAccountFull(userId)) {
 
                     transactionContinueCheck(userId, username)
                     return
                 }
             }
-            "5" -> {
-
-                transactionContinueCheck(userId, username)
-                return
-            }
             "6" -> {
-                exchangeAccounts()
-                addTransaction(userId = userId, username = username)
-                return
+                val chooseAccountResult=ChooseAccountUtils.chooseAccountById(userId)
+                if(chooseAccountResult.choosedAccountId != 0) {
+
+                    fromAccount=chooseAccountResult.choosedAccount
+                    transactionContinueCheck(userId, username)
+                    return
+                }
             }
             "7" -> {
 
-                exchangeAccounts()
                 transactionContinueCheck(userId, username)
                 return
             }
             "8" -> {
+
+                exchangeAccounts()
+                addTransaction(userId = userId, username = username)
+                return
+            }
+            "9" -> {
+
+                exchangeAccounts()
+                transactionContinueCheck(userId, username)
+                return
+            }
+            "10" -> {
                 if (transactionType == "Via.") {
 
                     if (chooseViaAccountFull(userId)) {
@@ -689,9 +713,24 @@ private fun addTransaction(userId: Int, username: String, transactionType: Strin
                         return
                     }
                 }
-                // else -> {
-                //     println("Invalid option, try again...")
-                // }
+                else {
+                    println("Invalid option, try again...")
+                }
+            }
+            "11" -> {
+                if (transactionType == "Via.") {
+
+                    val chooseAccountResult=ChooseAccountUtils.chooseAccountById(userId)
+                    if(chooseAccountResult.choosedAccountId != 0) {
+
+                        viaAccount=chooseAccountResult.choosedAccount
+                        transactionContinueCheck(userId, username)
+                        return
+                    }
+                }
+                else {
+                    println("Invalid option, try again...")
+                }
             }
             "0" -> return
             else -> println("Invalid option, try again...")
@@ -1096,17 +1135,17 @@ private fun insertTransaction(
 
 private fun chooseDepositFull(userId: Int): Boolean {
 
-    return handleAccountsApiResponse(apiResponse = getAccountsFull(userId = userId), purpose = "To")
+    return handleAccountsApiResponse(apiResponse =ApiUtils.getAccountsFull(userId = userId), purpose = "To")
 }
 
 private fun chooseFromAccountFull(userId: Int): Boolean {
 
-    return handleAccountsApiResponse(apiResponse = getAccountsFull(userId), purpose = "From")
+    return handleAccountsApiResponse(apiResponse = ApiUtils.getAccountsFull(userId), purpose = "From")
 }
 
 private fun chooseViaAccountFull(userId: Int): Boolean {
 
-    return handleAccountsApiResponse(apiResponse = getAccountsFull(userId), purpose = "Via.")
+    return handleAccountsApiResponse(apiResponse = ApiUtils.getAccountsFull(userId), purpose = "Via.")
 }
 
 private fun handleAccountsApiResponse(
@@ -1136,9 +1175,10 @@ private fun handleAccountsApiResponse(
         if (accountsResponseResult.status == 1) {
 
             println("No Accounts...")
+            
         } else {
 
-            prepareUserAccountsMap(accountsResponseResult.accounts)
+            userAccountsMap = AccountUtils.prepareUserAccountsMap(accountsResponseResult.accounts)
             do {
                 commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
                     listOf(
@@ -1264,16 +1304,6 @@ private fun handleViaAccountSelection(
     return false
 }
 
-private fun getAccountsFull(userId: Int): ResponseHolder<AccountsResponse> {
-
-    val apiResponse: ResponseHolder<AccountsResponse>
-    val userAccountsDataSource = AccountsDataSource()
-    println("Contacting Server...")
-    runBlocking { apiResponse = userAccountsDataSource.selectUserAccountsFull(userId = userId) }
-    //    println("Response : $apiResponse")
-    return apiResponse
-}
-
 private fun searchAccount(userAccountsMap: LinkedHashMap<Int, AccountResponse>): Int {
 
     commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
@@ -1359,7 +1389,7 @@ private fun userAccountsToStringFromListPair(
     return result
 }
 
-public fun getLast10ItemsFromLinkedHashMap(userAccountsMap: LinkedHashMap<Int, AccountResponse>): List<Pair<Int, AccountResponse>> {
+private fun getLast10ItemsFromLinkedHashMap(userAccountsMap: LinkedHashMap<Int, AccountResponse>): List<Pair<Int, AccountResponse>> {
 
     if(userAccountsMap.size > 10){
 
@@ -1440,7 +1470,7 @@ private fun viewTransactions(userId: Int, accountId: Int, username: String) {
     }
 }
 
-fun printAccountLedger(transactions: List<TransactionResponse>, currentAccountId: Int): String {
+private fun printAccountLedger(transactions: List<TransactionResponse>, currentAccountId: Int): String {
 
     //    println("transactions = [${transactions}]")
 

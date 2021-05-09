@@ -20,4 +20,11 @@ internal object AccountUtils {
             placeHolder = ""
         )
     }
+
+    internal fun prepareUserAccountsMap(accounts: List<AccountResponse>): LinkedHashMap<Int, AccountResponse> {
+
+        val userAccountsMap = LinkedHashMap<Int, AccountResponse>()
+        accounts.forEach { currentAccount -> userAccountsMap[currentAccount.id] = currentAccount }
+        return userAccountsMap
+    }
 }

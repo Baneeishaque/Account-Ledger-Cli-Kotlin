@@ -3,7 +3,8 @@ package accountLedgerCli.cli
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class AppPropertiesTest {
+internal class AppPropertiesTest {
+    
     // @Test
     // fun testAppProperties() {
     //     assertEquals(App.appName, "Account Ledger CLI App")

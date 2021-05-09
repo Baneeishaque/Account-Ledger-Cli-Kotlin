@@ -2,7 +2,7 @@ package accountLedgerCli.to_utils
 
 object ToDoUtils {
 
-    internal fun showTodo(message: String = "Coming Soon...") {
+    fun showTodo(message: String = "Coming Soon...") {
 
         println(message)
     }

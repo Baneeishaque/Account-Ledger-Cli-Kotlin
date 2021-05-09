@@ -1,5 +1,6 @@
 package accountLedgerCli.to_utils
 
-public interface PrintMenuInterface {
+interface PrintMenuInterface {
+    
     fun printMenuFromListOfCommands(listOfCommands: List<String>, promptWord: String) {}
 }

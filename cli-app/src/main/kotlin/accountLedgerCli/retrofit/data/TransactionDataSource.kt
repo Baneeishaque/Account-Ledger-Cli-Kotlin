@@ -38,21 +38,21 @@ class TransactionDataSource {
             ResponseHolder.Error(Exception("Exception - ${exception.localizedMessage}"))
         }
     }
+}
 
-    //    TODO : Rewrite as general function for all responses
-    private fun processApiResponse(apiResponse: Response<InsertionResponse>): ResponseHolder<InsertionResponse> {
+//    TODO : Rewrite as general function for all responses
+private fun processApiResponse(apiResponse: Response<InsertionResponse>): ResponseHolder<InsertionResponse> {
 
-        if (apiResponse.isSuccessful) {
-            val loginApiResponseBody = apiResponse.body()
-            return if (loginApiResponseBody != null) {
+    if (apiResponse.isSuccessful) {
+        val loginApiResponseBody = apiResponse.body()
+        return if (loginApiResponseBody != null) {
 
-                ResponseHolder.Success(loginApiResponseBody)
+            ResponseHolder.Success(loginApiResponseBody)
 
-            } else {
+        } else {
 
-                ResponseHolder.Error(Exception("Invalid Response Body - $loginApiResponseBody"))
-            }
+            ResponseHolder.Error(Exception("Invalid Response Body - $loginApiResponseBody"))
         }
-        return ResponseHolder.Error(IOException("Exception Code - ${apiResponse.code()}, Message - ${apiResponse.message()}"))
     }
+    return ResponseHolder.Error(IOException("Exception Code - ${apiResponse.code()}, Message - ${apiResponse.message()}"))
 }

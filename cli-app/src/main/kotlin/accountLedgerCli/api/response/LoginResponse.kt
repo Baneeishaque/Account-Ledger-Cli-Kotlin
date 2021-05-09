@@ -2,8 +2,8 @@ package accountLedgerCli.api.response
 
 import com.google.gson.annotations.SerializedName
 
-data class LoginResponse(
+internal data class LoginResponse(
 
-    val id: Int,
-    @SerializedName("user_count") val userCount: Int
+    internal val id: Int,
+    @SerializedName("user_count") internal val userCount: Int
 )

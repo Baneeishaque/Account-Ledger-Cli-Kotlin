@@ -7,7 +7,7 @@ import accountLedgerCli.api.response.InsertionResponse
 import accountLedgerCli.api.response.LoginResponse
 import accountLedgerCli.api.response.TransactionsResponse
 
-interface Api {
+internal interface Api {
 
     @GET("${ApiConstants.selectUserMethod}.${ApiConstants.serverFileExtension}")
     suspend fun selectUser(

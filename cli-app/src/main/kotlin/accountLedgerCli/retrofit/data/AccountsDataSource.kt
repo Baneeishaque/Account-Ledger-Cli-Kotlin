@@ -14,6 +14,7 @@ class AccountsDataSource {
         userId: Int,
         parentAccountId: Int? = 0
     ): ResponseHolder<AccountsResponse> {
+
         return try {
 
             processApiResponse(retrofitClient.selectUserAccounts(userId = userId, parentAccountId = parentAccountId))
@@ -35,21 +36,22 @@ class AccountsDataSource {
             ResponseHolder.Error(Exception("Exception - ${exception.localizedMessage}"))
         }
     }
+}
 
-    //    TODO : Rewrite as general function for all responses
-    private fun processApiResponse(apiResponse: Response<AccountsResponse>): ResponseHolder<AccountsResponse> {
+//    TODO : Rewrite as general function for all responses
+private fun processApiResponse(apiResponse: Response<AccountsResponse>): ResponseHolder<AccountsResponse> {
 
-        if (apiResponse.isSuccessful) {
-            val loginApiResponseBody = apiResponse.body()
-            return if (loginApiResponseBody != null) {
+    if (apiResponse.isSuccessful) {
+        
+        val loginApiResponseBody = apiResponse.body()
+        return if (loginApiResponseBody != null) {
 
-                ResponseHolder.Success(loginApiResponseBody)
+            ResponseHolder.Success(loginApiResponseBody)
 
-            } else {
+        } else {
 
-                ResponseHolder.Error(Exception("Invalid Response Body - $loginApiResponseBody"))
-            }
+            ResponseHolder.Error(Exception("Invalid Response Body - $loginApiResponseBody"))
         }
-        return ResponseHolder.Error(IOException("Exception Code - ${apiResponse.code()}, Message - ${apiResponse.message()}"))
     }
+    return ResponseHolder.Error(IOException("Exception Code - ${apiResponse.code()}, Message - ${apiResponse.message()}"))
 }

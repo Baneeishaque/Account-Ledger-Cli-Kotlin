@@ -1,6 +1,7 @@
 package accountLedgerCli.api.response
 
-data class TransactionsResponse(
-    val status: Int,
-    val transactions: List<TransactionResponse>
+internal data class TransactionsResponse(
+    
+    internal val status: Int,
+    internal val transactions: List<TransactionResponse>
 )

@@ -7,7 +7,7 @@ import accountLedgerCli.retrofit.ProjectRetrofitClient
 import java.io.IOException
 import java.lang.Exception
 
-class UserDataSource {
+internal class UserDataSource {
 
     private val retrofitClient = ProjectRetrofitClient.retrofitClient
 
