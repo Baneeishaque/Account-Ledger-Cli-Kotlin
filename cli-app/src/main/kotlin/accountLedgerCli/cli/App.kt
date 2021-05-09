@@ -1347,10 +1347,10 @@ private fun userAccountsToStringFromLinkedHashMapLimitedTo10(
     userAccountsMap: LinkedHashMap<Int, AccountResponse>
 ): String {
 
-    return userAccountsToStringFromList(getLast10ItemsFromLinkedHashMap(userAccountsMap))
+    return userAccountsToStringFromListPair(getLast10ItemsFromLinkedHashMap(userAccountsMap))
 }
 
-private fun userAccountsToStringFromList(
+private fun userAccountsToStringFromListPair(
     userAccountsList: List<Pair<Int, AccountResponse>>
 ): String {
 
