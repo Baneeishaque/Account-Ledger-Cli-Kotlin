@@ -10,8 +10,10 @@ class TransactionsDataSource {
 
     private val retrofitClient = ProjectRetrofitClient.retrofitClient
 
-    internal suspend fun selectUserTransactions(userId: Int,
-                                                accountId: Int): ResponseHolder<TransactionsResponse> {
+    internal suspend fun selectUserTransactions(
+        userId: Int,
+        accountId: Int
+    ): ResponseHolder<TransactionsResponse> {
         return try {
 
             processApiResponse(retrofitClient.selectUserTransactionsV2M(userId = userId, accountId = accountId))

@@ -11,8 +11,8 @@ object ProjectRetrofitClient {
     val retrofitClient: Api by lazy {
 
         Retrofit.Builder()
-                .baseUrl(ApiConstants.serverApiAddress)
-                .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
-                .build().create(Api::class.java)
+            .baseUrl(ApiConstants.serverApiAddress)
+            .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
+            .build().create(Api::class.java)
     }
 }

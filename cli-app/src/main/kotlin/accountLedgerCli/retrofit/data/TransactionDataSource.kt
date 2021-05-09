@@ -12,15 +12,26 @@ class TransactionDataSource {
 
     private val retrofitClient = ProjectRetrofitClient.retrofitClient
 
-    internal suspend fun insertTransaction(userId: Int,
-                                           eventDateTimeString: String,
-                                           particulars: String?,
-                                           amount: Float,
-                                           fromAccountId: Int,
-                                           toAccountId: Int?): ResponseHolder<InsertionResponse> {
+    internal suspend fun insertTransaction(
+        userId: Int,
+        eventDateTimeString: String,
+        particulars: String?,
+        amount: Float,
+        fromAccountId: Int,
+        toAccountId: Int?
+    ): ResponseHolder<InsertionResponse> {
         return try {
 
-            processApiResponse(retrofitClient.insertTransaction(userId = userId, eventDateTimeString = MysqlUtils.normalDateTimeStringToMysqlDateTimeString(eventDateTimeString), particulars = particulars, amount = amount, fromAccountId = fromAccountId, toAccountId = toAccountId))
+            processApiResponse(
+                retrofitClient.insertTransaction(
+                    userId = userId,
+                    eventDateTimeString = MysqlUtils.normalDateTimeStringToMysqlDateTimeString(eventDateTimeString),
+                    particulars = particulars,
+                    amount = amount,
+                    fromAccountId = fromAccountId,
+                    toAccountId = toAccountId
+                )
+            )
 
         } catch (exception: java.lang.Exception) {
 

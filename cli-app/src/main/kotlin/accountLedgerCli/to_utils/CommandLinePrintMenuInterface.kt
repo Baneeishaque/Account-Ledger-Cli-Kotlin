@@ -1,3 +1,3 @@
 package accountLedgerCli.to_utils
 
-public interface CommandLinePrintMenuInterface: PrintMenuInterface {}
+public interface CommandLinePrintMenuInterface : PrintMenuInterface {}
