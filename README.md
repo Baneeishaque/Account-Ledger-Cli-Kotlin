@@ -1,7 +1,7 @@
 # Account Ledger Cli
 
 [![Open in Cloud Shell](https://gstatic.com/cloudssh/images/open-btn.svg)](https://ssh.cloud.google.com/cloudshell/editor?cloudshell_git_repo=https%3A%2F%2Fgithub.com%2FBaneeishaque%2FAccount-Ledger-Cli-Kotlin-Gradle.git)
-[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/Baneeishaque/Account-Ledger-Cli-Kotlin-Gradle)  
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/Baneeishaque/Account-Ledger-Cli-Kotlin-Gradle)
 ![GitHub Actions](https://github.com/Baneeishaque/Account-Ledger-Cli-Kotlin-Gradle/workflows/Java%20CI%20with%20Gradle/badge.svg)
 [![codecov](https://codecov.io/gh/Baneeishaque/Account-Ledger-Cli-Kotlin-Gradle/branch/master/graph/badge.svg)](https://codecov.io/gh/Baneeishaque/Account-Ledger-Cli-Kotlin-Gradle)
 [![CodeFactor](https://www.codefactor.io/repository/github/baneeishaque/account-ledger-cli-kotlin-gradle/badge)](https://www.codefactor.io/repository/github/baneeishaque/account-ledger-cli-kotlin-gradle)
