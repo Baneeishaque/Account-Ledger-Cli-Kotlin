@@ -1343,6 +1343,18 @@ private fun userAccountsToStringFromLinkedHashMap(
     return result
 }
 
+/*public fun getLast10ItemsFromLinkedHashMap(userAccountsMap: LinkedHashMap<Int, AccountResponse>): LinkedHashMap<Int, AccountResponse> {
+
+    if(userAccountsMap.size < 11){
+
+        return userAccountsMap
+
+    } else{
+
+        return userAccountsMap.toList().takeLast(10)
+    }
+}*/
+
 private fun chooseDepositTop(userId: Int): Boolean {
 
     return handleAccountsApiResponse(apiResponse = getAccounts(userId = userId), purpose = "To")
