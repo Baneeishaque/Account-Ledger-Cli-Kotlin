@@ -1175,7 +1175,7 @@ private fun handleAccountsApiResponse(
         if (accountsResponseResult.status == 1) {
 
             println("No Accounts...")
-            
+
         } else {
 
             userAccountsMap = AccountUtils.prepareUserAccountsMap(accountsResponseResult.accounts)
