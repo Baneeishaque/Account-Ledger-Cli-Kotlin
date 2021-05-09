@@ -1447,7 +1447,7 @@ fun printAccountLedger(transactions: List<TransactionResponse>, currentAccountId
     var outPut = ""
     var currentBalance = 0.0F
     var transactionDirection: String
-    var secondAccountName = ""
+    var secondAccountName: String
     transactions.forEach { currentTransaction: TransactionResponse ->
         if (currentTransaction.from_account_id == currentAccountId) {
 
