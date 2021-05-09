@@ -20,7 +20,7 @@ internal object ChooseAccountUtils {
         while(true) {
 
             print("Enter To Account ID or 0 to Back : ")
-            
+
             try {
 
                 accountIdInput = reader.nextInt()
@@ -44,7 +44,7 @@ internal object ChooseAccountUtils {
                     //                else -> println("Invalid option, try again...")
                     //            }
                     //        } while (input != "N")
-                } 
+                }
                 else {
 
                     val accountsResponseResult = apiResponse.getValue() as AccountsResponse
@@ -52,7 +52,7 @@ internal object ChooseAccountUtils {
 
                         println("No Accounts...")
                         return ChooseAccountResult(0,AccountUtils.getBlankAccount())
-                        
+
                     } else {
 
                         val userAccountsMap:LinkedHashMap<Int, AccountResponse> = AccountUtils.prepareUserAccountsMap(accountsResponseResult.accounts)

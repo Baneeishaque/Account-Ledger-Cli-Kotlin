@@ -1,7 +1,7 @@
 package accountLedgerCli.api.response
 
 internal data class TransactionResponse(
-    
+
     internal val id: String,
     internal val event_date_time: String,
     internal val particulars: String,

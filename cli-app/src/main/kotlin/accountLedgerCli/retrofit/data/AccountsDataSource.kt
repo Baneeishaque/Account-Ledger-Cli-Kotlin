@@ -42,7 +42,7 @@ class AccountsDataSource {
 private fun processApiResponse(apiResponse: Response<AccountsResponse>): ResponseHolder<AccountsResponse> {
 
     if (apiResponse.isSuccessful) {
-        
+
         val loginApiResponseBody = apiResponse.body()
         return if (loginApiResponseBody != null) {
 
