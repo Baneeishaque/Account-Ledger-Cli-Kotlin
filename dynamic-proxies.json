@@ -1,3 +1,5 @@
 [
-  ["accountLedgerCli.api.Api"]
+  [
+    "accountLedgerCli.api.Api"
+  ]
 ]

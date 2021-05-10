@@ -1,11 +1,11 @@
 package accountLedgerCli.api
 
-import retrofit2.Response
-import retrofit2.http.*
 import accountLedgerCli.api.response.AccountsResponse
 import accountLedgerCli.api.response.InsertionResponse
 import accountLedgerCli.api.response.LoginResponse
 import accountLedgerCli.api.response.TransactionsResponse
+import retrofit2.Response
+import retrofit2.http.*
 
 internal interface Api {
 

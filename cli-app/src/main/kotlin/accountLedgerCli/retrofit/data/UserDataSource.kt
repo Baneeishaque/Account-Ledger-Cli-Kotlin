@@ -1,11 +1,10 @@
 package accountLedgerCli.retrofit.data
 
-import retrofit2.Response
 import accountLedgerCli.api.response.LoginResponse
-import accountLedgerCli.retrofit.ResponseHolder
 import accountLedgerCli.retrofit.ProjectRetrofitClient
+import accountLedgerCli.retrofit.ResponseHolder
+import retrofit2.Response
 import java.io.IOException
-import java.lang.Exception
 
 internal class UserDataSource {
 

@@ -1,30 +1,20 @@
 package accountLedgerCli.cli
 
-import accountLedgerCli.api.response.AccountResponse
-import accountLedgerCli.api.response.LoginResponse
-import accountLedgerCli.api.response.AccountsResponse
-import accountLedgerCli.api.response.InsertionResponse
-import accountLedgerCli.api.response.TransactionResponse
-import accountLedgerCli.api.response.TransactionsResponse
+import accountLedgerCli.api.response.*
 import accountLedgerCli.retrofit.ResponseHolder
 import accountLedgerCli.retrofit.data.AccountsDataSource
 import accountLedgerCli.retrofit.data.TransactionDataSource
 import accountLedgerCli.retrofit.data.TransactionsDataSource
 import accountLedgerCli.retrofit.data.UserDataSource
-import accountLedgerCli.to_utils.CommandLinePrintMenu
-import accountLedgerCli.to_utils.CommandLinePrintMenuWithContinuePrompt
-import accountLedgerCli.to_utils.CommandLinePrintMenuWithEnterPrompt
-import accountLedgerCli.to_utils.CommandLinePrintMenuWithTryPrompt
-import accountLedgerCli.to_utils.DateTimeUtils
+import accountLedgerCli.to_utils.*
 import accountLedgerCli.to_utils.DateTimeUtils.normalPattern
-import accountLedgerCli.to_utils.ToDoUtils
 import accountLedgerCli.utils.AccountUtils
 import accountLedgerCli.utils.ApiUtils
 import accountLedgerCli.utils.ChooseAccountUtils
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
+import kotlinx.coroutines.runBlocking
 import java.time.LocalDateTime
 import java.time.format.DateTimeParseException
-import kotlinx.coroutines.runBlocking
 
 internal var dateTimeString = LocalDateTime.now().format(normalPattern)
 
@@ -656,10 +646,10 @@ private fun addTransaction(userId: Int, username: String, transactionType: Strin
             }
             "3" -> {
 
-                val chooseAccountResult= ChooseAccountUtils.chooseAccountById(userId)
-                if(chooseAccountResult.choosedAccountId != 0) {
+                val chooseAccountResult = ChooseAccountUtils.chooseAccountById(userId)
+                if (chooseAccountResult.choosedAccountId != 0) {
 
-                    toAccount=chooseAccountResult.choosedAccount
+                    toAccount = chooseAccountResult.choosedAccount
                     transactionContinueCheck(userId, username)
                     return
                 }
@@ -679,10 +669,10 @@ private fun addTransaction(userId: Int, username: String, transactionType: Strin
                 }
             }
             "6" -> {
-                val chooseAccountResult=ChooseAccountUtils.chooseAccountById(userId)
-                if(chooseAccountResult.choosedAccountId != 0) {
+                val chooseAccountResult = ChooseAccountUtils.chooseAccountById(userId)
+                if (chooseAccountResult.choosedAccountId != 0) {
 
-                    fromAccount=chooseAccountResult.choosedAccount
+                    fromAccount = chooseAccountResult.choosedAccount
                     transactionContinueCheck(userId, username)
                     return
                 }
@@ -712,23 +702,21 @@ private fun addTransaction(userId: Int, username: String, transactionType: Strin
                         transactionContinueCheck(userId, username, "Via.")
                         return
                     }
-                }
-                else {
+                } else {
                     println("Invalid option, try again...")
                 }
             }
             "11" -> {
                 if (transactionType == "Via.") {
 
-                    val chooseAccountResult=ChooseAccountUtils.chooseAccountById(userId)
-                    if(chooseAccountResult.choosedAccountId != 0) {
+                    val chooseAccountResult = ChooseAccountUtils.chooseAccountById(userId)
+                    if (chooseAccountResult.choosedAccountId != 0) {
 
-                        viaAccount=chooseAccountResult.choosedAccount
+                        viaAccount = chooseAccountResult.choosedAccount
                         transactionContinueCheck(userId, username)
                         return
                     }
-                }
-                else {
+                } else {
                     println("Invalid option, try again...")
                 }
             }
@@ -1135,7 +1123,7 @@ private fun insertTransaction(
 
 private fun chooseDepositFull(userId: Int): Boolean {
 
-    return handleAccountsApiResponse(apiResponse =ApiUtils.getAccountsFull(userId = userId), purpose = "To")
+    return handleAccountsApiResponse(apiResponse = ApiUtils.getAccountsFull(userId = userId), purpose = "To")
 }
 
 private fun chooseFromAccountFull(userId: Int): Boolean {
@@ -1391,7 +1379,7 @@ private fun userAccountsToStringFromListPair(
 
 private fun getLast10ItemsFromLinkedHashMap(userAccountsMap: LinkedHashMap<Int, AccountResponse>): List<Pair<Int, AccountResponse>> {
 
-    if(userAccountsMap.size > 10){
+    if (userAccountsMap.size > 10) {
 
         return userAccountsMap.toList().takeLast(10)
     }

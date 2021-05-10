@@ -1,53 +1,53 @@
 {
-    // See https://go.microsoft.com/fwlink/?LinkId=733558
-    // for the documentation about the tasks.json format
-    "version": "2.0.0",
-    "tasks": [
-        {
-            "label": "build",
-            "type": "shell",
-            "command": "./gradlew build --warning-mode all",
-            "windows": {
-                "command": "gradlew.bat build --warning-mode all"
-            },
-            "problemMatcher": [],
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            }
-        },
-        {
-            "label": "clean",
-            "type": "shell",
-            "command": "./gradlew clean --warning-mode all",
-            "windows": {
-                "command": "gradlew.bat clean --warning-mode all"
-            }
-        },
-        {
-            "label": "Rebuild",
-            "type": "shell",
-            "dependsOn": [
-                "clean",
-                "build"
-            ],
-            "dependsOrder": "sequence",
-            "command": "echo Rebuild Task"
-        },
-        {
-            "label": "jar",
-            "type": "shell",
-            "command": "./gradlew jar --warning-mode all",
-            "windows": {
-                "command": "gradlew.bat jar --warning-mode all"
-            },
-            "dependsOn": "build"
-        },
-        {
-            "label": "run jar",
-            "type": "shell",
-            "command": "java -jar cli-app/build/libs/cli-app.jar",
-            "dependsOn": "jar"
-        }
-    ]
+  // See https://go.microsoft.com/fwlink/?LinkId=733558
+  // for the documentation about the tasks.json format
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "build",
+      "type": "shell",
+      "command": "./gradlew build --warning-mode all",
+      "windows": {
+        "command": "gradlew.bat build --warning-mode all"
+      },
+      "problemMatcher": [],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
+      "label": "clean",
+      "type": "shell",
+      "command": "./gradlew clean --warning-mode all",
+      "windows": {
+        "command": "gradlew.bat clean --warning-mode all"
+      }
+    },
+    {
+      "label": "Rebuild",
+      "type": "shell",
+      "dependsOn": [
+        "clean",
+        "build"
+      ],
+      "dependsOrder": "sequence",
+      "command": "echo Rebuild Task"
+    },
+    {
+      "label": "jar",
+      "type": "shell",
+      "command": "./gradlew jar --warning-mode all",
+      "windows": {
+        "command": "gradlew.bat jar --warning-mode all"
+      },
+      "dependsOn": "build"
+    },
+    {
+      "label": "run jar",
+      "type": "shell",
+      "command": "java -jar cli-app/build/libs/cli-app.jar",
+      "dependsOn": "jar"
+    }
+  ]
 }

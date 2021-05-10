@@ -1,7 +1,7 @@
 package accountLedgerCli.cli
 
-import kotlin.test.Test
-import kotlin.test.assertEquals
+// import kotlin.test.Test
+// import kotlin.test.assertEquals
 
 internal class AppPropertiesTest {
 

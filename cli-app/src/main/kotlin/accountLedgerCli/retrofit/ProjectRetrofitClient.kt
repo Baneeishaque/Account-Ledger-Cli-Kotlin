@@ -1,10 +1,10 @@
 package accountLedgerCli.retrofit
 
+import accountLedgerCli.api.Api
+import accountLedgerCli.api.ApiConstants
 import com.google.gson.GsonBuilder
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import accountLedgerCli.api.Api
-import accountLedgerCli.api.ApiConstants
 
 internal object ProjectRetrofitClient {
 
