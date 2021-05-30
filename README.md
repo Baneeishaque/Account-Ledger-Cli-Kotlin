@@ -6,7 +6,9 @@
 [![codecov](https://codecov.io/gh/Baneeishaque/Account-Ledger-Cli-Kotlin-Gradle/branch/master/graph/badge.svg)](https://codecov.io/gh/Baneeishaque/Account-Ledger-Cli-Kotlin-Gradle)
 [![CodeFactor](https://www.codefactor.io/repository/github/baneeishaque/account-ledger-cli-kotlin-gradle/badge)](https://www.codefactor.io/repository/github/baneeishaque/account-ledger-cli-kotlin-gradle)
 
-[//]: # "https://codecov.io/gh/Baneeishaque/Account-Ledger-Cli-Kotlin-Gradle/branch/master/graphs/sunburst
+[//]:
+  #
+  "https://codecov.io/gh/Baneeishaque/Account-Ledger-Cli-Kotlin-Gradle/branch/master/graphs/sunburst
 https://codecov.io/gh/Baneeishaque/Account-Ledger-Cli-Kotlin-Gradle/branch/master/graphs/icicle.svg
 https://codecov.io/gh/Baneeishaque/Account-Ledger-Cli-Kotlin-Gradle/branch/master/graphs/tree.svg
 https://codecov.io/gh/Baneeishaque/Account-Ledger-Cli-Kotlin-Gradle/branch/master/graphs/commits.svg
