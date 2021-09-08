@@ -34,15 +34,18 @@ steps:
   - script: 'gradlew --stop'
     displayName: Stop Gradle Daemon
 
-  # Upload Executable Tar File
-  - task: FtpUpload@2
-    displayName: 'FTP Upload $(repositoryName) Tar File'
-    inputs:
-      credentialsOption: inputs
-      serverUrl: 'ftp://$(MAPPED_FTP_HOST)'
-      username: $(MAPPED_FTP_USER)
-      password: $(MAPPED_FTP_PWD)
-      # TODO : Add option for file instead of directory
-      rootDirectory: '.'
-      remoteDirectory: '/public_html/files/$(repositoryName)/$(Build.SourceVersion)'
-      filePatterns: 'cli-app/build/distributions/cli-app.tar'
+  # # Upload Executable Tar File
+  # - task: FtpUpload@2
+    # displayName: 'FTP Upload $(repositoryName) Tar File'
+    # inputs:
+      # credentialsOption: inputs
+      # serverUrl: 'ftp://$(MAPPED_FTP_HOST)'
+      # username: $(MAPPED_FTP_USER)
+      # password: $(MAPPED_FTP_PWD)
+      # # TODO : Add option for file instead of directory
+      # rootDirectory: '.'
+      # remoteDirectory: '/public_html/files/$(repositoryName)/$(Build.SourceVersion)'
+      # filePatterns: 'cli-app/build/distributions/cli-app.tar'
+
+  - publish: cli-app/build/distributions/cli-app.tar
+    artifact: Account-Ledger-Cli-Windows
