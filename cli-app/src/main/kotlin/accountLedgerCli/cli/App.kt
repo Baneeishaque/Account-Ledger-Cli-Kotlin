@@ -11,53 +11,40 @@ import accountLedgerCli.to_utils.DateTimeUtils.normalPattern
 import accountLedgerCli.utils.AccountUtils
 import accountLedgerCli.utils.ApiUtils
 import accountLedgerCli.utils.ChooseAccountUtils
+
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
+import io.github.cdimascio.dotenv.dotenv
+
 import kotlinx.coroutines.runBlocking
+
 import java.time.LocalDateTime
 import java.time.format.DateTimeParseException
 
 internal var dateTimeString = LocalDateTime.now().format(normalPattern)
 
 private var fromAccount = AccountUtils.getBlankAccount()
-
 private var viaAccount = AccountUtils.getBlankAccount()
-
 private var toAccount = AccountUtils.getBlankAccount()
-
 private var transactionParticulars = ""
-
 private var transactionAmount = 0F
 
 private const val baneeWalletAccountId = 6
-
 private const val baneeBankAccountId = 11
-
 private const val baneeBankAccountName = "Punjab National Bank, Tirur"
-
+private const val baneeFrequent1AccountId = 688
 private const val baneeFrequent1AccountName = "Hisham Banee Ishaque K Brother"
-
+private const val baneeFrequent2AccountId = 38
 private const val baneeFrequent2AccountName = "Ismail K Father Banee Ishaque K"
-
+private const val baneeFrequent3AccountId = 367
 private const val baneeFrequent3AccountName = "Account Shortages"
 
-private const val baneeFrequent1AccountId = 688
-
-private const val baneeFrequent2AccountId = 38
-
-private const val baneeFrequent3AccountId = 367
-
 private var userAccountsMap = LinkedHashMap<Int, AccountResponse>()
-
 private val accountsResponseResult = AccountsResponse(1, listOf(AccountUtils.getBlankAccount()))
-
 private val commandLinePrintMenu = CommandLinePrintMenu()
-
 private val commandLinePrintMenuWithEnterPrompt =
     CommandLinePrintMenuWithEnterPrompt(commandLinePrintMenu)
-
 private val commandLinePrintMenuWithTryPrompt =
     CommandLinePrintMenuWithTryPrompt(commandLinePrintMenu)
-
 private val commandLinePrintMenuWithContinuePrompt =
     CommandLinePrintMenuWithContinuePrompt(commandLinePrintMenu)
 
@@ -88,15 +75,23 @@ private fun login() {
 
     println("\nAccount Ledger Authentication")
     println("--------------------------------")
-    print("Enter Your Username : ")
-    val username = readLine().toString()
-    print("Enter Your Password : ")
-    val password = readLine().toString()
 
-    val user = UserDataSource()
+    val dotenv = dotenv()
+    var username = dotenv["USER_NAME"] ?: ""
+    var password = dotenv["PASSWORD"] ?: ""
+
+    if(username.isEmpty()|| password.isEmpty()){
+
+        print("Enter Your Username : ")
+        username = readLine().toString()
+        print("Enter Your Password : ")
+        password = readLine().toString()
+    }
+
+    val userDataSource = UserDataSource()
     println("Contacting Server...")
     val apiResponse: ResponseHolder<LoginResponse>
-    runBlocking { apiResponse = user.selectUser(username = username, password = password) }
+    runBlocking { apiResponse = userDataSource.selectUser(username = username, password = password) }
     // println("Response : $apiResponse")
     if (apiResponse.isError()) {
 
@@ -129,7 +124,6 @@ private fun login() {
     }
 }
 
-// @Suppress("SameParameterValue")
 private fun userScreen(username: String, userId: Int) {
 
     do {
