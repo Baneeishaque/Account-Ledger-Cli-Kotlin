@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="winrar cli-app\build\distributions\cli-app.tar" type="ShConfigurationType">
-    <option name="SCRIPT_TEXT" value="winrar $PROJECT_DIR$\cli-app\build\distributions\cli-app.tar" />
+  <configuration default="false" name="cli-app.bat" type="ShConfigurationType">
+    <option name="SCRIPT_TEXT" value="winrar x -o+ cli-app\build\distributions\cli-app.tar C:\Account-Ledger-Cli\ &amp; copy .env C:\Account-Ledger-Cli\cli-app\bin\ /Y &amp; C:\Account-Ledger-Cli\cli-app\bin\cli-app.bat" />
     <option name="INDEPENDENT_SCRIPT_PATH" value="true" />
     <option name="SCRIPT_PATH" value="" />
     <option name="SCRIPT_OPTIONS" value="" />
