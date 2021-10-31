@@ -16,6 +16,7 @@ import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import io.github.cdimascio.dotenv.dotenv
 
 import kotlinx.coroutines.runBlocking
+import java.nio.file.Paths
 
 import java.time.LocalDateTime
 import java.time.format.DateTimeParseException
@@ -73,14 +74,18 @@ fun main() {
 
 private fun login() {
 
+//    println("Directory : ${Paths.get("").toAbsolutePath()}")
     println("\nAccount Ledger Authentication")
     println("--------------------------------")
 
-    val dotenv = dotenv()
+    val dotenv = dotenv() {
+        directory = Paths.get("").toAbsolutePath().toString()
+        ignoreIfMissing = true
+    }
     var username = dotenv["USER_NAME"] ?: ""
     var password = dotenv["PASSWORD"] ?: ""
 
-    if(username.isEmpty()|| password.isEmpty()){
+    if (username.isEmpty() || password.isEmpty()) {
 
         print("Enter Your Username : ")
         username = readLine().toString()
