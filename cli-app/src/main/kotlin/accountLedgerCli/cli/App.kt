@@ -67,7 +67,7 @@ fun main() {
             "1" -> login()
             "2" -> register()
             "0" -> println("Thanks...")
-            else -> println("Invalid option, try again...")
+            else -> invalidOptionMessage()
         }
     } while (choice != "0")
 }
@@ -111,7 +111,7 @@ private fun login() {
                 }
                 "N" -> {
                 }
-                else -> println("Invalid option, try again...")
+                else -> invalidOptionMessage()
             }
         } while (input != "N")
     } else {
@@ -173,7 +173,7 @@ private fun userScreen(username: String, userId: Int) {
             "14" -> importBankFromCsv()
             "15" -> importBankFromXlx()
             "0" -> return
-            else -> println("Invalid option, try again...")
+            else -> invalidOptionMessage()
         }
     } while (choice != "0")
 }
@@ -248,7 +248,7 @@ private fun insertQuickTransactionBankToFrequent1(userId: Int, username: String)
 
         fromAccount = userAccountsMap[baneeBankAccountId]!!
         toAccount = userAccountsMap[baneeFrequent1AccountId]!!
-        transactionContinueCheck(userId = userId, username = username)
+        transactionContinueCheck(userId = userId, username = username, transactionType = TransactionType.NORMAL)
     }
 }
 
@@ -258,7 +258,7 @@ private fun insertQuickTransactionBankToFrequent2(userId: Int, username: String)
 
         fromAccount = userAccountsMap[baneeBankAccountId]!!
         toAccount = userAccountsMap[baneeFrequent2AccountId]!!
-        transactionContinueCheck(userId = userId, username = username)
+        transactionContinueCheck(userId = userId, username = username, transactionType = TransactionType.NORMAL)
     }
 }
 
@@ -268,7 +268,7 @@ private fun insertQuickTransactionBankToFrequent3(userId: Int, username: String)
 
         fromAccount = userAccountsMap[baneeBankAccountId]!!
         toAccount = userAccountsMap[baneeFrequent3AccountId]!!
-        transactionContinueCheck(userId = userId, username = username)
+        transactionContinueCheck(userId = userId, username = username, transactionType = TransactionType.NORMAL)
     }
 }
 
@@ -327,7 +327,7 @@ private fun insertQuickTransactionWalletToFrequent1(userId: Int, username: Strin
 
         fromAccount = userAccountsMap[baneeWalletAccountId]!!
         toAccount = userAccountsMap[baneeFrequent1AccountId]!!
-        transactionContinueCheck(userId = userId, username = username)
+        transactionContinueCheck(userId = userId, username = username, transactionType = TransactionType.NORMAL)
     }
 }
 
@@ -337,7 +337,7 @@ private fun insertQuickTransactionWalletToFrequent2(userId: Int, username: Strin
 
         fromAccount = userAccountsMap[baneeWalletAccountId]!!
         toAccount = userAccountsMap[baneeFrequent2AccountId]!!
-        transactionContinueCheck(userId = userId, username = username)
+        transactionContinueCheck(userId = userId, username = username, transactionType = TransactionType.NORMAL)
     }
 }
 
@@ -347,7 +347,7 @@ private fun insertQuickTransactionWalletToFrequent3(userId: Int, username: Strin
 
         fromAccount = userAccountsMap[baneeWalletAccountId]!!
         toAccount = userAccountsMap[baneeFrequent3AccountId]!!
-        transactionContinueCheck(userId = userId, username = username)
+        transactionContinueCheck(userId = userId, username = username, transactionType = TransactionType.NORMAL)
     }
 }
 
@@ -431,14 +431,10 @@ private fun chooseAccountByIndex(userAccountsMap: LinkedHashMap<Int, AccountResp
     )
     val accountIdInput = readLine()!!
     if (accountIdInput == "0") return 0
-    try {
+    val accountId = InputUtils.getValidInt(accountIdInput, "Invalid Account Index")
+    if (userAccountsMap.containsKey(accountId)) {
 
-        val accountId = accountIdInput.toInt()
-        if (userAccountsMap.containsKey(accountId)) {
-
-            return accountId
-        }
-    } catch (exception: NumberFormatException) {
+        return accountId
     }
     commandLinePrintMenuWithTryPrompt.printMenuWithTryPromptFromListOfCommands(
         listOf("Invalid Account Index, Try again ? (Y/N) : ")
@@ -485,16 +481,16 @@ private fun accountHome(userId: Int, username: String) {
                 viewTransactions(
                     userId = userId, accountId = fromAccount.id, username = username
                 )
-            "2" -> addTransaction(userId = userId, username = username)
+            "2" -> addTransaction(userId = userId, username = username, transactionType = TransactionType.NORMAL)
             "3" ->
                 viewChildAccounts(
                     userId = userId,
                     username = username,
                 )
-            "4" -> addTransaction(userId = userId, username = username, transactionType = "Via.")
-            "5" -> addTransaction(userId = userId, username = username, transactionType = "Two Way")
+            "4" -> addTransaction(userId = userId, username = username, transactionType = TransactionType.VIA)
+            "5" -> addTransaction(userId = userId, username = username, transactionType = TransactionType.TWO_WAY)
             "0" -> return
-            else -> println("Invalid option, try again...")
+            else -> invalidOptionMessage()
         }
     } while (choiceInput != "0")
 }
@@ -516,7 +512,7 @@ private fun viewChildAccounts(username: String, userId: Int) {
                 }
                 "N" -> {
                 }
-                else -> println("Invalid option, try again...")
+                else -> invalidOptionMessage()
             }
         } while (input != "N")
     } else {
@@ -581,7 +577,7 @@ private fun processChildAccountScreenInput(
         "3" -> addAccount()
         "0" -> {
         }
-        else -> println("Invalid option, try again...")
+        else -> invalidOptionMessage()
     }
     return choice
 }
@@ -600,46 +596,68 @@ private fun handleFromAccountSelection(
     }
 }
 
-private fun addTransaction(userId: Int, username: String, transactionType: String = "Normal") {
+private fun addTransaction(userId: Int, username: String, transactionType: TransactionType) {
 
     do {
-        commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
-            listOf(
-                "\nUser : $username",
-                "From Account - ${fromAccount.id} : ${fromAccount.fullName}",
-                "To Account - ${toAccount.id} : ${toAccount.fullName}",
-                "Via. Account - ${viaAccount.id} : ${viaAccount.fullName}",
-                "1 - Choose To Account From List - Top Levels",
-                "2 - Choose To Account From List - Full Names",
-                "3 - Input To Account ID Directly",
-                "4 - Choose From Account From List - Top Levels",
-                "5 - Choose From Account From List - Full Names",
-                "6 - Input From Account ID Directly",
-                "7 - Continue Transaction",
+        var menuItems = listOf(
+            "\nUser : $username",
+            "Transaction Type : $transactionType",
+            "From Account - ${fromAccount.id} : ${fromAccount.fullName}"
+        )
+        if (transactionType == TransactionType.VIA) {
+            menuItems = menuItems + listOf(
+                "Via. Account - ${viaAccount.id} : ${viaAccount.fullName}"
+            )
+        }
+        menuItems = menuItems + listOf(
+            "To Account - ${toAccount.id} : ${toAccount.fullName}",
+            "1 - Choose To Account From List - Top Levels",
+            "2 - Choose To Account From List - Full Names",
+            "3 - Input To Account ID Directly",
+            "4 - Choose From Account From List - Top Levels",
+            "5 - Choose From Account From List - Full Names",
+            "6 - Input From Account ID Directly",
+            "7 - Continue Transaction"
+        )
+        if (transactionType == TransactionType.VIA) {
+            menuItems = menuItems + listOf(
+                "8 - Exchange From & Via. A/Cs",
+                "9 - Exchange From & Via. A/Cs, Then Continue Transaction",
+                "10 - Exchange Via. & To A/Cs",
+                "11 - Exchange Via & To A/Cs, Then Continue Transaction",
+                "12 - Exchange From & To. A/Cs",
+                "13 - Exchange From & To A/Cs, Then Continue Transaction",
+                "14 - Choose Via. Account From List - Top Levels",
+                "15 - Choose Via. Account From List - Full Names",
+                "16 - Input Via. Account ID Directly"
+            )
+        } else {
+            menuItems = menuItems + listOf(
                 "8 - Exchange Accounts",
                 "9 - Exchange Accounts, Then Continue Transaction",
-                // (transactionType == "Via." ? "8 - Choose Via. Account From List - Full
-                // Names" : ""),
-                "10 - Choose Via. Account From List - Full Names",
-                "11 - Input Via. Account ID Directly",
-                "0 - Back",
-                "",
-                "Enter Your Choice : "
             )
+        }
+        menuItems = menuItems + listOf(
+            "0 - Back",
+            "",
+            "Enter Your Choice : "
+        )
+        commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
+            menuItems
         )
         val choice = readLine()
         when (choice) {
             "1" -> {
                 if (chooseDepositTop(userId)) {
 
-                    transactionContinueCheck(userId, username)
+                    transactionContinueCheck(userId, username, transactionType)
                     return
                 }
             }
             "2" -> {
                 if (chooseDepositFull(userId)) {
 
-                    transactionContinueCheck(userId, username)
+                    transactionContinueCheck(userId, username, transactionType)
                     return
                 }
             }
@@ -649,21 +667,21 @@ private fun addTransaction(userId: Int, username: String, transactionType: Strin
                 if (chooseAccountResult.choosedAccountId != 0) {
 
                     toAccount = chooseAccountResult.choosedAccount
-                    transactionContinueCheck(userId, username)
+                    transactionContinueCheck(userId, username, transactionType)
                     return
                 }
             }
             "4" -> {
                 if (chooseFromAccountTop(userId)) {
 
-                    transactionContinueCheck(userId, username)
+                    transactionContinueCheck(userId, username, transactionType)
                     return
                 }
             }
             "5" -> {
                 if (chooseFromAccountFull(userId)) {
 
-                    transactionContinueCheck(userId, username)
+                    transactionContinueCheck(userId, username, transactionType)
                     return
                 }
             }
@@ -672,55 +690,123 @@ private fun addTransaction(userId: Int, username: String, transactionType: Strin
                 if (chooseAccountResult.choosedAccountId != 0) {
 
                     fromAccount = chooseAccountResult.choosedAccount
-                    transactionContinueCheck(userId, username)
+                    transactionContinueCheck(userId, username, transactionType)
                     return
                 }
             }
             "7" -> {
 
-                transactionContinueCheck(userId, username)
+                transactionContinueCheck(userId, username, transactionType)
                 return
             }
             "8" -> {
 
-                exchangeAccounts()
-                addTransaction(userId = userId, username = username)
+                if (transactionType == TransactionType.VIA) {
+
+                    exchangeFromAndViaAccounts()
+
+                } else {
+
+                    exchangeFromAndToAccounts()
+                }
+                addTransaction(userId = userId, username = username, transactionType = transactionType)
                 return
             }
             "9" -> {
 
-                exchangeAccounts()
-                transactionContinueCheck(userId, username)
+                if (transactionType == TransactionType.VIA) {
+
+                    exchangeFromAndViaAccounts()
+
+                } else {
+
+                    exchangeFromAndToAccounts()
+                }
+                transactionContinueCheck(userId, username, transactionType)
                 return
             }
             "10" -> {
-                if (transactionType == "Via.") {
+                if (transactionType == TransactionType.VIA) {
 
-                    if (chooseViaAccountFull(userId)) {
+                    exchangeToAndViaAccounts()
+                    addTransaction(userId = userId, username = username, transactionType = transactionType)
+                    return
 
-                        transactionContinueCheck(userId, username, "Via.")
-                        return
-                    }
                 } else {
-                    println("Invalid option, try again...")
+                    invalidOptionMessage()
                 }
             }
             "11" -> {
-                if (transactionType == "Via.") {
+                if (transactionType == TransactionType.VIA) {
+
+                    exchangeToAndViaAccounts()
+                    transactionContinueCheck(userId, username, transactionType)
+                    return
+
+                } else {
+                    invalidOptionMessage()
+                }
+            }
+            "12" -> {
+                if (transactionType == TransactionType.VIA) {
+
+                    exchangeFromAndToAccounts()
+                    addTransaction(userId = userId, username = username, transactionType = transactionType)
+                    return
+
+                } else {
+                    invalidOptionMessage()
+                }
+            }
+            "13" -> {
+                if (transactionType == TransactionType.VIA) {
+
+                    exchangeFromAndToAccounts()
+                    transactionContinueCheck(userId, username, transactionType)
+                    return
+
+                } else {
+                    invalidOptionMessage()
+                }
+            }
+            "14" -> {
+                if (transactionType == TransactionType.VIA) {
+
+                    ToDoUtils.showTodo()
+                    return
+
+                } else {
+                    invalidOptionMessage()
+                }
+            }
+            "15" -> {
+                if (transactionType == TransactionType.VIA) {
+
+                    if (chooseViaAccountFull(userId)) {
+
+                        transactionContinueCheck(userId, username, TransactionType.VIA)
+                        return
+                    }
+                } else {
+                    invalidOptionMessage()
+                }
+            }
+            "16" -> {
+                if (transactionType == TransactionType.VIA) {
 
                     val chooseAccountResult = ChooseAccountUtils.chooseAccountById(userId)
                     if (chooseAccountResult.choosedAccountId != 0) {
 
                         viaAccount = chooseAccountResult.choosedAccount
-                        transactionContinueCheck(userId, username)
+                        transactionContinueCheck(userId, username, transactionType)
                         return
                     }
                 } else {
-                    println("Invalid option, try again...")
+                    invalidOptionMessage()
                 }
             }
             "0" -> return
-            else -> println("Invalid option, try again...")
+            else -> invalidOptionMessage()
         }
     } while (choice != "0")
 }
@@ -728,21 +814,26 @@ private fun addTransaction(userId: Int, username: String, transactionType: Strin
 private fun transactionContinueCheck(
     userId: Int,
     username: String,
-    transactionType: String = "Normal"
+    transactionType: TransactionType
 ) {
 
     do {
 
-        commandLinePrintMenuWithContinuePrompt.printMenuWithContinuePromptFromListOfCommands(
-            listOf(
-                "\nUser : $username",
-                "From Account - ${fromAccount.id} : ${fromAccount.fullName}",
-                "To Account - ${toAccount.id} : ${toAccount.fullName}",
-                "Via. Account - ${viaAccount.id} : ${viaAccount.fullName}",
-                "",
-                "Continue (Y/N) : "
-            )
+        var menuItems = listOf(
+            "\nUser : $username",
+            "From Account - ${fromAccount.id} : ${fromAccount.fullName}",
         )
+        if (transactionType == TransactionType.VIA) {
+            menuItems = menuItems + listOf(
+                "Via. Account - ${viaAccount.id} : ${viaAccount.fullName}",
+            )
+        }
+        menuItems = menuItems + listOf(
+            "To Account - ${toAccount.id} : ${toAccount.fullName}",
+            "",
+            "Continue (Y/N) : "
+        )
+        commandLinePrintMenuWithContinuePrompt.printMenuWithContinuePromptFromListOfCommands(menuItems)
 
         val input = readLine()
         when (input) {
@@ -755,7 +846,7 @@ private fun transactionContinueCheck(
             }
             "N" -> {
             }
-            else -> println("Invalid option, try again...")
+            else -> invalidOptionMessage()
         }
     } while (input != "N")
 }
@@ -763,18 +854,20 @@ private fun transactionContinueCheck(
 private fun addTransactionWithAccountAvailabilityCheck(
     userId: Int,
     username: String,
-    transactionType: String
+    transactionType: TransactionType
 ) {
 
     if (isAccountsAreAvailable(transactionType)) {
 
-        if (transactionType == "Via.") {
+        if (transactionType == TransactionType.VIA) {
 
             if (addTransactionStep2(
                     userId = userId,
                     username = username,
                     localFromAccount = fromAccount,
-                    localToAccount = viaAccount
+                    localToAccount = viaAccount,
+                    transactionType = transactionType,
+                    localViaAccount = AccountUtils.getBlankAccount()
                 )
             ) {
                 dateTimeString =
@@ -787,7 +880,10 @@ private fun addTransactionWithAccountAvailabilityCheck(
                         userId = userId,
                         username = username,
                         localFromAccount = viaAccount,
-                        localToAccount = toAccount
+                        localToAccount = toAccount,
+                        transactionType = transactionType,
+                        localViaAccount = AccountUtils.getBlankAccount(),
+                        isViaStep = true
                     )
                 ) {
                     dateTimeString =
@@ -797,12 +893,15 @@ private fun addTransactionWithAccountAvailabilityCheck(
                             .format(normalPattern)
                 }
             }
-        } else {
+        } else if (transactionType == TransactionType.NORMAL) {
+
             if (addTransactionStep2(
                     userId = userId,
                     username = username,
                     localFromAccount = fromAccount,
-                    localToAccount = toAccount
+                    localToAccount = toAccount,
+                    transactionType = transactionType,
+                    localViaAccount = AccountUtils.getBlankAccount()
                 )
             ) {
                 dateTimeString =
@@ -811,24 +910,60 @@ private fun addTransactionWithAccountAvailabilityCheck(
                             LocalDateTime)
                         .format(normalPattern)
             }
+        } else if (transactionType == TransactionType.TWO_WAY) {
+
+            if (addTransactionStep2(
+                    userId = userId,
+                    username = username,
+                    localFromAccount = fromAccount,
+                    localToAccount = toAccount,
+                    transactionType = transactionType,
+                    localViaAccount = AccountUtils.getBlankAccount()
+                )
+            ) {
+                dateTimeString =
+                    ((LocalDateTime.parse(dateTimeString, normalPattern) as LocalDateTime)
+                        .plusMinutes(5) as
+                            LocalDateTime)
+                        .format(normalPattern)
+
+                if (addTransactionStep2(
+                        userId = userId,
+                        username = username,
+                        localFromAccount = toAccount,
+                        localToAccount = fromAccount,
+                        transactionType = transactionType,
+                        localViaAccount = AccountUtils.getBlankAccount(),
+                        isTwoWayStep = true
+                    )
+                ) {
+                    dateTimeString =
+                        ((LocalDateTime.parse(dateTimeString, normalPattern) as LocalDateTime)
+                            .plusMinutes(5) as
+                                LocalDateTime)
+                            .format(normalPattern)
+                }
+            }
         }
     } else {
 
-        addTransaction(userId = userId, username = username)
+        addTransaction(userId = userId, username = username, transactionType = transactionType)
     }
 }
 
-private fun isAccountsAreAvailable(transactionType: String): Boolean {
+private fun isAccountsAreAvailable(transactionType: TransactionType): Boolean {
 
     if (toAccount.id == 0) {
 
         println("Please choose deposit account...")
         return false
+
     } else if (fromAccount.id == 0) {
 
         println("Please choose from account...")
         return false
-    } else if ((transactionType == "Via.") && (viaAccount.id == 0)) {
+
+    } else if ((transactionType == TransactionType.VIA) && (viaAccount.id == 0)) {
 
         println("Please choose via. account...")
         return false
@@ -840,171 +975,384 @@ private fun addTransactionStep2(
     userId: Int,
     username: String,
     localFromAccount: AccountResponse,
-    localToAccount: AccountResponse
+    localToAccount: AccountResponse,
+    transactionType: TransactionType,
+    localViaAccount: AccountResponse,
+    isViaStep: Boolean = false,
+    isTwoWayStep: Boolean = false
 ): Boolean {
 
-    commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
-        listOf(
-            "\nUser : $username",
-            "Account - ${localFromAccount.id} : ${localFromAccount.fullName}",
-            "Deposit Account - ${localToAccount.id} : ${localToAccount.fullName}",
+    var menuItems = listOf(
+        "\nUser : $username",
+        "Withdraw Account - ${fromAccount.id} : ${fromAccount.fullName}",
+    )
+    if (transactionType == TransactionType.VIA) {
+        menuItems = menuItems + listOf(
+            "Intermediate Account - ${viaAccount.id} : ${viaAccount.fullName}",
+        )
+    }
+    menuItems = menuItems + listOf(
+        "Deposit Account - ${toAccount.id} : ${toAccount.fullName}",
+    )
+    if (isViaStep || isTwoWayStep) {
+
+        return invokeAutomatedInsertTransaction(
+            userId = userId,
+            eventDateTime = dateTimeString,
+            particulars = transactionParticulars,
+            amount = transactionAmount,
+            localFromAccount = localFromAccount,
+            localToAccount = localToAccount
+        )
+
+    } else {
+
+        menuItems = menuItems + listOf(
             // TODO : Complete back
             "Enter Time : "
         )
-    )
-    when (val inputDateTimeString = enterDateWithTime()) {
-        "D+Tr" -> {
+        commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(menuItems)
+        when (val inputDateTimeString = enterDateWithTime(transactionType = transactionType)) {
+            "D+Tr" -> {
 
-            dateTimeString =
-                DateTimeUtils.add1DayWith9ClockTimeToDateTimeString(
-                    dateTimeString = dateTimeString
-                )
-            return addTransactionStep2(
-                userId = userId,
-                username = username,
-                localFromAccount = localFromAccount,
-                localToAccount = localToAccount
-            )
-        }
-        "D+" -> {
-
-            dateTimeString = DateTimeUtils.add1DayToDateTimeString(dateTimeString = dateTimeString)
-            return addTransactionStep2(
-                userId = userId,
-                username = username,
-                localFromAccount = localFromAccount,
-                localToAccount = localToAccount
-            )
-        }
-        "D2+Tr" -> {
-
-            dateTimeString =
-                DateTimeUtils.add2DaysWith9ClockTimeToDateTimeString(
-                    dateTimeString = dateTimeString
-                )
-            return addTransactionStep2(
-                userId = userId,
-                username = username,
-                localFromAccount = localFromAccount,
-                localToAccount = localToAccount
-            )
-        }
-        "D2+" -> {
-
-            dateTimeString = DateTimeUtils.add2DaysToDateTimeString(dateTimeString = dateTimeString)
-            return addTransactionStep2(
-                userId = userId,
-                username = username,
-                localFromAccount = localFromAccount,
-                localToAccount = localToAccount
-            )
-        }
-        "Ex" -> {
-
-            exchangeAccounts()
-            return addTransactionStep2(
-                userId = userId,
-                username = username,
-                localFromAccount = localFromAccount,
-                localToAccount = localToAccount
-            )
-        }
-        "B" -> {
-
-            return false
-        }
-        else -> {
-
-            dateTimeString = inputDateTimeString
-
-            print("Enter Particulars (Current Value - $transactionParticulars): ")
-            // TODO : Back to fields, or complete back
-            val transactionParticularsInput = readLine()!!
-            if (transactionParticularsInput.isNotEmpty()) {
-
-                transactionParticulars = transactionParticularsInput
-            }
-
-            print("Enter Amount (Current Value - $transactionAmount) : ")
-            val transactionAmountInput = readLine()!!
-            if (transactionAmountInput.isNotEmpty()) {
-
-                transactionAmount = getValidAmount(transactionAmountInput)
-            }
-
-            do {
-                commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
-                    listOf(
-                        "\nTime - $dateTimeString",
-                        "Account - ${localFromAccount.id} : ${localFromAccount.fullName}",
-                        "Deposit Account - ${localToAccount.id} : ${localToAccount.fullName}",
-                        "Particulars - $transactionParticulars",
-                        "Amount - $transactionAmount",
-                        "\nCorrect ? (Y/N), Enter Ex to exchange accounts or B to back : "
+                dateTimeString =
+                    DateTimeUtils.add1DayWith9ClockTimeToDateTimeString(
+                        dateTimeString = dateTimeString
                     )
+                return invokeAddTransactionStep2(
+                    userId = userId,
+                    username = username,
+                    localFromAccount = localFromAccount,
+                    localToAccount = localToAccount,
+                    transactionType = transactionType,
+                    localViaAccount = localViaAccount
                 )
-                val isCorrect = readLine()
-                when (isCorrect) {
-                    "Y", "" -> {
-                        if (insertTransaction(
-                                userid = userId,
+            }
+            "D+" -> {
+
+                dateTimeString = DateTimeUtils.add1DayToDateTimeString(dateTimeString = dateTimeString)
+                return invokeAddTransactionStep2(
+                    userId = userId,
+                    username = username,
+                    localFromAccount = localFromAccount,
+                    localToAccount = localToAccount,
+                    transactionType = transactionType,
+                    localViaAccount = localViaAccount
+                )
+            }
+            "D2+Tr" -> {
+
+                dateTimeString =
+                    DateTimeUtils.add2DaysWith9ClockTimeToDateTimeString(
+                        dateTimeString = dateTimeString
+                    )
+                return invokeAddTransactionStep2(
+                    userId = userId,
+                    username = username,
+                    localFromAccount = localFromAccount,
+                    localToAccount = localToAccount,
+                    transactionType = transactionType,
+                    localViaAccount = localViaAccount
+                )
+            }
+            "D2+" -> {
+
+                dateTimeString = DateTimeUtils.add2DaysToDateTimeString(dateTimeString = dateTimeString)
+                return invokeAddTransactionStep2(
+                    userId = userId,
+                    username = username,
+                    localFromAccount = localFromAccount,
+                    localToAccount = localToAccount,
+                    transactionType = transactionType,
+                    localViaAccount = localViaAccount
+                )
+            }
+            "Ex" -> {
+
+                return ex13(userId, username, localFromAccount, localToAccount, transactionType, localViaAccount)
+            }
+            "Ex13" -> {
+
+                return ex13(userId, username, localFromAccount, localToAccount, transactionType, localViaAccount)
+            }
+            "Ex12" -> {
+
+                return ex12(userId, username, localFromAccount, localToAccount, transactionType, localViaAccount)
+            }
+            "Ex23" -> {
+
+                return ex23(userId, username, localFromAccount, localToAccount, transactionType, localViaAccount)
+            }
+            "B" -> {
+
+                return false
+            }
+            else -> {
+
+                dateTimeString = inputDateTimeString
+
+                print("Enter Particulars (Current Value - $transactionParticulars): ")
+                // TODO : Back to fields, or complete back
+                val transactionParticularsInput = readLine()!!
+                if (transactionParticularsInput.isNotEmpty()) {
+
+                    transactionParticulars = transactionParticularsInput
+                }
+
+                print("Enter Amount (Current Value - $transactionAmount) : ")
+                val transactionAmountInput = readLine()!!
+                if (transactionAmountInput.isNotEmpty()) {
+
+                    transactionAmount =
+                        InputUtils.getValidFloat(transactionAmountInput, "Invalid Amount : Try Again")
+                }
+
+                do {
+                    commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
+                        listOf(
+                            "\nTime - $dateTimeString",
+                            "Account - ${localFromAccount.id} : ${localFromAccount.fullName}",
+                            "Deposit Account - ${localToAccount.id} : ${localToAccount.fullName}",
+                            "Particulars - $transactionParticulars",
+                            "Amount - $transactionAmount",
+                            "\nCorrect ? (Y/N),${if (transactionType == TransactionType.VIA) " Ex12 to exchange From & Via A/Cs, Ex23 to exchange Via & To A/Cs, Ex13 to exchange From & To A/Cs" else " Ex to exchange From & To A/Cs"} or B to back : "
+                        )
+                    )
+                    val isCorrect = readLine()
+                    when (isCorrect) {
+                        "Y", "" -> {
+                            return invokeInsertTransaction(
+                                userId = userId,
                                 eventDateTime = dateTimeString,
                                 particulars = transactionParticulars,
                                 amount = transactionAmount,
                                 localFromAccount = localFromAccount,
                                 localToAccount = localToAccount
                             )
-                        ) {
-                            return true
                         }
+                        // TODO : Back to fields
+                        "N" ->
+                            return invokeAddTransactionStep2(
+                                userId = userId,
+                                username = username,
+                                localFromAccount = localFromAccount,
+                                localToAccount = localToAccount,
+                                transactionType = transactionType,
+                                localViaAccount = localViaAccount
+                            )
+                        "Ex" -> {
+
+                            if (transactionType == TransactionType.NORMAL) {
+                                return ex13(
+                                    userId,
+                                    username,
+                                    localFromAccount,
+                                    localToAccount,
+                                    transactionType,
+                                    localViaAccount
+                                )
+                            } else {
+                                invalidOptionMessage()
+                            }
+                        }
+                        "Ex13" -> {
+                            if (transactionType == TransactionType.VIA) {
+                                return ex13(
+                                    userId,
+                                    username,
+                                    localFromAccount,
+                                    localToAccount,
+                                    transactionType,
+                                    localViaAccount
+                                )
+                            } else {
+                                invalidOptionMessage()
+                            }
+                        }
+                        "Ex12" -> {
+
+                            if (transactionType == TransactionType.VIA) {
+                                return ex12(
+                                    userId,
+                                    username,
+                                    localFromAccount,
+                                    localToAccount,
+                                    transactionType,
+                                    localViaAccount
+                                )
+                            } else {
+                                invalidOptionMessage()
+                            }
+                        }
+                        "Ex23" -> {
+
+                            if (transactionType == TransactionType.VIA) {
+                                return ex23(
+                                    userId,
+                                    username,
+                                    localFromAccount,
+                                    localToAccount,
+                                    transactionType,
+                                    localViaAccount
+                                )
+                            } else {
+                                invalidOptionMessage()
+                            }
+                        }
+                        else -> invalidOptionMessage()
                     }
-                    // TODO : Back to fields
-                    "N" ->
-                        return addTransactionStep2(
-                            userId = userId,
-                            username = username,
-                            localFromAccount = localFromAccount,
-                            localToAccount = localToAccount
-                        )
-                    "Ex" -> {
-                        exchangeAccounts()
-                        return addTransactionStep2(
-                            userId = userId,
-                            username = username,
-                            localFromAccount = localFromAccount,
-                            localToAccount = localToAccount
-                        )
-                    }
-                    else -> println("Invalid option, try again...")
-                }
-            } while (isCorrect != "B")
+                } while (isCorrect != "B")
+            }
         }
+        return false
+    }
+}
+
+private fun invokeAutomatedInsertTransaction(
+    userId: Int,
+    eventDateTime: String,
+    particulars: String,
+    amount: Float,
+    localFromAccount: AccountResponse,
+    localToAccount: AccountResponse,
+): Boolean {
+    commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
+        listOf(
+            "\nTime - $eventDateTime",
+            "Withdraw Account - ${localFromAccount.id} : ${localFromAccount.fullName}",
+            "Deposit Account - ${localToAccount.id} : ${localToAccount.fullName}",
+            "Particulars - $particulars",
+            "Amount - $amount"
+        )
+    )
+    return invokeInsertTransaction(
+        userId = userId, eventDateTime = eventDateTime, particulars = particulars,
+        amount = amount, localFromAccount = localFromAccount, localToAccount = localToAccount
+    )
+}
+
+private fun ex23(
+    userId: Int,
+    username: String,
+    localFromAccount: AccountResponse,
+    localToAccount: AccountResponse,
+    transactionType: TransactionType,
+    localViaAccount: AccountResponse
+): Boolean {
+    exchangeToAndViaAccounts()
+    return invokeAddTransactionStep2(
+        userId = userId,
+        username = username,
+        localFromAccount = localFromAccount,
+        localToAccount = localToAccount,
+        transactionType = transactionType,
+        localViaAccount = localViaAccount
+    )
+}
+
+private fun ex12(
+    userId: Int,
+    username: String,
+    localFromAccount: AccountResponse,
+    localToAccount: AccountResponse,
+    transactionType: TransactionType,
+    localViaAccount: AccountResponse
+): Boolean {
+    exchangeFromAndViaAccounts()
+    return invokeAddTransactionStep2(
+        userId = userId,
+        username = username,
+        localFromAccount = localFromAccount,
+        localToAccount = localToAccount,
+        transactionType = transactionType,
+        localViaAccount = localViaAccount
+    )
+}
+
+private fun ex13(
+    userId: Int,
+    username: String,
+    localFromAccount: AccountResponse,
+    localToAccount: AccountResponse,
+    transactionType: TransactionType,
+    localViaAccount: AccountResponse
+): Boolean {
+    exchangeFromAndToAccounts()
+    return invokeAddTransactionStep2(
+        userId = userId,
+        username = username,
+        localFromAccount = localFromAccount,
+        localToAccount = localToAccount,
+        transactionType = transactionType,
+        localViaAccount = localViaAccount
+    )
+}
+
+private fun invokeInsertTransaction(
+    userId: Int,
+    eventDateTime: String,
+    particulars: String,
+    amount: Float,
+    localFromAccount: AccountResponse,
+    localToAccount: AccountResponse
+): Boolean {
+    if (insertTransaction(
+            userid = userId,
+            eventDateTime = eventDateTime,
+            particulars = particulars,
+            amount = amount,
+            localFromAccount = localFromAccount,
+            localToAccount = localToAccount
+        )
+    ) {
+        return true
     }
     return false
 }
 
-fun getValidAmount(transactionAmountInput: String): Float {
-
-    try {
-        return transactionAmountInput.toFloat()
-    } catch (exception: NumberFormatException) {
-
-        println("Invalid Amount : Try Again")
-        return getValidAmount(readLine()!!)
-    }
+private fun invokeAddTransactionStep2(
+    userId: Int,
+    username: String,
+    localFromAccount: AccountResponse,
+    localToAccount: AccountResponse,
+    transactionType: TransactionType,
+    localViaAccount: AccountResponse
+): Boolean {
+    return addTransactionStep2(
+        userId = userId,
+        username = username,
+        localFromAccount = localFromAccount,
+        localToAccount = localToAccount,
+        transactionType = transactionType,
+        localViaAccount = localViaAccount
+    )
 }
 
-private fun exchangeAccounts() {
+private fun exchangeFromAndToAccounts() {
 
     val tempAccount = fromAccount
     fromAccount = toAccount
     toAccount = tempAccount
 }
 
-private fun enterDateWithTime(): String {
+private fun exchangeFromAndViaAccounts() {
+
+    val tempAccount = fromAccount
+    fromAccount = viaAccount
+    viaAccount = tempAccount
+}
+
+private fun exchangeToAndViaAccounts() {
+
+    val tempAccount = toAccount
+    toAccount = viaAccount
+    viaAccount = tempAccount
+}
+
+private fun enterDateWithTime(transactionType: TransactionType): String {
 
     print(
-        "$dateTimeString Correct? (Y/N), D+Tr to increase 1 Day with Time Reset, D+ to increase 1 Day, D2+Tr to increase 2 Days with Time Reset, D2+ to increase 2 Days, Ex to exchange accounts or B to Back : "
+        "$dateTimeString Correct? (Y/N), D+Tr to increase 1 Day with Time Reset, D+ to increase 1 Day, D2+Tr to increase 2 Days with Time Reset, D2+ to increase 2 Days,${if (transactionType == TransactionType.VIA) " Ex12 to exchange From & Via A/Cs, Ex23 to exchange Via & To A/Cs, Ex13 to exchange From & To A/Cs" else " Ex to exchange From & To A/Cs"} or B to Back : "
     )
     when (readLine()) {
         "Y", "" -> {
@@ -1033,7 +1381,35 @@ private fun enterDateWithTime(): String {
         }
         "Ex" -> {
 
+            if (transactionType == TransactionType.VIA) {
+                invalidOptionMessage()
+                return enterDateWithTime(transactionType = transactionType)
+            }
             return "Ex"
+        }
+        "Ex12" -> {
+
+            if (transactionType != TransactionType.VIA) {
+                invalidOptionMessage()
+                return enterDateWithTime(transactionType = transactionType)
+            }
+            return "Ex12"
+        }
+        "Ex23" -> {
+
+            if (transactionType != TransactionType.VIA) {
+                invalidOptionMessage()
+                return enterDateWithTime(transactionType = transactionType)
+            }
+            return "Ex23"
+        }
+        "Ex13" -> {
+
+            if (transactionType != TransactionType.VIA) {
+                invalidOptionMessage()
+                return enterDateWithTime(transactionType = transactionType)
+            }
+            return "Ex13"
         }
         "B" -> {
 
@@ -1041,8 +1417,8 @@ private fun enterDateWithTime(): String {
         }
         else -> {
 
-            println("Invalid option, try again...")
-            return enterDateWithTime()
+            invalidOptionMessage()
+            return enterDateWithTime(transactionType = transactionType)
         }
     }
 }
@@ -1244,7 +1620,7 @@ private fun handleAccountsApiResponse(
                     }
                     "0" -> {
                     }
-                    else -> println("Invalid option, try again...")
+                    else -> invalidOptionMessage()
                 }
             } while (choice != "0")
         }
@@ -1313,7 +1689,7 @@ private fun searchAccount(userAccountsMap: LinkedHashMap<Int, AccountResponse>):
             )
             val input = readLine()
             if (input == "1") return searchAccount(userAccountsMap = userAccountsMap)
-            else if (input != "0") println("Invalid option, try again...")
+            else if (input != "0") invalidOptionMessage()
         } while (input != "0")
     } else {
 
@@ -1330,7 +1706,7 @@ private fun searchAccount(userAccountsMap: LinkedHashMap<Int, AccountResponse>):
             )
             val input = readLine()
             if (input == "1") return chooseAccountByIndex(searchResult)
-            else if (input != "0") println("Invalid option, try again...")
+            else if (input != "0") invalidOptionMessage()
         } while (input != "0")
     }
     return 0
@@ -1412,7 +1788,7 @@ private fun viewTransactions(userId: Int, accountId: Int, username: String) {
                 }
                 "N" -> {
                 }
-                else -> println("Invalid option, try again...")
+                else -> invalidOptionMessage()
             }
         } while (input != "N")
     } else {
@@ -1450,11 +1826,15 @@ private fun viewTransactions(userId: Int, accountId: Int, username: String) {
                     }
                     "0" -> {
                     }
-                    else -> println("Invalid option, try again...")
+                    else -> invalidOptionMessage()
                 }
             } while (choice != "0")
         }
     }
+}
+
+private fun invalidOptionMessage() {
+    println("Invalid option, try again...")
 }
 
 private fun printAccountLedger(transactions: List<TransactionResponse>, currentAccountId: Int): String {

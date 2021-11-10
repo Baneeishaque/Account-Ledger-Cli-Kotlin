@@ -1,11 +1,11 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="cli-app.bat Absolute Path Execution from Outside Folder" type="ShConfigurationType">
-    <option name="SCRIPT_TEXT" value="tar -xvf $PROJECT_DIR$/../Account-Ledger-Cli-Kotlin-Gradle\cli-app\build\distributions\cli-app.tar -C C:\Account-Ledger-Cli\ &amp;&amp; timeout 5 &amp;&amp; cp $PROJECT_DIR$/../Account-Ledger-Cli-Kotlin-Gradle\.env C:\Account-Ledger-Cli\cli-app\bin\ &amp;&amp; C:\Account-Ledger-Cli\cli-app\bin\cli-app.bat" />
+    <option name="SCRIPT_TEXT" value="mkdir C:\Account-Ledger-Cli &amp; tar -xvf $PROJECT_DIR$/../Account-Ledger-Cli-Kotlin-Gradle\cli-app\build\distributions\cli-app.tar -C C:\Account-Ledger-Cli\ &amp;&amp; timeout 5 &amp;&amp; cp $PROJECT_DIR$/../Account-Ledger-Cli-Kotlin-Gradle\.env C:\Account-Ledger-Cli\cli-app\bin\ &amp;&amp; C:\Account-Ledger-Cli\cli-app\bin\cli-app.bat" />
     <option name="INDEPENDENT_SCRIPT_PATH" value="true" />
     <option name="SCRIPT_PATH" value="" />
     <option name="SCRIPT_OPTIONS" value="" />
     <option name="INDEPENDENT_SCRIPT_WORKING_DIRECTORY" value="false" />
-    <option name="SCRIPT_WORKING_DIRECTORY" value="$PROJECT_DIR$/cli-app" />
+    <option name="SCRIPT_WORKING_DIRECTORY" value="$PROJECT_DIR$" />
     <option name="INDEPENDENT_INTERPRETER_PATH" value="true" />
     <option name="INTERPRETER_PATH" value="" />
     <option name="INTERPRETER_OPTIONS" value="" />
