@@ -40,4 +40,10 @@ internal interface Api {
         @Field("from_account_id") fromAccountId: Int,
         @Field("to_account_id") toAccountId: Int?
     ): Response<InsertionResponse>
+
+    @GET("${ApiConstants.selectUserTransactionsAfterSpecifiedDate}.${ApiConstants.serverFileExtension}")
+    suspend fun selectUserTransactionsAfterSpecifiedDate(
+        @Query("user_id") userId: Int,
+        @Query("specified_date") specifiedDate: String
+    ): Response<TransactionsResponse>
 }

@@ -5,7 +5,8 @@ import java.time.format.DateTimeFormatter.ofPattern
 
 object DateTimeUtils {
 
-    val normalPattern = ofPattern("dd/MM/yyyy HH:mm:ss")!!
+    val normalDateTimePattern = ofPattern("dd/MM/yyyy HH:mm:ss")!!
+    val normalDatePattern = ofPattern("dd/MM/yyyy")!!
 
     //TODO : extract into function
     private const val resetHour = 9
@@ -20,7 +21,7 @@ object DateTimeUtils {
         return addDaysToDateTimeStringAsDateTime(
             dateTimeString = dateTimeString,
             days = days
-        ).format(normalPattern)
+        ).format(normalDateTimePattern)
     }
 
     fun addDaysToDateTimeStringAsDateTime(
@@ -30,7 +31,7 @@ object DateTimeUtils {
 
         return LocalDateTime.parse(
             dateTimeString,
-            normalPattern
+            normalDateTimePattern
         ).plusDays(days.toLong())
     }
 
@@ -68,7 +69,7 @@ object DateTimeUtils {
 
     fun add1DayWith9ClockTimeToDateTimeString(dateTimeString: String): String {
 
-        return add1DayWith9ClockTimeToDateTimeStringAsDateTime(dateTimeString = dateTimeString).format(normalPattern)
+        return add1DayWith9ClockTimeToDateTimeStringAsDateTime(dateTimeString = dateTimeString).format(normalDateTimePattern)
     }
 
     fun add1DayWith9ClockTimeToDateTimeStringAsDateTime(dateTimeString: String): LocalDateTime {
@@ -85,6 +86,6 @@ object DateTimeUtils {
 
     fun add2DaysWith9ClockTimeToDateTimeString(dateTimeString: String): String {
 
-        return add2DaysWith9ClockTimeToDateTimeStringAsDateTime(dateTimeString = dateTimeString).format(normalPattern)
+        return add2DaysWith9ClockTimeToDateTimeStringAsDateTime(dateTimeString = dateTimeString).format(normalDateTimePattern)
     }
 }

@@ -7,7 +7,7 @@ import accountLedgerCli.retrofit.data.TransactionDataSource
 import accountLedgerCli.retrofit.data.TransactionsDataSource
 import accountLedgerCli.retrofit.data.UserDataSource
 import accountLedgerCli.to_utils.*
-import accountLedgerCli.to_utils.DateTimeUtils.normalPattern
+import accountLedgerCli.to_utils.DateTimeUtils.normalDateTimePattern
 import accountLedgerCli.utils.AccountUtils
 import accountLedgerCli.utils.ApiUtils
 import accountLedgerCli.utils.ChooseAccountUtils
@@ -19,9 +19,8 @@ import kotlinx.coroutines.runBlocking
 import java.nio.file.Paths
 
 import java.time.LocalDateTime
-import java.time.format.DateTimeParseException
 
-internal var dateTimeString = LocalDateTime.now().format(normalPattern)
+internal var dateTimeString = LocalDateTime.now().format(normalDateTimePattern)
 
 private var fromAccount = AccountUtils.getBlankAccount()
 private var viaAccount = AccountUtils.getBlankAccount()
@@ -150,6 +149,7 @@ private fun userScreen(username: String, userId: Int) {
                 "13 - List Accounts : Full Names",
                 "14 - Import Transactions To : Bank : $baneeBankAccountName From CSV",
                 "15 - Import Transactions To : Bank : $baneeBankAccountName From XLX",
+                "16 - Check A/Cs affected after a specified date",
                 "0 - Logout",
                 "",
                 "Enter Your Choice : "
@@ -172,10 +172,78 @@ private fun userScreen(username: String, userId: Int) {
             "13" -> listAccountsFull(username = username, userId = userId)
             "14" -> importBankFromCsv()
             "15" -> importBankFromXlx()
-            "0" -> return
+            "16" -> checkAccountsAffectedAfterSpecifiedDate(userId = userId, username = username)
+            "0" -> {}
             else -> invalidOptionMessage()
         }
     } while (choice != "0")
+}
+
+private fun checkAccountsAffectedAfterSpecifiedDate(userId: Int, username: String) {
+
+    val inputDate = InputUtils.getValidDateInNormalPattern()
+    val transactionsDataSource = TransactionsDataSource()
+    println("Contacting Server...")
+    val apiResponse: ResponseHolder<TransactionsResponse>
+    val specifiedDate = MysqlUtils.normalDateStringToMysqlDateString(normalDateString = inputDate)
+    if (specifiedDate.first) {
+        runBlocking {
+            apiResponse =
+                transactionsDataSource.selectUserTransactionsAfterSpecifiedDate(
+                    userId = userId,
+                    specifiedDate = specifiedDate.second
+                )
+        }
+        // println("Response : $apiResponse")
+        if (apiResponse.isError()) {
+
+            println("Error : ${(apiResponse.getValue() as Exception).localizedMessage}")
+            do {
+                print("Retry (Y/N) ? : ")
+                val input = readLine()
+                when (input) {
+                    "Y", "" -> {
+                        checkAccountsAffectedAfterSpecifiedDate(userId = userId, username = username)
+                        return
+                    }
+                    "N" -> {
+                    }
+                    else -> invalidOptionMessage()
+                }
+            } while (input != "N")
+        } else {
+
+            val selectUserTransactionsAfterSpecifiedDateResult = apiResponse.getValue() as TransactionsResponse
+            if (selectUserTransactionsAfterSpecifiedDateResult.status == 1) {
+
+                println("No Transactions...")
+
+            } else {
+
+                val accounts = mutableMapOf<Int, String>()
+                selectUserTransactionsAfterSpecifiedDateResult.transactions.forEach { transaction ->
+
+                    accounts.putIfAbsent(transaction.from_account_id, transaction.from_account_full_name)
+                    accounts.putIfAbsent(transaction.to_account_id, transaction.to_account_full_name)
+                }
+                println("Affected A/Cs : $accounts")
+                for (account in accounts) {
+
+                    when (viewTransactions(
+                        userId = userId,
+                        username = username,
+                        accountId = account.key,
+                        accountFullName = account.value,
+                        isFromCheckAccounts = true
+                    )) {
+                        "E", "0" -> {
+                            break
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 private fun register() {
@@ -479,7 +547,10 @@ private fun accountHome(userId: Int, username: String) {
         when (choiceInput) {
             "1" ->
                 viewTransactions(
-                    userId = userId, accountId = fromAccount.id, username = username
+                    userId = userId,
+                    username = username,
+                    accountId = fromAccount.id,
+                    accountFullName = fromAccount.fullName
                 )
             "2" -> addTransaction(userId = userId, username = username, transactionType = TransactionType.NORMAL)
             "3" ->
@@ -871,10 +942,10 @@ private fun addTransactionWithAccountAvailabilityCheck(
                 )
             ) {
                 dateTimeString =
-                    ((LocalDateTime.parse(dateTimeString, normalPattern) as LocalDateTime)
+                    ((LocalDateTime.parse(dateTimeString, normalDateTimePattern) as LocalDateTime)
                         .plusMinutes(5) as
                             LocalDateTime)
-                        .format(normalPattern)
+                        .format(normalDateTimePattern)
 
                 if (addTransactionStep2(
                         userId = userId,
@@ -887,10 +958,10 @@ private fun addTransactionWithAccountAvailabilityCheck(
                     )
                 ) {
                     dateTimeString =
-                        ((LocalDateTime.parse(dateTimeString, normalPattern) as LocalDateTime)
+                        ((LocalDateTime.parse(dateTimeString, normalDateTimePattern) as LocalDateTime)
                             .plusMinutes(5) as
                                 LocalDateTime)
-                            .format(normalPattern)
+                            .format(normalDateTimePattern)
                 }
             }
         } else if (transactionType == TransactionType.NORMAL) {
@@ -905,10 +976,10 @@ private fun addTransactionWithAccountAvailabilityCheck(
                 )
             ) {
                 dateTimeString =
-                    ((LocalDateTime.parse(dateTimeString, normalPattern) as LocalDateTime)
+                    ((LocalDateTime.parse(dateTimeString, normalDateTimePattern) as LocalDateTime)
                         .plusMinutes(5) as
                             LocalDateTime)
-                        .format(normalPattern)
+                        .format(normalDateTimePattern)
             }
         } else if (transactionType == TransactionType.TWO_WAY) {
 
@@ -922,10 +993,10 @@ private fun addTransactionWithAccountAvailabilityCheck(
                 )
             ) {
                 dateTimeString =
-                    ((LocalDateTime.parse(dateTimeString, normalPattern) as LocalDateTime)
+                    ((LocalDateTime.parse(dateTimeString, normalDateTimePattern) as LocalDateTime)
                         .plusMinutes(5) as
                             LocalDateTime)
-                        .format(normalPattern)
+                        .format(normalDateTimePattern)
 
                 if (addTransactionStep2(
                         userId = userId,
@@ -938,10 +1009,10 @@ private fun addTransactionWithAccountAvailabilityCheck(
                     )
                 ) {
                     dateTimeString =
-                        ((LocalDateTime.parse(dateTimeString, normalPattern) as LocalDateTime)
+                        ((LocalDateTime.parse(dateTimeString, normalDateTimePattern) as LocalDateTime)
                             .plusMinutes(5) as
                                 LocalDateTime)
-                            .format(normalPattern)
+                            .format(normalDateTimePattern)
                 }
             }
         }
@@ -1361,7 +1432,7 @@ private fun enterDateWithTime(transactionType: TransactionType): String {
         }
         "N" -> {
 
-            return inputDateTime()
+            return InputUtils.getValidDateTimeInNormalPattern()
         }
         "D+Tr" -> {
 
@@ -1423,24 +1494,6 @@ private fun enterDateWithTime(transactionType: TransactionType): String {
     }
 }
 
-private fun inputDateTime(): String {
-
-    // TODO : Implement Back
-    print("Enter Time (MM/DD/YYYY HH:MM:SS) : ")
-    // TODO : To Utils
-    try {
-
-        //        val normalMonthDay = ofPattern("dd")!!
-        //        val dateTimeInput= readLine()!!
-        //        while (dateTimeInput.isEmpty())
-        return LocalDateTime.parse(readLine(), normalPattern).format(normalPattern)
-    } catch (e: DateTimeParseException) {
-
-        println("Invalid Date...")
-        return inputDateTime()
-    }
-}
-
 private fun insertTransaction(
     userid: Int,
     eventDateTime: String,
@@ -1453,41 +1506,44 @@ private fun insertTransaction(
     val apiResponse: ResponseHolder<InsertionResponse>
     val userTransactionDataSource = TransactionDataSource()
     println("Contacting Server...")
-    runBlocking {
-        apiResponse =
-            userTransactionDataSource.insertTransaction(
-                userId = userid,
-                fromAccountId = localFromAccount.id,
-                eventDateTimeString = eventDateTime,
-                particulars = particulars,
-                amount = amount,
-                toAccountId = localToAccount.id
-            )
-    }
-    //    println("Response : $apiResponse")
-    if (apiResponse.isError()) {
+    val eventDateTimeConversionResult =
+        MysqlUtils.normalDateTimeStringToMysqlDateTimeString(normalDateTimeString = eventDateTime)
+    if (eventDateTimeConversionResult.first) {
+        runBlocking {
+            apiResponse =
+                userTransactionDataSource.insertTransaction(
+                    userId = userid,
+                    fromAccountId = localFromAccount.id,
+                    eventDateTimeString = eventDateTimeConversionResult.second,
+                    particulars = particulars,
+                    amount = amount,
+                    toAccountId = localToAccount.id
+                )
+        }
+        //    println("Response : $apiResponse")
+        if (apiResponse.isError()) {
 
-        println("Error : ${(apiResponse.getValue() as Exception).localizedMessage}")
-        //        do {
-        //            print("Retry (Y/N) ? : ")
-        //            val input = readLine()
-        //            when (input) {
-        //                "Y", "" -> {
-        //                    login()
-        //                    return
-        //                }
-        //                "N" -> {
-        //                }
-        //                else -> println("Invalid option, try again...")
-        //            }
-        //        } while (input != "N")
-    } else {
+            println("Error : ${(apiResponse.getValue() as Exception).localizedMessage}")
+            //        do {
+            //            print("Retry (Y/N) ? : ")
+            //            val input = readLine()
+            //            when (input) {
+            //                "Y", "" -> {
+            //                    login()
+            //                    return
+            //                }
+            //                "N" -> {
+            //                }
+            //                else -> println("Invalid option, try again...")
+            //            }
+            //        } while (input != "N")
+        } else {
 
-        val insertionResponseResult = apiResponse.getValue() as InsertionResponse
-        if (insertionResponseResult.status == 0) {
+            val insertionResponseResult = apiResponse.getValue() as InsertionResponse
+            if (insertionResponseResult.status == 0) {
 
-            println("OK...")
-            return true
+                println("OK...")
+                return true
         } else {
 
             println("Server Execution Error : ${insertionResponseResult.error}")
@@ -1771,7 +1827,13 @@ private fun chooseFromAccountTop(userId: Int): Boolean {
     return handleAccountsApiResponse(apiResponse = getAccounts(userId = userId), purpose = "From")
 }
 
-private fun viewTransactions(userId: Int, accountId: Int, username: String) {
+private fun viewTransactions(
+    userId: Int,
+    username: String,
+    accountId: Int,
+    accountFullName: String,
+    isFromCheckAccounts: Boolean = false
+): String {
 
     val apiResponse = getUserTransactions(userId = userId, accountId = accountId)
 
@@ -1783,31 +1845,46 @@ private fun viewTransactions(userId: Int, accountId: Int, username: String) {
             val input = readLine()
             when (input) {
                 "Y", "" -> {
-                    viewTransactions(userId = userId, accountId = accountId, username = username)
-                    return
+                    return viewTransactions(
+                        userId = userId,
+                        username = username,
+                        accountId = accountId,
+                        accountFullName = accountFullName,
+                        isFromCheckAccounts = isFromCheckAccounts
+                    )
                 }
-                "N" -> {
-                }
+                "N" -> {}
                 else -> invalidOptionMessage()
             }
         } while (input != "N")
+        return "E"
     } else {
 
         val userTransactionsResponseResult = apiResponse.getValue() as TransactionsResponse
         if (userTransactionsResponseResult.status == 1) {
 
+            println("Account - $accountFullName")
             println("No Transactions...")
+            return "0"
+
         } else {
 
+            var choice: String
             do {
-                commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
-                    listOf(
-                        "\nUser : $username",
-                        "${fromAccount.fullName} - Transactions",
-                        printAccountLedger(
-                            transactions = userTransactionsResponseResult.transactions,
-                            currentAccountId = accountId
-                        ),
+                var menuItems = listOf(
+                    "\nUser : $username",
+                    "$accountFullName - Transactions",
+                    printAccountLedger(
+                        transactions = userTransactionsResponseResult.transactions,
+                        currentAccountId = accountId
+                    )
+                )
+                if (isFromCheckAccounts) {
+
+                    menuItems = menuItems + listOf("0 to Back Enter to Continue : ")
+
+                } else {
+                    menuItems = menuItems + listOf(
                         "1 - Delete Transaction - By Index Number",
                         "2 - Delete Transaction - By Search",
                         "3 - Edit Transaction - By Index Number",
@@ -1817,18 +1894,41 @@ private fun viewTransactions(userId: Int, accountId: Int, username: String) {
                         "",
                         "Enter Your Choice : "
                     )
-                )
+                }
+                commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(menuItems)
 
-                val choice = readLine()
+                choice = readLine()!!
                 when (choice) {
-                    "1", "2", "3", "4", "5" -> {
-                        ToDoUtils.showTodo()
+                    "1", "2", "3", "4" -> {
+                        if (isFromCheckAccounts) {
+                            invalidOptionMessage()
+                        } else {
+                            ToDoUtils.showTodo()
+                        }
                     }
-                    "0" -> {
+                    "5" -> {
+                        if (isFromCheckAccounts) {
+                            invalidOptionMessage()
+                        } else {
+                            addTransaction(
+                                userId = userId,
+                                username = username,
+                                transactionType = TransactionType.NORMAL
+                            )
+                        }
+                    }
+                    "0" -> {}
+                    "" -> {
+                        if (isFromCheckAccounts) {
+                            break
+                        } else {
+                            invalidOptionMessage()
+                        }
                     }
                     else -> invalidOptionMessage()
                 }
             } while (choice != "0")
+            return choice
         }
     }
 }

@@ -23,6 +23,26 @@ internal class TransactionsDataSource {
             ResponseHolder.Error(Exception("Exception - ${exception.localizedMessage}"))
         }
     }
+
+    internal suspend fun selectUserTransactionsAfterSpecifiedDate(
+        userId: Int,
+        specifiedDate: String
+    ): ResponseHolder<TransactionsResponse> {
+
+        return try {
+
+            processApiResponse(
+                retrofitClient.selectUserTransactionsAfterSpecifiedDate(
+                    userId = userId,
+                    specifiedDate = specifiedDate
+                )
+            )
+
+        } catch (exception: java.lang.Exception) {
+
+            ResponseHolder.Error(Exception("Exception - ${exception.localizedMessage}"))
+        }
+    }
 }
 
 //    TODO : Rewrite as general function for all responses

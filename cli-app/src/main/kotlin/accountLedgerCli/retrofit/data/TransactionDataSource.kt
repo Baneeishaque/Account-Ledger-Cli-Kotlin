@@ -24,7 +24,7 @@ class TransactionDataSource {
             processApiResponse(
                 retrofitClient.insertTransaction(
                     userId = userId,
-                    eventDateTimeString = MysqlUtils.normalDateTimeStringToMysqlDateTimeString(eventDateTimeString),
+                    eventDateTimeString = eventDateTimeString,
                     particulars = particulars,
                     amount = amount,
                     fromAccountId = fromAccountId,
