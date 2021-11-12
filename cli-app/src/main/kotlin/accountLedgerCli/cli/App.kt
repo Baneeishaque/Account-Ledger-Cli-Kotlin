@@ -77,7 +77,7 @@ private fun login() {
     println("\nAccount Ledger Authentication")
     println("--------------------------------")
 
-    val dotenv = dotenv() {
+    val dotenv = dotenv {
         directory = Paths.get("").toAbsolutePath().toString()
         ignoreIfMissing = true
     }
@@ -560,7 +560,7 @@ private fun accountHome(userId: Int, username: String) {
                 )
             "4" -> addTransaction(userId = userId, username = username, transactionType = TransactionType.VIA)
             "5" -> addTransaction(userId = userId, username = username, transactionType = TransactionType.TWO_WAY)
-            "0" -> return
+            "0" -> {}
             else -> invalidOptionMessage()
         }
     } while (choiceInput != "0")
@@ -876,7 +876,7 @@ private fun addTransaction(userId: Int, username: String, transactionType: Trans
                     invalidOptionMessage()
                 }
             }
-            "0" -> return
+            "0" -> {}
             else -> invalidOptionMessage()
         }
     } while (choice != "0")
@@ -911,7 +911,9 @@ private fun transactionContinueCheck(
             "Y", "" -> {
 
                 addTransactionWithAccountAvailabilityCheck(
-                    userId = userId, username = username, transactionType = transactionType
+                    userId = userId,
+                    username = username,
+                    transactionType = transactionType
                 )
                 return
             }
@@ -1544,9 +1546,10 @@ private fun insertTransaction(
 
                 println("OK...")
                 return true
-        } else {
+            } else {
 
-            println("Server Execution Error : ${insertionResponseResult.error}")
+                println("Server Execution Error : ${insertionResponseResult.error}")
+            }
         }
     }
     return false
@@ -1951,6 +1954,7 @@ private fun printAccountLedger(transactions: List<TransactionResponse>, currentA
             currentBalance -= currentTransaction.amount
             transactionDirection = "-"
             secondAccountName = currentTransaction.to_account_name
+
         } else {
 
             currentBalance += currentTransaction.amount

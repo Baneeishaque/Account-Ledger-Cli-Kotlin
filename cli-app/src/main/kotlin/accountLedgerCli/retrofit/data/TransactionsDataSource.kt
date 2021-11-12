@@ -14,6 +14,7 @@ internal class TransactionsDataSource {
         userId: Int,
         accountId: Int
     ): ResponseHolder<TransactionsResponse> {
+
         return try {
 
             processApiResponse(retrofitClient.selectUserTransactionsV2M(userId = userId, accountId = accountId))
@@ -49,6 +50,7 @@ internal class TransactionsDataSource {
 private fun processApiResponse(apiResponse: Response<TransactionsResponse>): ResponseHolder<TransactionsResponse> {
 
     if (apiResponse.isSuccessful) {
+
         val userTransactionsApiResponseBody = apiResponse.body()
         return if (userTransactionsApiResponseBody != null) {
 
