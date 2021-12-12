@@ -159,6 +159,7 @@ private fun userScreen(username: String, userId: Int) {
                 "14 - Import Transactions To : Bank : $baneeBankAccountName From CSV",
                 "15 - Import Transactions To : Bank : $baneeBankAccountName From XLX",
                 "16 - Check A/Cs affected after a specified date",
+                "17 - View Transactions of a specific A/C",
                 "0 - Logout",
                 "",
                 "Enter Your Choice : "
@@ -182,10 +183,31 @@ private fun userScreen(username: String, userId: Int) {
             "14" -> importBankFromCsv()
             "15" -> importBankFromXlx()
             "16" -> checkAccountsAffectedAfterSpecifiedDate(userId = userId, username = username)
+            "17" -> viewTransactionsOfSpecificAccount(userId = userId, username = username)
             "0" -> {}
             else -> invalidOptionMessage()
         }
     } while (choice != "0")
+}
+
+private fun viewTransactionsOfSpecificAccount(userId: Int, username: String) {
+    println("Enter Account Index or 0 to Back : A")
+    val inputAccountIndex = readLine()!!
+    if (inputAccountIndex != "0") {
+        var accountIndex = InputUtils.getValidInt(inputAccountIndex, "Invalid Account Index")
+        if (handleAccountsResponse(ApiUtils.getAccountsFull(userId = userId))) {
+            accountIndex = getValidAccountIndex(userAccountsMap = userAccountsMap, accountId = accountIndex)
+            if (accountIndex != 0) {
+                viewTransactions(
+                    userId = userId,
+                    username = username,
+                    accountId = accountIndex,
+                    accountFullName = userAccountsMap[accountIndex]!!.fullName,
+                    functionCallSource = FunctionCallSource.FROM_VIEW_TRANSACTIONS_OF_ACCOUNT
+                )
+            }
+        }
+    }
 }
 
 private fun checkAccountsAffectedAfterSpecifiedDate(userId: Int, username: String) {
@@ -243,7 +265,7 @@ private fun checkAccountsAffectedAfterSpecifiedDate(userId: Int, username: Strin
                         username = username,
                         accountId = account.key,
                         accountFullName = account.value,
-                        isFromCheckAccounts = true
+                        functionCallSource = FunctionCallSource.FROM_CHECK_ACCOUNTS
                     )) {
                         "E", "0" -> {
                             break
@@ -509,6 +531,10 @@ private fun chooseAccountByIndex(userAccountsMap: LinkedHashMap<Int, AccountResp
     val accountIdInput = readLine()!!
     if (accountIdInput == "0") return 0
     val accountId = InputUtils.getValidInt(accountIdInput, "Invalid Account Index")
+    return getValidAccountIndex(userAccountsMap = userAccountsMap, accountId = accountId)
+}
+
+private fun getValidAccountIndex(userAccountsMap: LinkedHashMap<Int, AccountResponse>, accountId: Int): Int {
     if (userAccountsMap.containsKey(accountId)) {
 
         return accountId
@@ -518,11 +544,9 @@ private fun chooseAccountByIndex(userAccountsMap: LinkedHashMap<Int, AccountResp
     )
     return when (readLine()) {
         "Y", "" -> {
-
-            chooseAccountByIndex(userAccountsMap = userAccountsMap)
+            getValidAccountIndex(userAccountsMap = userAccountsMap, accountId = accountId)
         }
         "N" -> {
-
             0
         }
         else -> {
@@ -530,7 +554,7 @@ private fun chooseAccountByIndex(userAccountsMap: LinkedHashMap<Int, AccountResp
             commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
                 listOf("Invalid Entry...")
             )
-            chooseAccountByIndex(userAccountsMap = userAccountsMap)
+            getValidAccountIndex(userAccountsMap = userAccountsMap, accountId = accountId)
         }
     }
 }
@@ -1844,11 +1868,10 @@ private fun viewTransactions(
     username: String,
     accountId: Int,
     accountFullName: String,
-    isFromCheckAccounts: Boolean = false
+    functionCallSource: FunctionCallSource = FunctionCallSource.FROM_OTHERS
 ): String {
 
     val apiResponse = getUserTransactions(userId = userId, accountId = accountId)
-
     if (apiResponse.isError()) {
 
         println("Error : ${(apiResponse.getValue() as Exception).localizedMessage}")
@@ -1862,7 +1885,7 @@ private fun viewTransactions(
                         username = username,
                         accountId = accountId,
                         accountFullName = accountFullName,
-                        isFromCheckAccounts = isFromCheckAccounts
+                        functionCallSource = functionCallSource
                     )
                 }
                 "N" -> {}
@@ -1881,7 +1904,7 @@ private fun viewTransactions(
 
         } else {
 
-            var choice: String
+            var choice: String = ""
             do {
                 var menuItems = listOf(
                     "\nUser : $username",
@@ -1891,10 +1914,10 @@ private fun viewTransactions(
                         currentAccountId = accountId
                     )
                 )
-                if (isFromCheckAccounts) {
-
+                if (functionCallSource == FunctionCallSource.FROM_CHECK_ACCOUNTS) {
                     menuItems = menuItems + listOf("0 to Back Enter to Continue : ")
-
+                } else if (functionCallSource == FunctionCallSource.FROM_VIEW_TRANSACTIONS_OF_ACCOUNT) {
+                    break
                 } else {
                     menuItems = menuItems + listOf(
                         "1 - Delete Transaction - By Index Number",
@@ -1912,14 +1935,14 @@ private fun viewTransactions(
                 choice = readLine()!!
                 when (choice) {
                     "1", "2", "3", "4" -> {
-                        if (isFromCheckAccounts) {
+                        if (functionCallSource == FunctionCallSource.FROM_CHECK_ACCOUNTS) {
                             invalidOptionMessage()
                         } else {
                             ToDoUtils.showTodo()
                         }
                     }
                     "5" -> {
-                        if (isFromCheckAccounts) {
+                        if (functionCallSource == FunctionCallSource.FROM_CHECK_ACCOUNTS) {
                             invalidOptionMessage()
                         } else {
                             addTransaction(
@@ -1931,7 +1954,7 @@ private fun viewTransactions(
                     }
                     "0" -> {}
                     "" -> {
-                        if (isFromCheckAccounts) {
+                        if (functionCallSource == FunctionCallSource.FROM_CHECK_ACCOUNTS) {
                             break
                         } else {
                             invalidOptionMessage()
