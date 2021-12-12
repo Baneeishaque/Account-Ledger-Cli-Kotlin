@@ -192,7 +192,7 @@ private fun userScreen(username: String, userId: Int) {
 }
 
 private fun viewTransactionsOfSpecificAccount(userId: Int, username: String) {
-    println("Enter Account Index or 0 to Back : A")
+    print("Enter Account Index or 0 to Back : A")
     val inputAccountIndex = readLine()!!
     if (inputAccountIndex != "0") {
         var accountIndex = InputUtils.getValidInt(inputAccountIndex, "Invalid Account Index")
@@ -1905,7 +1905,7 @@ private fun viewTransactions(
 
         } else {
 
-            var choice: String = ""
+            var choice = ""
             do {
                 var menuItems = listOf(
                     "\nUser : $username",
