@@ -1,5 +1,6 @@
 package accountLedgerCli.to_utils
 
+import accountLedgerCli.cli.UserCredentials
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeParseException
@@ -60,5 +61,14 @@ object InputUtils {
             println("Invalid Date...")
             return getValidDateInNormalPattern()
         }
+    }
+
+    internal fun getUserCredentials(): UserCredentials {
+        var user = UserCredentials("", "");
+        print("Enter Your Username : ")
+        user.username = readLine().toString()
+        print("Enter Your Password : ")
+        user.passcode = readLine().toString()
+        return user
     }
 }

@@ -81,21 +81,31 @@ private fun login() {
         directory = Paths.get("").toAbsolutePath().toString()
         ignoreIfMissing = true
     }
-    var username = dotenv["USER_NAME"] ?: ""
-    var password = dotenv["PASSWORD"] ?: ""
+    var user = UserCredentials(dotenv["USER_NAME"] ?: "", dotenv["PASSWORD"] ?: "")
+    if (user.username.isEmpty() || user.passcode.isEmpty()) {
 
-    if (username.isEmpty() || password.isEmpty()) {
+        user = InputUtils.getUserCredentials()
 
-        print("Enter Your Username : ")
-        username = readLine().toString()
-        print("Enter Your Password : ")
-        password = readLine().toString()
+    } else {
+        do {
+            print("The recognised user is ${user.username}")
+            println("Do you want to continue (Y/N) : ")
+            val continueWithUser = readLine().toString()
+            when (continueWithUser) {
+                "Y", "" -> {}
+                "N" -> {
+                    user = InputUtils.getUserCredentials()
+                }
+                else -> invalidOptionMessage()
+            }
+
+        } while (continueWithUser != "Y" || continueWithUser != "")
     }
 
     val userDataSource = UserDataSource()
     println("Contacting Server...")
     val apiResponse: ResponseHolder<LoginResponse>
-    runBlocking { apiResponse = userDataSource.selectUser(username = username, password = password) }
+    runBlocking { apiResponse = userDataSource.selectUser(username = user.username, password = user.passcode) }
     // println("Response : $apiResponse")
     if (apiResponse.isError()) {
 
@@ -106,7 +116,6 @@ private fun login() {
             when (input) {
                 "Y", "" -> {
                     login()
-                    return
                 }
                 "N" -> {
                 }
@@ -121,7 +130,7 @@ private fun login() {
             1 -> {
 
                 println("Login Success...")
-                userScreen(username = username, userId = loginResponseResult.id)
+                userScreen(username = user.username, userId = loginResponseResult.id)
             }
             else -> println("Server Execution Error...")
         }
