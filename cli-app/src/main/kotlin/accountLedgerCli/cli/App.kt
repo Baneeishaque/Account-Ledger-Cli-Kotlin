@@ -88,18 +88,19 @@ private fun login() {
 
     } else {
         do {
-            print("The recognised user is ${user.username}")
-            println("Do you want to continue (Y/N) : ")
-            val continueWithUser = readLine().toString()
-            when (continueWithUser) {
-                "Y", "" -> {}
+            println("The recognised user is ${user.username}")
+            print("Do you want to continue (Y/N) : ")
+            when (readLine().toString()) {
+                "Y", "" -> {
+                    break
+                }
                 "N" -> {
                     user = InputUtils.getUserCredentials()
                 }
                 else -> invalidOptionMessage()
             }
 
-        } while (continueWithUser != "Y" || continueWithUser != "")
+        } while (true)
     }
 
     val userDataSource = UserDataSource()
