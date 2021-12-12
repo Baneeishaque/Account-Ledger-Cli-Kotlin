@@ -282,7 +282,7 @@ private fun register() {
     ToDoUtils.showTodo()
 }
 
-fun readCsv() {
+private fun readCsv() {
 
     // @v Input file path from user
     // @cr Hardcoded file path
@@ -295,12 +295,12 @@ fun readCsv() {
     }
 }
 
-fun importBankFromXlx() {
+private fun importBankFromXlx() {
 
     ToDoUtils.showTodo()
 }
 
-fun importBankFromCsv() {
+private fun importBankFromCsv() {
 
     ToDoUtils.showTodo()
 }
