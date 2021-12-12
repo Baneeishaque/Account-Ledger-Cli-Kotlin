@@ -1918,6 +1918,7 @@ private fun viewTransactions(
                 if (functionCallSource == FunctionCallSource.FROM_CHECK_ACCOUNTS) {
                     menuItems = menuItems + listOf("0 to Back Enter to Continue : ")
                 } else if (functionCallSource == FunctionCallSource.FROM_VIEW_TRANSACTIONS_OF_ACCOUNT) {
+                    commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(menuItems)
                     break
                 } else {
                     menuItems = menuItems + listOf(
