@@ -69,7 +69,7 @@ steps:
       echo -----------------------------------------------------
       pwd
       ls
-      tar -cjvf Account-Ledger-Cli.tar.bz2 Account-Ledger-Cli/
+      tar -cjvf Account-Ledger-Cli.tar.bz2 Account-Ledger-Cli
       echo -----------------------------------------------------
       ls
       tar -jtvf Account-Ledger-Cli.tar.bz2
