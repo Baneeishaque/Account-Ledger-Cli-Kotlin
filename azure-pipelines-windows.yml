@@ -52,13 +52,19 @@ steps:
   - script: | 
       cd cli-app/build/distributions
       tar -xzvf cli-app.tar
+      ls
       mv cli-app Account-Ledger-Cli
+      ls
       cd Account-Ledger-Cli/bin
+      ls
       mv cli-app Account-Ledger-Cli
       mv cli-app.bat Account-Ledger-Cli.bat
+      ls
       cd ../..
       tar -cjvf Account-Ledger-Cli.tar.bz2 Account-Ledger-Cli/
+      ls
       tar -jtvf Account-Ledger-Cli.tar.bz2
+    displayName: Rebuilding Tar Distribution
 
   - publish: cli-app/build/distributions/Account-Ledger-Cli.tar.bz2
     artifact: Account-Ledger-CLI
