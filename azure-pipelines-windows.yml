@@ -64,7 +64,11 @@ steps:
       mv cli-app.bat Account-Ledger-Cli.bat
       echo -----------------------------------------------------
       ls
+      pwd
       cd ../..
+      echo -----------------------------------------------------
+      pwd
+      ls
       tar -cjvf Account-Ledger-Cli.tar.bz2 Account-Ledger-Cli/
       echo -----------------------------------------------------
       ls
