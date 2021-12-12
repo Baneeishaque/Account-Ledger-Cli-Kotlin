@@ -69,11 +69,11 @@ steps:
       echo -----------------------------------------------------
       pwd
       ls
-      tar -cjvf Account-Ledger-Cli.tar.bz2 Account-Ledger-Cli
+      tar -czvf Account-Ledger-Cli.tar.gz Account-Ledger-Cli
       echo -----------------------------------------------------
       ls
-      tar -jtvf Account-Ledger-Cli.tar.bz2
+      tar -ztvf Account-Ledger-Cli.tar.gz
     displayName: Rebuilding Tar Distribution
 
-  - publish: cli-app/build/distributions/Account-Ledger-Cli.tar.bz2
+  - publish: cli-app/build/distributions/Account-Ledger-Cli.tar.gz
     artifact: Account-Ledger-CLI
