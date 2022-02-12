@@ -28,7 +28,7 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 
     implementation("org.jetbrains.kotlinx:kotlinx-cli:0.3.4")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0")
     implementation("com.github.doyaaaaaken:kotlin-csv-jvm:1.2.0")
     implementation("com.massisframework:j-text-utils:0.3.4")
     implementation("io.github.cdimascio:dotenv-kotlin:6.2.2")
