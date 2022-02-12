@@ -61,6 +61,7 @@ steps:
       echo -----------------------------------------------------
       ls
       mv cli-app Account-Ledger-Cli
+      chmod a+x Account-Ledger-Cli
       mv cli-app.bat Account-Ledger-Cli.bat
       echo -----------------------------------------------------
       ls
