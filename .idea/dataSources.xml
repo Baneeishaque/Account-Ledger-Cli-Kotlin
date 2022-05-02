@@ -2,10 +2,10 @@
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
     <data-source source="LOCAL" name="MySQL for 5.1 - heroku_0fd2194a537b978@us-cdbr-iron-east-05.cleardb.net" uuid="38fd9a27-f38f-4fcc-98e8-2b5594ed8f96">
-      <driver-ref>mysql</driver-ref>
+      <driver-ref>mysql.8</driver-ref>
       <synchronize>true</synchronize>
       <remarks>Account Ledger Heroku</remarks>
-      <jdbc-driver>com.mysql.jdbc.Driver</jdbc-driver>
+      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
       <jdbc-url>jdbc:mysql://us-cdbr-iron-east-05.cleardb.net/heroku_0fd2194a537b978</jdbc-url>
     </data-source>
   </component>
