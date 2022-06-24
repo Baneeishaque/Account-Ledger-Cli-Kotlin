@@ -1,5 +1,5 @@
 plugins {
-    kotlin("multiplatform") version "1.6.20-M1"
+    kotlin("multiplatform") version "1.7.0"
 }
 
 repositories {
@@ -124,10 +124,10 @@ kotlin {
                 implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
                 implementation("org.jetbrains.kotlinx:kotlinx-cli:0.3.4")
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.3")
                 implementation("com.squareup.retrofit2:retrofit:2.9.0")
                 implementation("com.squareup.retrofit2:converter-gson:2.9.0")
-                implementation("com.github.doyaaaaaken:kotlin-csv-jvm:1.2.0")
+                implementation("com.github.doyaaaaaken:kotlin-csv-jvm:1.3.0")
                 // implementation("com.massisframework:j-text-utils:0.3.4")
             }
         }
