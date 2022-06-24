@@ -1,5 +1,5 @@
 plugins {
-    id("org.jetbrains.kotlin.jvm") version "1.6.20-M1"
+    id("org.jetbrains.kotlin.jvm") version "1.7.0"
 
     application
     jacoco
