@@ -1,0 +1,2 @@
+GET https://{{host}}/{{http_API_folder}}/getUsers.{{file_extension}}
+Accept: application/json

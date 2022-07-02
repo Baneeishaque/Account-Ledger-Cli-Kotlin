@@ -1,22 +1,19 @@
 package accountLedgerCli.retrofit.data
 
-import accountLedgerCli.api.response.LoginResponse
+import accountLedgerCli.api.response.UsersResponse
 import accountLedgerCli.retrofit.ProjectRetrofitClient
 import accountLedgerCli.retrofit.ResponseHolder
 import retrofit2.Response
 import java.io.IOException
 
-internal class UserDataSource {
+internal class UsersDataSource {
 
     private val retrofitClient = ProjectRetrofitClient.retrofitClient
 
-    internal suspend fun selectUser(
-        username: String?,
-        password: String?
-    ): ResponseHolder<LoginResponse> {
+    internal suspend fun selectUsers(): ResponseHolder<UsersResponse> {
         return try {
 
-            processApiResponse(retrofitClient.selectUser(username = username, password = password))
+            processApiResponse(retrofitClient.selectUsers())
 
         } catch (exception: Exception) {
 
@@ -24,20 +21,19 @@ internal class UserDataSource {
         }
     }
 }
-
 //    TODO : Rewrite as general function for all responses
-private fun processApiResponse(apiResponse: Response<LoginResponse>): ResponseHolder<LoginResponse> {
+private fun processApiResponse(apiResponse: Response<UsersResponse>): ResponseHolder<UsersResponse> {
 
     if (apiResponse.isSuccessful) {
 
-        val loginApiResponseBody = apiResponse.body()
-        return if (loginApiResponseBody != null) {
+        val usersApiResponseBody = apiResponse.body()
+        return if (usersApiResponseBody != null) {
 
-            ResponseHolder.Success(loginApiResponseBody)
+            ResponseHolder.Success(usersApiResponseBody)
 
         } else {
 
-            ResponseHolder.Error(Exception("Invalid Response Body - $loginApiResponseBody"))
+            ResponseHolder.Error(Exception("Invalid Response Body - $usersApiResponseBody"))
         }
     }
     return ResponseHolder.Error(IOException("Exception Code - ${apiResponse.code()}, Message - ${apiResponse.message()}"))

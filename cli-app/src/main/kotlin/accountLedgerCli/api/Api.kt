@@ -1,8 +1,9 @@
 package accountLedgerCli.api
 
+import accountLedgerCli.api.response.*
 import accountLedgerCli.api.response.AccountsResponse
 import accountLedgerCli.api.response.InsertionResponse
-import accountLedgerCli.api.response.LoginResponse
+import accountLedgerCli.api.response.AuthenticationResponse
 import accountLedgerCli.api.response.TransactionsResponse
 import retrofit2.Response
 import retrofit2.http.*
@@ -10,10 +11,13 @@ import retrofit2.http.*
 internal interface Api {
 
     @GET("${ApiConstants.selectUserMethod}.${ApiConstants.serverFileExtension}")
-    suspend fun selectUser(
+    suspend fun authenticateUser(
         @Query("username") username: String?,
         @Query("password") password: String?
-    ): Response<LoginResponse>
+    ): Response<AuthenticationResponse>
+
+    @GET("${ApiConstants.selectUsersMethod}.${ApiConstants.serverFileExtension}")
+    suspend fun selectUsers(): Response<UsersResponse>
 
     @GET("${ApiConstants.selectUserAccountsV2Method}.${ApiConstants.serverFileExtension}")
     suspend fun selectUserAccounts(
@@ -21,17 +25,17 @@ internal interface Api {
         @Query("parent_account_id") parentAccountId: Int?
     ): Response<AccountsResponse>
 
-    @GET("${ApiConstants.selectUserAccountsFull}.${ApiConstants.serverFileExtension}")
+    @GET("${ApiConstants.selectUserAccountsFullMethod}.${ApiConstants.serverFileExtension}")
     suspend fun selectUserAccountsFull(@Query("user_id") userId: Int?): Response<AccountsResponse>
 
-    @GET("${ApiConstants.selectUserTransactionsV2M}.${ApiConstants.serverFileExtension}")
+    @GET("${ApiConstants.selectUserTransactionsV2MMethod}.${ApiConstants.serverFileExtension}")
     suspend fun selectUserTransactionsV2M(
         @Query("user_id") userId: Int,
         @Query("account_id") accountId: Int
     ): Response<TransactionsResponse>
 
     @FormUrlEncoded
-    @POST("${ApiConstants.insertTransaction}.${ApiConstants.serverFileExtension}")
+    @POST("${ApiConstants.insertTransactionMethod}.${ApiConstants.serverFileExtension}")
     suspend fun insertTransaction(
         @Field("event_date_time") eventDateTimeString: String,
         @Field("user_id") userId: Int?,
@@ -41,7 +45,7 @@ internal interface Api {
         @Field("to_account_id") toAccountId: Int?
     ): Response<InsertionResponse>
 
-    @GET("${ApiConstants.selectUserTransactionsAfterSpecifiedDate}.${ApiConstants.serverFileExtension}")
+    @GET("${ApiConstants.selectUserTransactionsAfterSpecifiedDateMethod}.${ApiConstants.serverFileExtension}")
     suspend fun selectUserTransactionsAfterSpecifiedDate(
         @Query("user_id") userId: Int,
         @Query("specified_date") specifiedDate: String

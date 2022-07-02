@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="select_User_Transactions_v2m#1" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" path="$PROJECT_DIR$/api/select_User_Transactions_v2m.http" runType="Run single request">
+  <configuration default="false" name="select_User_Transactions_v2m#1" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" path="$PROJECT_DIR$/api/select_User_Transactions_v2m.http" requestIdentifier="#1" runType="Run single request">
     <method v="2" />
   </configuration>
 </component>

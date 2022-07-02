@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="selectUserAccountsFull#1" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" path="$PROJECT_DIR$/api/selectUserAccountsFull.http" runType="Run single request">
+  <configuration default="false" name="selectUserAccountsFull#1" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" path="$PROJECT_DIR$/api/selectUserAccountsFull.http" requestIdentifier="#1" runType="Run single request">
     <method v="2" />
   </configuration>
 </component>
