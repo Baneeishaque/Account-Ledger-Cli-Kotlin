@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dataSource name="MySQL for 5.1 - heroku_0fd2194a537b978@us-cdbr-iron-east-05.cleardb.net">
-  <database-model serializer="dbm" dbms="MYSQL" family-id="MYSQL" format-version="4.38">
+  <database-model serializer="dbm" dbms="MYSQL" family-id="MYSQL" format-version="4.41">
     <root id="1">
       <DefaultCasing>lower/lower</DefaultCasing>
       <DefaultEngine>InnoDB</DefaultEngine>
@@ -814,12 +814,11 @@ heroku_0fd2194a537b978|schema||b5c0067badacde||UPDATE|G</Grants>
       <Type>btree</Type>
     </index>
     <key id="243" parent="224" name="PRIMARY">
-      <ColNames>account_id</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <Primary>1</Primary>
+      <UnderlyingIndexColNames>account_id</UnderlyingIndexColNames>
     </key>
     <key id="244" parent="224" name="account_id_UNIQUE">
-      <ColNames>account_id</ColNames>
       <UnderlyingIndexName>account_id_UNIQUE</UnderlyingIndexName>
     </key>
     <column id="245" parent="225" name="id">
@@ -844,9 +843,9 @@ heroku_0fd2194a537b978|schema||b5c0067badacde||UPDATE|G</Grants>
       <Position>4</Position>
     </column>
     <key id="249" parent="225" name="PRIMARY">
-      <ColNames>id</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <Primary>1</Primary>
+      <UnderlyingIndexColNames>id</UnderlyingIndexColNames>
     </key>
     <column id="250" parent="226" name="id">
       <AutoIncrement>166</AutoIncrement>
@@ -880,9 +879,9 @@ heroku_0fd2194a537b978|schema||b5c0067badacde||UPDATE|G</Grants>
       <Position>6</Position>
     </column>
     <key id="256" parent="226" name="PRIMARY">
-      <ColNames>id</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <Primary>1</Primary>
+      <UnderlyingIndexColNames>id</UnderlyingIndexColNames>
     </key>
     <column id="257" parent="227" name="id">
       <AutoIncrement>54510</AutoIncrement>
@@ -926,9 +925,9 @@ heroku_0fd2194a537b978|schema||b5c0067badacde||UPDATE|G</Grants>
       <Position>8</Position>
     </column>
     <key id="265" parent="227" name="PRIMARY">
-      <ColNames>id</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <Primary>1</Primary>
+      <UnderlyingIndexColNames>id</UnderlyingIndexColNames>
     </key>
     <column id="266" parent="228" name="id">
       <AutoIncrement>180</AutoIncrement>
@@ -947,9 +946,9 @@ heroku_0fd2194a537b978|schema||b5c0067badacde||UPDATE|G</Grants>
       <Position>3</Position>
     </column>
     <key id="269" parent="228" name="PRIMARY">
-      <ColNames>id</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <Primary>1</Primary>
+      <UnderlyingIndexColNames>id</UnderlyingIndexColNames>
     </key>
   </database-model>
 </dataSource>
