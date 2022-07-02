@@ -1,2 +1,0 @@
-GET http://localhost/account_ledger_server/http_API/select_User_Accounts_v2.php?user_id=13&parent_account_id=0
-Accept: application/json
