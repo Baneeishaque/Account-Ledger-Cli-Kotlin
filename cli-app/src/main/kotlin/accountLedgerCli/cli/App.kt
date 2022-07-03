@@ -1,18 +1,11 @@
 package accountLedgerCli.cli
 
-import accountLedgerCli.api.response.*
-import accountLedgerCli.retrofit.ResponseHolder
-import accountLedgerCli.retrofit.data.TransactionsDataSource
-import accountLedgerCli.retrofit.data.UsersDataSource
+import accountLedgerCli.api.response.AccountResponse
 import accountLedgerCli.to_utils.*
 import accountLedgerCli.to_utils.DateTimeUtils.normalDateTimePattern
 import accountLedgerCli.utils.AccountUtils
 import accountLedgerCli.utils.UserUtils
-import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
-import kotlinx.coroutines.runBlocking
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-import java.util.*
 
 internal var dateTimeString = LocalDateTime.now().format(normalDateTimePattern)
 
@@ -22,10 +15,9 @@ internal var toAccount = AccountUtils.getBlankAccount()
 internal var transactionParticulars = ""
 internal var transactionAmount = 0F
 
-internal var chosenUser = UserUtils.getBlankUser();
+internal var chosenUser = UserUtils.getBlankUser()
 
 internal var userAccountsMap = LinkedHashMap<Int, AccountResponse>()
-private val accountsResponseResult = AccountsResponse(1, listOf(AccountUtils.getBlankAccount()))
 private val commandLinePrintMenu = CommandLinePrintMenu()
 internal val commandLinePrintMenuWithEnterPrompt =
     CommandLinePrintMenuWithEnterPrompt(commandLinePrintMenu)
