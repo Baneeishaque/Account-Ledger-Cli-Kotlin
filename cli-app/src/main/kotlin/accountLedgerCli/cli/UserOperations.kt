@@ -1,24 +1,16 @@
 package accountLedgerCli.cli
 
 import accountLedgerCli.api.response.AuthenticationResponse
-import accountLedgerCli.api.response.TransactionResponse
-import accountLedgerCli.api.response.TransactionsResponse
 import accountLedgerCli.api.response.UsersResponse
 import accountLedgerCli.retrofit.ResponseHolder
 import accountLedgerCli.retrofit.data.AuthenticationDataSource
-import accountLedgerCli.retrofit.data.TransactionsDataSource
 import accountLedgerCli.retrofit.data.UsersDataSource
-import accountLedgerCli.to_utils.DateTimeUtils
 import accountLedgerCli.to_utils.InputUtils
-import accountLedgerCli.to_utils.MysqlUtils
 import accountLedgerCli.to_utils.ToDoUtils
 import accountLedgerCli.utils.UserUtils
 import io.github.cdimascio.dotenv.dotenv
 import kotlinx.coroutines.runBlocking
 import java.nio.file.Paths
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-import java.util.*
 
 internal fun login() {
 
