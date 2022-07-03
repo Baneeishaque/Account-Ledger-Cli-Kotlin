@@ -16,7 +16,7 @@ internal fun insertQuickTransactionWallet(userId: Int, username: String) {
 
     if (handleAccountsResponse(ApiUtils.getAccountsFull(userId = userId))) {
 
-        fromAccount = userAccountsMap[baneeWalletAccountId]!!
+        fromAccount = userAccountsMap[walletAccountId]!!
         accountHome(userId = userId, username = username)
     }
 }
@@ -25,8 +25,8 @@ internal fun insertQuickTransactionWalletToFrequent1(userId: Int, username: Stri
 
     if (handleAccountsResponse(ApiUtils.getAccountsFull(userId = userId))) {
 
-        fromAccount = userAccountsMap[baneeWalletAccountId]!!
-        toAccount = userAccountsMap[baneeFrequent1AccountId]!!
+        fromAccount = userAccountsMap[walletAccountId]!!
+        toAccount = userAccountsMap[frequent1AccountId]!!
         transactionContinueCheck(userId = userId, username = username, transactionType = TransactionType.NORMAL)
     }
 }
@@ -35,8 +35,8 @@ internal fun insertQuickTransactionWalletToFrequent2(userId: Int, username: Stri
 
     if (handleAccountsResponse(ApiUtils.getAccountsFull(userId = userId))) {
 
-        fromAccount = userAccountsMap[baneeWalletAccountId]!!
-        toAccount = userAccountsMap[baneeFrequent2AccountId]!!
+        fromAccount = userAccountsMap[walletAccountId]!!
+        toAccount = userAccountsMap[frequent2AccountId]!!
         transactionContinueCheck(userId = userId, username = username, transactionType = TransactionType.NORMAL)
     }
 }
@@ -45,8 +45,8 @@ internal fun insertQuickTransactionWalletToFrequent3(userId: Int, username: Stri
 
     if (handleAccountsResponse(ApiUtils.getAccountsFull(userId = userId))) {
 
-        fromAccount = userAccountsMap[baneeWalletAccountId]!!
-        toAccount = userAccountsMap[baneeFrequent3AccountId]!!
+        fromAccount = userAccountsMap[walletAccountId]!!
+        toAccount = userAccountsMap[frequent3AccountId]!!
         transactionContinueCheck(userId = userId, username = username, transactionType = TransactionType.NORMAL)
     }
 }
@@ -55,7 +55,7 @@ internal fun insertQuickTransactionBank(userId: Int, username: String) {
 
     if (handleAccountsResponse(ApiUtils.getAccountsFull(userId = userId))) {
 
-        fromAccount = userAccountsMap[baneeBankAccountId]!!
+        fromAccount = userAccountsMap[bankAccountId]!!
         accountHome(userId = userId, username = username)
     }
 }
@@ -64,8 +64,8 @@ internal fun insertQuickTransactionBankToFrequent1(userId: Int, username: String
 
     if (handleAccountsResponse(ApiUtils.getAccountsFull(userId = userId))) {
 
-        fromAccount = userAccountsMap[baneeBankAccountId]!!
-        toAccount = userAccountsMap[baneeFrequent1AccountId]!!
+        fromAccount = userAccountsMap[bankAccountId]!!
+        toAccount = userAccountsMap[frequent1AccountId]!!
         transactionContinueCheck(userId = userId, username = username, transactionType = TransactionType.NORMAL)
     }
 }
@@ -74,8 +74,8 @@ internal fun insertQuickTransactionBankToFrequent2(userId: Int, username: String
 
     if (handleAccountsResponse(ApiUtils.getAccountsFull(userId = userId))) {
 
-        fromAccount = userAccountsMap[baneeBankAccountId]!!
-        toAccount = userAccountsMap[baneeFrequent2AccountId]!!
+        fromAccount = userAccountsMap[bankAccountId]!!
+        toAccount = userAccountsMap[frequent2AccountId]!!
         transactionContinueCheck(userId = userId, username = username, transactionType = TransactionType.NORMAL)
     }
 }
@@ -84,7 +84,7 @@ internal fun insertQuickTransactionFrequent1(userId: Int, username: String) {
 
     if (handleAccountsResponse(ApiUtils.getAccountsFull(userId = userId))) {
 
-        fromAccount = userAccountsMap[baneeFrequent1AccountId]!!
+        fromAccount = userAccountsMap[frequent1AccountId]!!
         accountHome(userId = userId, username = username)
     }
 }
@@ -93,8 +93,8 @@ internal fun insertQuickTransactionBankToFrequent3(userId: Int, username: String
 
     if (handleAccountsResponse(ApiUtils.getAccountsFull(userId = userId))) {
 
-        fromAccount = userAccountsMap[baneeBankAccountId]!!
-        toAccount = userAccountsMap[baneeFrequent3AccountId]!!
+        fromAccount = userAccountsMap[bankAccountId]!!
+        toAccount = userAccountsMap[frequent3AccountId]!!
         transactionContinueCheck(userId = userId, username = username, transactionType = TransactionType.NORMAL)
     }
 }
@@ -103,7 +103,7 @@ internal fun insertQuickTransactionFrequent2(userId: Int, username: String) {
 
     if (handleAccountsResponse(ApiUtils.getAccountsFull(userId = userId))) {
 
-        fromAccount = userAccountsMap[baneeFrequent2AccountId]!!
+        fromAccount = userAccountsMap[frequent2AccountId]!!
         accountHome(userId = userId, username = username)
     }
 }
@@ -112,7 +112,7 @@ internal fun insertQuickTransactionFrequent3(userId: Int, username: String) {
 
     if (handleAccountsResponse(ApiUtils.getAccountsFull(userId = userId))) {
 
-        fromAccount = userAccountsMap[baneeFrequent3AccountId]!!
+        fromAccount = userAccountsMap[frequent3AccountId]!!
         accountHome(userId = userId, username = username)
     }
 }
