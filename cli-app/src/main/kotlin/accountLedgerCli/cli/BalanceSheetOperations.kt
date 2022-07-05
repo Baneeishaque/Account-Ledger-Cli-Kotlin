@@ -21,7 +21,7 @@ internal fun balanceSheetOfUser(usersMap: LinkedHashMap<Int, UserResponse>) {
 internal fun printBalanceSheetOfUser(
     currentUserName: String,
     currentUserId: Int,
-    mode: BalanceSheetRefineLevel = BalanceSheetRefineLevel.WITHOUT_FAMILY_ACCOUNTS
+    mode: BalanceSheetRefineLevel = BalanceSheetRefineLevel.WITHOUT_EXPENSE_ACCOUNTS
 ) {
 
 //    print("currentUser : $currentUserName")
@@ -96,6 +96,16 @@ internal fun printBalanceSheetOfUser(
                                     ?: "0").split(',') + (UserOperations.dotenv["MISC_INCOME_ACCOUNT_IDS"]
                                     ?: "0").split(',') + (UserOperations.dotenv["INVESTMENT_RETURNS_ACCOUNT_IDS"]
                                     ?: "0").split(',') + (UserOperations.dotenv["FAMILY_ACCOUNT_IDS"]
+                                    ?: "0").split(',')
+                        }
+
+                        BalanceSheetRefineLevel.WITHOUT_EXPENSE_ACCOUNTS -> {
+                            accountsToExclude =
+                                (UserOperations.dotenv["OPEN_BALANCE_ACCOUNT_IDS"]
+                                    ?: "0").split(',') + (UserOperations.dotenv["MISC_INCOME_ACCOUNT_IDS"]
+                                    ?: "0").split(',') + (UserOperations.dotenv["INVESTMENT_RETURNS_ACCOUNT_IDS"]
+                                    ?: "0").split(',') + (UserOperations.dotenv["FAMILY_ACCOUNT_IDS"]
+                                    ?: "0").split(',') + (UserOperations.dotenv["EXPENSE_ACCOUNT_IDS"]
                                     ?: "0").split(',')
                         }
                         //TODO : Report this

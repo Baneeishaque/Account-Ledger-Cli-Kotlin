@@ -59,6 +59,7 @@ internal fun userScreen(username: String, userId: Int) {
                 "20 - View Balance Sheet Ledger (Excluding Open Balances & Misc. Incomes)",
                 "21 - View Balance Sheet Ledger (Excluding Open Balances, Misc. Incomes & Investment Returns)",
                 "22 - View Balance Sheet Ledger (Excluding Open Balances, Misc. Incomes, Investment Returns & Family Accounts)",
+                "23 - View Balance Sheet Ledger (Excluding Open Balances, Misc. Incomes, Investment Returns, Family & Expense Accounts)",
                 "0 - Logout",
                 "",
                 "Enter Your Choice : "
@@ -111,6 +112,12 @@ internal fun userScreen(username: String, userId: Int) {
                 currentUserName = username,
                 currentUserId = userId,
                 mode = BalanceSheetRefineLevel.WITHOUT_FAMILY_ACCOUNTS
+            )
+
+            "23" -> printBalanceSheetOfUser(
+                currentUserName = username,
+                currentUserId = userId,
+                mode = BalanceSheetRefineLevel.WITHOUT_EXPENSE_ACCOUNTS
             )
 
             "0" -> {}
