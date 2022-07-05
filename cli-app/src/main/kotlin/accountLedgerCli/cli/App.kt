@@ -44,9 +44,9 @@ fun main() {
         )
         val choice = readLine()
         when (choice) {
-            "1" -> login()
-            "2" -> register()
-            "3" -> listUsers()
+            "1" -> UserOperations.login()
+            "2" -> UserOperations.register()
+            "3" -> UserOperations.listUsers()
             "4", "5" -> ToDoUtils.showTodo()
             "0" -> println("Thanks...")
             else -> invalidOptionMessage()

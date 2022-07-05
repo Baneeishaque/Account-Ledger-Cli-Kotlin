@@ -2,25 +2,26 @@ package accountLedgerCli.cli
 
 internal fun userScreen(username: String, userId: Int) {
 
+//    println("Env. Variables : ${UserOperations.dotenv.entries()}")
     do {
         commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
             listOf(
                 "\nUser : $username",
                 "1 - List Accounts : Top Levels",
                 "2 - Insert Quick Transaction On : Wallet",
-                "3 - Insert Quick Transaction On : Wallet To : $frequent1AccountName",
-                "4 - Insert Quick Transaction On : Wallet To : $frequent2AccountName",
-                "5 - Insert Quick Transaction On : Wallet To : $frequent3AccountName",
-                "6 - Insert Quick Transaction On : Bank : $bankAccountName",
-                "7 - Insert Quick Transaction On : Bank : $bankAccountName To : $frequent1AccountName",
-                "8 - Insert Quick Transaction On : Bank : $bankAccountName To : $frequent2AccountName",
-                "9 - Insert Quick Transaction On : Bank : $bankAccountName To : $frequent3AccountName",
-                "10 - Insert Quick Transaction On : $frequent1AccountName",
-                "11 - Insert Quick Transaction On : $frequent2AccountName",
-                "12 - Insert Quick Transaction On : $frequent3AccountName",
+                "3 - Insert Quick Transaction On : Wallet To : ${UserOperations.dotenv["FREQUENT_1_ACCOUNT_NAME"] ?: "N/A"}",
+                "4 - Insert Quick Transaction On : Wallet To : ${UserOperations.dotenv["FREQUENT_2_ACCOUNT_NAME"] ?: "N/A"}",
+                "5 - Insert Quick Transaction On : Wallet To : ${UserOperations.dotenv["FREQUENT_3_ACCOUNT_NAME"] ?: "N/A"}",
+                "6 - Insert Quick Transaction On : Bank : ${UserOperations.dotenv["BANK_ACCOUNT_NAME"] ?: "N/A"}",
+                "7 - Insert Quick Transaction On : Bank : ${UserOperations.dotenv["BANK_ACCOUNT_NAME"] ?: "N/A"} To : $${UserOperations.dotenv["FREQUENT_1_ACCOUNT_NAME"] ?: "N/A"}",
+                "8 - Insert Quick Transaction On : Bank : ${UserOperations.dotenv["BANK_ACCOUNT_NAME"] ?: "N/A"} To : $${UserOperations.dotenv["FREQUENT_2_ACCOUNT_NAME"] ?: "N/A"}",
+                "9 - Insert Quick Transaction On : Bank : ${UserOperations.dotenv["BANK_ACCOUNT_NAME"] ?: "N/A"} To : $${UserOperations.dotenv["FREQUENT_3_ACCOUNT_NAME"] ?: "N/A"}",
+                "10 - Insert Quick Transaction On : $${UserOperations.dotenv["FREQUENT_1_ACCOUNT_NAME"] ?: "N/A"}",
+                "11 - Insert Quick Transaction On : $${UserOperations.dotenv["FREQUENT_2_ACCOUNT_NAME"] ?: "N/A"}",
+                "12 - Insert Quick Transaction On : $${UserOperations.dotenv["FREQUENT_3_ACCOUNT_NAME"] ?: "N/A"}",
                 "13 - List Accounts : Full Names",
-                "14 - Import Transactions To : Bank : $bankAccountName From CSV",
-                "15 - Import Transactions To : Bank : $bankAccountName From XLX",
+                "14 - Import Transactions To : Bank : ${UserOperations.dotenv["BANK_ACCOUNT_NAME"] ?: "N/A"} From CSV",
+                "15 - Import Transactions To : Bank : ${UserOperations.dotenv["BANK_ACCOUNT_NAME"] ?: "N/A"} From XLX",
                 "16 - Check A/Cs affected after a specified date",
                 "17 - View Transactions of a specific A/C",
                 "0 - Logout",
