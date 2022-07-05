@@ -28,10 +28,6 @@ class UserOperations {
             println("\nAccount Ledger Authentication")
             println("--------------------------------")
 
-//            val dotenv = dotenv {
-//                directory = Paths.get("").toAbsolutePath().toString()
-//                ignoreIfMissing = true
-//            }
             var user = UserCredentials(dotenv["USER_NAME"] ?: "", dotenv["PASSWORD"] ?: "")
             if (user.username.isEmpty() || user.passcode.isEmpty()) {
 
