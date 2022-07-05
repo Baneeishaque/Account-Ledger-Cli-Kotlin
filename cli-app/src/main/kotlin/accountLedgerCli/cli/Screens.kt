@@ -9,22 +9,56 @@ internal fun userScreen(username: String, userId: Int) {
                 "\nUser : $username",
                 "1 - List Accounts : Top Levels",
                 "2 - Insert Quick Transaction On : Wallet",
-                "3 - Insert Quick Transaction On : Wallet To : ${UserOperations.dotenv["FREQUENT_1_ACCOUNT_NAME"] ?: "N/A"}",
-                "4 - Insert Quick Transaction On : Wallet To : ${UserOperations.dotenv["FREQUENT_2_ACCOUNT_NAME"] ?: "N/A"}",
-                "5 - Insert Quick Transaction On : Wallet To : ${UserOperations.dotenv["FREQUENT_3_ACCOUNT_NAME"] ?: "N/A"}",
-                "6 - Insert Quick Transaction On : Bank : ${UserOperations.dotenv["BANK_ACCOUNT_NAME"] ?: "N/A"}",
-                "7 - Insert Quick Transaction On : Bank : ${UserOperations.dotenv["BANK_ACCOUNT_NAME"] ?: "N/A"} To : $${UserOperations.dotenv["FREQUENT_1_ACCOUNT_NAME"] ?: "N/A"}",
-                "8 - Insert Quick Transaction On : Bank : ${UserOperations.dotenv["BANK_ACCOUNT_NAME"] ?: "N/A"} To : $${UserOperations.dotenv["FREQUENT_2_ACCOUNT_NAME"] ?: "N/A"}",
-                "9 - Insert Quick Transaction On : Bank : ${UserOperations.dotenv["BANK_ACCOUNT_NAME"] ?: "N/A"} To : $${UserOperations.dotenv["FREQUENT_3_ACCOUNT_NAME"] ?: "N/A"}",
-                "10 - Insert Quick Transaction On : $${UserOperations.dotenv["FREQUENT_1_ACCOUNT_NAME"] ?: "N/A"}",
-                "11 - Insert Quick Transaction On : $${UserOperations.dotenv["FREQUENT_2_ACCOUNT_NAME"] ?: "N/A"}",
-                "12 - Insert Quick Transaction On : $${UserOperations.dotenv["FREQUENT_3_ACCOUNT_NAME"] ?: "N/A"}",
+                "3 - Insert Quick Transaction On : Wallet To : ${
+                    getEnvironmentVariableValueForUserScreen(environmentVariableName = "FREQUENT_1_ACCOUNT_NAME")
+                }",
+                "4 - Insert Quick Transaction On : Wallet To : ${
+                    getEnvironmentVariableValueForUserScreen(environmentVariableName = "FREQUENT_2_ACCOUNT_NAME")
+                }",
+                "5 - Insert Quick Transaction On : Wallet To : ${
+                    getEnvironmentVariableValueForUserScreen(environmentVariableName = "FREQUENT_3_ACCOUNT_NAME")
+                }",
+                "6 - Insert Quick Transaction On : Bank : ${
+                    getEnvironmentVariableValueForUserScreen(environmentVariableName = "BANK_ACCOUNT_NAME")
+                }",
+                "7 - Insert Quick Transaction On : Bank : ${
+                    getEnvironmentVariableValueForUserScreen(environmentVariableName = "BANK_ACCOUNT_NAME")
+                } To : ${
+                    getEnvironmentVariableValueForUserScreen(environmentVariableName = "FREQUENT_1_ACCOUNT_NAME")
+                }",
+                "8 - Insert Quick Transaction On : Bank : ${
+                    getEnvironmentVariableValueForUserScreen(environmentVariableName = "BANK_ACCOUNT_NAME")
+                } To : ${
+                    getEnvironmentVariableValueForUserScreen(environmentVariableName = "FREQUENT_2_ACCOUNT_NAME")
+                }",
+                "9 - Insert Quick Transaction On : Bank : ${
+                    getEnvironmentVariableValueForUserScreen(environmentVariableName = "BANK_ACCOUNT_NAME")
+                } To : ${
+                    getEnvironmentVariableValueForUserScreen(environmentVariableName = "FREQUENT_3_ACCOUNT_NAME")
+                }",
+                "10 - Insert Quick Transaction On : ${
+                    getEnvironmentVariableValueForUserScreen(environmentVariableName = "FREQUENT_1_ACCOUNT_NAME")
+                }",
+                "11 - Insert Quick Transaction On : ${
+                    getEnvironmentVariableValueForUserScreen(environmentVariableName = "FREQUENT_2_ACCOUNT_NAME")
+                }",
+                "12 - Insert Quick Transaction On : ${
+                    getEnvironmentVariableValueForUserScreen(environmentVariableName = "FREQUENT_3_ACCOUNT_NAME")
+                }",
                 "13 - List Accounts : Full Names",
-                "14 - Import Transactions To : Bank : ${UserOperations.dotenv["BANK_ACCOUNT_NAME"] ?: "N/A"} From CSV",
-                "15 - Import Transactions To : Bank : ${UserOperations.dotenv["BANK_ACCOUNT_NAME"] ?: "N/A"} From XLX",
+                "14 - Import Transactions To : Bank : ${
+                    getEnvironmentVariableValueForUserScreen(environmentVariableName = "BANK_ACCOUNT_NAME")
+                } From CSV",
+                "15 - Import Transactions To : Bank : ${
+                    getEnvironmentVariableValueForUserScreen(environmentVariableName = "BANK_ACCOUNT_NAME")
+                } From XLX",
                 "16 - Check A/Cs affected after a specified date",
                 "17 - View Transactions of a specific A/C",
-                "18 - View Balance Sheet Ledger",
+                "18 - View Balance Sheet Ledger (All)",
+                "19 - View Balance Sheet Ledger (Excluding Open Balances)",
+                "20 - View Balance Sheet Ledger (Excluding Open Balances & Misc. Incomes)",
+                "21 - View Balance Sheet Ledger (Excluding Open Balances, Misc. Incomes & Investment Returns)",
+                "22 - View Balance Sheet Ledger (Excluding Open Balances, Misc. Incomes, Investment Returns & Family Accounts)",
                 "0 - Logout",
                 "",
                 "Enter Your Choice : "
@@ -49,13 +83,46 @@ internal fun userScreen(username: String, userId: Int) {
             "15" -> importBankFromXlx()
             "16" -> checkAccountsAffectedAfterSpecifiedDate(userId = userId, username = username)
             "17" -> viewTransactionsOfSpecificAccount(userId = userId, username = username)
-            "18" -> printBalanceSheetOfUser(currentUserName = username, currentUserId = userId)
+            "18" -> printBalanceSheetOfUser(
+                currentUserName = username,
+                currentUserId = userId,
+                mode = BalanceSheetRefineLevel.ALL
+            )
+
+            "19" -> printBalanceSheetOfUser(
+                currentUserName = username,
+                currentUserId = userId,
+                mode = BalanceSheetRefineLevel.WITHOUT_OPEN_BALANCES
+            )
+
+            "20" -> printBalanceSheetOfUser(
+                currentUserName = username,
+                currentUserId = userId,
+                mode = BalanceSheetRefineLevel.WITHOUT_MISC_INCOMES
+            )
+
+            "21" -> printBalanceSheetOfUser(
+                currentUserName = username,
+                currentUserId = userId,
+                mode = BalanceSheetRefineLevel.WITHOUT_INVESTMENT_RETURNS
+            )
+
+            "22" -> printBalanceSheetOfUser(
+                currentUserName = username,
+                currentUserId = userId,
+                mode = BalanceSheetRefineLevel.WITHOUT_FAMILY_ACCOUNTS
+            )
+
             "0" -> {}
             else -> invalidOptionMessage()
         }
     } while (choice != "0")
 }
 
+private fun getEnvironmentVariableValueForUserScreen(environmentVariableName: String) = getEnvironmentVariableValue(
+    dotenv = getApplicationEnvironmentFile(),
+    environmentVariableName = environmentVariableName, defaultValue = "N/A"
+)
 
 internal fun accountHome(userId: Int, username: String) {
 

@@ -5,6 +5,7 @@ import accountLedgerCli.to_utils.*
 import accountLedgerCli.to_utils.DateTimeUtils.normalDateTimePattern
 import accountLedgerCli.utils.AccountUtils
 import accountLedgerCli.utils.UserUtils
+import io.github.cdimascio.dotenv.Dotenv
 import java.time.LocalDateTime
 
 internal var dateTimeString = LocalDateTime.now().format(normalDateTimePattern)
@@ -52,4 +53,8 @@ fun main() {
             else -> invalidOptionMessage()
         }
     } while (choice != "0")
+}
+
+internal fun getApplicationEnvironmentFile(): Dotenv {
+    return UserOperations.dotenv
 }

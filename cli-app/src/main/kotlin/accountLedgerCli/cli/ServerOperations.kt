@@ -22,17 +22,23 @@ internal fun getAccounts(userId: Int, parentAccountId: Int = 0): ResponseHolder<
     return apiResponse
 }
 
-internal fun getUserTransactions(userId: Int, accountId: Int): ResponseHolder<TransactionsResponse> {
+internal fun getUserTransactions(
+    userId: Int,
+    accountId: Int,
+    isNotFromBalanceSheet: Boolean = true
+): ResponseHolder<TransactionsResponse> {
 
     val apiResponse: ResponseHolder<TransactionsResponse>
     val userTransactionsDataSource = TransactionsDataSource()
-    println("Contacting Server...")
+    if (isNotFromBalanceSheet) {
+        println("Contacting Server...")
+    }
     runBlocking {
         apiResponse =
             userTransactionsDataSource.selectUserTransactions(
                 userId = userId, accountId = accountId
             )
     }
-    println("Response : $apiResponse")
+//    println("Response : $apiResponse")
     return apiResponse
 }

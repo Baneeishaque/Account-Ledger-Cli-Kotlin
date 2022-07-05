@@ -1,0 +1,5 @@
+package accountLedgerCli.cli
+
+enum class BalanceSheetRefineLevel {
+    ALL, WITHOUT_OPEN_BALANCES, WITHOUT_MISC_INCOMES, WITHOUT_INVESTMENT_RETURNS, WITHOUT_FAMILY_ACCOUNTS
+}
