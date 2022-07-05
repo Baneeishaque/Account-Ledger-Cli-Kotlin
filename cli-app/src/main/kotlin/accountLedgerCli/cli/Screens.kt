@@ -24,6 +24,7 @@ internal fun userScreen(username: String, userId: Int) {
                 "15 - Import Transactions To : Bank : ${UserOperations.dotenv["BANK_ACCOUNT_NAME"] ?: "N/A"} From XLX",
                 "16 - Check A/Cs affected after a specified date",
                 "17 - View Transactions of a specific A/C",
+                "18 - View Balance Sheet Ledger",
                 "0 - Logout",
                 "",
                 "Enter Your Choice : "
@@ -48,6 +49,7 @@ internal fun userScreen(username: String, userId: Int) {
             "15" -> importBankFromXlx()
             "16" -> checkAccountsAffectedAfterSpecifiedDate(userId = userId, username = username)
             "17" -> viewTransactionsOfSpecificAccount(userId = userId, username = username)
+            "18" -> printBalanceSheetOfUser(currentUserName = username, currentUserId = userId)
             "0" -> {}
             else -> invalidOptionMessage()
         }
