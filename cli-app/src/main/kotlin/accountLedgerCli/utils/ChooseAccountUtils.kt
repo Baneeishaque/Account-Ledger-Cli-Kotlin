@@ -4,7 +4,7 @@ import accountLedgerCli.api.response.AccountResponse
 import accountLedgerCli.api.response.AccountsResponse
 import java.util.*
 
-internal class ChooseAccountResult(val choosedAccountId: Int, val choosedAccount: AccountResponse)
+internal class ChooseAccountResult(val chosenAccountId: Int, val chosenAccount: AccountResponse)
 
 internal object ChooseAccountUtils {
 

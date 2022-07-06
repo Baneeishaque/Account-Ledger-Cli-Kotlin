@@ -1,13 +1,13 @@
 plugins {
-    id("org.jetbrains.kotlin.jvm") version "1.7.0"
+    kotlin("jvm") version "1.7.0"
+    kotlin("plugin.serialization") version "1.7.0"
 
     application
     jacoco
 }
 
 repositories {
-    jcenter()
-    maven("https://kotlin.bintray.com/kotlinx")
+    mavenCentral()
 }
 
 dependencies {
@@ -32,15 +32,17 @@ dependencies {
     implementation("com.github.doyaaaaaken:kotlin-csv-jvm:1.3.0")
     implementation("com.massisframework:j-text-utils:0.3.4")
     implementation("io.github.cdimascio:dotenv-kotlin:6.3.1")
+
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3")
 }
 
 application {
-    mainClass.set("accountLedgerCli.cli.AppKt")
+    mainClass.set("accountLedgerCli.cli.App")
 }
 
 val jar by tasks.getting(Jar::class) {
     manifest {
-        attributes["Main-Class"] = "accountLedgerCli.cli.AppKt"
+        attributes["Main-Class"] = "accountLedgerCli.cli.App"
     }
     from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) }) {
         exclude("META-INF/*.RSA", "META-INF/*.SF", "META-INF/*.DSA")

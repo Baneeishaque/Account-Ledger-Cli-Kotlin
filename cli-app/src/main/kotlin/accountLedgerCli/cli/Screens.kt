@@ -1,5 +1,8 @@
 package accountLedgerCli.cli
 
+import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
+import accountLedgerCli.cli.App.Companion.fromAccount
+
 internal fun userScreen(username: String, userId: Int) {
 
 //    println("Env. Variables : ${UserOperations.dotenv.entries()}")
@@ -87,37 +90,37 @@ internal fun userScreen(username: String, userId: Int) {
             "18" -> printBalanceSheetOfUser(
                 currentUserName = username,
                 currentUserId = userId,
-                mode = BalanceSheetRefineLevel.ALL
+                refineLevel = BalanceSheetRefineLevelEnum.ALL
             )
 
             "19" -> printBalanceSheetOfUser(
                 currentUserName = username,
                 currentUserId = userId,
-                mode = BalanceSheetRefineLevel.WITHOUT_OPEN_BALANCES
+                refineLevel = BalanceSheetRefineLevelEnum.WITHOUT_OPEN_BALANCES
             )
 
             "20" -> printBalanceSheetOfUser(
                 currentUserName = username,
                 currentUserId = userId,
-                mode = BalanceSheetRefineLevel.WITHOUT_MISC_INCOMES
+                refineLevel = BalanceSheetRefineLevelEnum.WITHOUT_MISC_INCOMES
             )
 
             "21" -> printBalanceSheetOfUser(
                 currentUserName = username,
                 currentUserId = userId,
-                mode = BalanceSheetRefineLevel.WITHOUT_INVESTMENT_RETURNS
+                refineLevel = BalanceSheetRefineLevelEnum.WITHOUT_INVESTMENT_RETURNS
             )
 
             "22" -> printBalanceSheetOfUser(
                 currentUserName = username,
                 currentUserId = userId,
-                mode = BalanceSheetRefineLevel.WITHOUT_FAMILY_ACCOUNTS
+                refineLevel = BalanceSheetRefineLevelEnum.WITHOUT_FAMILY_ACCOUNTS
             )
 
             "23" -> printBalanceSheetOfUser(
                 currentUserName = username,
                 currentUserId = userId,
-                mode = BalanceSheetRefineLevel.WITHOUT_EXPENSE_ACCOUNTS
+                refineLevel = BalanceSheetRefineLevelEnum.WITHOUT_EXPENSE_ACCOUNTS
             )
 
             "0" -> {}
@@ -127,7 +130,7 @@ internal fun userScreen(username: String, userId: Int) {
 }
 
 private fun getEnvironmentVariableValueForUserScreen(environmentVariableName: String) = getEnvironmentVariableValue(
-    dotenv = getApplicationEnvironmentFile(),
+    dotenv = App.dotenv,
     environmentVariableName = environmentVariableName, defaultValue = "N/A"
 )
 
@@ -158,15 +161,15 @@ internal fun accountHome(userId: Int, username: String) {
                     accountFullName = fromAccount.fullName
                 )
 
-            "2" -> addTransaction(userId = userId, username = username, transactionType = TransactionType.NORMAL)
+            "2" -> addTransaction(userId = userId, username = username, transactionTypeEnum = TransactionTypeEnum.NORMAL)
             "3" ->
                 viewChildAccounts(
                     userId = userId,
                     username = username,
                 )
 
-            "4" -> addTransaction(userId = userId, username = username, transactionType = TransactionType.VIA)
-            "5" -> addTransaction(userId = userId, username = username, transactionType = TransactionType.TWO_WAY)
+            "4" -> addTransaction(userId = userId, username = username, transactionTypeEnum = TransactionTypeEnum.VIA)
+            "5" -> addTransaction(userId = userId, username = username, transactionTypeEnum = TransactionTypeEnum.TWO_WAY)
             "0" -> {}
             else -> invalidOptionMessage()
         }

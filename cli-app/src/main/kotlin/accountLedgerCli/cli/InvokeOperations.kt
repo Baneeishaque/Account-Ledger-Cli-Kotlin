@@ -1,6 +1,7 @@
 package accountLedgerCli.cli
 
 import accountLedgerCli.api.response.AccountResponse
+import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
 
 internal fun invokeAutomatedInsertTransaction(
     userId: Int,
@@ -52,7 +53,7 @@ internal fun invokeAddTransactionStep2(
     username: String,
     localFromAccount: AccountResponse,
     localToAccount: AccountResponse,
-    transactionType: TransactionType,
+    transactionTypeEnum: TransactionTypeEnum,
     localViaAccount: AccountResponse
 ): Boolean {
     return addTransactionStep2(
@@ -60,7 +61,7 @@ internal fun invokeAddTransactionStep2(
         username = username,
         localFromAccount = localFromAccount,
         localToAccount = localToAccount,
-        transactionType = transactionType,
+        transactionTypeEnum = transactionTypeEnum,
         localViaAccount = localViaAccount
     )
 }

@@ -1,10 +1,15 @@
 package accountLedgerCli.cli
 
+import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithContinuePrompt
+import accountLedgerCli.cli.App.Companion.dateTimeString
+import accountLedgerCli.cli.App.Companion.fromAccount
+import accountLedgerCli.cli.App.Companion.toAccount
+import accountLedgerCli.cli.App.Companion.viaAccount
 import accountLedgerCli.to_utils.DateTimeUtils
 import accountLedgerCli.utils.AccountUtils
 import java.time.LocalDateTime
 
-internal fun isAccountsAreAvailable(transactionType: TransactionType): Boolean {
+internal fun isAccountsAreAvailable(transactionTypeEnum: TransactionTypeEnum): Boolean {
 
     if (toAccount.id == 0) {
 
@@ -16,7 +21,7 @@ internal fun isAccountsAreAvailable(transactionType: TransactionType): Boolean {
         println("Please choose from account...")
         return false
 
-    } else if ((transactionType == TransactionType.VIA) && (viaAccount.id == 0)) {
+    } else if ((transactionTypeEnum == TransactionTypeEnum.VIA) && (viaAccount.id == 0)) {
 
         println("Please choose via. account...")
         return false
@@ -27,7 +32,7 @@ internal fun isAccountsAreAvailable(transactionType: TransactionType): Boolean {
 internal fun transactionContinueCheck(
     userId: Int,
     username: String,
-    transactionType: TransactionType
+    transactionTypeEnum: TransactionTypeEnum
 ) {
 
     do {
@@ -36,7 +41,7 @@ internal fun transactionContinueCheck(
             "\nUser : $username",
             "From Account - ${fromAccount.id} : ${fromAccount.fullName}",
         )
-        if (transactionType == TransactionType.VIA) {
+        if (transactionTypeEnum == TransactionTypeEnum.VIA) {
             menuItems = menuItems + listOf(
                 "Via. Account - ${viaAccount.id} : ${viaAccount.fullName}",
             )
@@ -55,7 +60,7 @@ internal fun transactionContinueCheck(
                 addTransactionWithAccountAvailabilityCheck(
                     userId = userId,
                     username = username,
-                    transactionType = transactionType
+                    transactionTypeEnum = transactionTypeEnum
                 )
                 return
             }
@@ -69,19 +74,19 @@ internal fun transactionContinueCheck(
 internal fun addTransactionWithAccountAvailabilityCheck(
     userId: Int,
     username: String,
-    transactionType: TransactionType
+    transactionTypeEnum: TransactionTypeEnum
 ) {
 
-    if (isAccountsAreAvailable(transactionType)) {
+    if (isAccountsAreAvailable(transactionTypeEnum)) {
 
-        if (transactionType == TransactionType.VIA) {
+        if (transactionTypeEnum == TransactionTypeEnum.VIA) {
 
             if (addTransactionStep2(
                     userId = userId,
                     username = username,
                     localFromAccount = fromAccount,
                     localToAccount = viaAccount,
-                    transactionType = transactionType,
+                    transactionTypeEnum = transactionTypeEnum,
                     localViaAccount = AccountUtils.getBlankAccount()
                 )
             ) {
@@ -96,7 +101,7 @@ internal fun addTransactionWithAccountAvailabilityCheck(
                         username = username,
                         localFromAccount = viaAccount,
                         localToAccount = toAccount,
-                        transactionType = transactionType,
+                        transactionTypeEnum = transactionTypeEnum,
                         localViaAccount = AccountUtils.getBlankAccount(),
                         isViaStep = true
                     )
@@ -108,14 +113,14 @@ internal fun addTransactionWithAccountAvailabilityCheck(
                             .format(DateTimeUtils.normalDateTimePattern)
                 }
             }
-        } else if (transactionType == TransactionType.NORMAL) {
+        } else if (transactionTypeEnum == TransactionTypeEnum.NORMAL) {
 
             if (addTransactionStep2(
                     userId = userId,
                     username = username,
                     localFromAccount = fromAccount,
                     localToAccount = toAccount,
-                    transactionType = transactionType,
+                    transactionTypeEnum = transactionTypeEnum,
                     localViaAccount = AccountUtils.getBlankAccount()
                 )
             ) {
@@ -125,14 +130,14 @@ internal fun addTransactionWithAccountAvailabilityCheck(
                             LocalDateTime)
                         .format(DateTimeUtils.normalDateTimePattern)
             }
-        } else if (transactionType == TransactionType.TWO_WAY) {
+        } else if (transactionTypeEnum == TransactionTypeEnum.TWO_WAY) {
 
             if (addTransactionStep2(
                     userId = userId,
                     username = username,
                     localFromAccount = fromAccount,
                     localToAccount = toAccount,
-                    transactionType = transactionType,
+                    transactionTypeEnum = transactionTypeEnum,
                     localViaAccount = AccountUtils.getBlankAccount()
                 )
             ) {
@@ -147,7 +152,7 @@ internal fun addTransactionWithAccountAvailabilityCheck(
                         username = username,
                         localFromAccount = toAccount,
                         localToAccount = fromAccount,
-                        transactionType = transactionType,
+                        transactionTypeEnum = transactionTypeEnum,
                         localViaAccount = AccountUtils.getBlankAccount(),
                         isTwoWayStep = true
                     )
@@ -162,7 +167,7 @@ internal fun addTransactionWithAccountAvailabilityCheck(
         }
     } else {
 
-        addTransaction(userId = userId, username = username, transactionType = transactionType)
+        addTransaction(userId = userId, username = username, transactionTypeEnum = transactionTypeEnum)
     }
 }
 

@@ -3,6 +3,8 @@ package accountLedgerCli.cli
 import accountLedgerCli.api.response.AccountResponse
 import accountLedgerCli.api.response.AccountsResponse
 import accountLedgerCli.api.response.TransactionsResponse
+import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
+import accountLedgerCli.cli.App.Companion.fromAccount
 import accountLedgerCli.retrofit.ResponseHolder
 import accountLedgerCli.retrofit.data.TransactionsDataSource
 import accountLedgerCli.to_utils.InputUtils
@@ -66,7 +68,7 @@ internal fun checkAccountsAffectedAfterSpecifiedDate(userId: Int, username: Stri
                         username = username,
                         accountId = account.key,
                         accountFullName = account.value,
-                        functionCallSource = FunctionCallSource.FROM_CHECK_ACCOUNTS
+                        functionCallSourceEnum = FunctionCallSourceEnum.FROM_CHECK_ACCOUNTS
                     )) {
                         "E", "0" -> {
                             break

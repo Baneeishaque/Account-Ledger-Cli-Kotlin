@@ -1,6 +1,7 @@
 package accountLedgerCli.cli
 
 import accountLedgerCli.api.response.AccountResponse
+import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
 
 internal fun searchAccount(userAccountsMap: LinkedHashMap<Int, AccountResponse>): Int {
 

@@ -7,7 +7,7 @@ internal fun ex13(
     username: String,
     localFromAccount: AccountResponse,
     localToAccount: AccountResponse,
-    transactionType: TransactionType,
+    transactionTypeEnum: TransactionTypeEnum,
     localViaAccount: AccountResponse
 ): Boolean {
     exchangeFromAndToAccounts()
@@ -16,7 +16,7 @@ internal fun ex13(
         username = username,
         localFromAccount = localFromAccount,
         localToAccount = localToAccount,
-        transactionType = transactionType,
+        transactionTypeEnum = transactionTypeEnum,
         localViaAccount = localViaAccount
     )
 }
@@ -26,7 +26,7 @@ internal fun ex12(
     username: String,
     localFromAccount: AccountResponse,
     localToAccount: AccountResponse,
-    transactionType: TransactionType,
+    transactionTypeEnum: TransactionTypeEnum,
     localViaAccount: AccountResponse
 ): Boolean {
     exchangeFromAndViaAccounts()
@@ -35,7 +35,7 @@ internal fun ex12(
         username = username,
         localFromAccount = localFromAccount,
         localToAccount = localToAccount,
-        transactionType = transactionType,
+        transactionTypeEnum = transactionTypeEnum,
         localViaAccount = localViaAccount
     )
 }
@@ -45,7 +45,7 @@ internal fun ex23(
     username: String,
     localFromAccount: AccountResponse,
     localToAccount: AccountResponse,
-    transactionType: TransactionType,
+    transactionTypeEnum: TransactionTypeEnum,
     localViaAccount: AccountResponse
 ): Boolean {
     exchangeToAndViaAccounts()
@@ -54,7 +54,7 @@ internal fun ex23(
         username = username,
         localFromAccount = localFromAccount,
         localToAccount = localToAccount,
-        transactionType = transactionType,
+        transactionTypeEnum = transactionTypeEnum,
         localViaAccount = localViaAccount
     )
 }

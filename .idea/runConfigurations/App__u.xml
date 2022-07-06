@@ -1,0 +1,11 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="App -u" type="JetRunConfigurationType" singleton="false">
+    <option name="MAIN_CLASS_NAME" value="accountLedgerCli.cli.App" />
+    <module name="accountLedgerCli.cli-app.main" />
+    <option name="PROGRAM_PARAMETERS" value="-u" />
+    <shortenClasspath name="NONE" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

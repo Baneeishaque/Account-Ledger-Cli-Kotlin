@@ -2,6 +2,14 @@ package accountLedgerCli.cli
 
 import accountLedgerCli.api.response.AccountResponse
 import accountLedgerCli.api.response.InsertionResponse
+import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
+import accountLedgerCli.cli.App.Companion.dateTimeString
+import accountLedgerCli.cli.App.Companion.fromAccount
+import accountLedgerCli.cli.App.Companion.toAccount
+import accountLedgerCli.cli.App.Companion.transactionAmount
+import accountLedgerCli.cli.App.Companion.transactionParticulars
+import accountLedgerCli.cli.App.Companion.userAccountsMap
+import accountLedgerCli.cli.App.Companion.viaAccount
 import accountLedgerCli.retrofit.ResponseHolder
 import accountLedgerCli.retrofit.data.TransactionDataSource
 import accountLedgerCli.to_utils.DateTimeUtils
@@ -27,7 +35,7 @@ internal fun insertQuickTransactionWalletToFrequent1(userId: Int, username: Stri
 
         fromAccount = userAccountsMap[walletAccountId]!!
         toAccount = userAccountsMap[frequent1AccountId]!!
-        transactionContinueCheck(userId = userId, username = username, transactionType = TransactionType.NORMAL)
+        transactionContinueCheck(userId = userId, username = username, transactionTypeEnum = TransactionTypeEnum.NORMAL)
     }
 }
 
@@ -37,7 +45,7 @@ internal fun insertQuickTransactionWalletToFrequent2(userId: Int, username: Stri
 
         fromAccount = userAccountsMap[walletAccountId]!!
         toAccount = userAccountsMap[frequent2AccountId]!!
-        transactionContinueCheck(userId = userId, username = username, transactionType = TransactionType.NORMAL)
+        transactionContinueCheck(userId = userId, username = username, transactionTypeEnum = TransactionTypeEnum.NORMAL)
     }
 }
 
@@ -47,7 +55,7 @@ internal fun insertQuickTransactionWalletToFrequent3(userId: Int, username: Stri
 
         fromAccount = userAccountsMap[walletAccountId]!!
         toAccount = userAccountsMap[frequent3AccountId]!!
-        transactionContinueCheck(userId = userId, username = username, transactionType = TransactionType.NORMAL)
+        transactionContinueCheck(userId = userId, username = username, transactionTypeEnum = TransactionTypeEnum.NORMAL)
     }
 }
 
@@ -66,7 +74,7 @@ internal fun insertQuickTransactionBankToFrequent1(userId: Int, username: String
 
         fromAccount = userAccountsMap[bankAccountId]!!
         toAccount = userAccountsMap[frequent1AccountId]!!
-        transactionContinueCheck(userId = userId, username = username, transactionType = TransactionType.NORMAL)
+        transactionContinueCheck(userId = userId, username = username, transactionTypeEnum = TransactionTypeEnum.NORMAL)
     }
 }
 
@@ -76,7 +84,7 @@ internal fun insertQuickTransactionBankToFrequent2(userId: Int, username: String
 
         fromAccount = userAccountsMap[bankAccountId]!!
         toAccount = userAccountsMap[frequent2AccountId]!!
-        transactionContinueCheck(userId = userId, username = username, transactionType = TransactionType.NORMAL)
+        transactionContinueCheck(userId = userId, username = username, transactionTypeEnum = TransactionTypeEnum.NORMAL)
     }
 }
 
@@ -95,7 +103,7 @@ internal fun insertQuickTransactionBankToFrequent3(userId: Int, username: String
 
         fromAccount = userAccountsMap[bankAccountId]!!
         toAccount = userAccountsMap[frequent3AccountId]!!
-        transactionContinueCheck(userId = userId, username = username, transactionType = TransactionType.NORMAL)
+        transactionContinueCheck(userId = userId, username = username, transactionTypeEnum = TransactionTypeEnum.NORMAL)
     }
 }
 
@@ -123,15 +131,15 @@ internal fun addAccount() {
     ToDoUtils.showTodo()
 }
 
-internal fun addTransaction(userId: Int, username: String, transactionType: TransactionType) {
+internal fun addTransaction(userId: Int, username: String, transactionTypeEnum: TransactionTypeEnum) {
 
     do {
         var menuItems = listOf(
             "\nUser : $username",
-            "Transaction Type : $transactionType",
+            "Transaction Type : $transactionTypeEnum",
             "From Account - ${fromAccount.id} : ${fromAccount.fullName}"
         )
-        if (transactionType == TransactionType.VIA) {
+        if (transactionTypeEnum == TransactionTypeEnum.VIA) {
             menuItems = menuItems + listOf(
                 "Via. Account - ${viaAccount.id} : ${viaAccount.fullName}"
             )
@@ -146,7 +154,7 @@ internal fun addTransaction(userId: Int, username: String, transactionType: Tran
             "6 - Input From Account ID Directly",
             "7 - Continue Transaction"
         )
-        if (transactionType == TransactionType.VIA) {
+        if (transactionTypeEnum == TransactionTypeEnum.VIA) {
             menuItems = menuItems + listOf(
                 "8 - Exchange From & Via. A/Cs",
                 "9 - Exchange From & Via. A/Cs, Then Continue Transaction",
@@ -177,58 +185,58 @@ internal fun addTransaction(userId: Int, username: String, transactionType: Tran
             "1" -> {
                 if (chooseDepositTop(userId)) {
 
-                    transactionContinueCheck(userId, username, transactionType)
+                    transactionContinueCheck(userId, username, transactionTypeEnum)
                     return
                 }
             }
             "2" -> {
                 if (chooseDepositFull(userId)) {
 
-                    transactionContinueCheck(userId, username, transactionType)
+                    transactionContinueCheck(userId, username, transactionTypeEnum)
                     return
                 }
             }
             "3" -> {
 
                 val chooseAccountResult = ChooseAccountUtils.chooseAccountById(userId)
-                if (chooseAccountResult.choosedAccountId != 0) {
+                if (chooseAccountResult.chosenAccountId != 0) {
 
-                    toAccount = chooseAccountResult.choosedAccount
-                    transactionContinueCheck(userId, username, transactionType)
+                    toAccount = chooseAccountResult.chosenAccount
+                    transactionContinueCheck(userId, username, transactionTypeEnum)
                     return
                 }
             }
             "4" -> {
                 if (chooseFromAccountTop(userId)) {
 
-                    transactionContinueCheck(userId, username, transactionType)
+                    transactionContinueCheck(userId, username, transactionTypeEnum)
                     return
                 }
             }
             "5" -> {
                 if (chooseFromAccountFull(userId)) {
 
-                    transactionContinueCheck(userId, username, transactionType)
+                    transactionContinueCheck(userId, username, transactionTypeEnum)
                     return
                 }
             }
             "6" -> {
                 val chooseAccountResult = ChooseAccountUtils.chooseAccountById(userId)
-                if (chooseAccountResult.choosedAccountId != 0) {
+                if (chooseAccountResult.chosenAccountId != 0) {
 
-                    fromAccount = chooseAccountResult.choosedAccount
-                    transactionContinueCheck(userId, username, transactionType)
+                    fromAccount = chooseAccountResult.chosenAccount
+                    transactionContinueCheck(userId, username, transactionTypeEnum)
                     return
                 }
             }
             "7" -> {
 
-                transactionContinueCheck(userId, username, transactionType)
+                transactionContinueCheck(userId, username, transactionTypeEnum)
                 return
             }
             "8" -> {
 
-                if (transactionType == TransactionType.VIA) {
+                if (transactionTypeEnum == TransactionTypeEnum.VIA) {
 
                     exchangeFromAndViaAccounts()
 
@@ -236,12 +244,12 @@ internal fun addTransaction(userId: Int, username: String, transactionType: Tran
 
                     exchangeFromAndToAccounts()
                 }
-                addTransaction(userId = userId, username = username, transactionType = transactionType)
+                addTransaction(userId = userId, username = username, transactionTypeEnum = transactionTypeEnum)
                 return
             }
             "9" -> {
 
-                if (transactionType == TransactionType.VIA) {
+                if (transactionTypeEnum == TransactionTypeEnum.VIA) {
 
                     exchangeFromAndViaAccounts()
 
@@ -249,14 +257,14 @@ internal fun addTransaction(userId: Int, username: String, transactionType: Tran
 
                     exchangeFromAndToAccounts()
                 }
-                transactionContinueCheck(userId, username, transactionType)
+                transactionContinueCheck(userId, username, transactionTypeEnum)
                 return
             }
             "10" -> {
-                if (transactionType == TransactionType.VIA) {
+                if (transactionTypeEnum == TransactionTypeEnum.VIA) {
 
                     exchangeToAndViaAccounts()
-                    addTransaction(userId = userId, username = username, transactionType = transactionType)
+                    addTransaction(userId = userId, username = username, transactionTypeEnum = transactionTypeEnum)
                     return
 
                 } else {
@@ -264,10 +272,10 @@ internal fun addTransaction(userId: Int, username: String, transactionType: Tran
                 }
             }
             "11" -> {
-                if (transactionType == TransactionType.VIA) {
+                if (transactionTypeEnum == TransactionTypeEnum.VIA) {
 
                     exchangeToAndViaAccounts()
-                    transactionContinueCheck(userId, username, transactionType)
+                    transactionContinueCheck(userId, username, transactionTypeEnum)
                     return
 
                 } else {
@@ -275,10 +283,10 @@ internal fun addTransaction(userId: Int, username: String, transactionType: Tran
                 }
             }
             "12" -> {
-                if (transactionType == TransactionType.VIA) {
+                if (transactionTypeEnum == TransactionTypeEnum.VIA) {
 
                     exchangeFromAndToAccounts()
-                    addTransaction(userId = userId, username = username, transactionType = transactionType)
+                    addTransaction(userId = userId, username = username, transactionTypeEnum = transactionTypeEnum)
                     return
 
                 } else {
@@ -286,10 +294,10 @@ internal fun addTransaction(userId: Int, username: String, transactionType: Tran
                 }
             }
             "13" -> {
-                if (transactionType == TransactionType.VIA) {
+                if (transactionTypeEnum == TransactionTypeEnum.VIA) {
 
                     exchangeFromAndToAccounts()
-                    transactionContinueCheck(userId, username, transactionType)
+                    transactionContinueCheck(userId, username, transactionTypeEnum)
                     return
 
                 } else {
@@ -297,7 +305,7 @@ internal fun addTransaction(userId: Int, username: String, transactionType: Tran
                 }
             }
             "14" -> {
-                if (transactionType == TransactionType.VIA) {
+                if (transactionTypeEnum == TransactionTypeEnum.VIA) {
 
                     ToDoUtils.showTodo()
                     return
@@ -307,11 +315,11 @@ internal fun addTransaction(userId: Int, username: String, transactionType: Tran
                 }
             }
             "15" -> {
-                if (transactionType == TransactionType.VIA) {
+                if (transactionTypeEnum == TransactionTypeEnum.VIA) {
 
                     if (chooseViaAccountFull(userId)) {
 
-                        transactionContinueCheck(userId, username, TransactionType.VIA)
+                        transactionContinueCheck(userId, username, TransactionTypeEnum.VIA)
                         return
                     }
                 } else {
@@ -319,13 +327,13 @@ internal fun addTransaction(userId: Int, username: String, transactionType: Tran
                 }
             }
             "16" -> {
-                if (transactionType == TransactionType.VIA) {
+                if (transactionTypeEnum == TransactionTypeEnum.VIA) {
 
                     val chooseAccountResult = ChooseAccountUtils.chooseAccountById(userId)
-                    if (chooseAccountResult.choosedAccountId != 0) {
+                    if (chooseAccountResult.chosenAccountId != 0) {
 
-                        viaAccount = chooseAccountResult.choosedAccount
-                        transactionContinueCheck(userId, username, transactionType)
+                        viaAccount = chooseAccountResult.chosenAccount
+                        transactionContinueCheck(userId, username, transactionTypeEnum)
                         return
                     }
                 } else {
@@ -343,7 +351,7 @@ internal fun addTransactionStep2(
     username: String,
     localFromAccount: AccountResponse,
     localToAccount: AccountResponse,
-    transactionType: TransactionType,
+    transactionTypeEnum: TransactionTypeEnum,
     localViaAccount: AccountResponse,
     isViaStep: Boolean = false,
     isTwoWayStep: Boolean = false
@@ -353,7 +361,7 @@ internal fun addTransactionStep2(
         "\nUser : $username",
         "Withdraw Account - ${fromAccount.id} : ${fromAccount.fullName}",
     )
-    if (transactionType == TransactionType.VIA) {
+    if (transactionTypeEnum == TransactionTypeEnum.VIA) {
         menuItems = menuItems + listOf(
             "Intermediate Account - ${viaAccount.id} : ${viaAccount.fullName}",
         )
@@ -379,7 +387,7 @@ internal fun addTransactionStep2(
             "Enter Time : "
         )
         commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(menuItems)
-        when (val inputDateTimeString = enterDateWithTime(transactionType = transactionType)) {
+        when (val inputDateTimeString = enterDateWithTime(transactionTypeEnum = transactionTypeEnum)) {
             "D+Tr" -> {
 
                 dateTimeString =
@@ -391,7 +399,7 @@ internal fun addTransactionStep2(
                     username = username,
                     localFromAccount = localFromAccount,
                     localToAccount = localToAccount,
-                    transactionType = transactionType,
+                    transactionTypeEnum = transactionTypeEnum,
                     localViaAccount = localViaAccount
                 )
             }
@@ -403,7 +411,7 @@ internal fun addTransactionStep2(
                     username = username,
                     localFromAccount = localFromAccount,
                     localToAccount = localToAccount,
-                    transactionType = transactionType,
+                    transactionTypeEnum = transactionTypeEnum,
                     localViaAccount = localViaAccount
                 )
             }
@@ -418,7 +426,7 @@ internal fun addTransactionStep2(
                     username = username,
                     localFromAccount = localFromAccount,
                     localToAccount = localToAccount,
-                    transactionType = transactionType,
+                    transactionTypeEnum = transactionTypeEnum,
                     localViaAccount = localViaAccount
                 )
             }
@@ -430,25 +438,25 @@ internal fun addTransactionStep2(
                     username = username,
                     localFromAccount = localFromAccount,
                     localToAccount = localToAccount,
-                    transactionType = transactionType,
+                    transactionTypeEnum = transactionTypeEnum,
                     localViaAccount = localViaAccount
                 )
             }
             "Ex" -> {
 
-                return ex13(userId, username, localFromAccount, localToAccount, transactionType, localViaAccount)
+                return ex13(userId, username, localFromAccount, localToAccount, transactionTypeEnum, localViaAccount)
             }
             "Ex13" -> {
 
-                return ex13(userId, username, localFromAccount, localToAccount, transactionType, localViaAccount)
+                return ex13(userId, username, localFromAccount, localToAccount, transactionTypeEnum, localViaAccount)
             }
             "Ex12" -> {
 
-                return ex12(userId, username, localFromAccount, localToAccount, transactionType, localViaAccount)
+                return ex12(userId, username, localFromAccount, localToAccount, transactionTypeEnum, localViaAccount)
             }
             "Ex23" -> {
 
-                return ex23(userId, username, localFromAccount, localToAccount, transactionType, localViaAccount)
+                return ex23(userId, username, localFromAccount, localToAccount, transactionTypeEnum, localViaAccount)
             }
             "B" -> {
 
@@ -482,7 +490,7 @@ internal fun addTransactionStep2(
                             "Deposit Account - ${localToAccount.id} : ${localToAccount.fullName}",
                             "Particulars - $transactionParticulars",
                             "Amount - $transactionAmount",
-                            "\nCorrect ? (Y/N),${if (transactionType == TransactionType.VIA) " Ex12 to exchange From & Via A/Cs, Ex23 to exchange Via & To A/Cs, Ex13 to exchange From & To A/Cs" else " Ex to exchange From & To A/Cs"} or B to back : "
+                            "\nCorrect ? (Y/N),${if (transactionTypeEnum == TransactionTypeEnum.VIA) " Ex12 to exchange From & Via A/Cs, Ex23 to exchange Via & To A/Cs, Ex13 to exchange From & To A/Cs" else " Ex to exchange From & To A/Cs"} or B to back : "
                         )
                     )
                     val isCorrect = readLine()
@@ -504,18 +512,18 @@ internal fun addTransactionStep2(
                                 username = username,
                                 localFromAccount = localFromAccount,
                                 localToAccount = localToAccount,
-                                transactionType = transactionType,
+                                transactionTypeEnum = transactionTypeEnum,
                                 localViaAccount = localViaAccount
                             )
                         "Ex" -> {
 
-                            if (transactionType == TransactionType.NORMAL) {
+                            if (transactionTypeEnum == TransactionTypeEnum.NORMAL) {
                                 return ex13(
                                     userId,
                                     username,
                                     localFromAccount,
                                     localToAccount,
-                                    transactionType,
+                                    transactionTypeEnum,
                                     localViaAccount
                                 )
                             } else {
@@ -523,13 +531,13 @@ internal fun addTransactionStep2(
                             }
                         }
                         "Ex13" -> {
-                            if (transactionType == TransactionType.VIA) {
+                            if (transactionTypeEnum == TransactionTypeEnum.VIA) {
                                 return ex13(
                                     userId,
                                     username,
                                     localFromAccount,
                                     localToAccount,
-                                    transactionType,
+                                    transactionTypeEnum,
                                     localViaAccount
                                 )
                             } else {
@@ -538,13 +546,13 @@ internal fun addTransactionStep2(
                         }
                         "Ex12" -> {
 
-                            if (transactionType == TransactionType.VIA) {
+                            if (transactionTypeEnum == TransactionTypeEnum.VIA) {
                                 return ex12(
                                     userId,
                                     username,
                                     localFromAccount,
                                     localToAccount,
-                                    transactionType,
+                                    transactionTypeEnum,
                                     localViaAccount
                                 )
                             } else {
@@ -553,13 +561,13 @@ internal fun addTransactionStep2(
                         }
                         "Ex23" -> {
 
-                            if (transactionType == TransactionType.VIA) {
+                            if (transactionTypeEnum == TransactionTypeEnum.VIA) {
                                 return ex23(
                                     userId,
                                     username,
                                     localFromAccount,
                                     localToAccount,
-                                    transactionType,
+                                    transactionTypeEnum,
                                     localViaAccount
                                 )
                             } else {

@@ -3,11 +3,15 @@ package accountLedgerCli.cli
 import accountLedgerCli.api.response.TransactionResponse
 import accountLedgerCli.api.response.TransactionsResponse
 import accountLedgerCli.api.response.UserResponse
+import accountLedgerCli.cli.App.Companion.chosenUser
+import accountLedgerCli.cli.App.Companion.dotenv
+import accountLedgerCli.models.*
 import accountLedgerCli.retrofit.ResponseHolder
 import accountLedgerCli.retrofit.data.TransactionsDataSource
 import accountLedgerCli.to_utils.DateTimeUtils
 import accountLedgerCli.to_utils.MysqlUtils
 import kotlinx.coroutines.runBlocking
+import kotlinx.serialization.json.Json
 
 internal fun balanceSheetOfUser(usersMap: LinkedHashMap<Int, UserResponse>) {
     if (handleUserSelection(
@@ -21,12 +25,15 @@ internal fun balanceSheetOfUser(usersMap: LinkedHashMap<Int, UserResponse>) {
 internal fun printBalanceSheetOfUser(
     currentUserName: String,
     currentUserId: Int,
-    mode: BalanceSheetRefineLevel = BalanceSheetRefineLevel.WITHOUT_EXPENSE_ACCOUNTS
+    refineLevel: BalanceSheetRefineLevelEnum = BalanceSheetRefineLevelEnum.WITHOUT_EXPENSE_ACCOUNTS,
+    isNotApiCall: Boolean = true
 ) {
 
 //    print("currentUser : $currentUserName")
     val transactionsDataSource = TransactionsDataSource()
-    println("Contacting Server...")
+    if (isNotApiCall) {
+        println("Contacting Server...")
+    }
     val apiResponse2: ResponseHolder<TransactionsResponse>
     val specifiedDate: Pair<Boolean, String> = MysqlUtils.normalDateStringToMysqlDateString(
         normalDateString = getUserInitialTransactionDateFromUsername(username = currentUserName).minusDays(
@@ -41,71 +48,106 @@ internal fun printBalanceSheetOfUser(
         }
         // println("Response : $apiResponse2")
         if (apiResponse2.isError()) {
+            if (isNotApiCall) {
 
-            println("Error : ${(apiResponse2.getValue() as Exception).localizedMessage}")
-            do {
-                print("Retry (Y/N) ? : ")
-                val input: String? = readLine()
-                when (input) {
-                    "Y", "" -> {
-                        return
+                println("Error : ${(apiResponse2.getValue() as Exception).localizedMessage}")
+                do {
+                    print("Retry (Y/N) ? : ")
+                    val input: String? = readLine()
+                    when (input) {
+                        "Y", "" -> {
+                            printBalanceSheetOfUser(
+                                currentUserName = currentUserName,
+                                currentUserId = currentUserId,
+                                refineLevel = refineLevel,
+                                isNotApiCall = isNotApiCall
+                            )
+                            return
+                        }
+
+                        "N" -> {
+                        }
+
+                        else -> invalidOptionMessage()
                     }
+                } while (input != "N")
 
-                    "N" -> {
-                    }
+            } else {
 
-                    else -> invalidOptionMessage()
-                }
-            } while (input != "N")
+                print(
+                    Json.encodeToString(
+                        serializer = BalanceSheetDataModel.serializer(),
+                        value = BalanceSheetDataModel(
+                            status = 1,
+                            error = "Error : ${(apiResponse2.getValue() as Exception).localizedMessage}"
+                        )
+                    )
+                )
+            }
         } else {
 
             val selectUserTransactionsAfterSpecifiedDateResult: TransactionsResponse =
                 apiResponse2.getValue() as TransactionsResponse
             if (selectUserTransactionsAfterSpecifiedDateResult.status == 1) {
 
-                println("No Transactions...")
+                if (isNotApiCall) {
+
+                    println("No Transactions...")
+
+                } else {
+
+                    print(
+                        Json.encodeToString(
+                            serializer = BalanceSheetDataModel.serializer(),
+                            value = BalanceSheetDataModel(
+                                status = 2,
+                                error = "No Transactions"
+                            )
+                        )
+                    )
+                }
 
             } else {
 
                 var accountsToExclude: List<String> = emptyList()
-                if (mode != BalanceSheetRefineLevel.ALL) {
+                if (refineLevel != BalanceSheetRefineLevelEnum.ALL) {
 
-                    when (mode) {
+                    when (refineLevel) {
 
-                        BalanceSheetRefineLevel.WITHOUT_OPEN_BALANCES -> {
-                            accountsToExclude = (UserOperations.dotenv["OPEN_BALANCE_ACCOUNT_IDS"] ?: "0").split(',')
+                        BalanceSheetRefineLevelEnum.WITHOUT_OPEN_BALANCES -> {
+                            accountsToExclude = (dotenv["OPEN_BALANCE_ACCOUNT_IDS"] ?: "0").split(',')
                         }
 
-                        BalanceSheetRefineLevel.WITHOUT_MISC_INCOMES -> {
-                            accountsToExclude = (UserOperations.dotenv["OPEN_BALANCE_ACCOUNT_IDS"]
-                                ?: "0").split(',') + (UserOperations.dotenv["MISC_INCOME_ACCOUNT_IDS"]
+                        BalanceSheetRefineLevelEnum.WITHOUT_MISC_INCOMES -> {
+                            accountsToExclude = (dotenv["OPEN_BALANCE_ACCOUNT_IDS"]
+                                ?: "0").split(',') + (dotenv["MISC_INCOME_ACCOUNT_IDS"]
                                 ?: "0").split(',')
                         }
 
-                        BalanceSheetRefineLevel.WITHOUT_INVESTMENT_RETURNS -> {
+                        BalanceSheetRefineLevelEnum.WITHOUT_INVESTMENT_RETURNS -> {
                             accountsToExclude =
-                                (UserOperations.dotenv["OPEN_BALANCE_ACCOUNT_IDS"]
-                                    ?: "0").split(',') + (UserOperations.dotenv["MISC_INCOME_ACCOUNT_IDS"]
-                                    ?: "0").split(',') + (UserOperations.dotenv["INVESTMENT_RETURNS_ACCOUNT_IDS"]
+                                (dotenv["OPEN_BALANCE_ACCOUNT_IDS"]
+                                    ?: "0").split(',') + (dotenv["MISC_INCOME_ACCOUNT_IDS"]
+                                    ?: "0").split(',') + (dotenv["INVESTMENT_RETURNS_ACCOUNT_IDS"]
                                     ?: "0").split(',')
                         }
 
-                        BalanceSheetRefineLevel.WITHOUT_FAMILY_ACCOUNTS -> {
+                        BalanceSheetRefineLevelEnum.WITHOUT_FAMILY_ACCOUNTS -> {
                             accountsToExclude =
-                                (UserOperations.dotenv["OPEN_BALANCE_ACCOUNT_IDS"]
-                                    ?: "0").split(',') + (UserOperations.dotenv["MISC_INCOME_ACCOUNT_IDS"]
-                                    ?: "0").split(',') + (UserOperations.dotenv["INVESTMENT_RETURNS_ACCOUNT_IDS"]
-                                    ?: "0").split(',') + (UserOperations.dotenv["FAMILY_ACCOUNT_IDS"]
+                                (dotenv["OPEN_BALANCE_ACCOUNT_IDS"]
+                                    ?: "0").split(',') + (dotenv["MISC_INCOME_ACCOUNT_IDS"]
+                                    ?: "0").split(',') + (dotenv["INVESTMENT_RETURNS_ACCOUNT_IDS"]
+                                    ?: "0").split(',') + (dotenv["FAMILY_ACCOUNT_IDS"]
                                     ?: "0").split(',')
                         }
 
-                        BalanceSheetRefineLevel.WITHOUT_EXPENSE_ACCOUNTS -> {
+                        BalanceSheetRefineLevelEnum.WITHOUT_EXPENSE_ACCOUNTS -> {
                             accountsToExclude =
-                                (UserOperations.dotenv["OPEN_BALANCE_ACCOUNT_IDS"]
-                                    ?: "0").split(',') + (UserOperations.dotenv["MISC_INCOME_ACCOUNT_IDS"]
-                                    ?: "0").split(',') + (UserOperations.dotenv["INVESTMENT_RETURNS_ACCOUNT_IDS"]
-                                    ?: "0").split(',') + (UserOperations.dotenv["FAMILY_ACCOUNT_IDS"]
-                                    ?: "0").split(',') + (UserOperations.dotenv["EXPENSE_ACCOUNT_IDS"]
+                                (dotenv["OPEN_BALANCE_ACCOUNT_IDS"]
+                                    ?: "0").split(',') + (dotenv["MISC_INCOME_ACCOUNT_IDS"]
+                                    ?: "0").split(',') + (dotenv["INVESTMENT_RETURNS_ACCOUNT_IDS"]
+                                    ?: "0").split(',') + (dotenv["FAMILY_ACCOUNT_IDS"]
+                                    ?: "0").split(',') + (dotenv["EXPENSE_ACCOUNT_IDS"]
                                     ?: "0").split(',')
                         }
                         //TODO : Report this
@@ -127,7 +169,8 @@ internal fun printBalanceSheetOfUser(
                     )
                 }
 //                println("Affected A/Cs : $accounts")
-                var menuItems: List<String> = listOf("\nUser : $currentUserName Balance Sheet Ledger")
+                val menuItems: MutableList<String> = mutableListOf("\nUser : $currentUserName Balance Sheet Ledger")
+                val balanceSheetDataRows: MutableList<BalanceSheetDataRowModel> = mutableListOf()
                 for (account in accounts) {
 
                     val apiResponse3: ResponseHolder<TransactionsResponse> =
@@ -138,18 +181,31 @@ internal fun printBalanceSheetOfUser(
                         )
                     if (apiResponse3.isError()) {
 
-                        println("Error : ${(apiResponse3.getValue() as Exception).localizedMessage}")
-                        do {
-                            print("Retry (Y/N) ? : ")
-                            val input: String? = readLine()
-                            when (input) {
-                                "Y", "" -> {
-                                }
+                        if (isNotApiCall) {
+                            println("Error : ${(apiResponse3.getValue() as Exception).localizedMessage}")
+                            do {
+                                print("Retry (Y/N) ? : ")
+                                val input: String? = readLine()
+                                when (input) {
+                                    "Y", "" -> {
+                                    }
 
-                                "N" -> {}
-                                else -> invalidOptionMessage()
-                            }
-                        } while (input != "N")
+                                    "N" -> {}
+                                    else -> invalidOptionMessage()
+                                }
+                            } while (input != "N")
+                        } else {
+
+                            print(
+                                Json.encodeToString(
+                                    serializer = BalanceSheetDataModel.serializer(),
+                                    value = BalanceSheetDataModel(
+                                        status = 1,
+                                        error = "Error : ${(apiResponse3.getValue() as Exception).localizedMessage}"
+                                    )
+                                )
+                            )
+                        }
                     } else {
 
                         val userTransactionsResponseResult: TransactionsResponse =
@@ -169,13 +225,33 @@ internal fun printBalanceSheetOfUser(
                             }
                             if (currentBalance != 0.0F) {
                                 //TODO : Print Ledger
-                                menuItems = menuItems + listOf("\n${account.key} : ${account.value} : $currentBalance")
+                                menuItems.add(element = "\n${account.key} : ${account.value} : $currentBalance")
+                                balanceSheetDataRows.add(
+                                    element =
+                                    BalanceSheetDataRowModel(
+                                        accountId = account.key,
+                                        accountName = account.value,
+                                        accountBalance = currentBalance
+                                    )
+                                )
                             }
                         }
                     }
                 }
                 //TODO : print Balance Sheet on Console
-                println(menuItems)
+                if (isNotApiCall) {
+                    println(menuItems)
+                } else {
+                    print(
+                        Json.encodeToString(
+                            serializer = BalanceSheetDataModel.serializer(),
+                            value = BalanceSheetDataModel(
+                                status = 0,
+                                data = balanceSheetDataRows
+                            )
+                        )
+                    )
+                }
 //                menuItems = menuItems + listOf("0 to Back Enter to Continue : ")
 //                var choice2: String
 //                do {
@@ -193,6 +269,20 @@ internal fun printBalanceSheetOfUser(
 //                    }
 //                } while (choice2 != "0")
             }
+        }
+    } else {
+        if (isNotApiCall) {
+            println("Error : ${specifiedDate.second}")
+        } else {
+            print(
+                Json.encodeToString(
+                    serializer = BalanceSheetDataModel.serializer(),
+                    value = BalanceSheetDataModel(
+                        status = 1,
+                        error = "Error : ${specifiedDate.second}"
+                    )
+                )
+            )
         }
     }
 }

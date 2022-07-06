@@ -2,58 +2,70 @@ package accountLedgerCli.cli
 
 import accountLedgerCli.api.response.AuthenticationResponse
 import accountLedgerCli.api.response.UsersResponse
+import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
+import accountLedgerCli.models.BalanceSheetDataModel
 import accountLedgerCli.retrofit.ResponseHolder
 import accountLedgerCli.retrofit.data.AuthenticationDataSource
 import accountLedgerCli.retrofit.data.UsersDataSource
 import accountLedgerCli.to_utils.InputUtils
 import accountLedgerCli.to_utils.ToDoUtils
 import accountLedgerCli.utils.UserUtils
-import io.github.cdimascio.dotenv.dotenv
 import kotlinx.coroutines.runBlocking
-import java.nio.file.Paths
+import kotlinx.serialization.json.Json
 
 class UserOperations {
     companion object {
 
         @JvmStatic
-        val dotenv = dotenv {
-            directory = Paths.get("").toAbsolutePath().toString()
-            ignoreIfMissing = true
-        }
+        internal fun login(
+            username: String,
+            password: String,
+            isNotApiCall: Boolean = true,
+            apiMethod: String = "",
+            apiMethodOptions: LinkedHashMap<String, Any> = linkedMapOf()
+        ) {
 
-        @JvmStatic
-        fun login() {
-
+            if (isNotApiCall) {
 //            println("Directory : ${Paths.get("").toAbsolutePath()}")
-            println("\nAccount Ledger Authentication")
-            println("--------------------------------")
+                println("\nAccount Ledger Authentication")
+                println("--------------------------------")
+            }
 
-            var user = UserCredentials(dotenv["USER_NAME"] ?: "", dotenv["PASSWORD"] ?: "")
-            if (user.username.isEmpty() || user.passcode.isEmpty()) {
+            var user: UserCredentials
+            if (username.isEmpty() || password.isEmpty()) {
 
                 user = InputUtils.getUserCredentials()
 
             } else {
-                do {
-                    println("The recognised user is ${user.username}")
-                    print("Do you want to continue (Y/N) : ")
-                    when (readLine().toString()) {
-                        "Y", "" -> {
-                            break
+
+                user = UserCredentials(
+                    username = username,
+                    passcode = password
+                )
+
+                if (isNotApiCall) {
+                    do {
+                        displayCurrentUser(user)
+                        print("Do you want to continue (Y/N) : ")
+                        when (readLine().toString()) {
+                            "Y", "" -> {
+                                break
+                            }
+
+                            "N" -> {
+                                user = InputUtils.getUserCredentials()
+                            }
+
+                            else -> invalidOptionMessage()
                         }
-
-                        "N" -> {
-                            user = InputUtils.getUserCredentials()
-                        }
-
-                        else -> invalidOptionMessage()
-                    }
-
-                } while (true)
+                    } while (true)
+                }
             }
 
             val authenticationDataSource = AuthenticationDataSource()
-            println("Contacting Server...")
+            if (isNotApiCall) {
+                println("Contacting Server...")
+            }
             val apiResponse: ResponseHolder<AuthenticationResponse>
             runBlocking {
                 apiResponse =
@@ -62,45 +74,174 @@ class UserOperations {
             // println("Response : $apiResponse")
             if (apiResponse.isError()) {
 
-                println("Error : ${(apiResponse.getValue() as Exception).localizedMessage}")
-                do {
-                    print("Retry (Y/N) ? : ")
-                    val input = readLine()
-                    when (input) {
-                        "Y", "" -> {
-                            login()
-                        }
+                if (isNotApiCall) {
+                    println("Error : ${(apiResponse.getValue() as Exception).localizedMessage}")
+                    do {
+                        print("Retry (Y/N) ? : ")
+                        val input = readLine()
+                        when (input) {
+                            "Y", "" -> {
+                                login(username = username, password = password)
+                                return
+                            }
 
-                        "N" -> {
-                        }
+                            "N" -> {
+                            }
 
-                        else -> invalidOptionMessage()
-                    }
-                } while (input != "N")
+                            else -> invalidOptionMessage()
+                        }
+                    } while (input != "N")
+
+                } else {
+
+//                    println("API Call Error")
+                    print(
+                        Json.encodeToString(
+                            serializer = BalanceSheetDataModel.serializer(),
+                            value = BalanceSheetDataModel(
+                                status = 1,
+                                error = "Error : ${(apiResponse.getValue() as Exception).localizedMessage}"
+                            )
+                        )
+                    )
+                }
             } else {
 
                 val authenticationResponseResult = apiResponse.getValue() as AuthenticationResponse
                 when (authenticationResponseResult.userCount) {
-                    0 -> println("Invalid Credentials...")
-                    1 -> {
-
-                        println("Login Success...")
-                        userScreen(username = user.username, userId = authenticationResponseResult.id)
+                    0 -> {
+                        if (isNotApiCall) {
+                            println("Invalid Credentials...")
+                        } else {
+                            print(
+                                Json.encodeToString(
+                                    serializer = BalanceSheetDataModel.serializer(),
+                                    value = BalanceSheetDataModel(
+                                        status = 1,
+                                        error = "Invalid Credentials"
+                                    )
+                                )
+                            )
+                        }
                     }
 
-                    else -> println("Server Execution Error...")
+                    1 -> {
+
+                        if (isNotApiCall) {
+                            println("Login Success...")
+                            userScreen(username = user.username, userId = authenticationResponseResult.id)
+                        } else {
+                            when (apiMethod) {
+                                "BalanceSheet" -> {
+                                    if (apiMethodOptions.containsKey(CommandLineApiMethodBalanceSheetOptionsEnum.refineLevel.name)) {
+                                        val refineryLevel =
+                                            apiMethodOptions[CommandLineApiMethodBalanceSheetOptionsEnum.refineLevel.name]
+                                        if (refineryLevel is BalanceSheetRefineLevelEnum) {
+                                            if (apiMethodOptions.containsKey(CommandLineApiMethodBalanceSheetOptionsEnum.outputFormat.name)) {
+                                                if (apiMethodOptions[CommandLineApiMethodBalanceSheetOptionsEnum.outputFormat.name] is BalanceSheetOutputFormatsEnum) {
+                                                    printBalanceSheetOfUser(
+                                                        currentUserName = username,
+                                                        currentUserId = authenticationResponseResult.id,
+                                                        refineLevel = refineryLevel,
+                                                        isNotApiCall = false
+                                                    )
+                                                } else {
+//                                                    println("Output Format is Invalid")
+                                                    print(
+                                                        Json.encodeToString(
+                                                            serializer = BalanceSheetDataModel.serializer(),
+                                                            value = BalanceSheetDataModel(
+                                                                status = 1,
+                                                                error = "Invalid Output Format"
+                                                            )
+                                                        )
+                                                    )
+                                                }
+                                            } else {
+//                                                println("Output Format is Missing")
+                                                print(
+                                                    Json.encodeToString(
+                                                        serializer = BalanceSheetDataModel.serializer(),
+                                                        value = BalanceSheetDataModel(
+                                                            status = 1,
+                                                            error = "Missing Output Format of the Balance Sheet Ledger"
+                                                        )
+                                                    )
+                                                )
+                                            }
+                                        } else {
+//                                            println("Refinery Level is Invalid")
+                                            print(
+                                                Json.encodeToString(
+                                                    serializer = BalanceSheetDataModel.serializer(),
+                                                    value = BalanceSheetDataModel(
+                                                        status = 1,
+                                                        error = "Invalid Refinery Level"
+                                                    )
+                                                )
+                                            )
+                                        }
+                                    } else {
+//                                        println("Refinery Level is Missing")
+                                        print(
+                                            Json.encodeToString(
+                                                serializer = BalanceSheetDataModel.serializer(),
+                                                value = BalanceSheetDataModel(
+                                                    status = 1,
+                                                    error = "Missing Refinery Level of the Balance Sheet Ledger"
+                                                )
+                                            )
+                                        )
+                                    }
+                                }
+
+                                else -> {
+//                                    println("Invalid API Method")
+                                    print(
+                                        Json.encodeToString(
+                                            serializer = BalanceSheetDataModel.serializer(),
+                                            value = BalanceSheetDataModel(
+                                                status = 1,
+                                                error = "Invalid API Method Reference"
+                                            )
+                                        )
+                                    )
+                                }
+                            }
+                        }
+                    }
+
+                    else -> {
+                        if (isNotApiCall) {
+                            println("Server Execution Error...")
+                        } else {
+                            print(
+                                Json.encodeToString(
+                                    serializer = BalanceSheetDataModel.serializer(),
+                                    value = BalanceSheetDataModel(
+                                        status = 1,
+                                        error = "Server Execution Error"
+                                    )
+                                )
+                            )
+                        }
+                    }
                 }
             }
         }
 
+        private fun displayCurrentUser(user: UserCredentials) {
+            println("The recognised user is ${user.username}")
+        }
+
         @JvmStatic
-        fun register() {
+        internal fun register() {
 
             ToDoUtils.showTodo()
         }
 
         @JvmStatic
-        fun listUsers() {
+        internal fun listUsers() {
 
             val usersDataSource = UsersDataSource()
             println("Contacting Server...")

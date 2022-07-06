@@ -1,6 +1,8 @@
 package accountLedgerCli.cli
 
 import accountLedgerCli.api.response.TransactionsResponse
+import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
+import accountLedgerCli.cli.App.Companion.userAccountsMap
 import accountLedgerCli.to_utils.InputUtils
 import accountLedgerCli.to_utils.ToDoUtils
 import accountLedgerCli.utils.ApiUtils
@@ -10,7 +12,7 @@ internal fun viewTransactions(
     username: String,
     accountId: Int,
     accountFullName: String,
-    functionCallSource: FunctionCallSource = FunctionCallSource.FROM_OTHERS
+    functionCallSourceEnum: FunctionCallSourceEnum = FunctionCallSourceEnum.FROM_OTHERS
 ): String {
 
     val apiResponse = getUserTransactions(userId = userId, accountId = accountId)
@@ -27,7 +29,7 @@ internal fun viewTransactions(
                         username = username,
                         accountId = accountId,
                         accountFullName = accountFullName,
-                        functionCallSource = functionCallSource
+                        functionCallSourceEnum = functionCallSourceEnum
                     )
                 }
 
@@ -57,9 +59,9 @@ internal fun viewTransactions(
                         currentAccountId = accountId
                     )
                 )
-                if (functionCallSource == FunctionCallSource.FROM_CHECK_ACCOUNTS) {
+                if (functionCallSourceEnum == FunctionCallSourceEnum.FROM_CHECK_ACCOUNTS) {
                     menuItems = menuItems + listOf("0 to Back Enter to Continue : ")
-                } else if (functionCallSource == FunctionCallSource.FROM_VIEW_TRANSACTIONS_OF_ACCOUNT) {
+                } else if (functionCallSourceEnum == FunctionCallSourceEnum.FROM_VIEW_TRANSACTIONS_OF_ACCOUNT) {
                     commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(menuItems)
                     break
                 } else {
@@ -79,7 +81,7 @@ internal fun viewTransactions(
                 choice = readLine()!!
                 when (choice) {
                     "1", "2", "3", "4" -> {
-                        if (functionCallSource == FunctionCallSource.FROM_CHECK_ACCOUNTS) {
+                        if (functionCallSourceEnum == FunctionCallSourceEnum.FROM_CHECK_ACCOUNTS) {
                             invalidOptionMessage()
                         } else {
                             ToDoUtils.showTodo()
@@ -87,20 +89,20 @@ internal fun viewTransactions(
                     }
 
                     "5" -> {
-                        if (functionCallSource == FunctionCallSource.FROM_CHECK_ACCOUNTS) {
+                        if (functionCallSourceEnum == FunctionCallSourceEnum.FROM_CHECK_ACCOUNTS) {
                             invalidOptionMessage()
                         } else {
                             addTransaction(
                                 userId = userId,
                                 username = username,
-                                transactionType = TransactionType.NORMAL
+                                transactionTypeEnum = TransactionTypeEnum.NORMAL
                             )
                         }
                     }
 
                     "0" -> {}
                     "" -> {
-                        if (functionCallSource == FunctionCallSource.FROM_CHECK_ACCOUNTS) {
+                        if (functionCallSourceEnum == FunctionCallSourceEnum.FROM_CHECK_ACCOUNTS) {
                             break
                         } else {
                             invalidOptionMessage()
@@ -128,7 +130,7 @@ internal fun viewTransactionsOfSpecificAccount(userId: Int, username: String) {
                     username = username,
                     accountId = accountIndex,
                     accountFullName = userAccountsMap[accountIndex]!!.fullName,
-                    functionCallSource = FunctionCallSource.FROM_VIEW_TRANSACTIONS_OF_ACCOUNT
+                    functionCallSourceEnum = FunctionCallSourceEnum.FROM_VIEW_TRANSACTIONS_OF_ACCOUNT
                 )
             }
         }

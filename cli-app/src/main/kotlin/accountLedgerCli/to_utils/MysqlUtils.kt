@@ -34,8 +34,11 @@ object MysqlUtils {
 
         } catch (e: DateTimeParseException) {
 
-            println("Something went wrong...")
+//            println("Something went wrong...")
             return Pair(false, e.localizedMessage)
         }
     }
+
+    //TODO : Normal Date to MySQL Date String
+    //TODO : Normal DateTime to MySQL DateTime String
 }
