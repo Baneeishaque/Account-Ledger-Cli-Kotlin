@@ -83,9 +83,8 @@ class App {
                             password = dotenv[EnvironmentFIleFieldsEnum.PASSWORD.name] ?: ""
                         )
 
-                        "2" -> UserOperations.register()
                         "3" -> UserOperations.listUsers()
-                        "4", "5" -> ToDoUtils.showTodo()
+                        "2","4", "5" -> ToDoUtils.showTodo()
                         "0" -> println("Thanks...")
                         else -> invalidOptionMessage()
                     }

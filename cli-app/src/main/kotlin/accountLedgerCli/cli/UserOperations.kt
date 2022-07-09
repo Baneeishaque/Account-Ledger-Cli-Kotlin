@@ -235,12 +235,6 @@ class UserOperations {
         }
 
         @JvmStatic
-        internal fun register() {
-
-            ToDoUtils.showTodo()
-        }
-
-        @JvmStatic
         internal fun listUsers() {
 
             val usersDataSource = UsersDataSource()
