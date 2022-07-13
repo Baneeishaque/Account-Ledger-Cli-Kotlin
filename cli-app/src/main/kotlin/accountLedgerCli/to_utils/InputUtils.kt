@@ -64,7 +64,7 @@ object InputUtils {
     }
 
     internal fun getUserCredentials(): UserCredentials {
-        var user = UserCredentials("", "");
+        val user = UserCredentials("", "")
         print("Enter Your Username : ")
         user.username = readLine().toString()
         print("Enter Your Password : ")

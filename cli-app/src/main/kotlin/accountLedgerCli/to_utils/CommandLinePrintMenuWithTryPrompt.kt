@@ -1,6 +1,6 @@
 package accountLedgerCli.to_utils
 
-class CommandLinePrintMenuWithTryPrompt(val commandLinePrintMenu: CommandLinePrintMenuInterface) {
+class CommandLinePrintMenuWithTryPrompt(private val commandLinePrintMenu: CommandLinePrintMenuInterface) {
 
     fun printMenuWithTryPromptFromListOfCommands(listOfCommands: List<String>) {
 
