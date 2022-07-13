@@ -22,7 +22,7 @@ sealed class ResponseHolder<out T : Any> {
 
         return when (this) {
 
-            is Success<*> -> data
+            is Success<T> -> data
             is Error -> exception
         }
     }
@@ -31,7 +31,7 @@ sealed class ResponseHolder<out T : Any> {
 
         return when (this) {
 
-            is Success<*> -> "Success[data=$data]"
+            is Success<T> -> "Success[data=$data]"
             is Error -> "Error[exception=$exception]"
         }
     }

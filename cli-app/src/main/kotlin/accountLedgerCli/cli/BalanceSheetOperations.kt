@@ -13,7 +13,7 @@ import accountLedgerCli.to_utils.MysqlUtils
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 
-internal fun balanceSheetOfUser(usersMap: LinkedHashMap<Int, UserResponse>) {
+internal fun balanceSheetOfUser(usersMap: LinkedHashMap<UInt, UserResponse>) {
     if (handleUserSelection(
             chosenUserId = chooseUserByIndex(usersMap = usersMap), usersMap = usersMap
         )
@@ -24,7 +24,7 @@ internal fun balanceSheetOfUser(usersMap: LinkedHashMap<Int, UserResponse>) {
 
 internal fun printBalanceSheetOfUser(
     currentUserName: String,
-    currentUserId: Int,
+    currentUserId: UInt,
     refineLevel: BalanceSheetRefineLevelEnum = BalanceSheetRefineLevelEnum.WITHOUT_EXPENSE_ACCOUNTS,
     isNotApiCall: Boolean = true
 ) {
@@ -88,7 +88,7 @@ internal fun printBalanceSheetOfUser(
 
             val selectUserTransactionsAfterSpecifiedDateResult: TransactionsResponse =
                 apiResponse2.getValue() as TransactionsResponse
-            if (selectUserTransactionsAfterSpecifiedDateResult.status == 1) {
+            if (selectUserTransactionsAfterSpecifiedDateResult.status == 1u) {
 
                 if (isNotApiCall) {
 
@@ -154,7 +154,7 @@ internal fun printBalanceSheetOfUser(
                         else -> {}
                     }
                 }
-                val accounts: MutableMap<Int, String> = mutableMapOf()
+                val accounts: MutableMap<UInt, String> = mutableMapOf()
                 selectUserTransactionsAfterSpecifiedDateResult.transactions.filterNot { transactionResponse: TransactionResponse ->
                     (accountsToExclude.contains(transactionResponse.from_account_id.toString())) || (accountsToExclude.contains(
                         transactionResponse.to_account_id.toString()
@@ -210,7 +210,7 @@ internal fun printBalanceSheetOfUser(
 
                         val userTransactionsResponseResult: TransactionsResponse =
                             apiResponse3.getValue() as TransactionsResponse
-                        if (userTransactionsResponseResult.status == 0) {
+                        if (userTransactionsResponseResult.status == 0u) {
 
                             var currentBalance = 0.0F
                             userTransactionsResponseResult.transactions.forEach { currentTransaction: TransactionResponse ->

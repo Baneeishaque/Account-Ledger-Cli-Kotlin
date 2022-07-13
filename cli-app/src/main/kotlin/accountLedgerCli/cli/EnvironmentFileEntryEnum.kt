@@ -1,0 +1,5 @@
+package accountLedgerCli.cli
+
+enum class EnvironmentFileEntryEnum {
+    USER_NAME, PASSWORD, WALLET_ACCOUNT_ID, BANK_ACCOUNT_ID, FREQUENT_1_ACCOUNT_ID, FREQUENT_2_ACCOUNT_ID, FREQUENT_3_ACCOUNT_ID
+}

@@ -10,7 +10,6 @@ import accountLedgerCli.cli.App.Companion.transactionAmount
 import accountLedgerCli.cli.App.Companion.transactionParticulars
 import accountLedgerCli.cli.App.Companion.userAccountsMap
 import accountLedgerCli.cli.App.Companion.viaAccount
-import accountLedgerCli.retrofit.ResponseHolder
 import accountLedgerCli.retrofit.data.TransactionDataSource
 import accountLedgerCli.to_utils.DateTimeUtils
 import accountLedgerCli.to_utils.InputUtils
@@ -20,107 +19,173 @@ import accountLedgerCli.utils.ApiUtils
 import accountLedgerCli.utils.ChooseAccountUtils
 import kotlinx.coroutines.runBlocking
 
-internal fun insertQuickTransactionWallet(userId: Int, username: String) {
+internal val walletAccountId: EnvironmentVariableForWholeNumber =
+    getEnvironmentVariableValueForInsertOperation(
+        environmentVariableName = EnvironmentalFileEntries.walletAccountId.entryName.name,
+        environmentVariableFormalName = EnvironmentalFileEntries.walletAccountId.entryFormalName
+    )
 
-    if (handleAccountsResponse(ApiUtils.getAccountsFull(userId = userId))) {
+internal val frequent1AccountId: EnvironmentVariableForWholeNumber =
+    getEnvironmentVariableValueForInsertOperation(
+        environmentVariableName = EnvironmentalFileEntries.frequent1AccountId.entryName.name,
+        environmentVariableFormalName = EnvironmentalFileEntries.frequent1AccountId.entryFormalName
+    )
 
-        fromAccount = userAccountsMap[walletAccountId]!!
+internal val frequent2AccountId: EnvironmentVariableForWholeNumber =
+    getEnvironmentVariableValueForInsertOperation(
+        environmentVariableName = EnvironmentalFileEntries.frequent2AccountId.entryName.name,
+        environmentVariableFormalName = EnvironmentalFileEntries.frequent2AccountId.entryFormalName
+    )
+
+internal val frequent3AccountId: EnvironmentVariableForWholeNumber =
+    getEnvironmentVariableValueForInsertOperation(
+        environmentVariableName = EnvironmentalFileEntries.frequent3AccountId.entryName.name,
+        environmentVariableFormalName = EnvironmentalFileEntries.frequent3AccountId.entryFormalName
+    )
+
+internal val bankAccountId: EnvironmentVariableForWholeNumber =
+    getEnvironmentVariableValueForInsertOperation(
+        environmentVariableName = EnvironmentalFileEntries.bankAccountId.entryName.name,
+        environmentVariableFormalName = EnvironmentalFileEntries.bankAccountId.entryFormalName
+    )
+
+internal fun insertQuickTransactionWallet(userId: UInt, username: String) {
+
+    if (walletAccountId.isAvailable && handleAccountsResponse(ApiUtils.getAccountsFull(userId = userId))) {
+
+        fromAccount = userAccountsMap[walletAccountId.value]!!
         accountHome(userId = userId, username = username)
     }
 }
 
-internal fun insertQuickTransactionWalletToFrequent1(userId: Int, username: String) {
+internal fun insertQuickTransactionWalletToFrequent1(userId: UInt, username: String) {
 
-    if (handleAccountsResponse(ApiUtils.getAccountsFull(userId = userId))) {
+    if (EnvironmentFileOperations.isEnvironmentVariablesAreAvailable(
+            environmentVariables = listOf(
+                walletAccountId, frequent1AccountId
+            )
+        ) && handleAccountsResponse(ApiUtils.getAccountsFull(userId = userId))
+    ) {
+        fromAccount = userAccountsMap[walletAccountId.value]!!
+        toAccount = userAccountsMap[frequent1AccountId.value]!!
+        transactionContinueCheck(
+            userId = userId,
+            username = username,
+            transactionTypeEnum = TransactionTypeEnum.NORMAL
+        )
+    }
+}
 
-        fromAccount = userAccountsMap[walletAccountId]!!
-        toAccount = userAccountsMap[frequent1AccountId]!!
+internal fun insertQuickTransactionWalletToFrequent2(userId: UInt, username: String) {
+
+    if (EnvironmentFileOperations.isEnvironmentVariablesAreAvailable(
+            environmentVariables = listOf(
+                walletAccountId, frequent2AccountId
+            )
+        ) && handleAccountsResponse(ApiUtils.getAccountsFull(userId = userId))
+    ) {
+        fromAccount = userAccountsMap[walletAccountId.value]!!
+        toAccount = userAccountsMap[frequent2AccountId.value]!!
+        transactionContinueCheck(
+            userId = userId,
+            username = username,
+            transactionTypeEnum = TransactionTypeEnum.NORMAL
+        )
+    }
+
+}
+
+internal fun insertQuickTransactionWalletToFrequent3(userId: UInt, username: String) {
+
+    if (EnvironmentFileOperations.isEnvironmentVariablesAreAvailable(
+            environmentVariables = listOf(
+                walletAccountId, frequent3AccountId
+            )
+        ) && handleAccountsResponse(ApiUtils.getAccountsFull(userId = userId))
+    ) {
+        fromAccount = userAccountsMap[walletAccountId.value]!!
+        toAccount = userAccountsMap[frequent3AccountId.value]!!
         transactionContinueCheck(userId = userId, username = username, transactionTypeEnum = TransactionTypeEnum.NORMAL)
     }
 }
 
-internal fun insertQuickTransactionWalletToFrequent2(userId: Int, username: String) {
+internal fun insertQuickTransactionBank(userId: UInt, username: String) {
 
-    if (handleAccountsResponse(ApiUtils.getAccountsFull(userId = userId))) {
+    if (bankAccountId.isAvailable && handleAccountsResponse(ApiUtils.getAccountsFull(userId = userId))) {
 
-        fromAccount = userAccountsMap[walletAccountId]!!
-        toAccount = userAccountsMap[frequent2AccountId]!!
-        transactionContinueCheck(userId = userId, username = username, transactionTypeEnum = TransactionTypeEnum.NORMAL)
-    }
-}
-
-internal fun insertQuickTransactionWalletToFrequent3(userId: Int, username: String) {
-
-    if (handleAccountsResponse(ApiUtils.getAccountsFull(userId = userId))) {
-
-        fromAccount = userAccountsMap[walletAccountId]!!
-        toAccount = userAccountsMap[frequent3AccountId]!!
-        transactionContinueCheck(userId = userId, username = username, transactionTypeEnum = TransactionTypeEnum.NORMAL)
-    }
-}
-
-internal fun insertQuickTransactionBank(userId: Int, username: String) {
-
-    if (handleAccountsResponse(ApiUtils.getAccountsFull(userId = userId))) {
-
-        fromAccount = userAccountsMap[bankAccountId]!!
+        fromAccount = userAccountsMap[bankAccountId.value]!!
         accountHome(userId = userId, username = username)
     }
 }
 
-internal fun insertQuickTransactionBankToFrequent1(userId: Int, username: String) {
+internal fun insertQuickTransactionBankToFrequent1(userId: UInt, username: String) {
 
-    if (handleAccountsResponse(ApiUtils.getAccountsFull(userId = userId))) {
-
-        fromAccount = userAccountsMap[bankAccountId]!!
-        toAccount = userAccountsMap[frequent1AccountId]!!
+    if (EnvironmentFileOperations.isEnvironmentVariablesAreAvailable(
+            environmentVariables = listOf(
+                bankAccountId,
+                frequent1AccountId
+            )
+        ) && handleAccountsResponse(ApiUtils.getAccountsFull(userId = userId))
+    ) {
+        fromAccount = userAccountsMap[bankAccountId.value]!!
+        toAccount = userAccountsMap[frequent1AccountId.value]!!
         transactionContinueCheck(userId = userId, username = username, transactionTypeEnum = TransactionTypeEnum.NORMAL)
     }
 }
 
-internal fun insertQuickTransactionBankToFrequent2(userId: Int, username: String) {
+internal fun insertQuickTransactionBankToFrequent2(userId: UInt, username: String) {
 
-    if (handleAccountsResponse(ApiUtils.getAccountsFull(userId = userId))) {
-
-        fromAccount = userAccountsMap[bankAccountId]!!
-        toAccount = userAccountsMap[frequent2AccountId]!!
+    if (EnvironmentFileOperations.isEnvironmentVariablesAreAvailable(
+            environmentVariables = listOf(
+                bankAccountId,
+                frequent2AccountId
+            )
+        ) && handleAccountsResponse(ApiUtils.getAccountsFull(userId = userId))
+    ) {
+        fromAccount = userAccountsMap[bankAccountId.value]!!
+        toAccount = userAccountsMap[frequent2AccountId.value]!!
         transactionContinueCheck(userId = userId, username = username, transactionTypeEnum = TransactionTypeEnum.NORMAL)
     }
 }
 
-internal fun insertQuickTransactionFrequent1(userId: Int, username: String) {
+internal fun insertQuickTransactionFrequent1(userId: UInt, username: String) {
 
-    if (handleAccountsResponse(ApiUtils.getAccountsFull(userId = userId))) {
+    if (frequent1AccountId.isAvailable && handleAccountsResponse(ApiUtils.getAccountsFull(userId = userId))) {
 
-        fromAccount = userAccountsMap[frequent1AccountId]!!
+        fromAccount = userAccountsMap[frequent1AccountId.value]!!
         accountHome(userId = userId, username = username)
     }
 }
 
-internal fun insertQuickTransactionBankToFrequent3(userId: Int, username: String) {
+internal fun insertQuickTransactionBankToFrequent3(userId: UInt, username: String) {
 
-    if (handleAccountsResponse(ApiUtils.getAccountsFull(userId = userId))) {
-
-        fromAccount = userAccountsMap[bankAccountId]!!
-        toAccount = userAccountsMap[frequent3AccountId]!!
+    if (EnvironmentFileOperations.isEnvironmentVariablesAreAvailable(
+            environmentVariables = listOf(
+                bankAccountId,
+                frequent3AccountId
+            )
+        ) && handleAccountsResponse(ApiUtils.getAccountsFull(userId = userId))
+    ) {
+        fromAccount = userAccountsMap[bankAccountId.value]!!
+        toAccount = userAccountsMap[frequent3AccountId.value]!!
         transactionContinueCheck(userId = userId, username = username, transactionTypeEnum = TransactionTypeEnum.NORMAL)
     }
 }
 
-internal fun insertQuickTransactionFrequent2(userId: Int, username: String) {
+internal fun insertQuickTransactionFrequent2(userId: UInt, username: String) {
 
-    if (handleAccountsResponse(ApiUtils.getAccountsFull(userId = userId))) {
+    if (frequent2AccountId.isAvailable && handleAccountsResponse(ApiUtils.getAccountsFull(userId = userId))) {
 
-        fromAccount = userAccountsMap[frequent2AccountId]!!
+        fromAccount = userAccountsMap[frequent2AccountId.value]!!
         accountHome(userId = userId, username = username)
     }
 }
 
-internal fun insertQuickTransactionFrequent3(userId: Int, username: String) {
+internal fun insertQuickTransactionFrequent3(userId: UInt, username: String) {
 
-    if (handleAccountsResponse(ApiUtils.getAccountsFull(userId = userId))) {
+    if (frequent3AccountId.isAvailable && handleAccountsResponse(ApiUtils.getAccountsFull(userId = userId))) {
 
-        fromAccount = userAccountsMap[frequent3AccountId]!!
+        fromAccount = userAccountsMap[frequent3AccountId.value]!!
         accountHome(userId = userId, username = username)
     }
 }
@@ -131,7 +196,7 @@ internal fun addAccount() {
     ToDoUtils.showTodo()
 }
 
-internal fun addTransaction(userId: Int, username: String, transactionTypeEnum: TransactionTypeEnum) {
+internal fun addTransaction(userId: UInt, username: String, transactionTypeEnum: TransactionTypeEnum) {
 
     do {
         var menuItems = listOf(
@@ -189,6 +254,7 @@ internal fun addTransaction(userId: Int, username: String, transactionTypeEnum: 
                     return
                 }
             }
+
             "2" -> {
                 if (chooseDepositFull(userId)) {
 
@@ -196,16 +262,18 @@ internal fun addTransaction(userId: Int, username: String, transactionTypeEnum: 
                     return
                 }
             }
+
             "3" -> {
 
                 val chooseAccountResult = ChooseAccountUtils.chooseAccountById(userId)
-                if (chooseAccountResult.chosenAccountId != 0) {
+                if (chooseAccountResult.chosenAccountId != 0u) {
 
                     toAccount = chooseAccountResult.chosenAccount
                     transactionContinueCheck(userId, username, transactionTypeEnum)
                     return
                 }
             }
+
             "4" -> {
                 if (chooseFromAccountTop(userId)) {
 
@@ -213,6 +281,7 @@ internal fun addTransaction(userId: Int, username: String, transactionTypeEnum: 
                     return
                 }
             }
+
             "5" -> {
                 if (chooseFromAccountFull(userId)) {
 
@@ -220,20 +289,23 @@ internal fun addTransaction(userId: Int, username: String, transactionTypeEnum: 
                     return
                 }
             }
+
             "6" -> {
                 val chooseAccountResult = ChooseAccountUtils.chooseAccountById(userId)
-                if (chooseAccountResult.chosenAccountId != 0) {
+                if (chooseAccountResult.chosenAccountId != 0u) {
 
                     fromAccount = chooseAccountResult.chosenAccount
                     transactionContinueCheck(userId, username, transactionTypeEnum)
                     return
                 }
             }
+
             "7" -> {
 
                 transactionContinueCheck(userId, username, transactionTypeEnum)
                 return
             }
+
             "8" -> {
 
                 if (transactionTypeEnum == TransactionTypeEnum.VIA) {
@@ -247,6 +319,7 @@ internal fun addTransaction(userId: Int, username: String, transactionTypeEnum: 
                 addTransaction(userId = userId, username = username, transactionTypeEnum = transactionTypeEnum)
                 return
             }
+
             "9" -> {
 
                 if (transactionTypeEnum == TransactionTypeEnum.VIA) {
@@ -260,6 +333,7 @@ internal fun addTransaction(userId: Int, username: String, transactionTypeEnum: 
                 transactionContinueCheck(userId, username, transactionTypeEnum)
                 return
             }
+
             "10" -> {
                 if (transactionTypeEnum == TransactionTypeEnum.VIA) {
 
@@ -271,6 +345,7 @@ internal fun addTransaction(userId: Int, username: String, transactionTypeEnum: 
                     invalidOptionMessage()
                 }
             }
+
             "11" -> {
                 if (transactionTypeEnum == TransactionTypeEnum.VIA) {
 
@@ -282,6 +357,7 @@ internal fun addTransaction(userId: Int, username: String, transactionTypeEnum: 
                     invalidOptionMessage()
                 }
             }
+
             "12" -> {
                 if (transactionTypeEnum == TransactionTypeEnum.VIA) {
 
@@ -293,6 +369,7 @@ internal fun addTransaction(userId: Int, username: String, transactionTypeEnum: 
                     invalidOptionMessage()
                 }
             }
+
             "13" -> {
                 if (transactionTypeEnum == TransactionTypeEnum.VIA) {
 
@@ -304,6 +381,7 @@ internal fun addTransaction(userId: Int, username: String, transactionTypeEnum: 
                     invalidOptionMessage()
                 }
             }
+
             "14" -> {
                 if (transactionTypeEnum == TransactionTypeEnum.VIA) {
 
@@ -314,6 +392,7 @@ internal fun addTransaction(userId: Int, username: String, transactionTypeEnum: 
                     invalidOptionMessage()
                 }
             }
+
             "15" -> {
                 if (transactionTypeEnum == TransactionTypeEnum.VIA) {
 
@@ -326,11 +405,12 @@ internal fun addTransaction(userId: Int, username: String, transactionTypeEnum: 
                     invalidOptionMessage()
                 }
             }
+
             "16" -> {
                 if (transactionTypeEnum == TransactionTypeEnum.VIA) {
 
                     val chooseAccountResult = ChooseAccountUtils.chooseAccountById(userId)
-                    if (chooseAccountResult.chosenAccountId != 0) {
+                    if (chooseAccountResult.chosenAccountId != 0u) {
 
                         viaAccount = chooseAccountResult.chosenAccount
                         transactionContinueCheck(userId, username, transactionTypeEnum)
@@ -340,6 +420,7 @@ internal fun addTransaction(userId: Int, username: String, transactionTypeEnum: 
                     invalidOptionMessage()
                 }
             }
+
             "0" -> {}
             else -> invalidOptionMessage()
         }
@@ -347,7 +428,7 @@ internal fun addTransaction(userId: Int, username: String, transactionTypeEnum: 
 }
 
 internal fun addTransactionStep2(
-    userId: Int,
+    userId: UInt,
     username: String,
     localFromAccount: AccountResponse,
     localToAccount: AccountResponse,
@@ -403,6 +484,7 @@ internal fun addTransactionStep2(
                     localViaAccount = localViaAccount
                 )
             }
+
             "D+" -> {
 
                 dateTimeString = DateTimeUtils.add1DayToDateTimeString(dateTimeString = dateTimeString)
@@ -415,6 +497,7 @@ internal fun addTransactionStep2(
                     localViaAccount = localViaAccount
                 )
             }
+
             "D2+Tr" -> {
 
                 dateTimeString =
@@ -430,6 +513,7 @@ internal fun addTransactionStep2(
                     localViaAccount = localViaAccount
                 )
             }
+
             "D2+" -> {
 
                 dateTimeString = DateTimeUtils.add2DaysToDateTimeString(dateTimeString = dateTimeString)
@@ -442,26 +526,32 @@ internal fun addTransactionStep2(
                     localViaAccount = localViaAccount
                 )
             }
+
             "Ex" -> {
 
                 return ex13(userId, username, localFromAccount, localToAccount, transactionTypeEnum, localViaAccount)
             }
+
             "Ex13" -> {
 
                 return ex13(userId, username, localFromAccount, localToAccount, transactionTypeEnum, localViaAccount)
             }
+
             "Ex12" -> {
 
                 return ex12(userId, username, localFromAccount, localToAccount, transactionTypeEnum, localViaAccount)
             }
+
             "Ex23" -> {
 
                 return ex23(userId, username, localFromAccount, localToAccount, transactionTypeEnum, localViaAccount)
             }
+
             "B" -> {
 
                 return false
             }
+
             else -> {
 
                 dateTimeString = inputDateTimeString
@@ -515,6 +605,7 @@ internal fun addTransactionStep2(
                                 transactionTypeEnum = transactionTypeEnum,
                                 localViaAccount = localViaAccount
                             )
+
                         "Ex" -> {
 
                             if (transactionTypeEnum == TransactionTypeEnum.NORMAL) {
@@ -530,6 +621,7 @@ internal fun addTransactionStep2(
                                 invalidOptionMessage()
                             }
                         }
+
                         "Ex13" -> {
                             if (transactionTypeEnum == TransactionTypeEnum.VIA) {
                                 return ex13(
@@ -544,6 +636,7 @@ internal fun addTransactionStep2(
                                 invalidOptionMessage()
                             }
                         }
+
                         "Ex12" -> {
 
                             if (transactionTypeEnum == TransactionTypeEnum.VIA) {
@@ -559,6 +652,7 @@ internal fun addTransactionStep2(
                                 invalidOptionMessage()
                             }
                         }
+
                         "Ex23" -> {
 
                             if (transactionTypeEnum == TransactionTypeEnum.VIA) {
@@ -574,6 +668,7 @@ internal fun addTransactionStep2(
                                 invalidOptionMessage()
                             }
                         }
+
                         else -> invalidOptionMessage()
                     }
                 } while (isCorrect != "B")
@@ -584,7 +679,7 @@ internal fun addTransactionStep2(
 }
 
 internal fun insertTransaction(
-    userid: Int,
+    userid: UInt,
     eventDateTime: String,
     particulars: String,
     amount: Float,
@@ -592,7 +687,7 @@ internal fun insertTransaction(
     localToAccount: AccountResponse
 ): Boolean {
 
-    val apiResponse: ResponseHolder<InsertionResponse>
+    val apiResponse: Result<InsertionResponse>
     val userTransactionDataSource = TransactionDataSource()
     println("Contacting Server...")
     val eventDateTimeConversionResult =
@@ -610,9 +705,9 @@ internal fun insertTransaction(
                 )
         }
         //    println("Response : $apiResponse")
-        if (apiResponse.isError()) {
+        if (apiResponse.isFailure) {
 
-            println("Error : ${(apiResponse.getValue() as Exception).localizedMessage}")
+            println("Error : ${(apiResponse.exceptionOrNull() as Exception).localizedMessage}")
             //        do {
             //            print("Retry (Y/N) ? : ")
             //            val input = readLine()
@@ -628,7 +723,7 @@ internal fun insertTransaction(
             //        } while (input != "N")
         } else {
 
-            val insertionResponseResult = apiResponse.getValue() as InsertionResponse
+            val insertionResponseResult = apiResponse.getOrNull() as InsertionResponse
             if (insertionResponseResult.status == 0) {
 
                 println("OK...")
@@ -641,3 +736,15 @@ internal fun insertTransaction(
     }
     return false
 }
+
+private fun getEnvironmentVariableValueForInsertOperation(
+
+    environmentVariableName: String,
+    environmentVariableFormalName: String
+
+): EnvironmentVariableForWholeNumber = EnvironmentFileOperations.getEnvironmentVariableValueForWholeNumber(
+
+    dotenv = App.dotenv,
+    environmentVariableName = environmentVariableName,
+    environmentVariableFormalName = environmentVariableFormalName
+)

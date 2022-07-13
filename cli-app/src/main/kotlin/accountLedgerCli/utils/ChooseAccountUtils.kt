@@ -4,13 +4,13 @@ import accountLedgerCli.api.response.AccountResponse
 import accountLedgerCli.api.response.AccountsResponse
 import java.util.*
 
-internal class ChooseAccountResult(val chosenAccountId: Int, val chosenAccount: AccountResponse)
+internal class ChooseAccountResult(val chosenAccountId: UInt, val chosenAccount: AccountResponse)
 
 internal object ChooseAccountUtils {
 
-    internal fun chooseAccountById(userId: Int): ChooseAccountResult {
+    internal fun chooseAccountById(userId: UInt): ChooseAccountResult {
 
-        var accountIdInput: Int
+        var accountIdInput: UInt
         val reader = Scanner(System.`in`)
 
         while (true) {
@@ -19,13 +19,13 @@ internal object ChooseAccountUtils {
 
             try {
 
-                accountIdInput = reader.nextInt()
-                if (accountIdInput == 0) return ChooseAccountResult(0, AccountUtils.getBlankAccount())
+                accountIdInput = reader.nextInt().toUInt()
+                if (accountIdInput == 0u) return ChooseAccountResult(0u, AccountUtils.getBlankAccount())
 
-                val apiResponse = ApiUtils.getAccountsFull(userId = userId);
-                if (apiResponse.isError()) {
+                val apiResponse = ApiUtils.getAccountsFull(userId = userId)
+                if (apiResponse.isFailure) {
 
-                    println("Error : ${(apiResponse.getValue() as Exception).localizedMessage}")
+                    println("Error : ${(apiResponse.exceptionOrNull() as Exception).localizedMessage}")
 
                     //        do {
                     //            print("Retry (Y/N) ? : ")
@@ -42,15 +42,15 @@ internal object ChooseAccountUtils {
                     //        } while (input != "N")
                 } else {
 
-                    val accountsResponseResult = apiResponse.getValue() as AccountsResponse
+                    val accountsResponseResult = apiResponse.getOrNull() as AccountsResponse
                     if (accountsResponseResult.status == 1) {
 
                         println("No Accounts...")
-                        return ChooseAccountResult(0, AccountUtils.getBlankAccount())
+                        return ChooseAccountResult(0u, AccountUtils.getBlankAccount())
 
                     } else {
 
-                        val userAccountsMap: LinkedHashMap<Int, AccountResponse> =
+                        val userAccountsMap: LinkedHashMap<UInt, AccountResponse> =
                             AccountUtils.prepareUserAccountsMap(accountsResponseResult.accounts)
 
                         if (userAccountsMap.containsKey(accountIdInput)) {

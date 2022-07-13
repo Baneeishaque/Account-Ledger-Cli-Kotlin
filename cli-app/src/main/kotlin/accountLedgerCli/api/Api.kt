@@ -21,33 +21,33 @@ internal interface Api {
 
     @GET("${ApiConstants.selectUserAccountsV2Method}.${ApiConstants.serverFileExtension}")
     suspend fun selectUserAccounts(
-        @Query("user_id") userId: Int?,
-        @Query("parent_account_id") parentAccountId: Int?
+        @Query("user_id") userId: UInt?,
+        @Query("parent_account_id") parentAccountId: UInt?
     ): Response<AccountsResponse>
 
     @GET("${ApiConstants.selectUserAccountsFullMethod}.${ApiConstants.serverFileExtension}")
-    suspend fun selectUserAccountsFull(@Query("user_id") userId: Int?): Response<AccountsResponse>
+    suspend fun selectUserAccountsFull(@Query("user_id") userId: UInt?): Response<AccountsResponse>
 
     @GET("${ApiConstants.selectUserTransactionsV2MMethod}.${ApiConstants.serverFileExtension}")
     suspend fun selectUserTransactionsV2M(
-        @Query("user_id") userId: Int,
-        @Query("account_id") accountId: Int
+        @Query("user_id") userId: UInt,
+        @Query("account_id") accountId: UInt
     ): Response<TransactionsResponse>
 
     @FormUrlEncoded
     @POST("${ApiConstants.insertTransactionMethod}.${ApiConstants.serverFileExtension}")
     suspend fun insertTransaction(
         @Field("event_date_time") eventDateTimeString: String,
-        @Field("user_id") userId: Int?,
+        @Field("user_id") userId: UInt?,
         @Field("particulars") particulars: String?,
         @Field("amount") amount: Float,
-        @Field("from_account_id") fromAccountId: Int,
-        @Field("to_account_id") toAccountId: Int?
+        @Field("from_account_id") fromAccountId: UInt,
+        @Field("to_account_id") toAccountId: UInt?
     ): Response<InsertionResponse>
 
     @GET("${ApiConstants.selectUserTransactionsAfterSpecifiedDateMethod}.${ApiConstants.serverFileExtension}")
     suspend fun selectUserTransactionsAfterSpecifiedDate(
-        @Query("user_id") userId: Int,
+        @Query("user_id") userId: UInt,
         @Query("specified_date") specifiedDate: String
     ): Response<TransactionsResponse>
 }

@@ -4,7 +4,7 @@ import accountLedgerCli.api.response.AccountResponse
 import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
 
 internal fun invokeAutomatedInsertTransaction(
-    userId: Int,
+    userId: UInt,
     eventDateTime: String,
     particulars: String,
     amount: Float,
@@ -27,7 +27,7 @@ internal fun invokeAutomatedInsertTransaction(
 }
 
 internal fun invokeInsertTransaction(
-    userId: Int,
+    userId: UInt,
     eventDateTime: String,
     particulars: String,
     amount: Float,
@@ -49,7 +49,7 @@ internal fun invokeInsertTransaction(
 }
 
 internal fun invokeAddTransactionStep2(
-    userId: Int,
+    userId: UInt,
     username: String,
     localFromAccount: AccountResponse,
     localToAccount: AccountResponse,

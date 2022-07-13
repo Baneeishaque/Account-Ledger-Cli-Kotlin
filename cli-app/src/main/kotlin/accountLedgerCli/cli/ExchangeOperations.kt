@@ -3,7 +3,7 @@ package accountLedgerCli.cli
 import accountLedgerCli.api.response.AccountResponse
 
 internal fun ex13(
-    userId: Int,
+    userId: UInt,
     username: String,
     localFromAccount: AccountResponse,
     localToAccount: AccountResponse,
@@ -22,7 +22,7 @@ internal fun ex13(
 }
 
 internal fun ex12(
-    userId: Int,
+    userId: UInt,
     username: String,
     localFromAccount: AccountResponse,
     localToAccount: AccountResponse,
@@ -41,7 +41,7 @@ internal fun ex12(
 }
 
 internal fun ex23(
-    userId: Int,
+    userId: UInt,
     username: String,
     localFromAccount: AccountResponse,
     localToAccount: AccountResponse,

@@ -4,9 +4,9 @@ import accountLedgerCli.api.response.UserResponse
 
 object UserUtils {
 
-    internal fun prepareUsersMap(users: List<UserResponse>): LinkedHashMap<Int, UserResponse> {
+    internal fun prepareUsersMap(users: List<UserResponse>): LinkedHashMap<UInt, UserResponse> {
 
-        val usersMap = LinkedHashMap<Int, UserResponse>()
+        val usersMap = LinkedHashMap<UInt, UserResponse>()
         users.forEach { currentUser -> usersMap[currentUser.id] = currentUser }
 //        return usersMap.toSortedMap()
         return usersMap
@@ -15,7 +15,7 @@ object UserUtils {
     internal fun getBlankUser(): UserResponse {
 
         return UserResponse(
-            id = 0,
+            id = 0u,
             password = "",
             status = "",
             username = ""

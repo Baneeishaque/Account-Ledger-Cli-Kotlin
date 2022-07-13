@@ -109,7 +109,7 @@ class UserOperations {
 
                 val authenticationResponseResult = apiResponse.getValue() as AuthenticationResponse
                 when (authenticationResponseResult.userCount) {
-                    0 -> {
+                    0u -> {
                         if (isNotApiCall) {
                             println("Invalid Credentials...")
                         } else {
@@ -125,7 +125,7 @@ class UserOperations {
                         }
                     }
 
-                    1 -> {
+                    1u -> {
 
                         if (isNotApiCall) {
                             println("Login Success...")

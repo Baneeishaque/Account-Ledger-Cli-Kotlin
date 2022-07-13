@@ -1,57 +1,31 @@
 package accountLedgerCli.retrofit.data
 
 import accountLedgerCli.api.response.AccountsResponse
-import accountLedgerCli.retrofit.ProjectRetrofitClient
-import accountLedgerCli.retrofit.ResponseHolder
-import retrofit2.Response
-import java.io.IOException
 
-class AccountsDataSource {
-
-    private val retrofitClient = ProjectRetrofitClient.retrofitClient
+internal class AccountsDataSource : AppDataSource<AccountsResponse>() {
 
     internal suspend fun selectUserAccounts(
-        userId: Int,
-        parentAccountId: Int? = 0
-    ): ResponseHolder<AccountsResponse> {
 
-        return try {
+        userId: UInt,
+        parentAccountId: UInt? = 0u
 
-            processApiResponse(retrofitClient.selectUserAccounts(userId = userId, parentAccountId = parentAccountId))
+    ): Result<AccountsResponse> {
 
-        } catch (exception: java.lang.Exception) {
+        return executeApiRequest(
 
-            ResponseHolder.Error(Exception("Exception - ${exception.localizedMessage}"))
-        }
+            apiRequest = retrofitClient.selectUserAccounts(
+
+                userId = userId,
+                parentAccountId = parentAccountId
+            )
+        )
     }
 
-    internal suspend fun selectUserAccountsFull(userId: Int): ResponseHolder<AccountsResponse> {
+    internal suspend fun selectUserAccountsFull(userId: UInt): Result<AccountsResponse> {
 
-        return try {
+        return executeApiRequest(
 
-            processApiResponse(retrofitClient.selectUserAccountsFull(userId = userId))
-
-        } catch (exception: java.lang.Exception) {
-
-            ResponseHolder.Error(Exception("Exception - ${exception.localizedMessage}"))
-        }
+            apiRequest = retrofitClient.selectUserAccountsFull(userId = userId)
+        )
     }
-}
-
-//    TODO : Rewrite as general function for all responses
-private fun processApiResponse(apiResponse: Response<AccountsResponse>): ResponseHolder<AccountsResponse> {
-
-    if (apiResponse.isSuccessful) {
-
-        val loginApiResponseBody = apiResponse.body()
-        return if (loginApiResponseBody != null) {
-
-            ResponseHolder.Success(loginApiResponseBody)
-
-        } else {
-
-            ResponseHolder.Error(Exception("Invalid Response Body - $loginApiResponseBody"))
-        }
-    }
-    return ResponseHolder.Error(IOException("Exception Code - ${apiResponse.code()}, Message - ${apiResponse.message()}"))
 }

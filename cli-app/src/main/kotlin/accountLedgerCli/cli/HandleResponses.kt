@@ -1,16 +1,14 @@
 package accountLedgerCli.cli
 
-import accountLedgerCli.api.response.AccountResponse
 import accountLedgerCli.api.response.AccountsResponse
 import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
 import accountLedgerCli.cli.App.Companion.userAccountsMap
-import accountLedgerCli.retrofit.ResponseHolder
 import accountLedgerCli.utils.AccountUtils
 
 internal fun handleAccountsResponseAndPrintMenu(
-    apiResponse: ResponseHolder<AccountsResponse>,
+    apiResponse: Result<AccountsResponse>,
     username: String,
-    userId: Int
+    userId: UInt
 ) {
 
     if (handleAccountsResponse(apiResponse)) {
@@ -40,11 +38,11 @@ internal fun handleAccountsResponseAndPrintMenu(
     }
 }
 
-internal fun handleAccountsResponse(apiResponse: ResponseHolder<AccountsResponse>): Boolean {
+internal fun handleAccountsResponse(apiResponse: Result<AccountsResponse>): Boolean {
 
-    if (apiResponse.isError()) {
+    if (apiResponse.isFailure) {
 
-        println("Error : ${(apiResponse.getValue() as Exception).localizedMessage}")
+        println("Error : ${(apiResponse.exceptionOrNull() as Exception).localizedMessage}")
         //        do {
         //            print("Retry (Y/N) ? : ")
         //            val input = readLine()
@@ -60,7 +58,7 @@ internal fun handleAccountsResponse(apiResponse: ResponseHolder<AccountsResponse
         return false
     } else {
 
-        val localAccountsResponseWithStatus = apiResponse.getValue() as AccountsResponse
+        val localAccountsResponseWithStatus = apiResponse.getOrNull() as AccountsResponse
         return if (localAccountsResponseWithStatus.status == 1) {
 
             println("No Accounts...")
@@ -75,13 +73,13 @@ internal fun handleAccountsResponse(apiResponse: ResponseHolder<AccountsResponse
 }
 
 internal fun handleAccountsApiResponse(
-    apiResponse: ResponseHolder<AccountsResponse>,
+    apiResponse: Result<AccountsResponse>,
     purpose: String
 ): Boolean {
 
-    if (apiResponse.isError()) {
+    if (apiResponse.isFailure) {
 
-        println("Error : ${(apiResponse.getValue() as Exception).localizedMessage}")
+        println("Error : ${(apiResponse.exceptionOrNull() as Exception).localizedMessage}")
         //        do {
         //            print("Retry (Y/N) ? : ")
         //            val input = readLine()
@@ -97,7 +95,7 @@ internal fun handleAccountsApiResponse(
         //        } while (input != "N")
     } else {
 
-        val accountsResponseResult = apiResponse.getValue() as AccountsResponse
+        val accountsResponseResult = apiResponse.getOrNull() as AccountsResponse
         if (accountsResponseResult.status == 1) {
 
             println("No Accounts...")
@@ -151,6 +149,7 @@ internal fun handleAccountsApiResponse(
                             }
                         }
                     }
+
                     "2" -> {
                         if (purpose == "To") {
 
@@ -181,8 +180,10 @@ internal fun handleAccountsApiResponse(
                             }
                         }
                     }
+
                     "0" -> {
                     }
+
                     else -> invalidOptionMessage()
                 }
             } while (choice != "0")

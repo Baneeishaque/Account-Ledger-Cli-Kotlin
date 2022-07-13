@@ -2,12 +2,21 @@ package accountLedgerCli.cli
 
 import accountLedgerCli.api.response.AccountResponse
 import accountLedgerCli.models.BalanceSheetDataModel
-import accountLedgerCli.to_utils.*
-import accountLedgerCli.to_utils.DateTimeUtils.normalDateTimePattern
+import accountLedgerCli.to_utils.CommandLinePrintMenu
+import accountLedgerCli.to_utils.CommandLinePrintMenuWithContinuePrompt
+import accountLedgerCli.to_utils.CommandLinePrintMenuWithEnterPrompt
+import accountLedgerCli.to_utils.CommandLinePrintMenuWithTryPrompt
+import accountLedgerCli.to_utils.DateTimeUtils
+import accountLedgerCli.to_utils.ToDoUtils
 import accountLedgerCli.utils.AccountUtils
 import accountLedgerCli.utils.UserUtils
 import io.github.cdimascio.dotenv.dotenv
-import kotlinx.cli.*
+import kotlinx.cli.ArgParser
+import kotlinx.cli.ArgType
+import kotlinx.cli.ExperimentalCli
+import kotlinx.cli.default
+import kotlinx.cli.optional
+import kotlinx.cli.Subcommand
 import kotlinx.serialization.json.Json
 import java.nio.file.Paths
 import java.time.LocalDateTime
@@ -15,7 +24,7 @@ import java.time.LocalDateTime
 class App {
     companion object {
         @JvmStatic
-        internal var dateTimeString = LocalDateTime.now().format(normalDateTimePattern)
+        internal var dateTimeString = LocalDateTime.now().format(DateTimeUtils.normalDateTimePattern)
 
         @JvmStatic
         internal var fromAccount = AccountUtils.getBlankAccount()
@@ -36,7 +45,7 @@ class App {
         internal var chosenUser = UserUtils.getBlankUser()
 
         @JvmStatic
-        internal var userAccountsMap = LinkedHashMap<Int, AccountResponse>()
+        internal var userAccountsMap = LinkedHashMap<UInt, AccountResponse>()
         private val commandLinePrintMenu = CommandLinePrintMenu()
 
         @JvmStatic
@@ -62,10 +71,13 @@ class App {
         fun main(args: Array<String>) {
             if (args.isEmpty()) {
                 do {
+                    val identifiedUser: String = dotenv[EnvironmentFileEntryEnum.USER_NAME.name] ?: Constants.defaultValueForStringEnvironmentVariables
                     commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
                         listOfCommands = listOf(
                             "Account Ledger",
                             "---------------",
+                            "The identified user is $identifiedUser",
+                            "",
                             "1 : Login",
                             "2 : Registration",
                             "3 : List Users",
@@ -79,12 +91,12 @@ class App {
                     val choice = readLine()
                     when (choice) {
                         "1" -> UserOperations.login(
-                            username = dotenv[EnvironmentFIleFieldsEnum.USER_NAME.name] ?: "",
-                            password = dotenv[EnvironmentFIleFieldsEnum.PASSWORD.name] ?: ""
+                            username = if (identifiedUser == Constants.defaultValueForStringEnvironmentVariables) "" else identifiedUser,
+                            password = dotenv[EnvironmentFileEntryEnum.PASSWORD.name] ?: ""
                         )
 
                         "3" -> UserOperations.listUsers()
-                        "2","4", "5" -> ToDoUtils.showTodo()
+                        "2", "4", "5" -> ToDoUtils.showTodo()
                         "0" -> println("Thanks...")
                         else -> invalidOptionMessage()
                     }
@@ -131,8 +143,8 @@ class App {
 
                         if (username.isNullOrEmpty()) {
 
-                            val environmentUsername = dotenv[EnvironmentFIleFieldsEnum.USER_NAME.name]
-                            val environmentPassword = dotenv[EnvironmentFIleFieldsEnum.PASSWORD.name]
+                            val environmentUsername = dotenv[EnvironmentFileEntryEnum.USER_NAME.name]
+                            val environmentPassword = dotenv[EnvironmentFileEntryEnum.PASSWORD.name]
 
                             if (environmentUsername.isNullOrEmpty()) {
 

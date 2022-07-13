@@ -8,7 +8,7 @@ import accountLedgerCli.cli.App.Companion.dateTimeString
 import accountLedgerCli.to_utils.InputUtils
 import accountLedgerCli.utils.ApiUtils
 
-internal fun chooseAccountByIndex(userAccountsMap: LinkedHashMap<Int, AccountResponse>): Int {
+internal fun chooseAccountByIndex(userAccountsMap: LinkedHashMap<UInt, AccountResponse>): UInt {
 
     commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
         listOf(
@@ -17,13 +17,13 @@ internal fun chooseAccountByIndex(userAccountsMap: LinkedHashMap<Int, AccountRes
             "Enter Account Index, or O to back : A"
         )
     )
-    val accountIdInput = readLine()!!
-    if (accountIdInput == "0") return 0
-    val accountId = InputUtils.getValidInt(accountIdInput, "Invalid Account Index")
+    val accountIdInput: String = readLine()!!
+    if (accountIdInput == "0") return 0u
+    val accountId: UInt = InputUtils.getValidInt(accountIdInput, "Invalid Account Index")
     return getValidAccountIndex(userAccountsMap = userAccountsMap, accountId = accountId)
 }
 
-internal fun chooseUserByIndex(usersMap: LinkedHashMap<Int, UserResponse>): Int {
+internal fun chooseUserByIndex(usersMap: LinkedHashMap<UInt, UserResponse>): UInt {
 
     commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
         listOf(
@@ -34,13 +34,13 @@ internal fun chooseUserByIndex(usersMap: LinkedHashMap<Int, UserResponse>): Int 
             "Enter User Index, or O to back : A"
         )
     )
-    val userIdInput = readLine()!!
-    if (userIdInput == "0") return 0
-    val userId = InputUtils.getValidInt(userIdInput, "Invalid User Index")
+    val userIdInput: String = readLine()!!
+    if (userIdInput == "0") return 0u
+    val userId: UInt = InputUtils.getValidInt(userIdInput, "Invalid User Index")
     return getValidUserIndex(usersMap = usersMap, userId = userId)
 }
 
-internal fun getValidAccountIndex(userAccountsMap: LinkedHashMap<Int, AccountResponse>, accountId: Int): Int {
+internal fun getValidAccountIndex(userAccountsMap: LinkedHashMap<UInt, AccountResponse>, accountId: UInt): UInt {
     if (userAccountsMap.containsKey(accountId)) {
 
         return accountId
@@ -52,9 +52,11 @@ internal fun getValidAccountIndex(userAccountsMap: LinkedHashMap<Int, AccountRes
         "Y", "" -> {
             getValidAccountIndex(userAccountsMap = userAccountsMap, accountId = accountId)
         }
+
         "N" -> {
-            0
+            0u
         }
+
         else -> {
 
             commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
@@ -65,7 +67,7 @@ internal fun getValidAccountIndex(userAccountsMap: LinkedHashMap<Int, AccountRes
     }
 }
 
-internal fun getValidUserIndex(usersMap: LinkedHashMap<Int, UserResponse>, userId: Int): Int {
+internal fun getValidUserIndex(usersMap: LinkedHashMap<UInt, UserResponse>, userId: UInt): UInt {
     if (usersMap.containsKey(userId)) {
 
         return userId
@@ -77,9 +79,11 @@ internal fun getValidUserIndex(usersMap: LinkedHashMap<Int, UserResponse>, userI
         "Y", "" -> {
             getValidUserIndex(usersMap = usersMap, userId = userId)
         }
+
         "N" -> {
-            0
+            0u
         }
+
         else -> {
 
             commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
@@ -90,27 +94,27 @@ internal fun getValidUserIndex(usersMap: LinkedHashMap<Int, UserResponse>, userI
     }
 }
 
-internal fun chooseDepositTop(userId: Int): Boolean {
+internal fun chooseDepositTop(userId: UInt): Boolean {
 
     return handleAccountsApiResponse(apiResponse = getAccounts(userId = userId), purpose = "To")
 }
 
-internal fun chooseDepositFull(userId: Int): Boolean {
+internal fun chooseDepositFull(userId: UInt): Boolean {
 
     return handleAccountsApiResponse(apiResponse = ApiUtils.getAccountsFull(userId = userId), purpose = "To")
 }
 
-internal fun chooseFromAccountTop(userId: Int): Boolean {
+internal fun chooseFromAccountTop(userId: UInt): Boolean {
 
     return handleAccountsApiResponse(apiResponse = getAccounts(userId = userId), purpose = "From")
 }
 
-internal fun chooseFromAccountFull(userId: Int): Boolean {
+internal fun chooseFromAccountFull(userId: UInt): Boolean {
 
     return handleAccountsApiResponse(apiResponse = ApiUtils.getAccountsFull(userId), purpose = "From")
 }
 
-internal fun chooseViaAccountFull(userId: Int): Boolean {
+internal fun chooseViaAccountFull(userId: UInt): Boolean {
 
     return handleAccountsApiResponse(apiResponse = ApiUtils.getAccountsFull(userId), purpose = "Via.")
 }
@@ -125,26 +129,32 @@ internal fun enterDateWithTime(transactionTypeEnum: TransactionTypeEnum): String
 
             return dateTimeString
         }
+
         "N" -> {
 
             return InputUtils.getValidDateTimeInNormalPattern()
         }
+
         "D+Tr" -> {
 
             return "D+Tr"
         }
+
         "D+" -> {
 
             return "D+"
         }
+
         "D2+Tr" -> {
 
             return "D2+Tr"
         }
+
         "D2+" -> {
 
             return "D2+"
         }
+
         "Ex" -> {
 
             if (transactionTypeEnum == TransactionTypeEnum.VIA) {
@@ -153,6 +163,7 @@ internal fun enterDateWithTime(transactionTypeEnum: TransactionTypeEnum): String
             }
             return "Ex"
         }
+
         "Ex12" -> {
 
             if (transactionTypeEnum != TransactionTypeEnum.VIA) {
@@ -161,6 +172,7 @@ internal fun enterDateWithTime(transactionTypeEnum: TransactionTypeEnum): String
             }
             return "Ex12"
         }
+
         "Ex23" -> {
 
             if (transactionTypeEnum != TransactionTypeEnum.VIA) {
@@ -169,6 +181,7 @@ internal fun enterDateWithTime(transactionTypeEnum: TransactionTypeEnum): String
             }
             return "Ex23"
         }
+
         "Ex13" -> {
 
             if (transactionTypeEnum != TransactionTypeEnum.VIA) {
@@ -177,10 +190,12 @@ internal fun enterDateWithTime(transactionTypeEnum: TransactionTypeEnum): String
             }
             return "Ex13"
         }
+
         "B" -> {
 
             return "B"
         }
+
         else -> {
 
             invalidOptionMessage()

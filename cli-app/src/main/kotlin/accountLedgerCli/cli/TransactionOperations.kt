@@ -8,9 +8,9 @@ import accountLedgerCli.to_utils.ToDoUtils
 import accountLedgerCli.utils.ApiUtils
 
 internal fun viewTransactions(
-    userId: Int,
+    userId: UInt,
     username: String,
-    accountId: Int,
+    accountId: UInt,
     accountFullName: String,
     functionCallSourceEnum: FunctionCallSourceEnum = FunctionCallSourceEnum.FROM_OTHERS
 ): String {
@@ -41,7 +41,7 @@ internal fun viewTransactions(
     } else {
 
         val userTransactionsResponseResult = apiResponse.getValue() as TransactionsResponse
-        if (userTransactionsResponseResult.status == 1) {
+        if (userTransactionsResponseResult.status == 1u) {
 
             println("Account - $accountFullName")
             println("No Transactions...")
@@ -117,14 +117,14 @@ internal fun viewTransactions(
     }
 }
 
-internal fun viewTransactionsOfSpecificAccount(userId: Int, username: String) {
+internal fun viewTransactionsOfSpecificAccount(userId: UInt, username: String) {
     print("Enter Account Index or 0 to Back : A")
     val inputAccountIndex = readLine()!!
     if (inputAccountIndex != "0") {
         var accountIndex = InputUtils.getValidInt(inputAccountIndex, "Invalid Account Index")
         if (handleAccountsResponse(ApiUtils.getAccountsFull(userId = userId))) {
             accountIndex = getValidAccountIndex(userAccountsMap = userAccountsMap, accountId = accountIndex)
-            if (accountIndex != 0) {
+            if (accountIndex != 0u) {
                 viewTransactions(
                     userId = userId,
                     username = username,

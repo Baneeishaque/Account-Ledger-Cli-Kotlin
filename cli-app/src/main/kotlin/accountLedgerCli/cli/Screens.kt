@@ -3,7 +3,7 @@ package accountLedgerCli.cli
 import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
 import accountLedgerCli.cli.App.Companion.fromAccount
 
-internal fun userScreen(username: String, userId: Int) {
+internal fun userScreen(username: String, userId: UInt) {
 
 //    println("Env. Variables : ${UserOperations.dotenv.entries()}")
     do {
@@ -129,12 +129,14 @@ internal fun userScreen(username: String, userId: Int) {
     } while (choice != "0")
 }
 
-private fun getEnvironmentVariableValueForUserScreen(environmentVariableName: String) = getEnvironmentVariableValue(
-    dotenv = App.dotenv,
-    environmentVariableName = environmentVariableName, defaultValue = "N/A"
-)
+private fun getEnvironmentVariableValueForUserScreen(environmentVariableName: String) =
+    EnvironmentFileOperations.getEnvironmentVariableValueForTextWithDefaultValue(
+        dotenv = App.dotenv,
+        environmentVariableName = environmentVariableName,
+        defaultValue = Constants.defaultValueForStringEnvironmentVariables
+    )
 
-internal fun accountHome(userId: Int, username: String) {
+internal fun accountHome(userId: UInt, username: String) {
 
     do {
         commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
@@ -151,7 +153,7 @@ internal fun accountHome(userId: Int, username: String) {
                 "Enter Your Choice : "
             )
         )
-        val choiceInput = readLine()
+        val choiceInput:String? = readLine()
         when (choiceInput) {
             "1" ->
                 viewTransactions(
@@ -161,7 +163,12 @@ internal fun accountHome(userId: Int, username: String) {
                     accountFullName = fromAccount.fullName
                 )
 
-            "2" -> addTransaction(userId = userId, username = username, transactionTypeEnum = TransactionTypeEnum.NORMAL)
+            "2" -> addTransaction(
+                userId = userId,
+                username = username,
+                transactionTypeEnum = TransactionTypeEnum.NORMAL
+            )
+
             "3" ->
                 viewChildAccounts(
                     userId = userId,
@@ -169,7 +176,12 @@ internal fun accountHome(userId: Int, username: String) {
                 )
 
             "4" -> addTransaction(userId = userId, username = username, transactionTypeEnum = TransactionTypeEnum.VIA)
-            "5" -> addTransaction(userId = userId, username = username, transactionTypeEnum = TransactionTypeEnum.TWO_WAY)
+            "5" -> addTransaction(
+                userId = userId,
+                username = username,
+                transactionTypeEnum = TransactionTypeEnum.TWO_WAY
+            )
+
             "0" -> {}
             else -> invalidOptionMessage()
         }

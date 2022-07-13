@@ -2,7 +2,7 @@ package accountLedgerCli.cli
 
 import accountLedgerCli.api.response.TransactionResponse
 
-internal fun printAccountLedger(transactions: List<TransactionResponse>, currentAccountId: Int): String {
+internal fun printAccountLedger(transactions: List<TransactionResponse>, currentAccountId: UInt): String {
 
     println("transactions = [${transactions}]")
 

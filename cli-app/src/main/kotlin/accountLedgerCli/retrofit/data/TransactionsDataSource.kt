@@ -11,8 +11,8 @@ internal class TransactionsDataSource {
     private val retrofitClient = ProjectRetrofitClient.retrofitClient
 
     internal suspend fun selectUserTransactions(
-        userId: Int,
-        accountId: Int
+        userId: UInt,
+        accountId: UInt
     ): ResponseHolder<TransactionsResponse> {
 
         return try {
@@ -26,7 +26,7 @@ internal class TransactionsDataSource {
     }
 
     internal suspend fun selectUserTransactionsAfterSpecifiedDate(
-        userId: Int,
+        userId: UInt,
         specifiedDate: String
     ): ResponseHolder<TransactionsResponse> {
 
@@ -58,7 +58,7 @@ private fun processApiResponse(apiResponse: Response<TransactionsResponse>): Res
 
         } else {
 
-            ResponseHolder.Error(Exception("Invalid Response Body - $userTransactionsApiResponseBody"))
+            ResponseHolder.Error(Exception("Invalid Response Body"))
         }
     }
     return ResponseHolder.Error(IOException("Exception Code - ${apiResponse.code()}, Message - ${apiResponse.message()}"))

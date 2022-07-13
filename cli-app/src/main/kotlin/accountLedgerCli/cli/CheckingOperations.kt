@@ -11,17 +11,17 @@ import java.time.LocalDateTime
 
 internal fun isAccountsAreAvailable(transactionTypeEnum: TransactionTypeEnum): Boolean {
 
-    if (toAccount.id == 0) {
+    if (toAccount.id == 0u) {
 
         println("Please choose deposit account...")
         return false
 
-    } else if (fromAccount.id == 0) {
+    } else if (fromAccount.id == 0u) {
 
         println("Please choose from account...")
         return false
 
-    } else if ((transactionTypeEnum == TransactionTypeEnum.VIA) && (viaAccount.id == 0)) {
+    } else if ((transactionTypeEnum == TransactionTypeEnum.VIA) && (viaAccount.id == 0u)) {
 
         println("Please choose via. account...")
         return false
@@ -30,7 +30,7 @@ internal fun isAccountsAreAvailable(transactionTypeEnum: TransactionTypeEnum): B
 }
 
 internal fun transactionContinueCheck(
-    userId: Int,
+    userId: UInt,
     username: String,
     transactionTypeEnum: TransactionTypeEnum
 ) {
@@ -72,7 +72,7 @@ internal fun transactionContinueCheck(
 }
 
 internal fun addTransactionWithAccountAvailabilityCheck(
-    userId: Int,
+    userId: UInt,
     username: String,
     transactionTypeEnum: TransactionTypeEnum
 ) {

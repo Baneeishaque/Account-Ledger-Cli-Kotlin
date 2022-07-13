@@ -8,8 +8,8 @@ import accountLedgerCli.cli.App.Companion.toAccount
 import accountLedgerCli.cli.App.Companion.viaAccount
 
 internal fun processChildAccountScreenInput(
-    userAccountsMap: LinkedHashMap<Int, AccountResponse>,
-    userId: Int,
+    userAccountsMap: LinkedHashMap<UInt, AccountResponse>,
+    userId: UInt,
     username: String
 ): String? {
 
@@ -40,13 +40,13 @@ internal fun processChildAccountScreenInput(
 }
 
 private fun handleFromAccountSelection(
-    accountId: Int,
-    userAccountsMap: LinkedHashMap<Int, AccountResponse>,
-    userId: Int,
+    accountId: UInt,
+    userAccountsMap: LinkedHashMap<UInt, AccountResponse>,
+    userId: UInt,
     username: String
 ) {
 
-    if (accountId != 0) {
+    if (accountId != 0u) {
 
         fromAccount = userAccountsMap[accountId]!!
         accountHome(userId = userId, username = username)
@@ -54,11 +54,11 @@ private fun handleFromAccountSelection(
 }
 
 internal fun handleFromAccountSelection(
-    fromAccountId: Int,
-    userAccountsMap: LinkedHashMap<Int, AccountResponse>
+    fromAccountId: UInt,
+    userAccountsMap: LinkedHashMap<UInt, AccountResponse>
 ): Boolean {
 
-    if (fromAccountId != 0) {
+    if (fromAccountId != 0u) {
 
         fromAccount = userAccountsMap[fromAccountId]!!
         return true
@@ -67,11 +67,11 @@ internal fun handleFromAccountSelection(
 }
 
 internal fun handleToAccountSelection(
-    depositAccountId: Int,
-    userAccountsMap: LinkedHashMap<Int, AccountResponse>
+    depositAccountId: UInt,
+    userAccountsMap: LinkedHashMap<UInt, AccountResponse>
 ): Boolean {
 
-    if (depositAccountId != 0) {
+    if (depositAccountId != 0u) {
 
         toAccount = userAccountsMap[depositAccountId]!!
         return true
@@ -80,11 +80,11 @@ internal fun handleToAccountSelection(
 }
 
 internal fun handleUserSelection(
-    chosenUserId: Int,
-    usersMap: LinkedHashMap<Int, UserResponse>
+    chosenUserId: UInt,
+    usersMap: LinkedHashMap<UInt, UserResponse>
 ): Boolean {
 
-    if (chosenUserId != 0) {
+    if (chosenUserId != 0u) {
 
         chosenUser = usersMap[chosenUserId]!!
         return true
@@ -94,11 +94,11 @@ internal fun handleUserSelection(
 
 
 internal fun handleViaAccountSelection(
-    viaAccountId: Int,
-    userAccountsMap: LinkedHashMap<Int, AccountResponse>
+    viaAccountId: UInt,
+    userAccountsMap: LinkedHashMap<UInt, AccountResponse>
 ): Boolean {
 
-    if (viaAccountId != 0) {
+    if (viaAccountId != 0u) {
 
         viaAccount = userAccountsMap[viaAccountId]!!
         return true

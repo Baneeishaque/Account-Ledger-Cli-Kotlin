@@ -7,9 +7,9 @@ import accountLedgerCli.retrofit.data.AccountsDataSource
 import accountLedgerCli.retrofit.data.TransactionsDataSource
 import kotlinx.coroutines.runBlocking
 
-internal fun getAccounts(userId: Int, parentAccountId: Int = 0): ResponseHolder<AccountsResponse> {
+internal fun getAccounts(userId: UInt, parentAccountId: UInt = 0u): Result<AccountsResponse> {
 
-    val apiResponse: ResponseHolder<AccountsResponse>
+    val apiResponse: Result<AccountsResponse>
     val userAccountsDataSource = AccountsDataSource()
     println("Contacting Server...")
     runBlocking {
@@ -23,8 +23,8 @@ internal fun getAccounts(userId: Int, parentAccountId: Int = 0): ResponseHolder<
 }
 
 internal fun getUserTransactions(
-    userId: Int,
-    accountId: Int,
+    userId: UInt,
+    accountId: UInt,
     isNotFromBalanceSheet: Boolean = true
 ): ResponseHolder<TransactionsResponse> {
 

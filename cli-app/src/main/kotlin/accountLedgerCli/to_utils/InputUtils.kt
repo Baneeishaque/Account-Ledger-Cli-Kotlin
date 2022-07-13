@@ -19,10 +19,10 @@ object InputUtils {
         }
     }
 
-    fun getValidInt(inputString: String, invalidMessage: String): Int {
+    fun getValidInt(inputString: String, invalidMessage: String): UInt {
 
         try {
-            return inputString.toInt()
+            return inputString.toUInt()
 
         } catch (exception: NumberFormatException) {
 

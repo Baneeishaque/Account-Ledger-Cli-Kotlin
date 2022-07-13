@@ -3,7 +3,7 @@ package accountLedgerCli.cli
 import accountLedgerCli.api.response.AccountResponse
 import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
 
-internal fun searchAccount(userAccountsMap: LinkedHashMap<Int, AccountResponse>): Int {
+internal fun searchAccount(userAccountsMap: LinkedHashMap<UInt, AccountResponse>): UInt {
 
     commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
         listOf("\nEnter Search Key : ")
@@ -45,15 +45,15 @@ internal fun searchAccount(userAccountsMap: LinkedHashMap<Int, AccountResponse>)
             else if (input != "0") invalidOptionMessage()
         } while (input != "0")
     }
-    return 0
+    return 0u
 }
 
 private fun searchOnHashMapValues(
-    hashMap: LinkedHashMap<Int, AccountResponse>,
+    hashMap: LinkedHashMap<UInt, AccountResponse>,
     searchKey: String
-): LinkedHashMap<Int, AccountResponse> {
+): LinkedHashMap<UInt, AccountResponse> {
 
-    val result = LinkedHashMap<Int, AccountResponse>()
+    val result = LinkedHashMap<UInt, AccountResponse>()
     hashMap.forEach { account ->
         if (account.value.fullName.contains(other = searchKey, ignoreCase = true)) {
 

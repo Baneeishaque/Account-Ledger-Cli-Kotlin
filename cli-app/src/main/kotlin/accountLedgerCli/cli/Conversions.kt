@@ -4,14 +4,14 @@ import accountLedgerCli.api.response.AccountResponse
 import accountLedgerCli.api.response.UserResponse
 
 internal fun userAccountsToStringFromLinkedHashMapLimitedTo10(
-    userAccountsMap: LinkedHashMap<Int, AccountResponse>
+    userAccountsMap: LinkedHashMap<UInt, AccountResponse>
 ): String {
 
     return userAccountsToStringFromListPair(getLast10ItemsFromLinkedHashMap(userAccountsMap))
 }
 
 private fun userAccountsToStringFromListPair(
-    userAccountsList: List<Pair<Int, AccountResponse>>
+    userAccountsList: List<Pair<UInt, AccountResponse>>
 ): String {
 
     var result = ""
@@ -20,7 +20,7 @@ private fun userAccountsToStringFromListPair(
 }
 
 internal fun userAccountsToStringFromLinkedHashMap(
-    userAccountsMap: LinkedHashMap<Int, AccountResponse>
+    userAccountsMap: LinkedHashMap<UInt, AccountResponse>
 ): String {
 
     var result = ""
@@ -36,7 +36,7 @@ internal fun userAccountsToStringFromList(accounts: List<AccountResponse>): Stri
 }
 
 internal fun usersToStringFromLinkedHashMap(
-    usersMap: LinkedHashMap<Int, UserResponse>
+    usersMap: LinkedHashMap<UInt, UserResponse>
 ): String {
 
     var result = ""

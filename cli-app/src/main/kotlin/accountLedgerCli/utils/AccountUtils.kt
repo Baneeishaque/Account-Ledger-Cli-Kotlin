@@ -7,7 +7,7 @@ internal object AccountUtils {
     internal fun getBlankAccount(): AccountResponse {
 
         return AccountResponse(
-            id = 0,
+            id = 0u,
             fullName = "",
             name = "",
             parentAccountId = 0,
@@ -21,9 +21,9 @@ internal object AccountUtils {
         )
     }
 
-    internal fun prepareUserAccountsMap(accounts: List<AccountResponse>): LinkedHashMap<Int, AccountResponse> {
+    internal fun prepareUserAccountsMap(accounts: List<AccountResponse>): LinkedHashMap<UInt, AccountResponse> {
 
-        val userAccountsMap = LinkedHashMap<Int, AccountResponse>()
+        val userAccountsMap = LinkedHashMap<UInt, AccountResponse>()
         accounts.forEach { currentAccount -> userAccountsMap[currentAccount.id] = currentAccount }
         return userAccountsMap
     }

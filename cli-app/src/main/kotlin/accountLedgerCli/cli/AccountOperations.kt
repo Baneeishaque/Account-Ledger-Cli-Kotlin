@@ -11,7 +11,7 @@ import accountLedgerCli.to_utils.InputUtils
 import accountLedgerCli.to_utils.MysqlUtils
 import kotlinx.coroutines.runBlocking
 
-internal fun checkAccountsAffectedAfterSpecifiedDate(userId: Int, username: String) {
+internal fun checkAccountsAffectedAfterSpecifiedDate(userId: UInt, username: String) {
 
     val inputDate = InputUtils.getValidDateInNormalPattern()
     val transactionsDataSource = TransactionsDataSource()
@@ -48,13 +48,13 @@ internal fun checkAccountsAffectedAfterSpecifiedDate(userId: Int, username: Stri
         } else {
 
             val selectUserTransactionsAfterSpecifiedDateResult = apiResponse.getValue() as TransactionsResponse
-            if (selectUserTransactionsAfterSpecifiedDateResult.status == 1) {
+            if (selectUserTransactionsAfterSpecifiedDateResult.status == 1u) {
 
                 println("No Transactions...")
 
             } else {
 
-                val accounts = mutableMapOf<Int, String>()
+                val accounts = mutableMapOf<UInt, String>()
                 selectUserTransactionsAfterSpecifiedDateResult.transactions.forEach { transaction ->
 
                     accounts.putIfAbsent(transaction.from_account_id, transaction.from_account_full_name)
@@ -80,13 +80,13 @@ internal fun checkAccountsAffectedAfterSpecifiedDate(userId: Int, username: Stri
     }
 }
 
-internal fun viewChildAccounts(username: String, userId: Int) {
+internal fun viewChildAccounts(username: String, userId: UInt) {
 
-    val apiResponse = getAccounts(userId = userId, parentAccountId = fromAccount.id)
+    val apiResponse:Result<AccountsResponse> = getAccounts(userId = userId, parentAccountId = fromAccount.id)
 
-    if (apiResponse.isError()) {
+    if (apiResponse.isFailure) {
 
-        println("Error : ${(apiResponse.getValue() as Exception).localizedMessage}")
+        println("Error : ${(apiResponse.exceptionOrNull() as Exception).localizedMessage}")
         do {
             print("Retry (Y/N) ? : ")
             val input = readLine()
@@ -104,13 +104,13 @@ internal fun viewChildAccounts(username: String, userId: Int) {
         } while (input != "N")
     } else {
 
-        val accountsResponseResult = apiResponse.getValue() as AccountsResponse
+        val accountsResponseResult = apiResponse.getOrNull() as AccountsResponse
         if (accountsResponseResult.status == 1) {
 
             println("No Child Accounts...")
         } else {
 
-            val userAccountsMap = LinkedHashMap<Int, AccountResponse>()
+            val userAccountsMap = LinkedHashMap<UInt, AccountResponse>()
             accountsResponseResult.accounts.forEach { currentAccount ->
                 userAccountsMap[currentAccount.id] = currentAccount
             }
