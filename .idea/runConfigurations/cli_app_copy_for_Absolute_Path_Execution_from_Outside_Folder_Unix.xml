@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="cli-app.bat Absolute Path Execution from Outside Folder Unix" type="ShConfigurationType">
-    <option name="SCRIPT_TEXT" value="mkdir ~/Account-Ledger-Cli ; tar -xvf $PROJECT_DIR$/cli-app/build/distributions/cli-app.tar -C ~/Account-Ledger-Cli/ &amp;&amp; sleep 5s &amp;&amp; cp $PROJECT_DIR$/.env ~/Account-Ledger-Cli/cli-app/bin/ &amp;&amp; cd ~/Account-Ledger-Cli/cli-app/bin &amp;&amp; ./cli-app" />
+  <configuration default="false" name="cli-app copy for Absolute Path Execution from Outside Folder Unix" type="ShConfigurationType">
+    <option name="SCRIPT_TEXT" value="mkdir ~/Account-Ledger-Cli ; tar -xvf $PROJECT_DIR$/cli-app/build/distributions/cli-app.tar -C ~/Account-Ledger-Cli/ &amp;&amp; sleep 5s &amp;&amp; cp $PROJECT_DIR$/.env ~/Account-Ledger-Cli/cli-app/bin/" />
     <option name="INDEPENDENT_SCRIPT_PATH" value="true" />
     <option name="SCRIPT_PATH" value="" />
     <option name="SCRIPT_OPTIONS" value="" />
