@@ -2,13 +2,13 @@ package accountLedgerCli.cli
 
 import accountLedgerCli.api.response.AuthenticationResponse
 import accountLedgerCli.api.response.UsersResponse
+import accountLedgerCli.cli.App.Companion.chosenUser
 import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
 import accountLedgerCli.models.BalanceSheetDataModel
 import accountLedgerCli.retrofit.ResponseHolder
 import accountLedgerCli.retrofit.data.AuthenticationDataSource
 import accountLedgerCli.retrofit.data.UsersDataSource
 import accountLedgerCli.to_utils.InputUtils
-import accountLedgerCli.to_utils.ToDoUtils
 import accountLedgerCli.utils.UserUtils
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
@@ -277,6 +277,7 @@ class UserOperations {
                                     usersMap = usersMap
                                 ),
                                 "1 - Balance Sheet for an User",
+                                "2 - User Home",
                                 "0 - Back",
                                 "",
                                 "Enter Your Choice : "
@@ -286,6 +287,15 @@ class UserOperations {
                         when (choice) {
                             "1" -> {
                                 balanceSheetOfUser(usersMap = usersMap)
+                            }
+
+                            "2" -> {
+                                if (handleUserSelection(
+                                        chosenUserId = chooseUserByIndex(usersMap = usersMap), usersMap = usersMap
+                                    )
+                                ) {
+                                    userScreen(username = chosenUser.username, userId = chosenUser.id)
+                                }
                             }
 
                             "0" -> {
