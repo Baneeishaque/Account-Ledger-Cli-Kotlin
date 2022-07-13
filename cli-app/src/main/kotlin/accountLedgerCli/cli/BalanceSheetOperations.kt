@@ -15,7 +15,13 @@ import kotlinx.serialization.json.Json
 
 internal fun balanceSheetOfUser(usersMap: LinkedHashMap<UInt, UserResponse>) {
     if (handleUserSelection(
-            chosenUserId = chooseUserByIndex(usersMap = usersMap), usersMap = usersMap
+            chosenUserId = getValidIndex(
+
+                map = usersMap,
+                itemSpecification = Constants.userText,
+                items = usersToStringFromLinkedHashMap(usersMap = usersMap),
+
+                ), usersMap = usersMap
         )
     ) {
         printBalanceSheetOfUser(currentUserName = chosenUser.username, currentUserId = chosenUser.id)

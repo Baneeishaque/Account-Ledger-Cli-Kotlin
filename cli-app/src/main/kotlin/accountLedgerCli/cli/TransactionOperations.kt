@@ -123,7 +123,11 @@ internal fun viewTransactionsOfSpecificAccount(userId: UInt, username: String) {
     if (inputAccountIndex != "0") {
         var accountIndex = InputUtils.getValidInt(inputAccountIndex, "Invalid Account Index")
         if (handleAccountsResponse(ApiUtils.getAccountsFull(userId = userId))) {
-            accountIndex = getValidAccountIndex(userAccountsMap = userAccountsMap, accountId = accountIndex)
+            accountIndex = getValidIndex(
+                map = userAccountsMap,
+                itemSpecification = Constants.accountText,
+                items = userAccountsToStringFromLinkedHashMap(userAccountsMap = userAccountsMap),
+            )
             if (accountIndex != 0u) {
                 viewTransactions(
                     userId = userId,

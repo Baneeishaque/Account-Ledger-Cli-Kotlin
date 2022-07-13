@@ -1,5 +1,6 @@
 package accountLedgerCli.to_utils
 
+import accountLedgerCli.cli.App
 import accountLedgerCli.cli.UserCredentials
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -26,7 +27,9 @@ object InputUtils {
 
         } catch (exception: NumberFormatException) {
 
-            println(invalidMessage)
+            App.commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
+                listOf(invalidMessage)
+            )
             return getValidInt(readLine()!!, invalidMessage)
         }
     }

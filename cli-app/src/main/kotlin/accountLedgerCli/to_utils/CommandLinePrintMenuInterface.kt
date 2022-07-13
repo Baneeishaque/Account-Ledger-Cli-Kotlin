@@ -1,3 +1,3 @@
 package accountLedgerCli.to_utils
 
-interface CommandLinePrintMenuInterface : PrintMenuInterface {}
+interface CommandLinePrintMenuInterface : PrintMenuInterface

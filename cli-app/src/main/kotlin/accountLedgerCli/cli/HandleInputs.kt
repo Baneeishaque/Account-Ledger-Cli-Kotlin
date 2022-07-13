@@ -17,12 +17,17 @@ internal fun processChildAccountScreenInput(
     when (choice) {
         "1" -> {
             handleFromAccountSelection(
-                accountId = chooseAccountByIndex(userAccountsMap = userAccountsMap),
+                accountId = getValidIndex(
+                    map = userAccountsMap,
+                    itemSpecification = Constants.accountText,
+                    items = userAccountsToStringFromLinkedHashMap(userAccountsMap = userAccountsMap)
+                ),
                 userAccountsMap = userAccountsMap,
                 userId = userId,
                 username = username
             )
         }
+
         "2" -> {
             handleFromAccountSelection(
                 accountId = searchAccount(userAccountsMap = userAccountsMap),
@@ -31,10 +36,17 @@ internal fun processChildAccountScreenInput(
                 username = username
             )
         }
-        "3" -> addAccount()
+
+        "3" -> {
+            addAccount()
+        }
+
         "0" -> {
         }
-        else -> invalidOptionMessage()
+
+        else -> {
+            invalidOptionMessage()
+        }
     }
     return choice
 }

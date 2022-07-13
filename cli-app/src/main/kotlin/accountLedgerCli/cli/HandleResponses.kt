@@ -123,7 +123,11 @@ internal fun handleAccountsApiResponse(
                         if (purpose == "To") {
 
                             if (handleToAccountSelection(
-                                    chooseAccountByIndex(userAccountsMap), userAccountsMap
+                                    getValidIndex(
+                                        map = userAccountsMap,
+                                        itemSpecification = Constants.accountText,
+                                        items = userAccountsToStringFromLinkedHashMap(userAccountsMap = userAccountsMap)
+                                    ), userAccountsMap
                                 )
                             ) {
 
@@ -132,7 +136,11 @@ internal fun handleAccountsApiResponse(
                         } else if (purpose == "From") {
 
                             if (handleFromAccountSelection(
-                                    chooseAccountByIndex(userAccountsMap), userAccountsMap
+                                    getValidIndex(
+                                        map = userAccountsMap,
+                                        itemSpecification = Constants.accountText,
+                                        items = userAccountsToStringFromLinkedHashMap(userAccountsMap = userAccountsMap)
+                                    ), userAccountsMap
                                 )
                             ) {
 
@@ -141,7 +149,11 @@ internal fun handleAccountsApiResponse(
                         } else if (purpose == "Via.") {
 
                             if (handleViaAccountSelection(
-                                    chooseAccountByIndex(userAccountsMap), userAccountsMap
+                                    getValidIndex(
+                                        map = userAccountsMap,
+                                        itemSpecification = Constants.accountText,
+                                        items = userAccountsToStringFromLinkedHashMap(userAccountsMap = userAccountsMap)
+                                    ), userAccountsMap
                                 )
                             ) {
 

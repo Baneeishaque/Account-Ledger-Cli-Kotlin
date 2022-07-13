@@ -28,6 +28,8 @@ internal fun userAccountsToStringFromLinkedHashMap(
     return result
 }
 
+//TODO : Write List to String, then rewrite userAccountsToStringFromList, usersToStringFromLinkedHashMap, userAccountsToStringFromLinkedHashMap & userAccountsToStringFromListPair
+
 internal fun userAccountsToStringFromList(accounts: List<AccountResponse>): String {
 
     var result = ""

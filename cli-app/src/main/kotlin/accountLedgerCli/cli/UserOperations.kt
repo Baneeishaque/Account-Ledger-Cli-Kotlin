@@ -291,7 +291,11 @@ class UserOperations {
 
                             "2" -> {
                                 if (handleUserSelection(
-                                        chosenUserId = chooseUserByIndex(usersMap = usersMap), usersMap = usersMap
+                                        chosenUserId = getValidIndex(
+                                            map = usersMap,
+                                            itemSpecification = Constants.userText,
+                                            items = usersToStringFromLinkedHashMap(usersMap = usersMap)
+                                        ), usersMap = usersMap
                                     )
                                 ) {
                                     userScreen(username = chosenUser.username, userId = chosenUser.id)
