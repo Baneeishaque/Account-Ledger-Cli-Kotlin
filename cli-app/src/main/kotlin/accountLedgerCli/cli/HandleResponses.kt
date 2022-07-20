@@ -1,5 +1,6 @@
 package accountLedgerCli.cli
 
+import accountLedgerCli.api.response.AccountResponse
 import accountLedgerCli.api.response.AccountsResponse
 import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
 import accountLedgerCli.cli.App.Companion.userAccountsMap
@@ -8,7 +9,9 @@ import accountLedgerCli.utils.AccountUtils
 internal fun handleAccountsResponseAndPrintMenu(
     apiResponse: Result<AccountsResponse>,
     username: String,
-    userId: UInt
+    userId: UInt,
+    viaAccount: AccountResponse,
+    toAccount: AccountResponse
 ) {
 
     if (handleAccountsResponse(apiResponse)) {
@@ -30,9 +33,11 @@ internal fun handleAccountsResponseAndPrintMenu(
                 )
             )
 
-            val choice =
+            val choice: String =
                 processChildAccountScreenInput(
-                    userAccountsMap = userAccountsMap, userId = userId, username = username
+                    userAccountsMap = userAccountsMap, userId = userId, username = username,
+                    viaAccount = viaAccount,
+                    toAccount = toAccount
                 )
         } while (choice != "0")
     }
@@ -43,22 +48,24 @@ internal fun handleAccountsResponse(apiResponse: Result<AccountsResponse>): Bool
     if (apiResponse.isFailure) {
 
         println("Error : ${(apiResponse.exceptionOrNull() as Exception).localizedMessage}")
-        //        do {
-        //            print("Retry (Y/N) ? : ")
-        //            val input = readLine()
-        //            when (input) {
-        //                "Y", "" -> {
-        //                    return handleAccountsResponse(apiResponse)
-        //                }
-        //                "N" -> {
-        //                }
-        //                else -> println("Invalid option, try again...")
-        //            }
-        //        } while (input != "N")
-        return false
+        do {
+            print("Retry (Y/N) ? : ")
+            when (readLine()) {
+                "Y", "" -> {
+                    return handleAccountsResponse(apiResponse)
+                }
+
+                "N" -> {
+                    return false
+
+                }
+
+                else -> println("Invalid option, try again...")
+            }
+        } while (true)
     } else {
 
-        val localAccountsResponseWithStatus = apiResponse.getOrNull() as AccountsResponse
+        val localAccountsResponseWithStatus: AccountsResponse = apiResponse.getOrNull() as AccountsResponse
         return if (localAccountsResponseWithStatus.status == 1) {
 
             println("No Accounts...")
@@ -73,42 +80,48 @@ internal fun handleAccountsResponse(apiResponse: Result<AccountsResponse>): Bool
 }
 
 internal fun handleAccountsApiResponse(
+
     apiResponse: Result<AccountsResponse>,
-    purpose: String
-): Boolean {
+    purpose: AccountsApiCallPurposeEnum
+
+): HandleAccountsApiResponseResult {
 
     if (apiResponse.isFailure) {
 
         println("Error : ${(apiResponse.exceptionOrNull() as Exception).localizedMessage}")
-        //        do {
-        //            print("Retry (Y/N) ? : ")
-        //            val input = readLine()
-        //            when (input) {
-        //                "Y", "" -> {
-        //                    login()
-        //                    return
-        //                }
-        //                "N" -> {
-        //                }
-        //                else -> println("Invalid option, try again...")
-        //            }
-        //        } while (input != "N")
+        do {
+            print("Retry (Y/N) ? : ")
+            when (readLine()!!) {
+
+                "Y", "" -> {
+                    return handleAccountsApiResponse(apiResponse = apiResponse, purpose = purpose)
+                }
+
+                "N" -> {
+                    return HandleAccountsApiResponseResult(isAccountIdSelected = false)
+                }
+
+                else -> println("Invalid option, try again...")
+            }
+        } while (true)
+
     } else {
 
-        val accountsResponseResult = apiResponse.getOrNull() as AccountsResponse
+        val accountsResponseResult: AccountsResponse = apiResponse.getOrNull() as AccountsResponse
         if (accountsResponseResult.status == 1) {
 
             println("No Accounts...")
 
         } else {
 
-            userAccountsMap = AccountUtils.prepareUserAccountsMap(accountsResponseResult.accounts)
+            val userAccountsMapLocal: LinkedHashMap<UInt, AccountResponse> =
+                AccountUtils.prepareUserAccountsMap(accountsResponseResult.accounts)
             do {
                 commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
                     listOf(
                         "\nAccounts",
                         userAccountsToStringFromLinkedHashMap(
-                            userAccountsMap = userAccountsMap
+                            userAccountsMap = userAccountsMapLocal
                         ),
                         "1 - Choose $purpose Account - By Index Number",
                         "2 - Search $purpose Account - By Part Of Name",
@@ -117,80 +130,20 @@ internal fun handleAccountsApiResponse(
                         "Enter Your Choice : "
                     )
                 )
-                val choice = readLine()
+                val choice: String = readLine()!!
                 when (choice) {
                     "1" -> {
-                        if (purpose == "To") {
-
-                            if (handleToAccountSelection(
-                                    getValidIndex(
-                                        map = userAccountsMap,
-                                        itemSpecification = Constants.accountText,
-                                        items = userAccountsToStringFromLinkedHashMap(userAccountsMap = userAccountsMap)
-                                    ), userAccountsMap
-                                )
-                            ) {
-
-                                return true
-                            }
-                        } else if (purpose == "From") {
-
-                            if (handleFromAccountSelection(
-                                    getValidIndex(
-                                        map = userAccountsMap,
-                                        itemSpecification = Constants.accountText,
-                                        items = userAccountsToStringFromLinkedHashMap(userAccountsMap = userAccountsMap)
-                                    ), userAccountsMap
-                                )
-                            ) {
-
-                                return true
-                            }
-                        } else if (purpose == "Via.") {
-
-                            if (handleViaAccountSelection(
-                                    getValidIndex(
-                                        map = userAccountsMap,
-                                        itemSpecification = Constants.accountText,
-                                        items = userAccountsToStringFromLinkedHashMap(userAccountsMap = userAccountsMap)
-                                    ), userAccountsMap
-                                )
-                            ) {
-
-                                return true
-                            }
-                        }
+                        return getHandleAccountsResponseFromApiResult(
+                            selectedAccountId = getValidIndex(
+                                map = userAccountsMap,
+                                itemSpecification = Constants.accountText,
+                                items = userAccountsToStringFromLinkedHashMap(userAccountsMap = userAccountsMap)
+                            )
+                        )
                     }
 
                     "2" -> {
-                        if (purpose == "To") {
-
-                            if (handleToAccountSelection(
-                                    searchAccount(userAccountsMap), userAccountsMap
-                                )
-                            ) {
-
-                                return true
-                            }
-                        } else if (purpose == "From") {
-
-                            if (handleFromAccountSelection(
-                                    searchAccount(userAccountsMap), userAccountsMap
-                                )
-                            ) {
-
-                                return true
-                            }
-                        } else if (purpose == "Via.") {
-
-                            if (handleViaAccountSelection(
-                                    searchAccount(userAccountsMap), userAccountsMap
-                                )
-                            ) {
-
-                                return true
-                            }
-                        }
+                        return getHandleAccountsResponseFromApiResult(selectedAccountId = searchAccount(userAccountsMap = userAccountsMap))
                     }
 
                     "0" -> {
@@ -201,5 +154,17 @@ internal fun handleAccountsApiResponse(
             } while (choice != "0")
         }
     }
-    return false
+    return HandleAccountsApiResponseResult(isAccountIdSelected = false)
+}
+
+private fun getHandleAccountsResponseFromApiResult(selectedAccountId: UInt): HandleAccountsApiResponseResult {
+
+    if (selectedAccountId != 0u) {
+
+        return HandleAccountsApiResponseResult(
+            isAccountIdSelected = true,
+            selectedAccount = userAccountsMap[selectedAccountId]!!
+        )
+    }
+    return HandleAccountsApiResponseResult(isAccountIdSelected = false)
 }

@@ -4,7 +4,7 @@ import accountLedgerCli.api.response.AccountResponse
 import accountLedgerCli.api.response.AccountsResponse
 import java.util.*
 
-internal class ChooseAccountResult(val chosenAccountId: UInt, val chosenAccount: AccountResponse)
+internal class ChooseAccountResult(val chosenAccountId: UInt, val chosenAccount: AccountResponse? = null)
 
 internal object ChooseAccountUtils {
 
@@ -20,33 +20,37 @@ internal object ChooseAccountUtils {
             try {
 
                 accountIdInput = reader.nextInt().toUInt()
-                if (accountIdInput == 0u) return ChooseAccountResult(0u, AccountUtils.getBlankAccount())
+                if (accountIdInput == 0u) return AccountUtils.blankChosenAccount
 
-                val apiResponse = ApiUtils.getAccountsFull(userId = userId)
+                val apiResponse: Result<AccountsResponse> = ApiUtils.getAccountsFull(userId = userId)
                 if (apiResponse.isFailure) {
 
                     println("Error : ${(apiResponse.exceptionOrNull() as Exception).localizedMessage}")
 
-                    //        do {
-                    //            print("Retry (Y/N) ? : ")
-                    //            val input = readLine()
-                    //            when (input) {
-                    //                "Y", "" -> {
-                    //                    login()
-                    //                    return
-                    //                }
-                    //                "N" -> {
-                    //                }
-                    //                else -> println("Invalid option, try again...")
-                    //            }
-                    //        } while (input != "N")
+                    do {
+                        print("Retry (Y/N) ? : ")
+                        val input: String? = readLine()
+                        when (input) {
+                            "Y", "" -> {
+                                return chooseAccountById(userId = userId)
+                            }
+
+                            "N" -> {
+                            }
+
+                            else -> println("Invalid option, try again...")
+                        }
+                    } while (input != "N")
+
+                    return AccountUtils.blankChosenAccount
+
                 } else {
 
-                    val accountsResponseResult = apiResponse.getOrNull() as AccountsResponse
+                    val accountsResponseResult: AccountsResponse = apiResponse.getOrNull() as AccountsResponse
                     if (accountsResponseResult.status == 1) {
 
                         println("No Accounts...")
-                        return ChooseAccountResult(0u, AccountUtils.getBlankAccount())
+                        return AccountUtils.blankChosenAccount
 
                     } else {
 
@@ -56,6 +60,7 @@ internal object ChooseAccountUtils {
                         if (userAccountsMap.containsKey(accountIdInput)) {
 
                             return ChooseAccountResult(accountIdInput, userAccountsMap[accountIdInput]!!)
+
                         } else {
 
                             println("Invalid Account ID...")

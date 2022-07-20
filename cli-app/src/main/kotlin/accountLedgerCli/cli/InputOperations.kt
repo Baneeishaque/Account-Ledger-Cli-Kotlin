@@ -2,9 +2,9 @@ package accountLedgerCli.cli
 
 import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
 import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithTryPrompt
-import accountLedgerCli.cli.App.Companion.dateTimeString
 import accountLedgerCli.to_utils.InputUtils
 import accountLedgerCli.utils.ApiUtils
+import accountLedgerCli.utils.DateUtils
 
 internal fun <T> getValidIndex(
 
@@ -26,9 +26,8 @@ internal fun <T> getValidIndex(
     if (accountIdInput == "0") return 0u
 
     val inputForIndex = InputUtils.getValidInt(
-
-        accountIdInput,
-        "Invalid $itemSpecification Index...\nEnter $itemSpecification Index, or O to back : ${itemSpecification.first()}"
+        inputString = accountIdInput,
+        invalidMessage = "Invalid $itemSpecification Index...\nEnter $itemSpecification Index, or O to back : ${itemSpecification.first()}"
     )
     if (inputForIndex == 0u) {
 
@@ -43,7 +42,7 @@ internal fun <T> getValidIndex(
         } else {
 
             commandLinePrintMenuWithTryPrompt.printMenuWithTryPromptFromListOfCommands(
-                listOf("Invalid $itemSpecification Index, Try again ? (Y/N) : ")
+                listOfCommands = listOf("Invalid $itemSpecification Index, Try again ? (Y/N) : ")
             )
             return when (readLine()) {
 
@@ -64,7 +63,7 @@ internal fun <T> getValidIndex(
                 else -> {
 
                     commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
-                        listOf("Invalid Entry...")
+                        listOfCommands = listOf("Invalid Entry...")
                     )
                     getValidIndex(
 
@@ -78,41 +77,66 @@ internal fun <T> getValidIndex(
     }
 }
 
-//TODO : Enum for purpose
-internal fun chooseDepositTop(userId: UInt): Boolean {
+internal fun chooseDepositTop(userId: UInt): HandleAccountsApiResponseResult {
 
-    return handleAccountsApiResponse(apiResponse = getAccounts(userId = userId), purpose = "To")
+    return handleAccountsApiResponse(
+        apiResponse = getAccounts(userId = userId),
+        purpose = AccountsApiCallPurposeEnum.TO
+    )
 }
 
-internal fun chooseDepositFull(userId: UInt): Boolean {
+internal fun chooseDepositFull(userId: UInt): HandleAccountsApiResponseResult {
 
-    return handleAccountsApiResponse(apiResponse = ApiUtils.getAccountsFull(userId = userId), purpose = "To")
+    return handleAccountsApiResponse(
+        apiResponse = ApiUtils.getAccountsFull(userId = userId),
+        purpose = AccountsApiCallPurposeEnum.TO
+    )
 }
 
-internal fun chooseFromAccountTop(userId: UInt): Boolean {
+internal fun chooseWithdrawTop(userId: UInt): HandleAccountsApiResponseResult {
 
-    return handleAccountsApiResponse(apiResponse = getAccounts(userId = userId), purpose = "From")
+    return handleAccountsApiResponse(
+        apiResponse = getAccounts(userId = userId),
+        purpose = AccountsApiCallPurposeEnum.FROM
+    )
 }
 
-internal fun chooseFromAccountFull(userId: UInt): Boolean {
+internal fun chooseWithdrawFull(userId: UInt): HandleAccountsApiResponseResult {
 
-    return handleAccountsApiResponse(apiResponse = ApiUtils.getAccountsFull(userId), purpose = "From")
+    return handleAccountsApiResponse(
+        apiResponse = ApiUtils.getAccountsFull(userId),
+        purpose = AccountsApiCallPurposeEnum.FROM
+    )
 }
 
-internal fun chooseViaAccountFull(userId: UInt): Boolean {
+internal fun chooseViaTop(userId: UInt): HandleAccountsApiResponseResult {
 
-    return handleAccountsApiResponse(apiResponse = ApiUtils.getAccountsFull(userId), purpose = "Via.")
+    return handleAccountsApiResponse(
+        apiResponse = getAccounts(userId = userId),
+        purpose = AccountsApiCallPurposeEnum.VIA
+    )
 }
 
-internal fun enterDateWithTime(transactionTypeEnum: TransactionTypeEnum): String {
+internal fun chooseViaFull(userId: UInt): HandleAccountsApiResponseResult {
+
+    return handleAccountsApiResponse(
+        apiResponse = ApiUtils.getAccountsFull(userId),
+        purpose = AccountsApiCallPurposeEnum.VIA
+    )
+}
+
+internal fun enterDateWithTime(
+    dateTimeInText: String = DateUtils.getCurrentDateTimeText(),
+    transactionType: TransactionTypeEnum
+): String {
 
     print(
-        "$dateTimeString Correct? (Y/N), D+Tr to increase 1 Day with Time Reset, D+ to increase 1 Day, D2+Tr to increase 2 Days with Time Reset, D2+ to increase 2 Days,${if (transactionTypeEnum == TransactionTypeEnum.VIA) " Ex12 to exchange From & Via A/Cs, Ex23 to exchange Via & To A/Cs, Ex13 to exchange From & To A/Cs" else " Ex to exchange From & To A/Cs"} or B to Back : "
+        "$dateTimeInText Correct? (Y/N), D+Tr to increase 1 Day with Time Reset, D+ to increase 1 Day, D2+Tr to increase 2 Days with Time Reset, D2+ to increase 2 Days,${if (transactionType == TransactionTypeEnum.VIA) " Ex12 to exchange From & Via A/Cs, Ex23 to exchange Via & To A/Cs, Ex13 to exchange From & To A/Cs" else " Ex to exchange From & To A/Cs"} or B to Back : "
     )
     when (readLine()) {
         "Y", "" -> {
 
-            return dateTimeString
+            return dateTimeInText
         }
 
         "N" -> {
@@ -142,36 +166,36 @@ internal fun enterDateWithTime(transactionTypeEnum: TransactionTypeEnum): String
 
         "Ex" -> {
 
-            if (transactionTypeEnum == TransactionTypeEnum.VIA) {
-                invalidOptionMessage()
-                return enterDateWithTime(transactionTypeEnum = transactionTypeEnum)
+            if (transactionType == TransactionTypeEnum.VIA) {
+
+                return retryEnterDateWithTimeOnInvalidEntry(transactionType, dateTimeInText)
             }
             return "Ex"
         }
 
         "Ex12" -> {
 
-            if (transactionTypeEnum != TransactionTypeEnum.VIA) {
-                invalidOptionMessage()
-                return enterDateWithTime(transactionTypeEnum = transactionTypeEnum)
+            if (transactionType != TransactionTypeEnum.VIA) {
+
+                return retryEnterDateWithTimeOnInvalidEntry(transactionType, dateTimeInText)
             }
             return "Ex12"
         }
 
         "Ex23" -> {
 
-            if (transactionTypeEnum != TransactionTypeEnum.VIA) {
-                invalidOptionMessage()
-                return enterDateWithTime(transactionTypeEnum = transactionTypeEnum)
+            if (transactionType != TransactionTypeEnum.VIA) {
+
+                return retryEnterDateWithTimeOnInvalidEntry(transactionType, dateTimeInText)
             }
             return "Ex23"
         }
 
         "Ex13" -> {
 
-            if (transactionTypeEnum != TransactionTypeEnum.VIA) {
-                invalidOptionMessage()
-                return enterDateWithTime(transactionTypeEnum = transactionTypeEnum)
+            if (transactionType != TransactionTypeEnum.VIA) {
+
+                return retryEnterDateWithTimeOnInvalidEntry(transactionType, dateTimeInText)
             }
             return "Ex13"
         }
@@ -183,8 +207,13 @@ internal fun enterDateWithTime(transactionTypeEnum: TransactionTypeEnum): String
 
         else -> {
 
-            invalidOptionMessage()
-            return enterDateWithTime(transactionTypeEnum = transactionTypeEnum)
+            return retryEnterDateWithTimeOnInvalidEntry(transactionType, dateTimeInText)
         }
     }
+}
+
+private fun retryEnterDateWithTimeOnInvalidEntry(transactionType: TransactionTypeEnum, dateTimeInText: String): String {
+
+    invalidOptionMessage()
+    return enterDateWithTime(transactionType = transactionType, dateTimeInText = dateTimeInText)
 }

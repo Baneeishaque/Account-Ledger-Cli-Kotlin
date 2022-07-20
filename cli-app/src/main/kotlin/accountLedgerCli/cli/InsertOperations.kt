@@ -3,748 +3,907 @@ package accountLedgerCli.cli
 import accountLedgerCli.api.response.AccountResponse
 import accountLedgerCli.api.response.InsertionResponse
 import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
-import accountLedgerCli.cli.App.Companion.dateTimeString
-import accountLedgerCli.cli.App.Companion.fromAccount
-import accountLedgerCli.cli.App.Companion.toAccount
-import accountLedgerCli.cli.App.Companion.transactionAmount
-import accountLedgerCli.cli.App.Companion.transactionParticulars
-import accountLedgerCli.cli.App.Companion.userAccountsMap
-import accountLedgerCli.cli.App.Companion.viaAccount
 import accountLedgerCli.retrofit.data.TransactionDataSource
 import accountLedgerCli.to_utils.DateTimeUtils
 import accountLedgerCli.to_utils.InputUtils
 import accountLedgerCli.to_utils.MysqlUtils
-import accountLedgerCli.to_utils.ToDoUtils
-import accountLedgerCli.utils.ApiUtils
-import accountLedgerCli.utils.ChooseAccountUtils
+import accountLedgerCli.utils.*
 import kotlinx.coroutines.runBlocking
 
-internal val walletAccountId: EnvironmentVariableForWholeNumber =
-    getEnvironmentVariableValueForInsertOperation(
+object InsertOperations {
+
+    internal val walletAccount: EnvironmentVariableForWholeNumber = getEnvironmentVariableValueForInsertOperation(
         environmentVariableName = EnvironmentalFileEntries.walletAccountId.entryName.name,
         environmentVariableFormalName = EnvironmentalFileEntries.walletAccountId.entryFormalName
     )
 
-internal val frequent1AccountId: EnvironmentVariableForWholeNumber =
-    getEnvironmentVariableValueForInsertOperation(
+    internal val frequent1Account: EnvironmentVariableForWholeNumber = getEnvironmentVariableValueForInsertOperation(
         environmentVariableName = EnvironmentalFileEntries.frequent1AccountId.entryName.name,
         environmentVariableFormalName = EnvironmentalFileEntries.frequent1AccountId.entryFormalName
     )
 
-internal val frequent2AccountId: EnvironmentVariableForWholeNumber =
-    getEnvironmentVariableValueForInsertOperation(
+    internal val frequent2Account: EnvironmentVariableForWholeNumber = getEnvironmentVariableValueForInsertOperation(
         environmentVariableName = EnvironmentalFileEntries.frequent2AccountId.entryName.name,
         environmentVariableFormalName = EnvironmentalFileEntries.frequent2AccountId.entryFormalName
     )
 
-internal val frequent3AccountId: EnvironmentVariableForWholeNumber =
-    getEnvironmentVariableValueForInsertOperation(
+    internal val frequent3Account: EnvironmentVariableForWholeNumber = getEnvironmentVariableValueForInsertOperation(
         environmentVariableName = EnvironmentalFileEntries.frequent3AccountId.entryName.name,
         environmentVariableFormalName = EnvironmentalFileEntries.frequent3AccountId.entryFormalName
     )
 
-internal val bankAccountId: EnvironmentVariableForWholeNumber =
-    getEnvironmentVariableValueForInsertOperation(
+    internal val bankAccount: EnvironmentVariableForWholeNumber = getEnvironmentVariableValueForInsertOperation(
         environmentVariableName = EnvironmentalFileEntries.bankAccountId.entryName.name,
         environmentVariableFormalName = EnvironmentalFileEntries.bankAccountId.entryFormalName
     )
 
-internal fun insertQuickTransactionWallet(userId: UInt, username: String) {
-
-    if (walletAccountId.isAvailable && handleAccountsResponse(ApiUtils.getAccountsFull(userId = userId))) {
-
-        fromAccount = userAccountsMap[walletAccountId.value]!!
-        accountHome(userId = userId, username = username)
-    }
-}
-
-internal fun insertQuickTransactionWalletToFrequent1(userId: UInt, username: String) {
-
-    if (EnvironmentFileOperations.isEnvironmentVariablesAreAvailable(
-            environmentVariables = listOf(
-                walletAccountId, frequent1AccountId
-            )
-        ) && handleAccountsResponse(ApiUtils.getAccountsFull(userId = userId))
+    internal fun insertQuickTransactionFromAccount1toAccount2(
+        account1: EnvironmentVariableForAny<*>,
+        account2: EnvironmentVariableForAny<*>,
+        userId: UInt,
+        userAccountsMapLocal: LinkedHashMap<UInt, AccountResponse>,
+        username: String,
+        viaAccount: AccountResponse
     ) {
-        fromAccount = userAccountsMap[walletAccountId.value]!!
-        toAccount = userAccountsMap[frequent1AccountId.value]!!
-        transactionContinueCheck(
-            userId = userId,
-            username = username,
-            transactionTypeEnum = TransactionTypeEnum.NORMAL
-        )
-    }
-}
-
-internal fun insertQuickTransactionWalletToFrequent2(userId: UInt, username: String) {
-
-    if (EnvironmentFileOperations.isEnvironmentVariablesAreAvailable(
-            environmentVariables = listOf(
-                walletAccountId, frequent2AccountId
-            )
-        ) && handleAccountsResponse(ApiUtils.getAccountsFull(userId = userId))
-    ) {
-        fromAccount = userAccountsMap[walletAccountId.value]!!
-        toAccount = userAccountsMap[frequent2AccountId.value]!!
-        transactionContinueCheck(
-            userId = userId,
-            username = username,
-            transactionTypeEnum = TransactionTypeEnum.NORMAL
-        )
-    }
-
-}
-
-internal fun insertQuickTransactionWalletToFrequent3(userId: UInt, username: String) {
-
-    if (EnvironmentFileOperations.isEnvironmentVariablesAreAvailable(
-            environmentVariables = listOf(
-                walletAccountId, frequent3AccountId
-            )
-        ) && handleAccountsResponse(ApiUtils.getAccountsFull(userId = userId))
-    ) {
-        fromAccount = userAccountsMap[walletAccountId.value]!!
-        toAccount = userAccountsMap[frequent3AccountId.value]!!
-        transactionContinueCheck(userId = userId, username = username, transactionTypeEnum = TransactionTypeEnum.NORMAL)
-    }
-}
-
-internal fun insertQuickTransactionBank(userId: UInt, username: String) {
-
-    if (bankAccountId.isAvailable && handleAccountsResponse(ApiUtils.getAccountsFull(userId = userId))) {
-
-        fromAccount = userAccountsMap[bankAccountId.value]!!
-        accountHome(userId = userId, username = username)
-    }
-}
-
-internal fun insertQuickTransactionBankToFrequent1(userId: UInt, username: String) {
-
-    if (EnvironmentFileOperations.isEnvironmentVariablesAreAvailable(
-            environmentVariables = listOf(
-                bankAccountId,
-                frequent1AccountId
-            )
-        ) && handleAccountsResponse(ApiUtils.getAccountsFull(userId = userId))
-    ) {
-        fromAccount = userAccountsMap[bankAccountId.value]!!
-        toAccount = userAccountsMap[frequent1AccountId.value]!!
-        transactionContinueCheck(userId = userId, username = username, transactionTypeEnum = TransactionTypeEnum.NORMAL)
-    }
-}
-
-internal fun insertQuickTransactionBankToFrequent2(userId: UInt, username: String) {
-
-    if (EnvironmentFileOperations.isEnvironmentVariablesAreAvailable(
-            environmentVariables = listOf(
-                bankAccountId,
-                frequent2AccountId
-            )
-        ) && handleAccountsResponse(ApiUtils.getAccountsFull(userId = userId))
-    ) {
-        fromAccount = userAccountsMap[bankAccountId.value]!!
-        toAccount = userAccountsMap[frequent2AccountId.value]!!
-        transactionContinueCheck(userId = userId, username = username, transactionTypeEnum = TransactionTypeEnum.NORMAL)
-    }
-}
-
-internal fun insertQuickTransactionFrequent1(userId: UInt, username: String) {
-
-    if (frequent1AccountId.isAvailable && handleAccountsResponse(ApiUtils.getAccountsFull(userId = userId))) {
-
-        fromAccount = userAccountsMap[frequent1AccountId.value]!!
-        accountHome(userId = userId, username = username)
-    }
-}
-
-internal fun insertQuickTransactionBankToFrequent3(userId: UInt, username: String) {
-
-    if (EnvironmentFileOperations.isEnvironmentVariablesAreAvailable(
-            environmentVariables = listOf(
-                bankAccountId,
-                frequent3AccountId
-            )
-        ) && handleAccountsResponse(ApiUtils.getAccountsFull(userId = userId))
-    ) {
-        fromAccount = userAccountsMap[bankAccountId.value]!!
-        toAccount = userAccountsMap[frequent3AccountId.value]!!
-        transactionContinueCheck(userId = userId, username = username, transactionTypeEnum = TransactionTypeEnum.NORMAL)
-    }
-}
-
-internal fun insertQuickTransactionFrequent2(userId: UInt, username: String) {
-
-    if (frequent2AccountId.isAvailable && handleAccountsResponse(ApiUtils.getAccountsFull(userId = userId))) {
-
-        fromAccount = userAccountsMap[frequent2AccountId.value]!!
-        accountHome(userId = userId, username = username)
-    }
-}
-
-internal fun insertQuickTransactionFrequent3(userId: UInt, username: String) {
-
-    if (frequent3AccountId.isAvailable && handleAccountsResponse(ApiUtils.getAccountsFull(userId = userId))) {
-
-        fromAccount = userAccountsMap[frequent3AccountId.value]!!
-        accountHome(userId = userId, username = username)
-    }
-}
-
-internal fun addAccount() {
-
-    // Use all accounts for general account addition, or from account for child account addition
-    ToDoUtils.showTodo()
-}
-
-internal fun addTransaction(userId: UInt, username: String, transactionTypeEnum: TransactionTypeEnum) {
-
-    do {
-        var menuItems = listOf(
-            "\nUser : $username",
-            "Transaction Type : $transactionTypeEnum",
-            "From Account - ${fromAccount.id} : ${fromAccount.fullName}"
-        )
-        if (transactionTypeEnum == TransactionTypeEnum.VIA) {
-            menuItems = menuItems + listOf(
-                "Via. Account - ${viaAccount.id} : ${viaAccount.fullName}"
+        if (EnvironmentFileOperations.isEnvironmentVariablesAreAvailable(
+                environmentVariables = listOf(
+                    account1, account2
+                )
+            ) && handleAccountsResponse(ApiUtils.getAccountsFull(userId = userId))
+        ) {
+            transactionContinueCheck(
+                userId = userId,
+                username = username,
+                transactionType = TransactionTypeEnum.NORMAL,
+                fromAccount = userAccountsMapLocal[account1.value]!!,
+                viaAccount = viaAccount,
+                toAccount = userAccountsMapLocal[account2.value]!!
             )
         }
-        menuItems = menuItems + listOf(
-            "To Account - ${toAccount.id} : ${toAccount.fullName}",
-            "1 - Choose To Account From List - Top Levels",
-            "2 - Choose To Account From List - Full Names",
-            "3 - Input To Account ID Directly",
-            "4 - Choose From Account From List - Top Levels",
-            "5 - Choose From Account From List - Full Names",
-            "6 - Input From Account ID Directly",
-            "7 - Continue Transaction"
-        )
-        if (transactionTypeEnum == TransactionTypeEnum.VIA) {
-            menuItems = menuItems + listOf(
-                "8 - Exchange From & Via. A/Cs",
-                "9 - Exchange From & Via. A/Cs, Then Continue Transaction",
-                "10 - Exchange Via. & To A/Cs",
-                "11 - Exchange Via & To A/Cs, Then Continue Transaction",
-                "12 - Exchange From & To. A/Cs",
-                "13 - Exchange From & To A/Cs, Then Continue Transaction",
-                "14 - Choose Via. Account From List - Top Levels",
-                "15 - Choose Via. Account From List - Full Names",
-                "16 - Input Via. Account ID Directly"
-            )
-        } else {
-            menuItems = menuItems + listOf(
-                "8 - Exchange Accounts",
-                "9 - Exchange Accounts, Then Continue Transaction",
+    }
+
+    internal fun insertQuickTransactionOnAccount(
+        account: EnvironmentVariableForWholeNumber,
+        userId: UInt,
+        userAccountsMapLocal: LinkedHashMap<UInt, AccountResponse>,
+        username: String,
+        viaAccount: AccountResponse,
+        toAccount: AccountResponse,
+    ) {
+
+        if (account.isAvailable && handleAccountsResponse(ApiUtils.getAccountsFull(userId = userId))) {
+
+            Screens.accountHome(
+                userId = userId,
+                username = username,
+                fromAccount = userAccountsMapLocal[account.value]!!,
+                viaAccount = viaAccount,
+                toAccount = toAccount
             )
         }
-        menuItems = menuItems + listOf(
-            "0 - Back",
-            "",
-            "Enter Your Choice : "
-        )
-        commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
-            menuItems
-        )
-        val choice = readLine()
-        when (choice) {
-            "1" -> {
-                if (chooseDepositTop(userId)) {
+    }
 
-                    transactionContinueCheck(userId, username, transactionTypeEnum)
-                    return
-                }
-            }
+    internal fun addTransaction(
 
-            "2" -> {
-                if (chooseDepositFull(userId)) {
+        userId: UInt,
+        username: String,
+        transactionType: TransactionTypeEnum,
+        fromAccount: AccountResponse,
+        viaAccount: AccountResponse,
+        toAccount: AccountResponse
 
-                    transactionContinueCheck(userId, username, transactionTypeEnum)
-                    return
-                }
-            }
+    ) {
+        do {
+            commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
+                listOfCommands = Screens.getUserWithCurrentAccountSelectionsAsText(
 
-            "3" -> {
+                    username = username,
+                    fromAccount = fromAccount,
+                    viaAccount = viaAccount,
+                    toAccount = toAccount,
+                    transactionType = transactionType
 
-                val chooseAccountResult = ChooseAccountUtils.chooseAccountById(userId)
-                if (chooseAccountResult.chosenAccountId != 0u) {
+                ) + listOf(
 
-                    toAccount = chooseAccountResult.chosenAccount
-                    transactionContinueCheck(userId, username, transactionTypeEnum)
-                    return
-                }
-            }
+                    "1 - Choose To Account From List - Top Levels",
+                    "2 - Choose To Account From List - Full Names",
+                    "3 - Input To Account ID Directly",
+                    "4 - Choose From Account From List - Top Levels",
+                    "5 - Choose From Account From List - Full Names",
+                    "6 - Input From Account ID Directly",
+                    "7 - Continue Transaction",
 
-            "4" -> {
-                if (chooseFromAccountTop(userId)) {
+                    if (transactionType == TransactionTypeEnum.VIA) {
 
-                    transactionContinueCheck(userId, username, transactionTypeEnum)
-                    return
-                }
-            }
+                        "8 - Exchange From & Via. A/Cs\n" + "9 - Exchange From & Via. A/Cs, Then Continue Transaction\n" + "10 - Exchange Via. & To A/Cs\n" + "11 - Exchange Via & To A/Cs, Then Continue Transaction\n" + "12 - Exchange From & To. A/Cs\n" + "13 - Exchange From & To A/Cs, Then Continue Transaction\n" + "14 - Choose Via. Account From List - Top Levels\n" + "15 - Choose Via. Account From List - Full Names\n" + "16 - Input Via. Account ID Directly"
 
-            "5" -> {
-                if (chooseFromAccountFull(userId)) {
+                    } else {
 
-                    transactionContinueCheck(userId, username, transactionTypeEnum)
-                    return
-                }
-            }
-
-            "6" -> {
-                val chooseAccountResult = ChooseAccountUtils.chooseAccountById(userId)
-                if (chooseAccountResult.chosenAccountId != 0u) {
-
-                    fromAccount = chooseAccountResult.chosenAccount
-                    transactionContinueCheck(userId, username, transactionTypeEnum)
-                    return
-                }
-            }
-
-            "7" -> {
-
-                transactionContinueCheck(userId, username, transactionTypeEnum)
-                return
-            }
-
-            "8" -> {
-
-                if (transactionTypeEnum == TransactionTypeEnum.VIA) {
-
-                    exchangeFromAndViaAccounts()
-
-                } else {
-
-                    exchangeFromAndToAccounts()
-                }
-                addTransaction(userId = userId, username = username, transactionTypeEnum = transactionTypeEnum)
-                return
-            }
-
-            "9" -> {
-
-                if (transactionTypeEnum == TransactionTypeEnum.VIA) {
-
-                    exchangeFromAndViaAccounts()
-
-                } else {
-
-                    exchangeFromAndToAccounts()
-                }
-                transactionContinueCheck(userId, username, transactionTypeEnum)
-                return
-            }
-
-            "10" -> {
-                if (transactionTypeEnum == TransactionTypeEnum.VIA) {
-
-                    exchangeToAndViaAccounts()
-                    addTransaction(userId = userId, username = username, transactionTypeEnum = transactionTypeEnum)
-                    return
-
-                } else {
-                    invalidOptionMessage()
-                }
-            }
-
-            "11" -> {
-                if (transactionTypeEnum == TransactionTypeEnum.VIA) {
-
-                    exchangeToAndViaAccounts()
-                    transactionContinueCheck(userId, username, transactionTypeEnum)
-                    return
-
-                } else {
-                    invalidOptionMessage()
-                }
-            }
-
-            "12" -> {
-                if (transactionTypeEnum == TransactionTypeEnum.VIA) {
-
-                    exchangeFromAndToAccounts()
-                    addTransaction(userId = userId, username = username, transactionTypeEnum = transactionTypeEnum)
-                    return
-
-                } else {
-                    invalidOptionMessage()
-                }
-            }
-
-            "13" -> {
-                if (transactionTypeEnum == TransactionTypeEnum.VIA) {
-
-                    exchangeFromAndToAccounts()
-                    transactionContinueCheck(userId, username, transactionTypeEnum)
-                    return
-
-                } else {
-                    invalidOptionMessage()
-                }
-            }
-
-            "14" -> {
-                if (transactionTypeEnum == TransactionTypeEnum.VIA) {
-
-                    ToDoUtils.showTodo()
-                    return
-
-                } else {
-                    invalidOptionMessage()
-                }
-            }
-
-            "15" -> {
-                if (transactionTypeEnum == TransactionTypeEnum.VIA) {
-
-                    if (chooseViaAccountFull(userId)) {
-
-                        transactionContinueCheck(userId, username, TransactionTypeEnum.VIA)
+                        "8 - Exchange Accounts\n" + "9 - Exchange Accounts, Then Continue Transaction"
+                    },
+                    "0 - Back",
+                    "",
+                    "Enter Your Choice : "
+                )
+            )
+            val choice: String? = readLine()
+            when (choice) {
+                "1" -> {
+                    if (processChooseAccountResult(
+                            chooseAccountResult = chooseDepositTop(userId = userId),
+                            userId = userId,
+                            username = username,
+                            transactionType = transactionType,
+                            account1 = fromAccount,
+                            account2 = viaAccount,
+                            purpose = AccountsApiCallPurposeEnum.TO
+                        )
+                    ) {
                         return
                     }
-                } else {
-                    invalidOptionMessage()
                 }
-            }
 
-            "16" -> {
-                if (transactionTypeEnum == TransactionTypeEnum.VIA) {
+                "2" -> {
+                    if (processChooseAccountResult(
+                            chooseAccountResult = chooseDepositFull(userId = userId),
+                            userId = userId,
+                            username = username,
+                            transactionType = transactionType,
+                            account1 = fromAccount,
+                            account2 = viaAccount,
+                            purpose = AccountsApiCallPurposeEnum.TO
+                        )
+                    ) {
+                        return
+                    }
+                }
 
-                    val chooseAccountResult = ChooseAccountUtils.chooseAccountById(userId)
+                "3" -> {
+
+                    val chooseAccountResult: ChooseAccountResult = ChooseAccountUtils.chooseAccountById(userId = userId)
                     if (chooseAccountResult.chosenAccountId != 0u) {
 
-                        viaAccount = chooseAccountResult.chosenAccount
-                        transactionContinueCheck(userId, username, transactionTypeEnum)
+                        processSelectedAccount(
+                            selectedAccount = chooseAccountResult.chosenAccount!!,
+                            userId = userId,
+                            username = username,
+                            transactionType = transactionType,
+                            account1 = fromAccount,
+                            account2 = viaAccount,
+                            purpose = AccountsApiCallPurposeEnum.TO
+                        )
                         return
                     }
-                } else {
-                    invalidOptionMessage()
-                }
-            }
-
-            "0" -> {}
-            else -> invalidOptionMessage()
-        }
-    } while (choice != "0")
-}
-
-internal fun addTransactionStep2(
-    userId: UInt,
-    username: String,
-    localFromAccount: AccountResponse,
-    localToAccount: AccountResponse,
-    transactionTypeEnum: TransactionTypeEnum,
-    localViaAccount: AccountResponse,
-    isViaStep: Boolean = false,
-    isTwoWayStep: Boolean = false
-): Boolean {
-
-    var menuItems = listOf(
-        "\nUser : $username",
-        "Withdraw Account - ${fromAccount.id} : ${fromAccount.fullName}",
-    )
-    if (transactionTypeEnum == TransactionTypeEnum.VIA) {
-        menuItems = menuItems + listOf(
-            "Intermediate Account - ${viaAccount.id} : ${viaAccount.fullName}",
-        )
-    }
-    menuItems = menuItems + listOf(
-        "Deposit Account - ${toAccount.id} : ${toAccount.fullName}",
-    )
-    if (isViaStep || isTwoWayStep) {
-
-        return invokeAutomatedInsertTransaction(
-            userId = userId,
-            eventDateTime = dateTimeString,
-            particulars = transactionParticulars,
-            amount = transactionAmount,
-            localFromAccount = localFromAccount,
-            localToAccount = localToAccount
-        )
-
-    } else {
-
-        menuItems = menuItems + listOf(
-            // TODO : Complete back
-            "Enter Time : "
-        )
-        commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(menuItems)
-        when (val inputDateTimeString = enterDateWithTime(transactionTypeEnum = transactionTypeEnum)) {
-            "D+Tr" -> {
-
-                dateTimeString =
-                    DateTimeUtils.add1DayWith9ClockTimeToDateTimeString(
-                        dateTimeString = dateTimeString
-                    )
-                return invokeAddTransactionStep2(
-                    userId = userId,
-                    username = username,
-                    localFromAccount = localFromAccount,
-                    localToAccount = localToAccount,
-                    transactionTypeEnum = transactionTypeEnum,
-                    localViaAccount = localViaAccount
-                )
-            }
-
-            "D+" -> {
-
-                dateTimeString = DateTimeUtils.add1DayToDateTimeString(dateTimeString = dateTimeString)
-                return invokeAddTransactionStep2(
-                    userId = userId,
-                    username = username,
-                    localFromAccount = localFromAccount,
-                    localToAccount = localToAccount,
-                    transactionTypeEnum = transactionTypeEnum,
-                    localViaAccount = localViaAccount
-                )
-            }
-
-            "D2+Tr" -> {
-
-                dateTimeString =
-                    DateTimeUtils.add2DaysWith9ClockTimeToDateTimeString(
-                        dateTimeString = dateTimeString
-                    )
-                return invokeAddTransactionStep2(
-                    userId = userId,
-                    username = username,
-                    localFromAccount = localFromAccount,
-                    localToAccount = localToAccount,
-                    transactionTypeEnum = transactionTypeEnum,
-                    localViaAccount = localViaAccount
-                )
-            }
-
-            "D2+" -> {
-
-                dateTimeString = DateTimeUtils.add2DaysToDateTimeString(dateTimeString = dateTimeString)
-                return invokeAddTransactionStep2(
-                    userId = userId,
-                    username = username,
-                    localFromAccount = localFromAccount,
-                    localToAccount = localToAccount,
-                    transactionTypeEnum = transactionTypeEnum,
-                    localViaAccount = localViaAccount
-                )
-            }
-
-            "Ex" -> {
-
-                return ex13(userId, username, localFromAccount, localToAccount, transactionTypeEnum, localViaAccount)
-            }
-
-            "Ex13" -> {
-
-                return ex13(userId, username, localFromAccount, localToAccount, transactionTypeEnum, localViaAccount)
-            }
-
-            "Ex12" -> {
-
-                return ex12(userId, username, localFromAccount, localToAccount, transactionTypeEnum, localViaAccount)
-            }
-
-            "Ex23" -> {
-
-                return ex23(userId, username, localFromAccount, localToAccount, transactionTypeEnum, localViaAccount)
-            }
-
-            "B" -> {
-
-                return false
-            }
-
-            else -> {
-
-                dateTimeString = inputDateTimeString
-
-                print("Enter Particulars (Current Value - $transactionParticulars): ")
-                // TODO : Back to fields, or complete back
-                val transactionParticularsInput = readLine()!!
-                if (transactionParticularsInput.isNotEmpty()) {
-
-                    transactionParticulars = transactionParticularsInput
                 }
 
-                print("Enter Amount (Current Value - $transactionAmount) : ")
-                val transactionAmountInput = readLine()!!
-                if (transactionAmountInput.isNotEmpty()) {
-
-                    transactionAmount =
-                        InputUtils.getValidFloat(transactionAmountInput, "Invalid Amount : Try Again")
-                }
-
-                do {
-                    commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
-                        listOf(
-                            "\nTime - $dateTimeString",
-                            "Account - ${localFromAccount.id} : ${localFromAccount.fullName}",
-                            "Deposit Account - ${localToAccount.id} : ${localToAccount.fullName}",
-                            "Particulars - $transactionParticulars",
-                            "Amount - $transactionAmount",
-                            "\nCorrect ? (Y/N),${if (transactionTypeEnum == TransactionTypeEnum.VIA) " Ex12 to exchange From & Via A/Cs, Ex23 to exchange Via & To A/Cs, Ex13 to exchange From & To A/Cs" else " Ex to exchange From & To A/Cs"} or B to back : "
+                "4" -> {
+                    if (processChooseAccountResult(
+                            chooseAccountResult = chooseWithdrawTop(userId = userId),
+                            userId = userId,
+                            username = username,
+                            transactionType = transactionType,
+                            account1 = viaAccount,
+                            account2 = toAccount,
+                            purpose = AccountsApiCallPurposeEnum.FROM
                         )
+                    ) {
+                        return
+                    }
+                }
+
+                "5" -> {
+                    if (processChooseAccountResult(
+                            chooseAccountResult = chooseWithdrawFull(userId = userId),
+                            userId = userId,
+                            username = username,
+                            transactionType = transactionType,
+                            account1 = viaAccount,
+                            account2 = toAccount,
+                            purpose = AccountsApiCallPurposeEnum.FROM
+                        )
+                    ) {
+                        return
+                    }
+                }
+
+                "6" -> {
+                    val chooseAccountResult: ChooseAccountResult = ChooseAccountUtils.chooseAccountById(userId = userId)
+                    if (chooseAccountResult.chosenAccountId != 0u) {
+
+                        processSelectedAccount(
+                            selectedAccount = chooseAccountResult.chosenAccount!!,
+                            userId = userId,
+                            username = username,
+                            transactionType = transactionType,
+                            account1 = viaAccount,
+                            account2 = toAccount,
+                            purpose = AccountsApiCallPurposeEnum.FROM
+                        )
+                        return
+                    }
+                }
+
+                "7" -> {
+
+                    transactionContinueCheck(
+                        userId = userId,
+                        username = username,
+                        transactionType = transactionType,
+                        fromAccount = fromAccount,
+                        viaAccount = viaAccount,
+                        toAccount = toAccount
                     )
-                    val isCorrect = readLine()
-                    when (isCorrect) {
-                        "Y", "" -> {
-                            return invokeInsertTransaction(
-                                userId = userId,
-                                eventDateTime = dateTimeString,
-                                particulars = transactionParticulars,
-                                amount = transactionAmount,
-                                localFromAccount = localFromAccount,
-                                localToAccount = localToAccount
-                            )
-                        }
-                        // TODO : Back to fields
-                        "N" ->
-                            return invokeAddTransactionStep2(
+                    return
+                }
+
+                "8" -> {
+
+                    if (transactionType == TransactionTypeEnum.VIA) {
+
+                        addTransaction(
+                            userId = userId,
+                            username = username,
+                            transactionType = transactionType,
+                            fromAccount = viaAccount,
+                            viaAccount = fromAccount,
+                            toAccount = toAccount
+                        )
+
+                    } else {
+
+                        addTransaction(
+                            userId = userId,
+                            username = username,
+                            transactionType = transactionType,
+                            fromAccount = toAccount,
+                            viaAccount = viaAccount,
+                            toAccount = fromAccount
+                        )
+                    }
+                    return
+                }
+
+                "9" -> {
+
+                    if (transactionType == TransactionTypeEnum.VIA) {
+
+                        transactionContinueCheck(
+                            userId = userId,
+                            username = username,
+                            transactionType = transactionType,
+                            fromAccount = viaAccount,
+                            viaAccount = fromAccount,
+                            toAccount = toAccount
+                        )
+                    } else {
+
+                        transactionContinueCheck(
+                            userId = userId,
+                            username = username,
+                            transactionType = transactionType,
+                            fromAccount = toAccount,
+                            viaAccount = viaAccount,
+                            toAccount = fromAccount
+                        )
+                    }
+                    return
+                }
+
+                "10" -> {
+                    if (transactionType == TransactionTypeEnum.VIA) {
+
+                        addTransaction(
+                            userId = userId,
+                            username = username,
+                            transactionType = transactionType,
+                            fromAccount = fromAccount,
+                            viaAccount = toAccount,
+                            toAccount = viaAccount
+                        )
+                        return
+
+                    } else {
+                        invalidOptionMessage()
+                    }
+                }
+
+                "11" -> {
+                    if (transactionType == TransactionTypeEnum.VIA) {
+
+                        transactionContinueCheck(
+                            userId = userId,
+                            username = username,
+                            transactionType = transactionType,
+                            fromAccount = fromAccount,
+                            viaAccount = toAccount,
+                            toAccount = viaAccount
+                        )
+                        return
+
+                    } else {
+                        invalidOptionMessage()
+                    }
+                }
+
+                "12" -> {
+                    if (transactionType == TransactionTypeEnum.VIA) {
+
+                        addTransaction(
+                            userId = userId,
+                            username = username,
+                            transactionType = transactionType,
+                            fromAccount = toAccount,
+                            viaAccount = viaAccount,
+                            toAccount = fromAccount
+                        )
+                        return
+
+                    } else {
+                        invalidOptionMessage()
+                    }
+                }
+
+                "13" -> {
+                    if (transactionType == TransactionTypeEnum.VIA) {
+
+                        transactionContinueCheck(
+                            userId = userId,
+                            username = username,
+                            transactionType = transactionType,
+                            fromAccount = toAccount,
+                            viaAccount = viaAccount,
+                            toAccount = fromAccount
+                        )
+                        return
+
+                    } else {
+                        invalidOptionMessage()
+                    }
+                }
+
+                "14" -> {
+
+                    if (transactionType == TransactionTypeEnum.VIA) {
+
+                        if (processChooseAccountResult(
+                                chooseAccountResult = chooseViaTop(userId = userId),
                                 userId = userId,
                                 username = username,
-                                localFromAccount = localFromAccount,
-                                localToAccount = localToAccount,
-                                transactionTypeEnum = transactionTypeEnum,
-                                localViaAccount = localViaAccount
+                                transactionType = transactionType,
+                                account1 = fromAccount,
+                                account2 = toAccount,
+                                purpose = AccountsApiCallPurposeEnum.VIA
                             )
-
-                        "Ex" -> {
-
-                            if (transactionTypeEnum == TransactionTypeEnum.NORMAL) {
-                                return ex13(
-                                    userId,
-                                    username,
-                                    localFromAccount,
-                                    localToAccount,
-                                    transactionTypeEnum,
-                                    localViaAccount
-                                )
-                            } else {
-                                invalidOptionMessage()
-                            }
+                        ) {
+                            return
                         }
-
-                        "Ex13" -> {
-                            if (transactionTypeEnum == TransactionTypeEnum.VIA) {
-                                return ex13(
-                                    userId,
-                                    username,
-                                    localFromAccount,
-                                    localToAccount,
-                                    transactionTypeEnum,
-                                    localViaAccount
-                                )
-                            } else {
-                                invalidOptionMessage()
-                            }
-                        }
-
-                        "Ex12" -> {
-
-                            if (transactionTypeEnum == TransactionTypeEnum.VIA) {
-                                return ex12(
-                                    userId,
-                                    username,
-                                    localFromAccount,
-                                    localToAccount,
-                                    transactionTypeEnum,
-                                    localViaAccount
-                                )
-                            } else {
-                                invalidOptionMessage()
-                            }
-                        }
-
-                        "Ex23" -> {
-
-                            if (transactionTypeEnum == TransactionTypeEnum.VIA) {
-                                return ex23(
-                                    userId,
-                                    username,
-                                    localFromAccount,
-                                    localToAccount,
-                                    transactionTypeEnum,
-                                    localViaAccount
-                                )
-                            } else {
-                                invalidOptionMessage()
-                            }
-                        }
-
-                        else -> invalidOptionMessage()
+                    } else {
+                        invalidOptionMessage()
                     }
-                } while (isCorrect != "B")
+                }
+
+                "15" -> {
+
+                    if (transactionType == TransactionTypeEnum.VIA) {
+
+                        if (processChooseAccountResult(
+                                chooseAccountResult = chooseViaFull(userId = userId),
+                                userId = userId,
+                                username = username,
+                                transactionType = transactionType,
+                                account1 = fromAccount,
+                                account2 = toAccount,
+                                purpose = AccountsApiCallPurposeEnum.VIA
+                            )
+                        ) {
+                            return
+                        }
+                    } else {
+                        invalidOptionMessage()
+                    }
+                }
+
+                "16" -> {
+
+                    if (transactionType == TransactionTypeEnum.VIA) {
+
+                        val chooseAccountResult: ChooseAccountResult =
+                            ChooseAccountUtils.chooseAccountById(userId = userId)
+                        if (chooseAccountResult.chosenAccountId != 0u) {
+
+                            processSelectedAccount(
+                                selectedAccount = chooseAccountResult.chosenAccount!!,
+                                userId = userId,
+                                username = username,
+                                transactionType = transactionType,
+                                account1 = fromAccount,
+                                account2 = toAccount,
+                                purpose = AccountsApiCallPurposeEnum.VIA
+                            )
+                            return
+                        }
+                    } else {
+                        invalidOptionMessage()
+                    }
+                }
+
+                "0" -> {}
+                else -> invalidOptionMessage()
             }
+        } while (choice != "0")
+    }
+
+
+    private fun processChooseAccountResult(
+        chooseAccountResult: HandleAccountsApiResponseResult,
+        userId: UInt,
+        username: String,
+        transactionType: TransactionTypeEnum,
+        account1: AccountResponse,
+        account2: AccountResponse,
+        purpose: AccountsApiCallPurposeEnum
+    ): Boolean {
+        if (chooseAccountResult.isAccountIdSelected) {
+            processSelectedAccount(
+                selectedAccount = chooseAccountResult.selectedAccount!!,
+                userId = userId,
+                username = username,
+                transactionType = transactionType,
+                account1 = account1,
+                account2 = account2,
+                purpose = purpose
+            )
+            return true
         }
         return false
     }
-}
 
-internal fun insertTransaction(
-    userid: UInt,
-    eventDateTime: String,
-    particulars: String,
-    amount: Float,
-    localFromAccount: AccountResponse,
-    localToAccount: AccountResponse
-): Boolean {
-
-    val apiResponse: Result<InsertionResponse>
-    val userTransactionDataSource = TransactionDataSource()
-    println("Contacting Server...")
-    val eventDateTimeConversionResult =
-        MysqlUtils.normalDateTimeStringToMysqlDateTimeString(normalDateTimeString = eventDateTime)
-    if (eventDateTimeConversionResult.first) {
-        runBlocking {
-            apiResponse =
-                userTransactionDataSource.insertTransaction(
-                    userId = userid,
-                    fromAccountId = localFromAccount.id,
-                    eventDateTimeString = eventDateTimeConversionResult.second,
-                    particulars = particulars,
-                    amount = amount,
-                    toAccountId = localToAccount.id
+    private fun processSelectedAccount(
+        selectedAccount: AccountResponse,
+        userId: UInt,
+        username: String,
+        transactionType: TransactionTypeEnum,
+        account1: AccountResponse,
+        account2: AccountResponse,
+        purpose: AccountsApiCallPurposeEnum
+    ) {
+        when (purpose) {
+            AccountsApiCallPurposeEnum.TO -> {
+                transactionContinueCheck(
+                    userId = userId,
+                    username = username,
+                    transactionType = transactionType,
+                    fromAccount = account1,
+                    viaAccount = account2,
+                    toAccount = selectedAccount
                 )
-        }
-        //    println("Response : $apiResponse")
-        if (apiResponse.isFailure) {
+            }
 
-            println("Error : ${(apiResponse.exceptionOrNull() as Exception).localizedMessage}")
-            //        do {
-            //            print("Retry (Y/N) ? : ")
-            //            val input = readLine()
-            //            when (input) {
-            //                "Y", "" -> {
-            //                    login()
-            //                    return
-            //                }
-            //                "N" -> {
-            //                }
-            //                else -> println("Invalid option, try again...")
-            //            }
-            //        } while (input != "N")
-        } else {
+            AccountsApiCallPurposeEnum.FROM -> {
+                transactionContinueCheck(
+                    userId = userId,
+                    username = username,
+                    transactionType = transactionType,
+                    fromAccount = selectedAccount,
+                    viaAccount = account1,
+                    toAccount = account2
+                )
+            }
 
-            val insertionResponseResult = apiResponse.getOrNull() as InsertionResponse
-            if (insertionResponseResult.status == 0) {
-
-                println("OK...")
-                return true
-            } else {
-
-                println("Server Execution Error : ${insertionResponseResult.error}")
+            AccountsApiCallPurposeEnum.VIA -> {
+                transactionContinueCheck(
+                    userId = userId,
+                    username = username,
+                    transactionType = transactionType,
+                    fromAccount = account1,
+                    viaAccount = selectedAccount,
+                    toAccount = account2
+                )
             }
         }
     }
-    return false
+
+    internal fun addTransactionStep2(
+
+        userId: UInt,
+        username: String,
+        transactionType: TransactionTypeEnum,
+        fromAccount: AccountResponse,
+        viaAccount: AccountResponse,
+        toAccount: AccountResponse,
+        isViaStep: Boolean = false,
+        isTwoWayStep: Boolean = false,
+        dateTimeInText: String = DateUtils.getCurrentDateTimeText(),
+        transactionParticulars: String = "",
+        transactionAmount: Float = 0F
+
+    ): Boolean {
+
+        var localDateTimeInText: String = dateTimeInText
+        var localTransactionParticulars: String = transactionParticulars
+        var localTransactionAmount: Float = transactionAmount
+
+        var menuItems: List<String> = listOf(
+            "\nUser : $username",
+            "Withdraw Account - ${fromAccount.id} : ${fromAccount.fullName}",
+        )
+        if (transactionType == TransactionTypeEnum.VIA) {
+            menuItems = menuItems + listOf(
+                "Intermediate Account - ${viaAccount.id} : ${viaAccount.fullName}",
+            )
+        }
+        menuItems = menuItems + listOf(
+            "Deposit Account - ${toAccount.id} : ${toAccount.fullName}",
+        )
+        if (isViaStep || isTwoWayStep) {
+
+            return invokeAutomatedInsertTransaction(
+                userId = userId,
+                eventDateTime = localDateTimeInText,
+                particulars = localTransactionParticulars,
+                amount = localTransactionAmount,
+                fromAccount = fromAccount,
+                toAccount = toAccount
+            )
+
+        } else {
+
+            commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
+                listOfCommands = menuItems + listOf(
+                    // TODO : Option for Complete Back
+                    "Enter Time : "
+                )
+            )
+            when (val inputDateTimeInText: String =
+                enterDateWithTime(transactionType = transactionType, dateTimeInText = localDateTimeInText)) {
+                "D+Tr" -> {
+
+                    return addTransactionStep2(
+                        userId = userId,
+                        username = username,
+                        transactionType = transactionType,
+                        fromAccount = fromAccount,
+                        viaAccount = viaAccount,
+                        toAccount = toAccount,
+                        dateTimeInText = DateTimeUtils.add1DayWith9ClockTimeToDateTimeInText(dateTimeInText = localDateTimeInText),
+                        transactionParticulars = localTransactionParticulars,
+                        transactionAmount = localTransactionAmount
+                    )
+                }
+
+                "D+" -> {
+
+                    return addTransactionStep2(
+                        userId = userId,
+                        username = username,
+                        transactionType = transactionType,
+                        fromAccount = fromAccount,
+                        viaAccount = viaAccount,
+                        toAccount = toAccount,
+                        dateTimeInText = DateTimeUtils.add1DayToDateTimeInText(dateTimeInText = localDateTimeInText),
+                        transactionParticulars = localTransactionParticulars,
+                        transactionAmount = localTransactionAmount
+                    )
+                }
+
+                "D2+Tr" -> {
+
+                    return addTransactionStep2(
+                        userId = userId,
+                        username = username,
+                        transactionType = transactionType,
+                        fromAccount = fromAccount,
+                        viaAccount = viaAccount,
+                        toAccount = toAccount,
+                        dateTimeInText = DateTimeUtils.add2DaysWith9ClockTimeToDateTimeInText(
+                            dateTimeInText = localDateTimeInText
+                        ),
+                        transactionParticulars = localTransactionParticulars,
+                        transactionAmount = localTransactionAmount
+                    )
+                }
+
+                "D2+" -> {
+
+                    return addTransactionStep2(
+                        userId = userId,
+                        username = username,
+                        transactionType = transactionType,
+                        fromAccount = fromAccount,
+                        viaAccount = viaAccount,
+                        toAccount = toAccount,
+                        dateTimeInText = DateTimeUtils.add2DaysToDateTimeString(dateTimeInText = localDateTimeInText),
+                        transactionParticulars = localTransactionParticulars,
+                        transactionAmount = localTransactionAmount
+                    )
+                }
+
+                "Ex", "Ex13" -> {
+
+                    return addTransactionStep2(
+                        userId = userId,
+                        username = username,
+                        transactionType = transactionType,
+                        fromAccount = toAccount,
+                        viaAccount = viaAccount,
+                        toAccount = fromAccount,
+                        dateTimeInText = DateTimeUtils.add2DaysToDateTimeString(dateTimeInText = localDateTimeInText),
+                        transactionParticulars = localTransactionParticulars,
+                        transactionAmount = localTransactionAmount
+                    )
+                }
+
+                "Ex12" -> {
+
+                    return addTransactionStep2(
+                        userId = userId,
+                        username = username,
+                        transactionType = transactionType,
+                        fromAccount = viaAccount,
+                        viaAccount = fromAccount,
+                        toAccount = toAccount,
+                        dateTimeInText = DateTimeUtils.add2DaysToDateTimeString(dateTimeInText = localDateTimeInText),
+                        transactionParticulars = localTransactionParticulars,
+                        transactionAmount = localTransactionAmount
+                    )
+                }
+
+                "Ex23" -> {
+
+                    return addTransactionStep2(
+                        userId = userId,
+                        username = username,
+                        transactionType = transactionType,
+                        fromAccount = fromAccount,
+                        viaAccount = toAccount,
+                        toAccount = viaAccount,
+                        dateTimeInText = DateTimeUtils.add2DaysToDateTimeString(dateTimeInText = localDateTimeInText),
+                        transactionParticulars = localTransactionParticulars,
+                        transactionAmount = localTransactionAmount
+                    )
+                }
+
+                "B" -> {
+
+                    return false
+                }
+
+                else -> {
+
+                    localDateTimeInText = inputDateTimeInText
+
+                    print("Enter Particulars (Current Value - $localTransactionParticulars): ")
+                    // TODO : Back to fields, or complete back
+                    val transactionParticularsInput: String = readLine()!!
+                    if (transactionParticularsInput.isNotEmpty()) {
+
+                        localTransactionParticulars = transactionParticularsInput
+                    }
+
+                    print("Enter Amount (Current Value - $localTransactionAmount) : ")
+                    val transactionAmountInput: String = readLine()!!
+                    if (transactionAmountInput.isNotEmpty()) {
+
+                        localTransactionAmount =
+                            InputUtils.getValidFloat(transactionAmountInput, "Invalid Amount, Try Again : ")
+                    }
+
+                    do {
+                        menuItems = listOf(
+                            "\nTime - $localDateTimeInText",
+                            "Withdraw Account - ${fromAccount.id} : ${fromAccount.fullName}"
+                        )
+                        if (transactionType == TransactionTypeEnum.VIA) {
+                            menuItems =
+                                menuItems + listOf("Intermediate Account - ${viaAccount.id} : ${viaAccount.fullName}")
+                        }
+                        menuItems = menuItems + listOf(
+                            "Deposit Account - ${toAccount.id} : ${toAccount.fullName}",
+                            "Particulars - $localTransactionParticulars",
+                            "Amount - $localTransactionAmount",
+                            "\nCorrect ? (Y/N), Enter ${if (transactionType == TransactionTypeEnum.VIA) "Ex12 to exchange From & Via A/Cs, Ex23 to exchange Via & To A/Cs, Ex13 to exchange From & To A/Cs" else "Ex to exchange From & To A/Cs"} or B to back : "
+                        )
+                        commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(listOfCommands = menuItems)
+                        val isCorrect: String? = readLine()
+                        when (isCorrect) {
+                            "Y", "" -> {
+                                return insertTransaction(
+                                    userid = userId,
+                                    eventDateTime = localDateTimeInText,
+                                    particulars = localTransactionParticulars,
+                                    amount = localTransactionAmount,
+                                    fromAccount = fromAccount,
+                                    toAccount = toAccount
+                                )
+                            }
+                            // TODO : Back to fields
+                            "N" -> return addTransactionStep2(
+                                userId = userId,
+                                username = username,
+                                transactionType = transactionType,
+                                fromAccount = fromAccount,
+                                viaAccount = toAccount,
+                                toAccount = viaAccount,
+                                dateTimeInText = DateTimeUtils.add2DaysToDateTimeString(dateTimeInText = localDateTimeInText),
+                                transactionParticulars = localTransactionParticulars,
+                                transactionAmount = localTransactionAmount
+                            )
+
+                            "Ex" -> {
+
+                                if (transactionType == TransactionTypeEnum.NORMAL) {
+
+                                    return addTransactionStep2(
+                                        userId = userId,
+                                        username = username,
+                                        transactionType = transactionType,
+                                        fromAccount = toAccount,
+                                        viaAccount = viaAccount,
+                                        toAccount = fromAccount,
+                                        dateTimeInText = DateTimeUtils.add2DaysToDateTimeString(dateTimeInText = localDateTimeInText),
+                                        transactionParticulars = localTransactionParticulars,
+                                        transactionAmount = localTransactionAmount
+                                    )
+                                } else {
+
+                                    invalidOptionMessage()
+                                }
+                            }
+
+                            "Ex13" -> {
+                                if (transactionType == TransactionTypeEnum.VIA) {
+
+                                    return addTransactionStep2(
+                                        userId = userId,
+                                        username = username,
+                                        transactionType = transactionType,
+                                        fromAccount = toAccount,
+                                        viaAccount = viaAccount,
+                                        toAccount = fromAccount,
+                                        dateTimeInText = DateTimeUtils.add2DaysToDateTimeString(dateTimeInText = localDateTimeInText),
+                                        transactionParticulars = localTransactionParticulars,
+                                        transactionAmount = localTransactionAmount
+                                    )
+                                } else {
+
+                                    invalidOptionMessage()
+                                }
+                            }
+
+                            "Ex12" -> {
+
+                                if (transactionType == TransactionTypeEnum.VIA) {
+
+                                    return addTransactionStep2(
+                                        userId = userId,
+                                        username = username,
+                                        transactionType = transactionType,
+                                        fromAccount = viaAccount,
+                                        viaAccount = fromAccount,
+                                        toAccount = toAccount,
+                                        dateTimeInText = DateTimeUtils.add2DaysToDateTimeString(dateTimeInText = localDateTimeInText),
+                                        transactionParticulars = localTransactionParticulars,
+                                        transactionAmount = localTransactionAmount
+                                    )
+                                } else {
+
+                                    invalidOptionMessage()
+                                }
+                            }
+
+                            "Ex23" -> {
+
+                                if (transactionType == TransactionTypeEnum.VIA) {
+
+                                    return addTransactionStep2(
+                                        userId = userId,
+                                        username = username,
+                                        transactionType = transactionType,
+                                        fromAccount = fromAccount,
+                                        viaAccount = toAccount,
+                                        toAccount = viaAccount,
+                                        dateTimeInText = DateTimeUtils.add2DaysToDateTimeString(dateTimeInText = localDateTimeInText),
+                                        transactionParticulars = localTransactionParticulars,
+                                        transactionAmount = localTransactionAmount
+                                    )
+                                } else {
+                                    invalidOptionMessage()
+                                }
+                            }
+
+                            else -> invalidOptionMessage()
+                        }
+                    } while (isCorrect != "B")
+                }
+            }
+            return false
+        }
+    }
+
+    internal fun insertTransaction(
+
+        userid: UInt,
+        eventDateTime: String,
+        particulars: String,
+        amount: Float,
+        fromAccount: AccountResponse,
+        toAccount: AccountResponse
+
+    ): Boolean {
+
+        val apiResponse: Result<InsertionResponse>
+        val userTransactionDataSource = TransactionDataSource()
+
+        val eventDateTimeConversionResult: Pair<Boolean, String> =
+            MysqlUtils.normalDateTimeStringToMysqlDateTimeString(normalDateTimeString = eventDateTime)
+
+        if (eventDateTimeConversionResult.first) {
+
+            println("Contacting Server...")
+            runBlocking {
+                apiResponse = userTransactionDataSource.insertTransaction(
+                    userId = userid,
+                    fromAccountId = fromAccount.id,
+                    eventDateTimeString = eventDateTimeConversionResult.second,
+                    particulars = particulars,
+                    amount = amount,
+                    toAccountId = toAccount.id
+                )
+            }
+            //    println("Response : $apiResponse")
+            if (apiResponse.isFailure) {
+
+                println("Error : ${(apiResponse.exceptionOrNull() as Exception).localizedMessage}")
+                do {
+                    print("Retry (Y/N) ? : ")
+                    val input: String? = readLine()
+                    when (input) {
+                        "Y", "" -> {
+                            return insertTransaction(
+                                userid = userid,
+                                eventDateTime = eventDateTime,
+                                particulars = particulars,
+                                amount = amount,
+                                fromAccount = fromAccount,
+                                toAccount = toAccount
+                            )
+                        }
+
+                        "N" -> {
+                        }
+
+                        else -> println("Invalid option, try again...")
+                    }
+                } while (input != "N")
+
+            } else {
+
+                val insertionResponseResult: InsertionResponse = apiResponse.getOrNull()!!
+                if (insertionResponseResult.status == 0) {
+
+                    println("OK...")
+                    return true
+
+                } else {
+
+                    println("Server Execution Error : ${insertionResponseResult.error}")
+                }
+            }
+        } else {
+
+            println("Date Error : ${eventDateTimeConversionResult.second}")
+        }
+        return false
+    }
+
+    private fun getEnvironmentVariableValueForInsertOperation(
+
+        environmentVariableName: String, environmentVariableFormalName: String
+
+    ): EnvironmentVariableForWholeNumber = EnvironmentFileOperations.getEnvironmentVariableValueForWholeNumber(
+
+        dotenv = App.dotenv,
+        environmentVariableName = environmentVariableName,
+        environmentVariableFormalName = environmentVariableFormalName
+    )
 }
-
-private fun getEnvironmentVariableValueForInsertOperation(
-
-    environmentVariableName: String,
-    environmentVariableFormalName: String
-
-): EnvironmentVariableForWholeNumber = EnvironmentFileOperations.getEnvironmentVariableValueForWholeNumber(
-
-    dotenv = App.dotenv,
-    environmentVariableName = environmentVariableName,
-    environmentVariableFormalName = environmentVariableFormalName
-)

@@ -10,6 +10,7 @@ object MysqlUtils {
     val mysqlDateTimePattern = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")!!
     val mysqlDatePattern = DateTimeFormatter.ofPattern("yyyy-MM-dd")!!
 
+    //TODO : Replace with data class
     fun normalDateTimeStringToMysqlDateTimeString(normalDateTimeString: String): Pair<Boolean, String> {
 
         try {
@@ -20,7 +21,6 @@ object MysqlUtils {
 
         } catch (e: DateTimeParseException) {
 
-            println("Something went wrong...")
             return Pair(false, e.localizedMessage)
         }
     }

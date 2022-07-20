@@ -3,20 +3,22 @@ package accountLedgerCli.cli
 import accountLedgerCli.api.response.AccountResponse
 import accountLedgerCli.api.response.UserResponse
 import accountLedgerCli.cli.App.Companion.chosenUser
-import accountLedgerCli.cli.App.Companion.fromAccount
-import accountLedgerCli.cli.App.Companion.toAccount
-import accountLedgerCli.cli.App.Companion.viaAccount
+import accountLedgerCli.to_utils.ToDoUtils
 
 internal fun processChildAccountScreenInput(
+
     userAccountsMap: LinkedHashMap<UInt, AccountResponse>,
     userId: UInt,
-    username: String
-): String? {
+    username: String,
+    viaAccount: AccountResponse,
+    toAccount: AccountResponse
 
-    val choice = readLine()
+): String {
+
+    val choice: String = readLine()!!
     when (choice) {
         "1" -> {
-            handleFromAccountSelection(
+            handleAccountSelection(
                 accountId = getValidIndex(
                     map = userAccountsMap,
                     itemSpecification = Constants.accountText,
@@ -24,21 +26,26 @@ internal fun processChildAccountScreenInput(
                 ),
                 userAccountsMap = userAccountsMap,
                 userId = userId,
-                username = username
+                username = username,
+                viaAccount = viaAccount,
+                toAccount = toAccount
             )
         }
 
         "2" -> {
-            handleFromAccountSelection(
+            handleAccountSelection(
                 accountId = searchAccount(userAccountsMap = userAccountsMap),
                 userAccountsMap = userAccountsMap,
                 userId = userId,
-                username = username
+                username = username,
+                viaAccount = viaAccount,
+                toAccount = toAccount
             )
         }
 
         "3" -> {
-            addAccount()
+
+            ToDoUtils.showTodo()
         }
 
         "0" -> {
@@ -51,49 +58,31 @@ internal fun processChildAccountScreenInput(
     return choice
 }
 
-private fun handleFromAccountSelection(
+private fun handleAccountSelection(
+
     accountId: UInt,
     userAccountsMap: LinkedHashMap<UInt, AccountResponse>,
     userId: UInt,
-    username: String
+    username: String,
+    viaAccount: AccountResponse,
+    toAccount: AccountResponse
+
 ) {
 
     if (accountId != 0u) {
 
-        fromAccount = userAccountsMap[accountId]!!
-        accountHome(userId = userId, username = username)
+        Screens.accountHome(
+            userId = userId,
+            username = username,
+            fromAccount = userAccountsMap[accountId]!!,
+            viaAccount = viaAccount,
+            toAccount = toAccount
+        )
     }
-}
-
-internal fun handleFromAccountSelection(
-    fromAccountId: UInt,
-    userAccountsMap: LinkedHashMap<UInt, AccountResponse>
-): Boolean {
-
-    if (fromAccountId != 0u) {
-
-        fromAccount = userAccountsMap[fromAccountId]!!
-        return true
-    }
-    return false
-}
-
-internal fun handleToAccountSelection(
-    depositAccountId: UInt,
-    userAccountsMap: LinkedHashMap<UInt, AccountResponse>
-): Boolean {
-
-    if (depositAccountId != 0u) {
-
-        toAccount = userAccountsMap[depositAccountId]!!
-        return true
-    }
-    return false
 }
 
 internal fun handleUserSelection(
-    chosenUserId: UInt,
-    usersMap: LinkedHashMap<UInt, UserResponse>
+    chosenUserId: UInt, usersMap: LinkedHashMap<UInt, UserResponse>
 ): Boolean {
 
     if (chosenUserId != 0u) {
@@ -103,19 +92,3 @@ internal fun handleUserSelection(
     }
     return false
 }
-
-
-internal fun handleViaAccountSelection(
-    viaAccountId: UInt,
-    userAccountsMap: LinkedHashMap<UInt, AccountResponse>
-): Boolean {
-
-    if (viaAccountId != 0u) {
-
-        viaAccount = userAccountsMap[viaAccountId]!!
-        return true
-    }
-    return false
-}
-
-

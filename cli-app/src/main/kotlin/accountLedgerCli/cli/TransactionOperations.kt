@@ -1,27 +1,35 @@
 package accountLedgerCli.cli
 
+import accountLedgerCli.api.response.AccountResponse
 import accountLedgerCli.api.response.TransactionsResponse
 import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
 import accountLedgerCli.cli.App.Companion.userAccountsMap
+import accountLedgerCli.cli.InsertOperations.addTransaction
+import accountLedgerCli.retrofit.ResponseHolder
 import accountLedgerCli.to_utils.InputUtils
 import accountLedgerCli.to_utils.ToDoUtils
 import accountLedgerCli.utils.ApiUtils
 
 internal fun viewTransactions(
+
     userId: UInt,
     username: String,
     accountId: UInt,
     accountFullName: String,
-    functionCallSourceEnum: FunctionCallSourceEnum = FunctionCallSourceEnum.FROM_OTHERS
+    functionCallSourceEnum: FunctionCallSourceEnum = FunctionCallSourceEnum.FROM_OTHERS,
+    fromAccount: AccountResponse,
+    viaAccount: AccountResponse,
+    toAccount: AccountResponse
+
 ): String {
 
-    val apiResponse = getUserTransactions(userId = userId, accountId = accountId)
+    val apiResponse: ResponseHolder<TransactionsResponse> = getUserTransactions(userId = userId, accountId = accountId)
     if (apiResponse.isError()) {
 
         println("Error : ${(apiResponse.getValue() as Exception).localizedMessage}")
         do {
             print("Retry (Y/N) ? : ")
-            val input = readLine()
+            val input: String? = readLine()
             when (input) {
                 "Y", "" -> {
                     return viewTransactions(
@@ -29,7 +37,10 @@ internal fun viewTransactions(
                         username = username,
                         accountId = accountId,
                         accountFullName = accountFullName,
-                        functionCallSourceEnum = functionCallSourceEnum
+                        functionCallSourceEnum = functionCallSourceEnum,
+                        fromAccount = fromAccount,
+                        viaAccount = viaAccount,
+                        toAccount = toAccount
                     )
                 }
 
@@ -40,7 +51,7 @@ internal fun viewTransactions(
         return "E"
     } else {
 
-        val userTransactionsResponseResult = apiResponse.getValue() as TransactionsResponse
+        val userTransactionsResponseResult: TransactionsResponse = apiResponse.getValue() as TransactionsResponse
         if (userTransactionsResponseResult.status == 1u) {
 
             println("Account - $accountFullName")
@@ -95,7 +106,10 @@ internal fun viewTransactions(
                             addTransaction(
                                 userId = userId,
                                 username = username,
-                                transactionTypeEnum = TransactionTypeEnum.NORMAL
+                                transactionType = TransactionTypeEnum.NORMAL,
+                                fromAccount = fromAccount,
+                                viaAccount = viaAccount,
+                                toAccount = toAccount
                             )
                         }
                     }
@@ -117,13 +131,18 @@ internal fun viewTransactions(
     }
 }
 
-internal fun viewTransactionsOfSpecificAccount(userId: UInt, username: String) {
+internal fun viewTransactionsOfSpecificAccount(
+    userId: UInt,
+    username: String,
+    fromAccount: AccountResponse,
+    viaAccount: AccountResponse,
+    toAccount: AccountResponse
+) {
     print("Enter Account Index or 0 to Back : A")
-    val inputAccountIndex = readLine()!!
+    val inputAccountIndex: String = readLine()!!
     if (inputAccountIndex != "0") {
-        var accountIndex = InputUtils.getValidInt(inputAccountIndex, "Invalid Account Index")
         if (handleAccountsResponse(ApiUtils.getAccountsFull(userId = userId))) {
-            accountIndex = getValidIndex(
+            val accountIndex: UInt = getValidIndex(
                 map = userAccountsMap,
                 itemSpecification = Constants.accountText,
                 items = userAccountsToStringFromLinkedHashMap(userAccountsMap = userAccountsMap),
@@ -134,7 +153,10 @@ internal fun viewTransactionsOfSpecificAccount(userId: UInt, username: String) {
                     username = username,
                     accountId = accountIndex,
                     accountFullName = userAccountsMap[accountIndex]!!.fullName,
-                    functionCallSourceEnum = FunctionCallSourceEnum.FROM_VIEW_TRANSACTIONS_OF_ACCOUNT
+                    functionCallSourceEnum = FunctionCallSourceEnum.FROM_VIEW_TRANSACTIONS_OF_ACCOUNT,
+                    fromAccount = fromAccount,
+                    viaAccount = viaAccount,
+                    toAccount = toAccount
                 )
             }
         }

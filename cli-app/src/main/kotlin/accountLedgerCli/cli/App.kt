@@ -1,6 +1,7 @@
 package accountLedgerCli.cli
 
 import accountLedgerCli.api.response.AccountResponse
+import accountLedgerCli.api.response.UserResponse
 import accountLedgerCli.models.BalanceSheetDataModel
 import accountLedgerCli.to_utils.CommandLinePrintMenu
 import accountLedgerCli.to_utils.CommandLinePrintMenuWithContinuePrompt
@@ -10,6 +11,7 @@ import accountLedgerCli.to_utils.DateTimeUtils
 import accountLedgerCli.to_utils.ToDoUtils
 import accountLedgerCli.utils.AccountUtils
 import accountLedgerCli.utils.UserUtils
+import io.github.cdimascio.dotenv.Dotenv
 import io.github.cdimascio.dotenv.dotenv
 import kotlinx.cli.ArgParser
 import kotlinx.cli.ArgType
@@ -24,25 +26,19 @@ import java.time.LocalDateTime
 class App {
     companion object {
         @JvmStatic
-        internal var dateTimeString = LocalDateTime.now().format(DateTimeUtils.normalDateTimePattern)
+        internal var dateTimeString: String = LocalDateTime.now().format(DateTimeUtils.normalDateTimePattern)
 
         @JvmStatic
-        internal var fromAccount = AccountUtils.getBlankAccount()
+        internal var fromAccount: AccountResponse = AccountUtils.blankAccount
 
         @JvmStatic
-        internal var viaAccount = AccountUtils.getBlankAccount()
+        internal var viaAccount: AccountResponse = AccountUtils.blankAccount
 
         @JvmStatic
-        internal var toAccount = AccountUtils.getBlankAccount()
+        internal var toAccount: AccountResponse = AccountUtils.blankAccount
 
         @JvmStatic
-        internal var transactionParticulars = ""
-
-        @JvmStatic
-        internal var transactionAmount = 0F
-
-        @JvmStatic
-        internal var chosenUser = UserUtils.getBlankUser()
+        internal var chosenUser: UserResponse = UserUtils.blankUser
 
         @JvmStatic
         internal var userAccountsMap = LinkedHashMap<UInt, AccountResponse>()
@@ -61,7 +57,7 @@ class App {
             CommandLinePrintMenuWithContinuePrompt(commandLinePrintMenu)
 
         @JvmStatic
-        internal val dotenv = dotenv {
+        internal val dotenv: Dotenv = dotenv {
             directory = Paths.get("").toAbsolutePath().toString()
             ignoreIfMissing = true
         }
@@ -71,7 +67,8 @@ class App {
         fun main(args: Array<String>) {
             if (args.isEmpty()) {
                 do {
-                    val identifiedUser: String = dotenv[EnvironmentFileEntryEnum.USER_NAME.name] ?: Constants.defaultValueForStringEnvironmentVariables
+                    val identifiedUser: String = dotenv[EnvironmentFileEntryEnum.USER_NAME.name]
+                        ?: Constants.defaultValueForStringEnvironmentVariables
                     commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
                         listOfCommands = listOf(
                             "Account Ledger",
@@ -88,7 +85,7 @@ class App {
                             "Enter Your Choice : "
                         )
                     )
-                    val choice = readLine()
+                    val choice: String? = readLine()
                     when (choice) {
                         "1" -> UserOperations.login(
                             username = if (identifiedUser == Constants.defaultValueForStringEnvironmentVariables) "" else identifiedUser,
@@ -176,16 +173,7 @@ class App {
 
                                 } else {
 
-                                    UserOperations.login(
-                                        username = environmentUsername,
-                                        password = environmentPassword,
-                                        isNotApiCall = false,
-                                        apiMethod = CommandLineApiMethodsEnum.BalanceSheet.name,
-                                        apiMethodOptions = linkedMapOf(
-                                            CommandLineApiMethodBalanceSheetOptionsEnum.refineLevel.name to refineLevel,
-                                            CommandLineApiMethodBalanceSheetOptionsEnum.outputFormat.name to outputFormat
-                                        )
-                                    )
+                                    invokeUserLoginByApi(environmentUsername, environmentPassword)
                                 }
                             }
                         } else {
@@ -205,9 +193,23 @@ class App {
 
                             } else {
 
-                                UserOperations.login(username = username!!, password = password!!)
+                                invokeUserLoginByApi(username!!, password!!)
                             }
                         }
+                    }
+
+                    private fun invokeUserLoginByApi(usernameLocal: String, passwordLocal: String) {
+
+                        UserOperations.login(
+                            username = usernameLocal,
+                            password = passwordLocal,
+                            isNotApiCall = false,
+                            apiMethod = CommandLineApiMethodsEnum.BalanceSheet.name,
+                            apiMethodOptions = linkedMapOf(
+                                CommandLineApiMethodBalanceSheetOptionsEnum.refineLevel.name to refineLevel,
+                                CommandLineApiMethodBalanceSheetOptionsEnum.outputFormat.name to outputFormat
+                            )
+                        )
                     }
                 }
 
@@ -217,6 +219,5 @@ class App {
                 parser.parse(args = args)
             }
         }
-
     }
 }

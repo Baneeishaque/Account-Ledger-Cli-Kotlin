@@ -12,13 +12,10 @@ object UserUtils {
         return usersMap
     }
 
-    internal fun getBlankUser(): UserResponse {
-
-        return UserResponse(
-            id = 0u,
-            password = "",
-            status = "",
-            username = ""
-        )
-    }
+    internal val blankUser: UserResponse = UserResponse(
+        id = 0u,
+        password = "",
+        status = "",
+        username = ""
+    )
 }

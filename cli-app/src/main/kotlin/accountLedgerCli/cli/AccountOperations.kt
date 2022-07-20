@@ -4,16 +4,21 @@ import accountLedgerCli.api.response.AccountResponse
 import accountLedgerCli.api.response.AccountsResponse
 import accountLedgerCli.api.response.TransactionsResponse
 import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
-import accountLedgerCli.cli.App.Companion.fromAccount
 import accountLedgerCli.retrofit.ResponseHolder
 import accountLedgerCli.retrofit.data.TransactionsDataSource
 import accountLedgerCli.to_utils.InputUtils
 import accountLedgerCli.to_utils.MysqlUtils
 import kotlinx.coroutines.runBlocking
 
-internal fun checkAccountsAffectedAfterSpecifiedDate(userId: UInt, username: String) {
+internal fun checkAccountsAffectedAfterSpecifiedDate(
+    userId: UInt,
+    username: String,
+    fromAccount: AccountResponse,
+    viaAccount: AccountResponse,
+    toAccount: AccountResponse
+) {
 
-    val inputDate = InputUtils.getValidDateInNormalPattern()
+    val inputDate: String = InputUtils.getValidDateInNormalPattern()
     val transactionsDataSource = TransactionsDataSource()
     println("Contacting Server...")
     val apiResponse: ResponseHolder<TransactionsResponse>
@@ -35,7 +40,12 @@ internal fun checkAccountsAffectedAfterSpecifiedDate(userId: UInt, username: Str
                 val input = readLine()
                 when (input) {
                     "Y", "" -> {
-                        checkAccountsAffectedAfterSpecifiedDate(userId = userId, username = username)
+                        checkAccountsAffectedAfterSpecifiedDate(
+                            userId = userId, username = username,
+                            fromAccount = fromAccount,
+                            viaAccount = viaAccount,
+                            toAccount = toAccount
+                        )
                         return
                     }
 
@@ -68,7 +78,10 @@ internal fun checkAccountsAffectedAfterSpecifiedDate(userId: UInt, username: Str
                         username = username,
                         accountId = account.key,
                         accountFullName = account.value,
-                        functionCallSourceEnum = FunctionCallSourceEnum.FROM_CHECK_ACCOUNTS
+                        functionCallSourceEnum = FunctionCallSourceEnum.FROM_CHECK_ACCOUNTS,
+                        fromAccount = fromAccount,
+                        viaAccount = viaAccount,
+                        toAccount = toAccount
                     )) {
                         "E", "0" -> {
                             break
@@ -80,9 +93,15 @@ internal fun checkAccountsAffectedAfterSpecifiedDate(userId: UInt, username: Str
     }
 }
 
-internal fun viewChildAccounts(username: String, userId: UInt) {
+internal fun viewChildAccounts(
+    username: String,
+    userId: UInt,
+    fromAccount: AccountResponse,
+    viaAccount: AccountResponse,
+    toAccount: AccountResponse
+) {
 
-    val apiResponse:Result<AccountsResponse> = getAccounts(userId = userId, parentAccountId = fromAccount.id)
+    val apiResponse: Result<AccountsResponse> = getAccounts(userId = userId, parentAccountId = fromAccount.id)
 
     if (apiResponse.isFailure) {
 
@@ -92,7 +111,12 @@ internal fun viewChildAccounts(username: String, userId: UInt) {
             val input = readLine()
             when (input) {
                 "Y", "" -> {
-                    viewChildAccounts(username = username, userId = userId)
+                    viewChildAccounts(
+                        username = username, userId = userId,
+                        fromAccount = fromAccount,
+                        viaAccount = viaAccount,
+                        toAccount = toAccount
+                    )
                     return
                 }
 
@@ -131,7 +155,11 @@ internal fun viewChildAccounts(username: String, userId: UInt) {
                     )
                 )
 
-                val choice = processChildAccountScreenInput(userAccountsMap, userId, username)
+                val choice: String = processChildAccountScreenInput(
+                    userAccountsMap, userId, username,
+                    viaAccount = viaAccount,
+                    toAccount = toAccount
+                )
             } while (choice != "0")
         }
     }

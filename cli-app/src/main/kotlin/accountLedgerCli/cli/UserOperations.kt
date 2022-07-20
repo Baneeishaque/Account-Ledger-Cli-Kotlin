@@ -9,6 +9,7 @@ import accountLedgerCli.retrofit.ResponseHolder
 import accountLedgerCli.retrofit.data.AuthenticationDataSource
 import accountLedgerCli.retrofit.data.UsersDataSource
 import accountLedgerCli.to_utils.InputUtils
+import accountLedgerCli.utils.AccountUtils
 import accountLedgerCli.utils.UserUtils
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
@@ -94,7 +95,6 @@ class UserOperations {
 
                 } else {
 
-//                    println("API Call Error")
                     print(
                         Json.encodeToString(
                             serializer = BalanceSheetDataModel.serializer(),
@@ -107,7 +107,8 @@ class UserOperations {
                 }
             } else {
 
-                val authenticationResponseResult = apiResponse.getValue() as AuthenticationResponse
+                val authenticationResponseResult: AuthenticationResponse =
+                    apiResponse.getValue() as AuthenticationResponse
                 when (authenticationResponseResult.userCount) {
                     0u -> {
                         if (isNotApiCall) {
@@ -129,7 +130,12 @@ class UserOperations {
 
                         if (isNotApiCall) {
                             println("Login Success...")
-                            userScreen(username = user.username, userId = authenticationResponseResult.id)
+                            Screens.userScreen(
+                                username = user.username,
+                                userId = authenticationResponseResult.id,
+                                viaAccount = AccountUtils.blankAccount,
+                                toAccount = AccountUtils.blankAccount
+                            )
                         } else {
                             when (apiMethod) {
                                 "BalanceSheet" -> {
@@ -146,7 +152,6 @@ class UserOperations {
                                                         isNotApiCall = false
                                                     )
                                                 } else {
-//                                                    println("Output Format is Invalid")
                                                     print(
                                                         Json.encodeToString(
                                                             serializer = BalanceSheetDataModel.serializer(),
@@ -170,7 +175,6 @@ class UserOperations {
                                                 )
                                             }
                                         } else {
-//                                            println("Refinery Level is Invalid")
                                             print(
                                                 Json.encodeToString(
                                                     serializer = BalanceSheetDataModel.serializer(),
@@ -182,7 +186,6 @@ class UserOperations {
                                             )
                                         }
                                     } else {
-//                                        println("Refinery Level is Missing")
                                         print(
                                             Json.encodeToString(
                                                 serializer = BalanceSheetDataModel.serializer(),
@@ -196,7 +199,6 @@ class UserOperations {
                                 }
 
                                 else -> {
-//                                    println("Invalid API Method")
                                     print(
                                         Json.encodeToString(
                                             serializer = BalanceSheetDataModel.serializer(),
@@ -298,7 +300,12 @@ class UserOperations {
                                         ), usersMap = usersMap
                                     )
                                 ) {
-                                    userScreen(username = chosenUser.username, userId = chosenUser.id)
+                                    Screens.userScreen(
+                                        username = chosenUser.username,
+                                        userId = chosenUser.id,
+                                        viaAccount = AccountUtils.blankAccount,
+                                        toAccount = AccountUtils.blankAccount
+                                    )
                                 }
                             }
 

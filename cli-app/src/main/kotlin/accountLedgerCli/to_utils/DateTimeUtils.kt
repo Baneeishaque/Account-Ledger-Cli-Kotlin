@@ -35,10 +35,10 @@ object DateTimeUtils {
         ).plusDays(days.toLong())
     }
 
-    fun add1DayToDateTimeString(dateTimeString: String): String {
+    fun add1DayToDateTimeInText(dateTimeInText: String): String {
 
         return addDaysToDateTimeString(
-            dateTimeString = dateTimeString,
+            dateTimeString = dateTimeInText,
             days = 1
         )
     }
@@ -51,10 +51,10 @@ object DateTimeUtils {
         )
     }
 
-    fun add2DaysToDateTimeString(dateTimeString: String): String {
+    fun add2DaysToDateTimeString(dateTimeInText: String): String {
 
         return addDaysToDateTimeString(
-            dateTimeString = dateTimeString,
+            dateTimeString = dateTimeInText,
             days = 2
         )
     }
@@ -67,9 +67,9 @@ object DateTimeUtils {
         )
     }
 
-    fun add1DayWith9ClockTimeToDateTimeString(dateTimeString: String): String {
+    fun add1DayWith9ClockTimeToDateTimeInText(dateTimeInText: String): String {
 
-        return add1DayWith9ClockTimeToDateTimeStringAsDateTime(dateTimeString = dateTimeString).format(normalDateTimePattern)
+        return add1DayWith9ClockTimeToDateTimeStringAsDateTime(dateTimeString = dateTimeInText).format(normalDateTimePattern)
     }
 
     fun add1DayWith9ClockTimeToDateTimeStringAsDateTime(dateTimeString: String): LocalDateTime {
@@ -84,8 +84,8 @@ object DateTimeUtils {
             .withMinute(resetMinute).withSecond(resetSecond)
     }
 
-    fun add2DaysWith9ClockTimeToDateTimeString(dateTimeString: String): String {
+    fun add2DaysWith9ClockTimeToDateTimeInText(dateTimeInText: String): String {
 
-        return add2DaysWith9ClockTimeToDateTimeStringAsDateTime(dateTimeString = dateTimeString).format(normalDateTimePattern)
+        return add2DaysWith9ClockTimeToDateTimeStringAsDateTime(dateTimeString = dateTimeInText).format(normalDateTimePattern)
     }
 }
