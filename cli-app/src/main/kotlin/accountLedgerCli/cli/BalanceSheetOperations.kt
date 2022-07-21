@@ -3,7 +3,6 @@ package accountLedgerCli.cli
 import accountLedgerCli.api.response.TransactionResponse
 import accountLedgerCli.api.response.TransactionsResponse
 import accountLedgerCli.api.response.UserResponse
-import accountLedgerCli.cli.App.Companion.chosenUser
 import accountLedgerCli.cli.App.Companion.dotenv
 import accountLedgerCli.enums.BalanceSheetRefineLevelEnum
 import accountLedgerCli.models.*
@@ -15,17 +14,20 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 
 internal fun balanceSheetOfUser(usersMap: LinkedHashMap<UInt, UserResponse>) {
-    if (handleUserSelection(
-            chosenUserId = getValidIndex(
+    val chooseUserResult: ChooseUserResult = handleUserSelection(
+        chosenUserId = getValidIndex(
 
-                map = usersMap,
-                itemSpecification = Constants.userText,
-                items = usersToStringFromLinkedHashMap(usersMap = usersMap),
+            map = usersMap,
+            itemSpecification = Constants.userText,
+            items = usersToStringFromLinkedHashMap(usersMap = usersMap),
 
-                ), usersMap = usersMap
+            ), usersMap = usersMap
+    )
+    if (chooseUserResult.isChoosed) {
+        printBalanceSheetOfUser(
+            currentUserName = chooseUserResult.chosenUser!!.username,
+            currentUserId = chooseUserResult.chosenUser.id
         )
-    ) {
-        printBalanceSheetOfUser(currentUserName = chosenUser.username, currentUserId = chosenUser.id)
     }
 }
 

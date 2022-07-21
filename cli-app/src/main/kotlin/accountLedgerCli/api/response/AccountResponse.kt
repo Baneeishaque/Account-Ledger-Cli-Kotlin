@@ -2,7 +2,7 @@ package accountLedgerCli.api.response
 
 import com.google.gson.annotations.SerializedName
 
-internal data class AccountResponse(
+data class AccountResponse(
 
     @SerializedName("account_id") internal val id: UInt,
     @SerializedName("full_name") internal val fullName: String,

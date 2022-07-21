@@ -1,20 +1,20 @@
 package accountLedgerCli.cli
 
+import accountLedgerCli.api.response.AccountResponse
 import accountLedgerCli.api.response.AuthenticationResponse
 import accountLedgerCli.api.response.UserResponse
 import accountLedgerCli.api.response.UsersResponse
-import accountLedgerCli.cli.App.Companion.chosenUser
 import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
 import accountLedgerCli.enums.BalanceSheetOutputFormatsEnum
 import accountLedgerCli.enums.BalanceSheetRefineLevelEnum
 import accountLedgerCli.enums.CommandLineApiMethodBalanceSheetOptionsEnum
 import accountLedgerCli.models.BalanceSheetDataModel
+import accountLedgerCli.models.ChooseUserResult
 import accountLedgerCli.models.UserCredentials
 import accountLedgerCli.retrofit.ResponseHolder
 import accountLedgerCli.retrofit.data.AuthenticationDataSource
 import accountLedgerCli.retrofit.data.UsersDataSource
 import accountLedgerCli.to_utils.InputUtils
-import accountLedgerCli.utils.AccountUtils
 import accountLedgerCli.utils.UserUtils
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
@@ -29,6 +29,9 @@ class UserOperations {
             isNotApiCall: Boolean = true,
             apiMethod: String = "",
             apiMethodOptions: LinkedHashMap<String, Any> = linkedMapOf(),
+            fromAccount: AccountResponse,
+            viaAccount: AccountResponse,
+            toAccount: AccountResponse,
             dateTimeInText: String,
             transactionParticulars: String,
             transactionAmount: Float
@@ -93,6 +96,9 @@ class UserOperations {
                                 login(
                                     username = username,
                                     password = password,
+                                    fromAccount = fromAccount,
+                                    viaAccount = viaAccount,
+                                    toAccount = toAccount,
                                     dateTimeInText = dateTimeInText,
                                     transactionParticulars = transactionParticulars,
                                     transactionAmount = transactionAmount
@@ -147,8 +153,9 @@ class UserOperations {
                             Screens.userScreen(
                                 username = user.username,
                                 userId = authenticationResponseResult.id,
-                                viaAccount = AccountUtils.blankAccount,
-                                toAccount = AccountUtils.blankAccount,
+                                fromAccount = fromAccount,
+                                viaAccount = viaAccount,
+                                toAccount = toAccount,
                                 dateTimeInText = dateTimeInText,
                                 transactionParticulars = transactionParticulars,
                                 transactionAmount = transactionAmount
@@ -254,7 +261,14 @@ class UserOperations {
         }
 
         @JvmStatic
-        internal fun listUsers(dateTimeInText: String, transactionParticulars: String, transactionAmount: Float) {
+        internal fun listUsers(
+            fromAccount: AccountResponse,
+            viaAccount: AccountResponse,
+            toAccount: AccountResponse,
+            dateTimeInText: String,
+            transactionParticulars: String,
+            transactionAmount: Float
+        ) {
 
             val usersDataSource = UsersDataSource()
             println("Contacting Server...")
@@ -270,9 +284,12 @@ class UserOperations {
                     when (input) {
                         "Y", "" -> {
                             listUsers(
+                                fromAccount = fromAccount,
+                                viaAccount = viaAccount,
+                                toAccount = toAccount,
                                 dateTimeInText = dateTimeInText,
                                 transactionParticulars = transactionParticulars,
-                                transactionAmount = transactionAmount
+                                transactionAmount = transactionAmount,
                             )
                         }
 
@@ -313,19 +330,20 @@ class UserOperations {
                             }
 
                             "2" -> {
-                                if (handleUserSelection(
-                                        chosenUserId = getValidIndex(
-                                            map = usersMap,
-                                            itemSpecification = Constants.userText,
-                                            items = usersToStringFromLinkedHashMap(usersMap = usersMap)
-                                        ), usersMap = usersMap
-                                    )
-                                ) {
+                                val chooseUserResult: ChooseUserResult = handleUserSelection(
+                                    chosenUserId = getValidIndex(
+                                        map = usersMap,
+                                        itemSpecification = Constants.userText,
+                                        items = usersToStringFromLinkedHashMap(usersMap = usersMap)
+                                    ), usersMap = usersMap
+                                )
+                                if (chooseUserResult.isChoosed) {
                                     Screens.userScreen(
-                                        username = chosenUser.username,
-                                        userId = chosenUser.id,
-                                        viaAccount = AccountUtils.blankAccount,
-                                        toAccount = AccountUtils.blankAccount,
+                                        username = chooseUserResult.chosenUser!!.username,
+                                        userId = chooseUserResult.chosenUser.id,
+                                        fromAccount = fromAccount,
+                                        viaAccount = viaAccount,
+                                        toAccount = toAccount,
                                         dateTimeInText = dateTimeInText,
                                         transactionParticulars = transactionParticulars,
                                         transactionAmount = transactionAmount

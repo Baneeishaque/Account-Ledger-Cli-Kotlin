@@ -2,9 +2,8 @@ package accountLedgerCli.utils
 
 import accountLedgerCli.api.response.AccountResponse
 import accountLedgerCli.api.response.AccountsResponse
+import accountLedgerCli.models.ChooseAccountResult
 import java.util.*
-
-internal class ChooseAccountResult(val chosenAccountId: UInt, val chosenAccount: AccountResponse? = null)
 
 internal object ChooseAccountUtils {
 

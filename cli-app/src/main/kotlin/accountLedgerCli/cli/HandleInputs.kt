@@ -2,7 +2,8 @@ package accountLedgerCli.cli
 
 import accountLedgerCli.api.response.AccountResponse
 import accountLedgerCli.api.response.UserResponse
-import accountLedgerCli.cli.App.Companion.chosenUser
+import accountLedgerCli.models.ChooseAccountResult
+import accountLedgerCli.models.ChooseUserResult
 import accountLedgerCli.to_utils.ToDoUtils
 
 internal fun processChildAccountScreenInput(
@@ -98,12 +99,14 @@ private fun handleAccountSelection(
 
 internal fun handleUserSelection(
     chosenUserId: UInt, usersMap: LinkedHashMap<UInt, UserResponse>
-): Boolean {
+): ChooseUserResult {
 
     if (chosenUserId != 0u) {
 
-        chosenUser = usersMap[chosenUserId]!!
-        return true
+        return ChooseUserResult(
+            isChoosed = true,
+            chosenUser = usersMap[chosenUserId]!!
+        )
     }
-    return false
+    return ChooseUserResult(isChoosed = false)
 }

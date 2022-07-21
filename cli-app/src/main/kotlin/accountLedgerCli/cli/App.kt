@@ -1,12 +1,9 @@
 package accountLedgerCli.cli
 
 import accountLedgerCli.api.response.AccountResponse
-import accountLedgerCli.api.response.UserResponse
 import accountLedgerCli.enums.*
 import accountLedgerCli.models.BalanceSheetDataModel
 import accountLedgerCli.to_utils.*
-import accountLedgerCli.utils.AccountUtils
-import accountLedgerCli.utils.UserUtils
 import io.github.cdimascio.dotenv.Dotenv
 import io.github.cdimascio.dotenv.dotenv
 import kotlinx.cli.*
@@ -15,22 +12,8 @@ import java.nio.file.Paths
 
 class App {
     companion object {
-//        @JvmStatic
-//        private var dateTimeString: String = LocalDateTime.now().format(DateTimeUtils.normalDateTimePattern)
 
         private var dateTimeInText: String = DateTimeUtils.getCurrentDateTimeText()
-
-        @JvmStatic
-        internal var fromAccount: AccountResponse = AccountUtils.blankAccount
-
-        @JvmStatic
-        internal var viaAccount: AccountResponse = AccountUtils.blankAccount
-
-        @JvmStatic
-        internal var toAccount: AccountResponse = AccountUtils.blankAccount
-
-        @JvmStatic
-        internal var chosenUser: UserResponse = UserUtils.blankUser
 
         @JvmStatic
         internal var userAccountsMap = LinkedHashMap<UInt, AccountResponse>()
@@ -56,7 +39,14 @@ class App {
 
         @JvmStatic
         @OptIn(ExperimentalCli::class)
-        fun main(args: Array<String>, transactionParticulars: String, transactionAmount: Float) {
+        fun main(
+            args: Array<String>,
+            transactionParticulars: String,
+            transactionAmount: Float,
+            viaAccount: AccountResponse,
+            toAccount: AccountResponse,
+            fromAccount: AccountResponse
+        ) {
             if (args.isEmpty()) {
                 do {
                     val identifiedUser: String = dotenv[EnvironmentFileEntryEnum.USER_NAME.name]
@@ -82,15 +72,21 @@ class App {
                         "1" -> UserOperations.login(
                             username = if (identifiedUser == Constants.defaultValueForStringEnvironmentVariables) "" else identifiedUser,
                             password = dotenv[EnvironmentFileEntryEnum.PASSWORD.name] ?: "",
+                            fromAccount = fromAccount,
+                            viaAccount = viaAccount,
+                            toAccount = toAccount,
                             dateTimeInText = dateTimeInText,
                             transactionParticulars = transactionParticulars,
                             transactionAmount = transactionAmount
                         )
 
                         "3" -> UserOperations.listUsers(
+                            fromAccount = fromAccount,
+                            viaAccount = viaAccount,
+                            toAccount = toAccount,
                             dateTimeInText = dateTimeInText,
                             transactionParticulars = transactionParticulars,
-                            transactionAmount = transactionAmount
+                            transactionAmount = transactionAmount,
                         )
 
                         "2", "4", "5" -> ToDoUtils.showTodo()
@@ -209,9 +205,12 @@ class App {
                                 CommandLineApiMethodBalanceSheetOptionsEnum.refineLevel.name to refineLevel,
                                 CommandLineApiMethodBalanceSheetOptionsEnum.outputFormat.name to outputFormat
                             ),
+                            fromAccount = fromAccount,
+                            viaAccount = viaAccount,
+                            toAccount = toAccount,
                             dateTimeInText = dateTimeInText,
                             transactionParticulars = transactionParticulars,
-                            transactionAmount = transactionAmount
+                            transactionAmount = transactionAmount,
                         )
                     }
                 }

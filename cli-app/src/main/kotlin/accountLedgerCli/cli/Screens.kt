@@ -2,7 +2,6 @@ package accountLedgerCli.cli
 
 import accountLedgerCli.api.response.AccountResponse
 import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
-import accountLedgerCli.cli.App.Companion.fromAccount
 import accountLedgerCli.enums.BalanceSheetRefineLevelEnum
 import accountLedgerCli.enums.EnvironmentFileEntryEnum
 import accountLedgerCli.enums.TransactionTypeEnum
@@ -12,6 +11,7 @@ object Screens {
     internal fun userScreen(
         username: String,
         userId: UInt,
+        fromAccount:AccountResponse,
         viaAccount: AccountResponse,
         toAccount: AccountResponse,
         dateTimeInText: String,
