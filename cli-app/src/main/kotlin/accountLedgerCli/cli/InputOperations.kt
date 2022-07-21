@@ -2,9 +2,11 @@ package accountLedgerCli.cli
 
 import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
 import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithTryPrompt
+import accountLedgerCli.enums.GetAccountsApiCallPurposeEnum
+import accountLedgerCli.enums.HandleAccountsApiResponseResult
+import accountLedgerCli.enums.TransactionTypeEnum
 import accountLedgerCli.to_utils.InputUtils
 import accountLedgerCli.utils.ApiUtils
-import accountLedgerCli.utils.DateUtils
 
 internal fun <T> getValidIndex(
 
@@ -81,7 +83,7 @@ internal fun chooseDepositTop(userId: UInt): HandleAccountsApiResponseResult {
 
     return handleAccountsApiResponse(
         apiResponse = getAccounts(userId = userId),
-        purpose = AccountsApiCallPurposeEnum.TO
+        purpose = GetAccountsApiCallPurposeEnum.TO
     )
 }
 
@@ -89,7 +91,7 @@ internal fun chooseDepositFull(userId: UInt): HandleAccountsApiResponseResult {
 
     return handleAccountsApiResponse(
         apiResponse = ApiUtils.getAccountsFull(userId = userId),
-        purpose = AccountsApiCallPurposeEnum.TO
+        purpose = GetAccountsApiCallPurposeEnum.TO
     )
 }
 
@@ -97,7 +99,7 @@ internal fun chooseWithdrawTop(userId: UInt): HandleAccountsApiResponseResult {
 
     return handleAccountsApiResponse(
         apiResponse = getAccounts(userId = userId),
-        purpose = AccountsApiCallPurposeEnum.FROM
+        purpose = GetAccountsApiCallPurposeEnum.FROM
     )
 }
 
@@ -105,7 +107,7 @@ internal fun chooseWithdrawFull(userId: UInt): HandleAccountsApiResponseResult {
 
     return handleAccountsApiResponse(
         apiResponse = ApiUtils.getAccountsFull(userId),
-        purpose = AccountsApiCallPurposeEnum.FROM
+        purpose = GetAccountsApiCallPurposeEnum.FROM
     )
 }
 
@@ -113,7 +115,7 @@ internal fun chooseViaTop(userId: UInt): HandleAccountsApiResponseResult {
 
     return handleAccountsApiResponse(
         apiResponse = getAccounts(userId = userId),
-        purpose = AccountsApiCallPurposeEnum.VIA
+        purpose = GetAccountsApiCallPurposeEnum.VIA
     )
 }
 
@@ -121,12 +123,12 @@ internal fun chooseViaFull(userId: UInt): HandleAccountsApiResponseResult {
 
     return handleAccountsApiResponse(
         apiResponse = ApiUtils.getAccountsFull(userId),
-        purpose = AccountsApiCallPurposeEnum.VIA
+        purpose = GetAccountsApiCallPurposeEnum.VIA
     )
 }
 
 internal fun enterDateWithTime(
-    dateTimeInText: String = DateUtils.getCurrentDateTimeText(),
+    dateTimeInText: String,
     transactionType: TransactionTypeEnum
 ): String {
 

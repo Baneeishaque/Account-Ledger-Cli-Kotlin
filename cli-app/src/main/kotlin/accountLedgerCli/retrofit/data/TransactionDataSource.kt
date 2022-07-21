@@ -8,10 +8,10 @@ internal class TransactionDataSource : AppDataSource<InsertionResponse>() {
 
         userId: UInt,
         eventDateTimeString: String,
-        particulars: String?,
+        particulars: String,
         amount: Float,
         fromAccountId: UInt,
-        toAccountId: UInt?
+        toAccountId: UInt
 
     ): Result<InsertionResponse> {
 

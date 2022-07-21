@@ -1,10 +1,15 @@
 package accountLedgerCli.cli
 
 import accountLedgerCli.api.response.AuthenticationResponse
+import accountLedgerCli.api.response.UserResponse
 import accountLedgerCli.api.response.UsersResponse
 import accountLedgerCli.cli.App.Companion.chosenUser
 import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
+import accountLedgerCli.enums.BalanceSheetOutputFormatsEnum
+import accountLedgerCli.enums.BalanceSheetRefineLevelEnum
+import accountLedgerCli.enums.CommandLineApiMethodBalanceSheetOptionsEnum
 import accountLedgerCli.models.BalanceSheetDataModel
+import accountLedgerCli.models.UserCredentials
 import accountLedgerCli.retrofit.ResponseHolder
 import accountLedgerCli.retrofit.data.AuthenticationDataSource
 import accountLedgerCli.retrofit.data.UsersDataSource
@@ -23,7 +28,8 @@ class UserOperations {
             password: String,
             isNotApiCall: Boolean = true,
             apiMethod: String = "",
-            apiMethodOptions: LinkedHashMap<String, Any> = linkedMapOf()
+            apiMethodOptions: LinkedHashMap<String, Any> = linkedMapOf(),
+            dateTimeInText: String
         ) {
 
             if (isNotApiCall) {
@@ -79,10 +85,14 @@ class UserOperations {
                     println("Error : ${(apiResponse.getValue() as Exception).localizedMessage}")
                     do {
                         print("Retry (Y/N) ? : ")
-                        val input = readLine()
+                        val input: String = readLine()!!
                         when (input) {
                             "Y", "" -> {
-                                login(username = username, password = password)
+                                login(
+                                    username = username,
+                                    password = password,
+                                    dateTimeInText = dateTimeInText
+                                )
                                 return
                             }
 
@@ -134,7 +144,8 @@ class UserOperations {
                                 username = user.username,
                                 userId = authenticationResponseResult.id,
                                 viaAccount = AccountUtils.blankAccount,
-                                toAccount = AccountUtils.blankAccount
+                                toAccount = AccountUtils.blankAccount,
+                                dateTimeInText = dateTimeInText
                             )
                         } else {
                             when (apiMethod) {
@@ -237,7 +248,7 @@ class UserOperations {
         }
 
         @JvmStatic
-        internal fun listUsers() {
+        internal fun listUsers(dateTimeInText: String) {
 
             val usersDataSource = UsersDataSource()
             println("Contacting Server...")
@@ -249,10 +260,12 @@ class UserOperations {
                 println("Error : ${(apiResponse.getValue() as Exception).localizedMessage}")
                 do {
                     print("Retry (Y/N) ? : ")
-                    val input = readLine()
+                    val input: String = readLine()!!
                     when (input) {
                         "Y", "" -> {
-                            listUsers()
+                            listUsers(
+                                dateTimeInText = dateTimeInText
+                            )
                         }
 
                         "N" -> {
@@ -263,14 +276,14 @@ class UserOperations {
                 } while (input != "N")
             } else {
 
-                val usersResponse = apiResponse.getValue() as UsersResponse
-                if (usersResponse.status == 1) {
+                val usersResponse: UsersResponse = apiResponse.getValue() as UsersResponse
+                if (usersResponse.status == 1u) {
 
                     println("No Users...")
 
                 } else {
 
-                    val usersMap = UserUtils.prepareUsersMap(usersResponse.users)
+                    val usersMap: LinkedHashMap<UInt, UserResponse> = UserUtils.prepareUsersMap(usersResponse.users)
                     do {
                         commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
                             listOf(
@@ -285,7 +298,7 @@ class UserOperations {
                                 "Enter Your Choice : "
                             )
                         )
-                        val choice = readLine()
+                        val choice: String = readLine()!!
                         when (choice) {
                             "1" -> {
                                 balanceSheetOfUser(usersMap = usersMap)
@@ -304,7 +317,8 @@ class UserOperations {
                                         username = chosenUser.username,
                                         userId = chosenUser.id,
                                         viaAccount = AccountUtils.blankAccount,
-                                        toAccount = AccountUtils.blankAccount
+                                        toAccount = AccountUtils.blankAccount,
+                                        dateTimeInText = dateTimeInText
                                     )
                                 }
                             }

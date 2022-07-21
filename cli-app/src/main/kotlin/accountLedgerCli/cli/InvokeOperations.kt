@@ -2,9 +2,8 @@ package accountLedgerCli.cli
 
 import accountLedgerCli.api.response.AccountResponse
 import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
-import accountLedgerCli.cli.InsertOperations.insertTransaction
 
-internal fun invokeAutomatedInsertTransaction(
+internal fun automatedInsertTransaction(
 
     userId: UInt,
     eventDateTime: String,
@@ -24,28 +23,7 @@ internal fun invokeAutomatedInsertTransaction(
             "Amount - $amount"
         )
     )
-    return invokeInsertTransaction(
-        userId = userId,
-        eventDateTime = eventDateTime,
-        particulars = particulars,
-        amount = amount,
-        fromAccount = fromAccount,
-        toAccount = toAccount
-    )
-}
-
-internal fun invokeInsertTransaction(
-
-    userId: UInt,
-    eventDateTime: String,
-    particulars: String,
-    amount: Float,
-    fromAccount: AccountResponse,
-    toAccount: AccountResponse
-
-): Boolean {
-
-    return insertTransaction(
+    return InsertOperations.insertTransaction(
         userid = userId,
         eventDateTime = eventDateTime,
         particulars = particulars,

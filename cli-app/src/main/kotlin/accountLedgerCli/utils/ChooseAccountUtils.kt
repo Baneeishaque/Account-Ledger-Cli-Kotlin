@@ -8,6 +8,7 @@ internal class ChooseAccountResult(val chosenAccountId: UInt, val chosenAccount:
 
 internal object ChooseAccountUtils {
 
+    @JvmStatic
     internal fun chooseAccountById(userId: UInt): ChooseAccountResult {
 
         var accountIdInput: UInt
@@ -47,7 +48,7 @@ internal object ChooseAccountUtils {
                 } else {
 
                     val accountsResponseResult: AccountsResponse = apiResponse.getOrNull() as AccountsResponse
-                    if (accountsResponseResult.status == 1) {
+                    if (accountsResponseResult.status == 1u) {
 
                         println("No Accounts...")
                         return AccountUtils.blankChosenAccount

@@ -1,4 +1,4 @@
-package accountLedgerCli.cli
+package accountLedgerCli.enums
 
 enum class CommandLineApiMethodsEnum {
     BalanceSheet

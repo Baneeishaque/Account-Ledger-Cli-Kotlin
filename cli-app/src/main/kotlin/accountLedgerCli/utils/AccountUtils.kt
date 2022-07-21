@@ -4,21 +4,23 @@ import accountLedgerCli.api.response.AccountResponse
 
 internal object AccountUtils {
 
+    @JvmStatic
     internal val blankAccount = AccountResponse(
         id = 0u,
         fullName = "",
         name = "",
-        parentAccountId = 0,
+        parentAccountId = 0u,
         accountType = "",
         notes = "",
         commodityType = "",
         commodityValue = "",
-        ownerId = 0,
+        ownerId = 0u,
         taxable = "",
         placeHolder = ""
     )
 
 
+    @JvmStatic
     internal fun prepareUserAccountsMap(accounts: List<AccountResponse>): LinkedHashMap<UInt, AccountResponse> {
 
         val userAccountsMap = LinkedHashMap<UInt, AccountResponse>()
@@ -26,5 +28,6 @@ internal object AccountUtils {
         return userAccountsMap
     }
 
+    @JvmStatic
     internal val blankChosenAccount = ChooseAccountResult(chosenAccountId = 0u)
 }

@@ -4,6 +4,8 @@ import accountLedgerCli.api.response.AccountResponse
 import accountLedgerCli.api.response.AccountsResponse
 import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
 import accountLedgerCli.cli.App.Companion.userAccountsMap
+import accountLedgerCli.enums.GetAccountsApiCallPurposeEnum
+import accountLedgerCli.enums.HandleAccountsApiResponseResult
 import accountLedgerCli.utils.AccountUtils
 
 internal fun handleAccountsResponseAndPrintMenu(
@@ -11,7 +13,8 @@ internal fun handleAccountsResponseAndPrintMenu(
     username: String,
     userId: UInt,
     viaAccount: AccountResponse,
-    toAccount: AccountResponse
+    toAccount: AccountResponse,
+    dateTimeInText: String
 ) {
 
     if (handleAccountsResponse(apiResponse)) {
@@ -37,7 +40,8 @@ internal fun handleAccountsResponseAndPrintMenu(
                 processChildAccountScreenInput(
                     userAccountsMap = userAccountsMap, userId = userId, username = username,
                     viaAccount = viaAccount,
-                    toAccount = toAccount
+                    toAccount = toAccount,
+                    dateTimeInText = dateTimeInText
                 )
         } while (choice != "0")
     }
@@ -66,7 +70,7 @@ internal fun handleAccountsResponse(apiResponse: Result<AccountsResponse>): Bool
     } else {
 
         val localAccountsResponseWithStatus: AccountsResponse = apiResponse.getOrNull() as AccountsResponse
-        return if (localAccountsResponseWithStatus.status == 1) {
+        return if (localAccountsResponseWithStatus.status == 1u) {
 
             println("No Accounts...")
             false
@@ -82,7 +86,7 @@ internal fun handleAccountsResponse(apiResponse: Result<AccountsResponse>): Bool
 internal fun handleAccountsApiResponse(
 
     apiResponse: Result<AccountsResponse>,
-    purpose: AccountsApiCallPurposeEnum
+    purpose: GetAccountsApiCallPurposeEnum
 
 ): HandleAccountsApiResponseResult {
 
@@ -108,7 +112,7 @@ internal fun handleAccountsApiResponse(
     } else {
 
         val accountsResponseResult: AccountsResponse = apiResponse.getOrNull() as AccountsResponse
-        if (accountsResponseResult.status == 1) {
+        if (accountsResponseResult.status == 1u) {
 
             println("No Accounts...")
 

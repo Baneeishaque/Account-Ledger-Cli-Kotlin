@@ -11,8 +11,8 @@ internal class AuthenticationDataSource {
     private val retrofitClient = ProjectRetrofitClient.retrofitClient
 
     internal suspend fun authenticateUser(
-        username: String?,
-        password: String?
+        username: String,
+        password: String
     ): ResponseHolder<AuthenticationResponse> {
         return try {
 

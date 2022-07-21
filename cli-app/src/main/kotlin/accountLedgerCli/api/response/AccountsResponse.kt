@@ -2,6 +2,6 @@ package accountLedgerCli.api.response
 
 internal data class AccountsResponse(
 
-    internal val status: Int,
+    internal val status: UInt,
     internal val accounts: List<AccountResponse>
 )

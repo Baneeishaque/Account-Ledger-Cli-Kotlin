@@ -12,8 +12,8 @@ internal interface Api {
 
     @GET("${ApiConstants.selectUserMethod}.${ApiConstants.serverFileExtension}")
     suspend fun authenticateUser(
-        @Query("username") username: String?,
-        @Query("password") password: String?
+        @Query("username") username: String,
+        @Query("password") password: String
     ): Response<AuthenticationResponse>
 
     @GET("${ApiConstants.selectUsersMethod}.${ApiConstants.serverFileExtension}")
@@ -21,12 +21,12 @@ internal interface Api {
 
     @GET("${ApiConstants.selectUserAccountsV2Method}.${ApiConstants.serverFileExtension}")
     suspend fun selectUserAccounts(
-        @Query("user_id") userId: UInt?,
-        @Query("parent_account_id") parentAccountId: UInt?
+        @Query("user_id") userId: UInt,
+        @Query("parent_account_id") parentAccountId: UInt
     ): Response<AccountsResponse>
 
     @GET("${ApiConstants.selectUserAccountsFullMethod}.${ApiConstants.serverFileExtension}")
-    suspend fun selectUserAccountsFull(@Query("user_id") userId: UInt?): Response<AccountsResponse>
+    suspend fun selectUserAccountsFull(@Query("user_id") userId: UInt): Response<AccountsResponse>
 
     @GET("${ApiConstants.selectUserTransactionsV2MMethod}.${ApiConstants.serverFileExtension}")
     suspend fun selectUserTransactionsV2M(
@@ -38,11 +38,11 @@ internal interface Api {
     @POST("${ApiConstants.insertTransactionMethod}.${ApiConstants.serverFileExtension}")
     suspend fun insertTransaction(
         @Field("event_date_time") eventDateTimeString: String,
-        @Field("user_id") userId: UInt?,
-        @Field("particulars") particulars: String?,
+        @Field("user_id") userId: UInt,
+        @Field("particulars") particulars: String,
         @Field("amount") amount: Float,
         @Field("from_account_id") fromAccountId: UInt,
-        @Field("to_account_id") toAccountId: UInt?
+        @Field("to_account_id") toAccountId: UInt
     ): Response<InsertionResponse>
 
     @GET("${ApiConstants.selectUserTransactionsAfterSpecifiedDateMethod}.${ApiConstants.serverFileExtension}")

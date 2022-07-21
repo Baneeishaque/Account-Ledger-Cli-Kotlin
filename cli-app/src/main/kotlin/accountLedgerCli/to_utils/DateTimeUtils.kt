@@ -1,18 +1,23 @@
 package accountLedgerCli.to_utils
 
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeFormatter.ofPattern
 
 object DateTimeUtils {
 
-    val normalDateTimePattern = ofPattern("dd/MM/yyyy HH:mm:ss")!!
-    val normalDatePattern = ofPattern("dd/MM/yyyy")!!
+    @JvmStatic
+    val normalDateTimePattern: DateTimeFormatter = ofPattern("dd/MM/yyyy HH:mm:ss")!!
+
+    @JvmStatic
+    val normalDatePattern: DateTimeFormatter = ofPattern("dd/MM/yyyy")!!
 
     //TODO : extract into function
     private const val resetHour = 9
     private const val resetMinute = 0
     private const val resetSecond = 0
 
+    @JvmStatic
     fun addDaysToDateTimeString(
         dateTimeString: String,
         days: Int
@@ -24,6 +29,30 @@ object DateTimeUtils {
         ).format(normalDateTimePattern)
     }
 
+    @JvmStatic
+    fun add5MinutesToDateTimeString(
+        dateTimeInText: String
+    ): String {
+
+        return addMinutesToDateTimeString(
+            dateTimeString = dateTimeInText,
+            minutes = 5
+        )
+    }
+
+    @JvmStatic
+    fun addMinutesToDateTimeString(
+        dateTimeString: String,
+        minutes: Int
+    ): String {
+
+        return addMinutesToDateTimeStringAsDateTime(
+            dateTimeString = dateTimeString,
+            minutes = minutes
+        ).format(normalDateTimePattern)
+    }
+
+    @JvmStatic
     fun addDaysToDateTimeStringAsDateTime(
         dateTimeString: String,
         days: Int
@@ -35,6 +64,18 @@ object DateTimeUtils {
         ).plusDays(days.toLong())
     }
 
+    @JvmStatic
+    fun addMinutesToDateTimeStringAsDateTime(
+        dateTimeString: String,
+        minutes: Int
+    ): LocalDateTime {
+
+        return LocalDateTime.parse(
+            dateTimeString, normalDateTimePattern
+        ).plusMinutes(minutes.toLong())
+    }
+
+    @JvmStatic
     fun add1DayToDateTimeInText(dateTimeInText: String): String {
 
         return addDaysToDateTimeString(
@@ -43,6 +84,7 @@ object DateTimeUtils {
         )
     }
 
+    @JvmStatic
     fun add1DayToDateTimeStringAsDateTime(dateTimeString: String): LocalDateTime {
 
         return addDaysToDateTimeStringAsDateTime(
@@ -51,6 +93,7 @@ object DateTimeUtils {
         )
     }
 
+    @JvmStatic
     fun add2DaysToDateTimeString(dateTimeInText: String): String {
 
         return addDaysToDateTimeString(
@@ -59,6 +102,7 @@ object DateTimeUtils {
         )
     }
 
+    @JvmStatic
     fun add2DaysToDateTimeStringAsDateTime(dateTimeString: String): LocalDateTime {
 
         return addDaysToDateTimeStringAsDateTime(
@@ -67,25 +111,38 @@ object DateTimeUtils {
         )
     }
 
+    @JvmStatic
     fun add1DayWith9ClockTimeToDateTimeInText(dateTimeInText: String): String {
 
-        return add1DayWith9ClockTimeToDateTimeStringAsDateTime(dateTimeString = dateTimeInText).format(normalDateTimePattern)
+        return add1DayWith9ClockTimeToDateTimeStringAsDateTime(dateTimeString = dateTimeInText).format(
+            normalDateTimePattern
+        )
     }
 
+    @JvmStatic
     fun add1DayWith9ClockTimeToDateTimeStringAsDateTime(dateTimeString: String): LocalDateTime {
 
         return add1DayToDateTimeStringAsDateTime(dateTimeString = dateTimeString).withHour(resetHour)
             .withMinute(resetMinute).withSecond(resetSecond)
     }
 
+    @JvmStatic
     fun add2DaysWith9ClockTimeToDateTimeStringAsDateTime(dateTimeString: String): LocalDateTime {
 
         return add2DaysToDateTimeStringAsDateTime(dateTimeString = dateTimeString).withHour(resetHour)
             .withMinute(resetMinute).withSecond(resetSecond)
     }
 
+    @JvmStatic
     fun add2DaysWith9ClockTimeToDateTimeInText(dateTimeInText: String): String {
 
-        return add2DaysWith9ClockTimeToDateTimeStringAsDateTime(dateTimeString = dateTimeInText).format(normalDateTimePattern)
+        return add2DaysWith9ClockTimeToDateTimeStringAsDateTime(dateTimeString = dateTimeInText).format(
+            normalDateTimePattern
+        )
+    }
+
+    @JvmStatic
+    fun getCurrentDateTimeText(): String {
+        return LocalDateTime.now().format(normalDateTimePattern)
     }
 }

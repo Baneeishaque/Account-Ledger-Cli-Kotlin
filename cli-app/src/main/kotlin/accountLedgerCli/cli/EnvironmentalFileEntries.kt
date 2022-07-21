@@ -1,5 +1,7 @@
 package accountLedgerCli.cli
 
+import accountLedgerCli.enums.EnvironmentFileEntryEnum
+
 object EnvironmentalFileEntries {
 
     private const val accountIdFormalName: String = "Account Index No."

@@ -2,31 +2,23 @@ package accountLedgerCli.cli
 
 import accountLedgerCli.api.response.AccountResponse
 import accountLedgerCli.api.response.UserResponse
+import accountLedgerCli.enums.*
 import accountLedgerCli.models.BalanceSheetDataModel
-import accountLedgerCli.to_utils.CommandLinePrintMenu
-import accountLedgerCli.to_utils.CommandLinePrintMenuWithContinuePrompt
-import accountLedgerCli.to_utils.CommandLinePrintMenuWithEnterPrompt
-import accountLedgerCli.to_utils.CommandLinePrintMenuWithTryPrompt
-import accountLedgerCli.to_utils.DateTimeUtils
-import accountLedgerCli.to_utils.ToDoUtils
+import accountLedgerCli.to_utils.*
 import accountLedgerCli.utils.AccountUtils
 import accountLedgerCli.utils.UserUtils
 import io.github.cdimascio.dotenv.Dotenv
 import io.github.cdimascio.dotenv.dotenv
-import kotlinx.cli.ArgParser
-import kotlinx.cli.ArgType
-import kotlinx.cli.ExperimentalCli
-import kotlinx.cli.default
-import kotlinx.cli.optional
-import kotlinx.cli.Subcommand
+import kotlinx.cli.*
 import kotlinx.serialization.json.Json
 import java.nio.file.Paths
-import java.time.LocalDateTime
 
 class App {
     companion object {
-        @JvmStatic
-        internal var dateTimeString: String = LocalDateTime.now().format(DateTimeUtils.normalDateTimePattern)
+//        @JvmStatic
+//        private var dateTimeString: String = LocalDateTime.now().format(DateTimeUtils.normalDateTimePattern)
+
+        private var dateTimeInText: String = DateTimeUtils.getCurrentDateTimeText()
 
         @JvmStatic
         internal var fromAccount: AccountResponse = AccountUtils.blankAccount
@@ -89,10 +81,11 @@ class App {
                     when (choice) {
                         "1" -> UserOperations.login(
                             username = if (identifiedUser == Constants.defaultValueForStringEnvironmentVariables) "" else identifiedUser,
-                            password = dotenv[EnvironmentFileEntryEnum.PASSWORD.name] ?: ""
+                            password = dotenv[EnvironmentFileEntryEnum.PASSWORD.name] ?: "",
+                            dateTimeInText = dateTimeInText
                         )
 
-                        "3" -> UserOperations.listUsers()
+                        "3" -> UserOperations.listUsers(dateTimeInText = dateTimeInText)
                         "2", "4", "5" -> ToDoUtils.showTodo()
                         "0" -> println("Thanks...")
                         else -> invalidOptionMessage()
@@ -208,7 +201,8 @@ class App {
                             apiMethodOptions = linkedMapOf(
                                 CommandLineApiMethodBalanceSheetOptionsEnum.refineLevel.name to refineLevel,
                                 CommandLineApiMethodBalanceSheetOptionsEnum.outputFormat.name to outputFormat
-                            )
+                            ),
+                            dateTimeInText = dateTimeInText
                         )
                     }
                 }

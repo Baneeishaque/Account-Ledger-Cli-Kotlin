@@ -7,7 +7,7 @@ internal class AccountsDataSource : AppDataSource<AccountsResponse>() {
     internal suspend fun selectUserAccounts(
 
         userId: UInt,
-        parentAccountId: UInt? = 0u
+        parentAccountId: UInt = 0u
 
     ): Result<AccountsResponse> {
 

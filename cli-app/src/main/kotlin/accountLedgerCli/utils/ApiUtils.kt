@@ -6,6 +6,7 @@ import kotlinx.coroutines.runBlocking
 
 internal object ApiUtils {
 
+    @JvmStatic
     internal fun getAccountsFull(userId: UInt): Result<AccountsResponse> {
         val apiResponse: Result<AccountsResponse>
         val userAccountsDataSource = AccountsDataSource()

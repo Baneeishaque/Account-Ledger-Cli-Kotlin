@@ -1,73 +1,79 @@
 package accountLedgerCli.to_utils
 
 import accountLedgerCli.cli.App
-import accountLedgerCli.cli.UserCredentials
+import accountLedgerCli.models.UserCredentials
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeParseException
 
 object InputUtils {
 
+    @JvmStatic
     fun getValidFloat(inputString: String, invalidMessage: String): Float {
 
-        try {
-            return inputString.toFloat()
+        return try {
+            inputString.toFloat()
 
         } catch (exception: NumberFormatException) {
 
             println(invalidMessage)
-            return getValidFloat(readLine()!!, invalidMessage)
+            getValidFloat(readLine()!!, invalidMessage)
         }
     }
 
+    @JvmStatic
     fun getValidInt(inputString: String, invalidMessage: String): UInt {
 
-        try {
-            return inputString.toUInt()
+        return try {
+            inputString.toUInt()
 
         } catch (exception: NumberFormatException) {
 
             App.commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
                 listOf(invalidMessage)
             )
-            return getValidInt(readLine()!!, invalidMessage)
+            getValidInt(readLine()!!, invalidMessage)
         }
     }
 
+    @JvmStatic
     fun getValidDateTimeInNormalPattern(): String {
 
         // TODO : Implement Back
         print("Enter Time (DD/MM/YYYY HH:MM:SS) : ")
-        try {
+        return try {
 
-            return LocalDateTime.parse(readLine(), DateTimeUtils.normalDateTimePattern)
+            LocalDateTime.parse(readLine(), DateTimeUtils.normalDateTimePattern)
                 .format(DateTimeUtils.normalDateTimePattern)
 
         } catch (e: DateTimeParseException) {
 
             println("Invalid Date...")
-            return getValidDateTimeInNormalPattern()
+            getValidDateTimeInNormalPattern()
         }
     }
 
+    @JvmStatic
     fun getValidDateInNormalPattern(): String {
 
         // TODO : Implement Back
         print("Enter Date (DD/MM/YYYY) : ")
-        try {
+        return try {
 
-            return LocalDate.parse(readLine(), DateTimeUtils.normalDatePattern)
+            LocalDate.parse(readLine(), DateTimeUtils.normalDatePattern)
                 .format(DateTimeUtils.normalDatePattern)
 
         } catch (e: DateTimeParseException) {
 
             println("Invalid Date...")
-            return getValidDateInNormalPattern()
+            getValidDateInNormalPattern()
         }
     }
 
+    @JvmStatic
     internal fun getUserCredentials(): UserCredentials {
-        val user = UserCredentials("", "")
+
+        val user = UserCredentials(username = "", passcode = "")
         print("Enter Your Username : ")
         user.username = readLine().toString()
         print("Enter Your Password : ")

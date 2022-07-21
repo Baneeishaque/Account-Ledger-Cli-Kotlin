@@ -5,8 +5,9 @@ import accountLedgerCli.api.response.TransactionsResponse
 import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
 import accountLedgerCli.cli.App.Companion.userAccountsMap
 import accountLedgerCli.cli.InsertOperations.addTransaction
+import accountLedgerCli.enums.FunctionCallSourceEnum
+import accountLedgerCli.enums.TransactionTypeEnum
 import accountLedgerCli.retrofit.ResponseHolder
-import accountLedgerCli.to_utils.InputUtils
 import accountLedgerCli.to_utils.ToDoUtils
 import accountLedgerCli.utils.ApiUtils
 
@@ -19,7 +20,8 @@ internal fun viewTransactions(
     functionCallSourceEnum: FunctionCallSourceEnum = FunctionCallSourceEnum.FROM_OTHERS,
     fromAccount: AccountResponse,
     viaAccount: AccountResponse,
-    toAccount: AccountResponse
+    toAccount: AccountResponse,
+    dateTimeInText: String
 
 ): String {
 
@@ -40,7 +42,8 @@ internal fun viewTransactions(
                         functionCallSourceEnum = functionCallSourceEnum,
                         fromAccount = fromAccount,
                         viaAccount = viaAccount,
-                        toAccount = toAccount
+                        toAccount = toAccount,
+                        dateTimeInText = dateTimeInText
                     )
                 }
 
@@ -109,7 +112,8 @@ internal fun viewTransactions(
                                 transactionType = TransactionTypeEnum.NORMAL,
                                 fromAccount = fromAccount,
                                 viaAccount = viaAccount,
-                                toAccount = toAccount
+                                toAccount = toAccount,
+                                dateTimeInText = dateTimeInText
                             )
                         }
                     }
@@ -136,7 +140,8 @@ internal fun viewTransactionsOfSpecificAccount(
     username: String,
     fromAccount: AccountResponse,
     viaAccount: AccountResponse,
-    toAccount: AccountResponse
+    toAccount: AccountResponse,
+    dateTimeInText: String
 ) {
     print("Enter Account Index or 0 to Back : A")
     val inputAccountIndex: String = readLine()!!
@@ -156,7 +161,8 @@ internal fun viewTransactionsOfSpecificAccount(
                     functionCallSourceEnum = FunctionCallSourceEnum.FROM_VIEW_TRANSACTIONS_OF_ACCOUNT,
                     fromAccount = fromAccount,
                     viaAccount = viaAccount,
-                    toAccount = toAccount
+                    toAccount = toAccount,
+                    dateTimeInText = dateTimeInText
                 )
             }
         }

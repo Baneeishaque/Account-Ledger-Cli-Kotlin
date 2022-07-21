@@ -6,6 +6,9 @@ internal object ProjectApiUtils {
 
     internal fun getServerApiMethodAbsoluteUrl(serverApiMethodName: String): String {
 
-        return ApiUtils.getServerApiMethodAbsoluteUrl(serverApiMethodName, ApiConstants.serverFileExtension)
+        return ApiUtils.getServerApiMethodAbsoluteUrl(
+            serverApiMethodName = serverApiMethodName,
+            serverFileExtension = ApiConstants.serverFileExtension
+        )
     }
 }

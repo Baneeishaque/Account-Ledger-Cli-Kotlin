@@ -1,4 +1,4 @@
-package accountLedgerCli.cli
+package accountLedgerCli.enums
 
 import accountLedgerCli.api.response.AccountResponse
 

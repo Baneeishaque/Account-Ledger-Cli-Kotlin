@@ -4,6 +4,7 @@ import accountLedgerCli.api.response.AccountResponse
 import accountLedgerCli.api.response.AccountsResponse
 import accountLedgerCli.api.response.TransactionsResponse
 import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
+import accountLedgerCli.enums.FunctionCallSourceEnum
 import accountLedgerCli.retrofit.ResponseHolder
 import accountLedgerCli.retrofit.data.TransactionsDataSource
 import accountLedgerCli.to_utils.InputUtils
@@ -15,14 +16,16 @@ internal fun checkAccountsAffectedAfterSpecifiedDate(
     username: String,
     fromAccount: AccountResponse,
     viaAccount: AccountResponse,
-    toAccount: AccountResponse
+    toAccount: AccountResponse,
+    dateTimeInText: String
 ) {
 
     val inputDate: String = InputUtils.getValidDateInNormalPattern()
     val transactionsDataSource = TransactionsDataSource()
     println("Contacting Server...")
     val apiResponse: ResponseHolder<TransactionsResponse>
-    val specifiedDate = MysqlUtils.normalDateStringToMysqlDateString(normalDateString = inputDate)
+    val specifiedDate: Pair<Boolean, String> =
+        MysqlUtils.normalDateStringToMysqlDateString(normalDateString = inputDate)
     if (specifiedDate.first) {
         runBlocking {
             apiResponse =
@@ -37,14 +40,16 @@ internal fun checkAccountsAffectedAfterSpecifiedDate(
             println("Error : ${(apiResponse.getValue() as Exception).localizedMessage}")
             do {
                 print("Retry (Y/N) ? : ")
-                val input = readLine()
+                val input: String = readLine()!!
                 when (input) {
                     "Y", "" -> {
                         checkAccountsAffectedAfterSpecifiedDate(
-                            userId = userId, username = username,
+                            userId = userId,
+                            username = username,
                             fromAccount = fromAccount,
                             viaAccount = viaAccount,
-                            toAccount = toAccount
+                            toAccount = toAccount,
+                            dateTimeInText = dateTimeInText
                         )
                         return
                     }
@@ -57,21 +62,22 @@ internal fun checkAccountsAffectedAfterSpecifiedDate(
             } while (input != "N")
         } else {
 
-            val selectUserTransactionsAfterSpecifiedDateResult = apiResponse.getValue() as TransactionsResponse
+            val selectUserTransactionsAfterSpecifiedDateResult: TransactionsResponse =
+                apiResponse.getValue() as TransactionsResponse
             if (selectUserTransactionsAfterSpecifiedDateResult.status == 1u) {
 
                 println("No Transactions...")
 
             } else {
 
-                val accounts = mutableMapOf<UInt, String>()
+                val accounts: MutableMap<UInt, String> = mutableMapOf()
                 selectUserTransactionsAfterSpecifiedDateResult.transactions.forEach { transaction ->
 
                     accounts.putIfAbsent(transaction.from_account_id, transaction.from_account_full_name)
                     accounts.putIfAbsent(transaction.to_account_id, transaction.to_account_full_name)
                 }
                 println("Affected A/Cs : $accounts")
-                for (account in accounts) {
+                for (account: MutableMap.MutableEntry<UInt, String> in accounts) {
 
                     when (viewTransactions(
                         userId = userId,
@@ -81,7 +87,8 @@ internal fun checkAccountsAffectedAfterSpecifiedDate(
                         functionCallSourceEnum = FunctionCallSourceEnum.FROM_CHECK_ACCOUNTS,
                         fromAccount = fromAccount,
                         viaAccount = viaAccount,
-                        toAccount = toAccount
+                        toAccount = toAccount,
+                        dateTimeInText = dateTimeInText
                     )) {
                         "E", "0" -> {
                             break
@@ -98,24 +105,29 @@ internal fun viewChildAccounts(
     userId: UInt,
     fromAccount: AccountResponse,
     viaAccount: AccountResponse,
-    toAccount: AccountResponse
+    toAccount: AccountResponse,
+    dateTimeInText: String
 ) {
 
-    val apiResponse: Result<AccountsResponse> = getAccounts(userId = userId, parentAccountId = fromAccount.id)
+    val apiResponse: Result<AccountsResponse> = getAccounts(
+        userId = userId,
+        parentAccountId = fromAccount.id
+    )
 
     if (apiResponse.isFailure) {
 
         println("Error : ${(apiResponse.exceptionOrNull() as Exception).localizedMessage}")
         do {
             print("Retry (Y/N) ? : ")
-            val input = readLine()
+            val input: String = readLine()!!
             when (input) {
                 "Y", "" -> {
                     viewChildAccounts(
                         username = username, userId = userId,
                         fromAccount = fromAccount,
                         viaAccount = viaAccount,
-                        toAccount = toAccount
+                        toAccount = toAccount,
+                        dateTimeInText = dateTimeInText
                     )
                     return
                 }
@@ -128,10 +140,11 @@ internal fun viewChildAccounts(
         } while (input != "N")
     } else {
 
-        val accountsResponseResult = apiResponse.getOrNull() as AccountsResponse
-        if (accountsResponseResult.status == 1) {
+        val accountsResponseResult: AccountsResponse = apiResponse.getOrNull() as AccountsResponse
+        if (accountsResponseResult.status == 1u) {
 
             println("No Child Accounts...")
+
         } else {
 
             val userAccountsMap = LinkedHashMap<UInt, AccountResponse>()
@@ -156,9 +169,12 @@ internal fun viewChildAccounts(
                 )
 
                 val choice: String = processChildAccountScreenInput(
-                    userAccountsMap, userId, username,
+                    userAccountsMap = userAccountsMap,
+                    userId = userId,
+                    username = username,
                     viaAccount = viaAccount,
-                    toAccount = toAccount
+                    toAccount = toAccount,
+                    dateTimeInText = dateTimeInText
                 )
             } while (choice != "0")
         }

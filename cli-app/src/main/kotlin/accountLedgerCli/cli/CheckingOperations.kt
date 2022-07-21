@@ -2,12 +2,10 @@ package accountLedgerCli.cli
 
 import accountLedgerCli.api.response.AccountResponse
 import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithContinuePrompt
-import accountLedgerCli.cli.App.Companion.dateTimeString
-import accountLedgerCli.cli.InsertOperations.addTransactionStep2
+import accountLedgerCli.enums.TransactionTypeEnum
+import accountLedgerCli.models.InsertTransactionResult
 import accountLedgerCli.to_utils.DateTimeUtils
 import accountLedgerCli.utils.AccountUtils
-import accountLedgerCli.utils.DateUtils
-import java.time.LocalDateTime
 
 internal fun isAccountsAreAvailable(
 
@@ -44,7 +42,7 @@ internal fun transactionContinueCheck(
     fromAccount: AccountResponse,
     viaAccount: AccountResponse,
     toAccount: AccountResponse,
-    dateTimeInText: String = DateUtils.getCurrentDateTimeText(),
+    dateTimeInText: String,
     transactionParticulars: String = "",
     transactionAmount: Float = 0F
 
@@ -64,7 +62,7 @@ internal fun transactionContinueCheck(
                 "", "Continue (Y/N) : "
             )
         )
-        val input: String? = readLine()
+        val input: String = readLine()!!
         when (input) {
             "Y", "" -> {
 
@@ -99,102 +97,129 @@ internal fun addTransactionWithAccountAvailabilityCheck(
     fromAccount: AccountResponse,
     viaAccount: AccountResponse,
     toAccount: AccountResponse,
-    dateTimeInText: String = DateUtils.getCurrentDateTimeText(),
-    transactionParticulars: String = "",
-    transactionAmount: Float = 0F
+    dateTimeInText: String,
+    transactionParticulars: String,
+    transactionAmount: Float
 
-) {
-    if (transactionType == TransactionTypeEnum.VIA) {
+): InsertTransactionResult {
 
-        if (addTransactionStep2(
-                userId = userId,
-                username = username,
-                transactionType = transactionType,
-                fromAccount = fromAccount,
-                viaAccount = viaAccount,
-                toAccount = toAccount,
-                dateTimeInText = dateTimeInText,
-                transactionParticulars = transactionParticulars,
-                transactionAmount = transactionAmount
-            )
-        ) {
-            dateTimeString = ((LocalDateTime.parse(
-                dateTimeString, DateTimeUtils.normalDateTimePattern
-            ) as LocalDateTime).plusMinutes(5) as LocalDateTime).format(DateTimeUtils.normalDateTimePattern)
+    if (isAccountsAreAvailable(
+            transactionType = transactionType,
+            fromAccount = fromAccount,
+            viaAccount = viaAccount,
+            toAccount = toAccount
+        )
+    ) {
+        when (transactionType) {
 
-            if (addTransactionStep2(
+            TransactionTypeEnum.NORMAL -> {
+
+                val addTransactionStep2Result: InsertTransactionResult = InsertOperations.addTransactionStep2(
                     userId = userId,
                     username = username,
-                    fromAccount = viaAccount,
+                    transactionType = TransactionTypeEnum.NORMAL,
+                    fromAccount = fromAccount,
+                    viaAccount = viaAccount,
                     toAccount = toAccount,
-                    transactionType = transactionType,
-                    viaAccount = AccountUtils.blankAccount,
-                    isViaStep = true,
                     dateTimeInText = dateTimeInText,
                     transactionParticulars = transactionParticulars,
                     transactionAmount = transactionAmount
                 )
-            ) {
-                dateTimeString = ((LocalDateTime.parse(
-                    dateTimeString, DateTimeUtils.normalDateTimePattern
-                ) as LocalDateTime).plusMinutes(5) as LocalDateTime).format(DateTimeUtils.normalDateTimePattern)
+                if (addTransactionStep2Result.isSuccess) {
+
+                    return InsertTransactionResult(
+                        isSuccess = true,
+                        dateTimeInText = DateTimeUtils.add5MinutesToDateTimeString(dateTimeInText = addTransactionStep2Result.dateTimeInText!!),
+                        transactionParticulars = addTransactionStep2Result.transactionParticulars!!,
+                        transactionAmount = addTransactionStep2Result.transactionAmount!!
+                    )
+                }
             }
-        }
-    } else if (transactionType == TransactionTypeEnum.NORMAL) {
 
-        if (addTransactionStep2(
-                userId = userId,
-                username = username,
-                fromAccount = fromAccount,
-                toAccount = toAccount,
-                transactionType = TransactionTypeEnum.NORMAL,
-                viaAccount = AccountUtils.blankAccount,
-                dateTimeInText = dateTimeInText,
-                transactionParticulars = transactionParticulars,
-                transactionAmount = transactionAmount
-            )
-        ) {
-            dateTimeString = ((LocalDateTime.parse(
-                dateTimeString, DateTimeUtils.normalDateTimePattern
-            ) as LocalDateTime).plusMinutes(5) as LocalDateTime).format(DateTimeUtils.normalDateTimePattern)
-        }
-    } else if (transactionType == TransactionTypeEnum.TWO_WAY) {
+            TransactionTypeEnum.VIA -> {
 
-        if (addTransactionStep2(
-                userId = userId,
-                username = username,
-                fromAccount = fromAccount,
-                toAccount = toAccount,
-                transactionType = transactionType,
-                viaAccount = AccountUtils.blankAccount,
-                dateTimeInText = dateTimeInText,
-                transactionParticulars = transactionParticulars,
-                transactionAmount = transactionAmount
-            )
-        ) {
-            dateTimeString = ((LocalDateTime.parse(
-                dateTimeString, DateTimeUtils.normalDateTimePattern
-            ) as LocalDateTime).plusMinutes(5) as LocalDateTime).format(DateTimeUtils.normalDateTimePattern)
-
-            if (addTransactionStep2(
+                var addTransactionStep2Result: InsertTransactionResult = InsertOperations.addTransactionStep2(
                     userId = userId,
                     username = username,
-                    fromAccount = toAccount,
-                    toAccount = fromAccount,
-                    transactionType = transactionType,
-                    viaAccount = AccountUtils.blankAccount,
-                    isTwoWayStep = true,
+                    transactionType = TransactionTypeEnum.VIA,
+                    fromAccount = fromAccount,
+                    viaAccount = viaAccount,
+                    toAccount = toAccount,
                     dateTimeInText = dateTimeInText,
                     transactionParticulars = transactionParticulars,
                     transactionAmount = transactionAmount
                 )
-            ) {
-                dateTimeString = ((LocalDateTime.parse(
-                    dateTimeString, DateTimeUtils.normalDateTimePattern
-                ) as LocalDateTime).plusMinutes(5) as LocalDateTime).format(DateTimeUtils.normalDateTimePattern)
+                if (addTransactionStep2Result.isSuccess) {
+
+                    addTransactionStep2Result = InsertOperations.addTransactionStep2(
+                        userId = userId,
+                        username = username,
+                        transactionType = TransactionTypeEnum.VIA,
+                        fromAccount = viaAccount,
+                        viaAccount = AccountUtils.blankAccount,
+                        toAccount = toAccount,
+                        isViaStep = true,
+                        dateTimeInText = DateTimeUtils.add5MinutesToDateTimeString(dateTimeInText = addTransactionStep2Result.dateTimeInText!!),
+                        transactionParticulars = addTransactionStep2Result.transactionParticulars!!,
+                        transactionAmount = addTransactionStep2Result.transactionAmount!!
+                    )
+                    if (addTransactionStep2Result.isSuccess
+                    ) {
+                        return InsertTransactionResult(
+                            isSuccess = true,
+                            dateTimeInText = DateTimeUtils.add5MinutesToDateTimeString(dateTimeInText = addTransactionStep2Result.dateTimeInText!!),
+                            transactionParticulars = addTransactionStep2Result.transactionParticulars!!,
+                            transactionAmount = addTransactionStep2Result.transactionAmount!!
+                        )
+                    }
+                }
+            }
+
+            TransactionTypeEnum.TWO_WAY -> {
+
+                var addTransactionStep2Result: InsertTransactionResult = InsertOperations.addTransactionStep2(
+                    userId = userId,
+                    username = username,
+                    transactionType = transactionType,
+                    fromAccount = fromAccount,
+                    viaAccount = AccountUtils.blankAccount,
+                    toAccount = toAccount,
+                    dateTimeInText = dateTimeInText,
+                    transactionParticulars = transactionParticulars,
+                    transactionAmount = transactionAmount
+                )
+                if (addTransactionStep2Result.isSuccess) {
+
+                    addTransactionStep2Result = InsertOperations.addTransactionStep2(
+                        userId = userId,
+                        username = username,
+                        transactionType = transactionType,
+                        fromAccount = toAccount,
+                        viaAccount = AccountUtils.blankAccount,
+                        toAccount = fromAccount,
+                        isTwoWayStep = true,
+                        dateTimeInText = DateTimeUtils.add5MinutesToDateTimeString(dateTimeInText = addTransactionStep2Result.dateTimeInText!!),
+                        transactionParticulars = addTransactionStep2Result.transactionParticulars!!,
+                        transactionAmount = addTransactionStep2Result.transactionAmount!!
+                    )
+                    if (addTransactionStep2Result.isSuccess) {
+
+                        return InsertTransactionResult(
+                            isSuccess = true,
+                            dateTimeInText = DateTimeUtils.add5MinutesToDateTimeString(dateTimeInText = addTransactionStep2Result.dateTimeInText!!),
+                            transactionParticulars = addTransactionStep2Result.transactionParticulars!!,
+                            transactionAmount = addTransactionStep2Result.transactionAmount!!
+                        )
+                    }
+                }
             }
         }
     }
+    return InsertTransactionResult(
+        isSuccess = false,
+        dateTimeInText = dateTimeInText,
+        transactionParticulars = transactionParticulars,
+        transactionAmount = transactionAmount
+    )
 }
-
 

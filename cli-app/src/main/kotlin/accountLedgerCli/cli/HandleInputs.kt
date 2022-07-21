@@ -11,7 +11,8 @@ internal fun processChildAccountScreenInput(
     userId: UInt,
     username: String,
     viaAccount: AccountResponse,
-    toAccount: AccountResponse
+    toAccount: AccountResponse,
+    dateTimeInText: String
 
 ): String {
 
@@ -28,7 +29,8 @@ internal fun processChildAccountScreenInput(
                 userId = userId,
                 username = username,
                 viaAccount = viaAccount,
-                toAccount = toAccount
+                toAccount = toAccount,
+                dateTimeInText = dateTimeInText
             )
         }
 
@@ -39,7 +41,8 @@ internal fun processChildAccountScreenInput(
                 userId = userId,
                 username = username,
                 viaAccount = viaAccount,
-                toAccount = toAccount
+                toAccount = toAccount,
+                dateTimeInText = dateTimeInText
             )
         }
 
@@ -65,7 +68,8 @@ private fun handleAccountSelection(
     userId: UInt,
     username: String,
     viaAccount: AccountResponse,
-    toAccount: AccountResponse
+    toAccount: AccountResponse,
+    dateTimeInText: String
 
 ) {
 
@@ -76,7 +80,8 @@ private fun handleAccountSelection(
             username = username,
             fromAccount = userAccountsMap[accountId]!!,
             viaAccount = viaAccount,
-            toAccount = toAccount
+            toAccount = toAccount,
+            dateTimeInText = dateTimeInText
         )
     }
 }

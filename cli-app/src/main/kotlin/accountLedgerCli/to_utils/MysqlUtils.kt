@@ -7,35 +7,41 @@ import java.time.format.DateTimeParseException
 
 object MysqlUtils {
 
-    val mysqlDateTimePattern = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")!!
-    val mysqlDatePattern = DateTimeFormatter.ofPattern("yyyy-MM-dd")!!
+    @JvmStatic
+    val mysqlDateTimePattern: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")!!
+
+    @JvmStatic
+    val mysqlDatePattern: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")!!
 
     //TODO : Replace with data class
+    @JvmStatic
     fun normalDateTimeStringToMysqlDateTimeString(normalDateTimeString: String): Pair<Boolean, String> {
 
-        try {
+        return try {
 
-            val result = LocalDateTime.parse(normalDateTimeString, DateTimeUtils.normalDateTimePattern)
+            val result: String = LocalDateTime.parse(normalDateTimeString, DateTimeUtils.normalDateTimePattern)
                 .format(mysqlDateTimePattern)
-            return Pair(true, result)
+            Pair(true, result)
 
         } catch (e: DateTimeParseException) {
 
-            return Pair(false, e.localizedMessage)
+            Pair(false, e.localizedMessage)
         }
     }
 
+    @JvmStatic
     fun normalDateStringToMysqlDateString(normalDateString: String): Pair<Boolean, String> {
 
-        try {
+        return try {
 
-            val result = LocalDate.parse(normalDateString, DateTimeUtils.normalDatePattern).format(mysqlDatePattern)
-            return Pair(true, result)
+            val result: String =
+                LocalDate.parse(normalDateString, DateTimeUtils.normalDatePattern).format(mysqlDatePattern)
+            Pair(true, result)
 
         } catch (e: DateTimeParseException) {
 
-//            println("Something went wrong...")
-            return Pair(false, e.localizedMessage)
+            //            println("Something went wrong...")
+            Pair(false, e.localizedMessage)
         }
     }
 

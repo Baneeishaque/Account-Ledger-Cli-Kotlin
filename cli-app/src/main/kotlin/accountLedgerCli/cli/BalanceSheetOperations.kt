@@ -5,6 +5,7 @@ import accountLedgerCli.api.response.TransactionsResponse
 import accountLedgerCli.api.response.UserResponse
 import accountLedgerCli.cli.App.Companion.chosenUser
 import accountLedgerCli.cli.App.Companion.dotenv
+import accountLedgerCli.enums.BalanceSheetRefineLevelEnum
 import accountLedgerCli.models.*
 import accountLedgerCli.retrofit.ResponseHolder
 import accountLedgerCli.retrofit.data.TransactionsDataSource

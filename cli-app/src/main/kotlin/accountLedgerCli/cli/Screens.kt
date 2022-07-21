@@ -4,6 +4,9 @@ import accountLedgerCli.api.response.AccountResponse
 import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
 import accountLedgerCli.cli.App.Companion.fromAccount
 import accountLedgerCli.cli.InsertOperations.addTransaction
+import accountLedgerCli.enums.BalanceSheetRefineLevelEnum
+import accountLedgerCli.enums.EnvironmentFileEntryEnum
+import accountLedgerCli.enums.TransactionTypeEnum
 import accountLedgerCli.utils.ApiUtils
 
 object Screens {
@@ -11,7 +14,8 @@ object Screens {
         username: String,
         userId: UInt,
         viaAccount: AccountResponse,
-        toAccount: AccountResponse
+        toAccount: AccountResponse,
+        dateTimeInText: String
     ) {
 
 //        println("Env. Variables : ${App.dotenv.entries()}")
@@ -84,7 +88,8 @@ object Screens {
                     username = username,
                     userId = userId,
                     viaAccount = viaAccount,
-                    toAccount = toAccount
+                    toAccount = toAccount,
+                    dateTimeInText = dateTimeInText
                 )
 
                 "2" -> InsertOperations.insertQuickTransactionOnAccount(
@@ -93,7 +98,8 @@ object Screens {
                     userAccountsMapLocal = App.userAccountsMap,
                     username = username,
                     viaAccount = viaAccount,
-                    toAccount = toAccount
+                    toAccount = toAccount,
+                    dateTimeInText = dateTimeInText
                 )
 
                 "3" -> InsertOperations.insertQuickTransactionFromAccount1toAccount2(
@@ -102,7 +108,8 @@ object Screens {
                     userId = userId,
                     userAccountsMapLocal = App.userAccountsMap,
                     username = username,
-                    viaAccount = viaAccount
+                    viaAccount = viaAccount,
+                    dateTimeInText = dateTimeInText
                 )
 
                 "4" -> InsertOperations.insertQuickTransactionFromAccount1toAccount2(
@@ -111,7 +118,8 @@ object Screens {
                     userId = userId,
                     userAccountsMapLocal = App.userAccountsMap,
                     username = username,
-                    viaAccount = viaAccount
+                    viaAccount = viaAccount,
+                    dateTimeInText = dateTimeInText
                 )
 
                 "5" -> InsertOperations.insertQuickTransactionFromAccount1toAccount2(
@@ -120,7 +128,8 @@ object Screens {
                     userId = userId,
                     userAccountsMapLocal = App.userAccountsMap,
                     username = username,
-                    viaAccount = viaAccount
+                    viaAccount = viaAccount,
+                    dateTimeInText = dateTimeInText
                 )
 
                 "6" -> InsertOperations.insertQuickTransactionOnAccount(
@@ -129,7 +138,8 @@ object Screens {
                     userAccountsMapLocal = App.userAccountsMap,
                     username = username,
                     viaAccount = viaAccount,
-                    toAccount = toAccount
+                    toAccount = toAccount,
+                    dateTimeInText = dateTimeInText
                 )
 
                 "7" -> InsertOperations.insertQuickTransactionFromAccount1toAccount2(
@@ -138,7 +148,8 @@ object Screens {
                     userId = userId,
                     userAccountsMapLocal = App.userAccountsMap,
                     username = username,
-                    viaAccount = viaAccount
+                    viaAccount = viaAccount,
+                    dateTimeInText = dateTimeInText
                 )
 
                 "8" -> InsertOperations.insertQuickTransactionFromAccount1toAccount2(
@@ -147,7 +158,8 @@ object Screens {
                     userId = userId,
                     userAccountsMapLocal = App.userAccountsMap,
                     username = username,
-                    viaAccount = viaAccount
+                    viaAccount = viaAccount,
+                    dateTimeInText = dateTimeInText
                 )
 
                 "9" -> InsertOperations.insertQuickTransactionFromAccount1toAccount2(
@@ -156,7 +168,8 @@ object Screens {
                     userId = userId,
                     userAccountsMapLocal = App.userAccountsMap,
                     username = username,
-                    viaAccount = viaAccount
+                    viaAccount = viaAccount,
+                    dateTimeInText = dateTimeInText
                 )
 
                 "10" -> InsertOperations.insertQuickTransactionOnAccount(
@@ -165,7 +178,8 @@ object Screens {
                     userAccountsMapLocal = App.userAccountsMap,
                     username = username,
                     viaAccount = viaAccount,
-                    toAccount = toAccount
+                    toAccount = toAccount,
+                    dateTimeInText = dateTimeInText
                 )
 
                 "11" -> InsertOperations.insertQuickTransactionOnAccount(
@@ -174,7 +188,8 @@ object Screens {
                     userAccountsMapLocal = App.userAccountsMap,
                     username = username,
                     viaAccount = viaAccount,
-                    toAccount = toAccount
+                    toAccount = toAccount,
+                    dateTimeInText = dateTimeInText
                 )
 
                 "12" -> InsertOperations.insertQuickTransactionOnAccount(
@@ -183,7 +198,8 @@ object Screens {
                     userAccountsMapLocal = App.userAccountsMap,
                     username = username,
                     viaAccount = viaAccount,
-                    toAccount = toAccount
+                    toAccount = toAccount,
+                    dateTimeInText = dateTimeInText
                 )
 
                 "13" -> handleAccountsResponseAndPrintMenu(
@@ -191,7 +207,8 @@ object Screens {
                     username = username,
                     userId = userId,
                     viaAccount = viaAccount,
-                    toAccount = toAccount
+                    toAccount = toAccount,
+                    dateTimeInText = dateTimeInText
                 )
 
                 "14" -> importBankFromCsv()
@@ -201,7 +218,8 @@ object Screens {
                     username = username,
                     fromAccount = fromAccount,
                     viaAccount = viaAccount,
-                    toAccount = toAccount
+                    toAccount = toAccount,
+                    dateTimeInText = dateTimeInText
                 )
 
                 "17" -> viewTransactionsOfSpecificAccount(
@@ -209,7 +227,8 @@ object Screens {
                     username = username,
                     fromAccount = fromAccount,
                     viaAccount = viaAccount,
-                    toAccount = toAccount
+                    toAccount = toAccount,
+                    dateTimeInText = dateTimeInText
                 )
 
                 "18" -> printBalanceSheetOfUser(
@@ -266,7 +285,8 @@ object Screens {
         username: String,
         fromAccount: AccountResponse,
         viaAccount: AccountResponse,
-        toAccount: AccountResponse
+        toAccount: AccountResponse,
+        dateTimeInText: String
     ) {
 
         do {
@@ -293,7 +313,8 @@ object Screens {
                     accountFullName = fromAccount.fullName,
                     fromAccount = fromAccount,
                     viaAccount = viaAccount,
-                    toAccount = toAccount
+                    toAccount = toAccount,
+                    dateTimeInText = dateTimeInText
                 )
 
                 "2" -> addTransaction(
@@ -302,15 +323,17 @@ object Screens {
                     transactionType = TransactionTypeEnum.NORMAL,
                     fromAccount = fromAccount,
                     viaAccount = viaAccount,
-                    toAccount = toAccount
+                    toAccount = toAccount,
+                    dateTimeInText = dateTimeInText
                 )
 
                 "3" -> viewChildAccounts(
-                    userId = userId,
                     username = username,
+                    userId = userId,
                     fromAccount = fromAccount,
                     viaAccount = viaAccount,
-                    toAccount = toAccount
+                    toAccount = toAccount,
+                    dateTimeInText = dateTimeInText
                 )
 
                 "4" -> addTransaction(
@@ -319,7 +342,8 @@ object Screens {
                     transactionType = TransactionTypeEnum.VIA,
                     fromAccount = fromAccount,
                     viaAccount = viaAccount,
-                    toAccount = toAccount
+                    toAccount = toAccount,
+                    dateTimeInText = dateTimeInText
                 )
 
                 "5" -> addTransaction(
@@ -328,7 +352,8 @@ object Screens {
                     transactionType = TransactionTypeEnum.TWO_WAY,
                     fromAccount = fromAccount,
                     viaAccount = viaAccount,
-                    toAccount = toAccount
+                    toAccount = toAccount,
+                    dateTimeInText = dateTimeInText
                 )
 
                 "0" -> {}
