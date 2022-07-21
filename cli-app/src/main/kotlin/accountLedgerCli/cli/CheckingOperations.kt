@@ -43,10 +43,10 @@ internal fun transactionContinueCheck(
     viaAccount: AccountResponse,
     toAccount: AccountResponse,
     dateTimeInText: String,
-    transactionParticulars: String = "",
-    transactionAmount: Float = 0F
+    transactionParticulars: String,
+    transactionAmount: Float
 
-) {
+): InsertTransactionResult {
 
     do {
         commandLinePrintMenuWithContinuePrompt.printMenuWithContinuePromptFromListOfCommands(
@@ -62,11 +62,10 @@ internal fun transactionContinueCheck(
                 "", "Continue (Y/N) : "
             )
         )
-        val input: String = readLine()!!
-        when (input) {
+        when (readLine()!!) {
             "Y", "" -> {
 
-                addTransactionWithAccountAvailabilityCheck(
+                return addTransactionWithAccountAvailabilityCheck(
 
                     userId = userId,
                     username = username,
@@ -78,15 +77,15 @@ internal fun transactionContinueCheck(
                     transactionParticulars = transactionParticulars,
                     transactionAmount = transactionAmount
                 )
-                return
             }
 
             "N" -> {
+                return InsertTransactionResult(isSuccess = false)
             }
 
             else -> invalidOptionMessage()
         }
-    } while (input != "N")
+    } while (true)
 }
 
 internal fun addTransactionWithAccountAvailabilityCheck(
@@ -155,8 +154,8 @@ internal fun addTransactionWithAccountAvailabilityCheck(
                         userId = userId,
                         username = username,
                         transactionType = TransactionTypeEnum.VIA,
-                        fromAccount = viaAccount,
-                        viaAccount = AccountUtils.blankAccount,
+                        fromAccount = fromAccount,
+                        viaAccount = viaAccount,
                         toAccount = toAccount,
                         isViaStep = true,
                         dateTimeInText = DateTimeUtils.add5MinutesToDateTimeString(dateTimeInText = addTransactionStep2Result.dateTimeInText!!),
@@ -180,9 +179,9 @@ internal fun addTransactionWithAccountAvailabilityCheck(
                 var addTransactionStep2Result: InsertTransactionResult = InsertOperations.addTransactionStep2(
                     userId = userId,
                     username = username,
-                    transactionType = transactionType,
+                    transactionType = TransactionTypeEnum.TWO_WAY,
                     fromAccount = fromAccount,
-                    viaAccount = AccountUtils.blankAccount,
+                    viaAccount = viaAccount,
                     toAccount = toAccount,
                     dateTimeInText = dateTimeInText,
                     transactionParticulars = transactionParticulars,
@@ -193,10 +192,10 @@ internal fun addTransactionWithAccountAvailabilityCheck(
                     addTransactionStep2Result = InsertOperations.addTransactionStep2(
                         userId = userId,
                         username = username,
-                        transactionType = transactionType,
-                        fromAccount = toAccount,
-                        viaAccount = AccountUtils.blankAccount,
-                        toAccount = fromAccount,
+                        transactionType = TransactionTypeEnum.TWO_WAY,
+                        fromAccount = fromAccount,
+                        viaAccount = viaAccount,
+                        toAccount = toAccount,
                         isTwoWayStep = true,
                         dateTimeInText = DateTimeUtils.add5MinutesToDateTimeString(dateTimeInText = addTransactionStep2Result.dateTimeInText!!),
                         transactionParticulars = addTransactionStep2Result.transactionParticulars!!,

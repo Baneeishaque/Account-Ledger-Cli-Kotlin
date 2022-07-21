@@ -49,27 +49,32 @@ object InsertOperations {
         userAccountsMapLocal: LinkedHashMap<UInt, AccountResponse>,
         username: String,
         viaAccount: AccountResponse,
-        dateTimeInText: String
-    ) {
+        dateTimeInText: String,
+        transactionParticulars: String,
+        transactionAmount: Float
+    ): InsertTransactionResult {
         if (EnvironmentFileOperations.isEnvironmentVariablesAreAvailable(
                 environmentVariables = listOf(
                     account1, account2
                 )
             ) && handleAccountsResponse(ApiUtils.getAccountsFull(userId = userId))
         ) {
-            transactionContinueCheck(
+            return transactionContinueCheck(
                 userId = userId,
                 username = username,
                 transactionType = TransactionTypeEnum.NORMAL,
                 fromAccount = userAccountsMapLocal[account1.value]!!,
                 viaAccount = viaAccount,
                 toAccount = userAccountsMapLocal[account2.value]!!,
-                dateTimeInText = dateTimeInText
+                dateTimeInText = dateTimeInText,
+                transactionParticulars = transactionParticulars,
+                transactionAmount = transactionAmount
             )
         }
+        return InsertTransactionResult(isSuccess = false)
     }
 
-    internal fun insertQuickTransactionOnAccount(
+    internal fun openSpecifiedAccountHome(
         account: EnvironmentVariableForWholeNumber,
         userId: UInt,
         userAccountsMapLocal: LinkedHashMap<UInt, AccountResponse>,
@@ -77,6 +82,8 @@ object InsertOperations {
         viaAccount: AccountResponse,
         toAccount: AccountResponse,
         dateTimeInText: String,
+        transactionParticulars: String,
+        transactionAmount: Float,
     ) {
 
         if (account.isAvailable && handleAccountsResponse(ApiUtils.getAccountsFull(userId = userId))) {
@@ -87,7 +94,9 @@ object InsertOperations {
                 fromAccount = userAccountsMapLocal[account.value]!!,
                 viaAccount = viaAccount,
                 toAccount = toAccount,
-                dateTimeInText = dateTimeInText
+                dateTimeInText = dateTimeInText,
+                transactionParticulars = transactionParticulars,
+                transactionAmount = transactionAmount
             )
         }
     }
@@ -100,9 +109,11 @@ object InsertOperations {
         fromAccount: AccountResponse,
         viaAccount: AccountResponse,
         toAccount: AccountResponse,
-        dateTimeInText: String
+        dateTimeInText: String,
+        transactionParticulars: String,
+        transactionAmount: Float
 
-    ) {
+    ): InsertTransactionResult {
         do {
             commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
                 listOfCommands = Screens.getUserWithCurrentAccountSelectionsAsText(
@@ -136,38 +147,35 @@ object InsertOperations {
                     "Enter Your Choice : "
                 )
             )
-            val choice: String? = readLine()
-            when (choice) {
+            when (readLine()!!) {
                 "1" -> {
-                    if (processChooseAccountResult(
-                            chooseAccountResult = chooseDepositTop(userId = userId),
-                            userId = userId,
-                            username = username,
-                            transactionType = transactionType,
-                            account1 = fromAccount,
-                            account2 = viaAccount,
-                            purpose = GetAccountsApiCallPurposeEnum.TO,
-                            dateTimeInText = dateTimeInText
-                        )
-                    ) {
-                        return
-                    }
+                    return processChooseAccountResult(
+                        chooseAccountResult = chooseDepositTop(userId = userId),
+                        userId = userId,
+                        username = username,
+                        transactionType = transactionType,
+                        account1 = fromAccount,
+                        account2 = viaAccount,
+                        purpose = GetAccountsApiCallPurposeEnum.TO,
+                        dateTimeInText = dateTimeInText,
+                        transactionParticulars = transactionParticulars,
+                        transactionAmount = transactionAmount
+                    )
                 }
 
                 "2" -> {
-                    if (processChooseAccountResult(
-                            chooseAccountResult = chooseDepositFull(userId = userId),
-                            userId = userId,
-                            username = username,
-                            transactionType = transactionType,
-                            account1 = fromAccount,
-                            account2 = viaAccount,
-                            purpose = GetAccountsApiCallPurposeEnum.TO,
-                            dateTimeInText = dateTimeInText
-                        )
-                    ) {
-                        return
-                    }
+                    return processChooseAccountResult(
+                        chooseAccountResult = chooseDepositFull(userId = userId),
+                        userId = userId,
+                        username = username,
+                        transactionType = transactionType,
+                        account1 = fromAccount,
+                        account2 = viaAccount,
+                        purpose = GetAccountsApiCallPurposeEnum.TO,
+                        dateTimeInText = dateTimeInText,
+                        transactionParticulars = transactionParticulars,
+                        transactionAmount = transactionAmount
+                    )
                 }
 
                 "3" -> {
@@ -175,7 +183,7 @@ object InsertOperations {
                     val chooseAccountResult: ChooseAccountResult = ChooseAccountUtils.chooseAccountById(userId = userId)
                     if (chooseAccountResult.chosenAccountId != 0u) {
 
-                        processSelectedAccount(
+                        return processSelectedAccount(
                             selectedAccount = chooseAccountResult.chosenAccount!!,
                             userId = userId,
                             username = username,
@@ -183,49 +191,48 @@ object InsertOperations {
                             account1 = fromAccount,
                             account2 = viaAccount,
                             purpose = GetAccountsApiCallPurposeEnum.TO,
-                            dateTimeInText = dateTimeInText
+                            dateTimeInText = dateTimeInText,
+                            transactionParticulars = transactionParticulars,
+                            transactionAmount = transactionAmount
                         )
-                        return
                     }
                 }
 
                 "4" -> {
-                    if (processChooseAccountResult(
-                            chooseAccountResult = chooseWithdrawTop(userId = userId),
-                            userId = userId,
-                            username = username,
-                            transactionType = transactionType,
-                            account1 = viaAccount,
-                            account2 = toAccount,
-                            purpose = GetAccountsApiCallPurposeEnum.FROM,
-                            dateTimeInText = dateTimeInText
-                        )
-                    ) {
-                        return
-                    }
+                    return processChooseAccountResult(
+                        chooseAccountResult = chooseWithdrawTop(userId = userId),
+                        userId = userId,
+                        username = username,
+                        transactionType = transactionType,
+                        account1 = viaAccount,
+                        account2 = toAccount,
+                        purpose = GetAccountsApiCallPurposeEnum.FROM,
+                        dateTimeInText = dateTimeInText,
+                        transactionParticulars = transactionParticulars,
+                        transactionAmount = transactionAmount
+                    )
                 }
 
                 "5" -> {
-                    if (processChooseAccountResult(
-                            chooseAccountResult = chooseWithdrawFull(userId = userId),
-                            userId = userId,
-                            username = username,
-                            transactionType = transactionType,
-                            account1 = viaAccount,
-                            account2 = toAccount,
-                            purpose = GetAccountsApiCallPurposeEnum.FROM,
-                            dateTimeInText = dateTimeInText
-                        )
-                    ) {
-                        return
-                    }
+                    return processChooseAccountResult(
+                        chooseAccountResult = chooseWithdrawFull(userId = userId),
+                        userId = userId,
+                        username = username,
+                        transactionType = transactionType,
+                        account1 = viaAccount,
+                        account2 = toAccount,
+                        purpose = GetAccountsApiCallPurposeEnum.FROM,
+                        dateTimeInText = dateTimeInText,
+                        transactionParticulars = transactionParticulars,
+                        transactionAmount = transactionAmount
+                    )
                 }
 
                 "6" -> {
                     val chooseAccountResult: ChooseAccountResult = ChooseAccountUtils.chooseAccountById(userId = userId)
                     if (chooseAccountResult.chosenAccountId != 0u) {
 
-                        processSelectedAccount(
+                        return processSelectedAccount(
                             selectedAccount = chooseAccountResult.chosenAccount!!,
                             userId = userId,
                             username = username,
@@ -233,97 +240,106 @@ object InsertOperations {
                             account1 = viaAccount,
                             account2 = toAccount,
                             purpose = GetAccountsApiCallPurposeEnum.FROM,
-                            dateTimeInText = dateTimeInText
+                            dateTimeInText = dateTimeInText,
+                            transactionParticulars = transactionParticulars,
+                            transactionAmount = transactionAmount
                         )
-                        return
                     }
                 }
 
                 "7" -> {
 
-                    transactionContinueCheck(
+                    return transactionContinueCheck(
                         userId = userId,
                         username = username,
                         transactionType = transactionType,
                         fromAccount = fromAccount,
                         viaAccount = viaAccount,
                         toAccount = toAccount,
-                        dateTimeInText = dateTimeInText
+                        dateTimeInText = dateTimeInText,
+                        transactionParticulars = transactionParticulars,
+                        transactionAmount = transactionAmount
                     )
-                    return
                 }
 
                 "8" -> {
 
                     if (transactionType == TransactionTypeEnum.VIA) {
 
-                        addTransaction(
+                        return addTransaction(
                             userId = userId,
                             username = username,
                             transactionType = transactionType,
                             fromAccount = viaAccount,
                             viaAccount = fromAccount,
                             toAccount = toAccount,
-                            dateTimeInText = dateTimeInText
+                            dateTimeInText = dateTimeInText,
+                            transactionParticulars = transactionParticulars,
+                            transactionAmount = transactionAmount
                         )
 
                     } else {
 
-                        addTransaction(
+                        return addTransaction(
                             userId = userId,
                             username = username,
                             transactionType = transactionType,
                             fromAccount = toAccount,
                             viaAccount = viaAccount,
                             toAccount = fromAccount,
-                            dateTimeInText = dateTimeInText
+                            dateTimeInText = dateTimeInText,
+                            transactionParticulars = transactionParticulars,
+                            transactionAmount = transactionAmount
                         )
                     }
-                    return
                 }
 
                 "9" -> {
 
                     if (transactionType == TransactionTypeEnum.VIA) {
 
-                        transactionContinueCheck(
+                        return transactionContinueCheck(
                             userId = userId,
                             username = username,
                             transactionType = transactionType,
                             fromAccount = viaAccount,
                             viaAccount = fromAccount,
                             toAccount = toAccount,
-                            dateTimeInText = dateTimeInText
+                            dateTimeInText = dateTimeInText,
+                            transactionParticulars = transactionParticulars,
+                            transactionAmount = transactionAmount
                         )
                     } else {
 
-                        invokeContinueTransactionAfterExchangeOfFromAndToAccounts(
+                        return invokeContinueTransactionAfterExchangeOfFromAndToAccounts(
+
                             userId = userId,
                             username = username,
                             transactionType = transactionType,
                             fromAccount = fromAccount,
                             viaAccount = viaAccount,
                             toAccount = toAccount,
-                            dateTimeInText = dateTimeInText
+                            dateTimeInText = dateTimeInText,
+                            transactionParticulars = transactionParticulars,
+                            transactionAmount = transactionAmount
                         )
                     }
-                    return
                 }
 
                 "10" -> {
                     if (transactionType == TransactionTypeEnum.VIA) {
 
-                        addTransaction(
+                        return addTransaction(
                             userId = userId,
                             username = username,
                             transactionType = transactionType,
                             fromAccount = fromAccount,
                             viaAccount = toAccount,
                             toAccount = viaAccount,
-                            dateTimeInText = dateTimeInText
+                            dateTimeInText = dateTimeInText,
+                            transactionParticulars = transactionParticulars,
+                            transactionAmount = transactionAmount
                         )
-                        return
-
                     } else {
                         invalidOptionMessage()
                     }
@@ -332,16 +348,17 @@ object InsertOperations {
                 "11" -> {
                     if (transactionType == TransactionTypeEnum.VIA) {
 
-                        transactionContinueCheck(
+                        return transactionContinueCheck(
                             userId = userId,
                             username = username,
                             transactionType = transactionType,
                             fromAccount = fromAccount,
                             viaAccount = toAccount,
                             toAccount = viaAccount,
-                            dateTimeInText = dateTimeInText
+                            dateTimeInText = dateTimeInText,
+                            transactionParticulars = transactionParticulars,
+                            transactionAmount = transactionAmount
                         )
-                        return
 
                     } else {
                         invalidOptionMessage()
@@ -351,16 +368,17 @@ object InsertOperations {
                 "12" -> {
                     if (transactionType == TransactionTypeEnum.VIA) {
 
-                        addTransaction(
+                        return addTransaction(
                             userId = userId,
                             username = username,
                             transactionType = transactionType,
                             fromAccount = toAccount,
                             viaAccount = viaAccount,
                             toAccount = fromAccount,
-                            dateTimeInText = dateTimeInText
+                            dateTimeInText = dateTimeInText,
+                            transactionParticulars = transactionParticulars,
+                            transactionAmount = transactionAmount
                         )
-                        return
 
                     } else {
                         invalidOptionMessage()
@@ -370,17 +388,18 @@ object InsertOperations {
                 "13" -> {
                     if (transactionType == TransactionTypeEnum.VIA) {
 
-                        invokeContinueTransactionAfterExchangeOfFromAndToAccounts(
+                        return invokeContinueTransactionAfterExchangeOfFromAndToAccounts(
+
                             userId = userId,
                             username = username,
                             transactionType = transactionType,
                             fromAccount = fromAccount,
                             viaAccount = viaAccount,
                             toAccount = toAccount,
-                            dateTimeInText = dateTimeInText
+                            dateTimeInText = dateTimeInText,
+                            transactionParticulars = transactionParticulars,
+                            transactionAmount = transactionAmount
                         )
-                        return
-
                     } else {
                         invalidOptionMessage()
                     }
@@ -390,19 +409,18 @@ object InsertOperations {
 
                     if (transactionType == TransactionTypeEnum.VIA) {
 
-                        if (processChooseAccountResult(
-                                chooseAccountResult = chooseViaTop(userId = userId),
-                                userId = userId,
-                                username = username,
-                                transactionType = transactionType,
-                                account1 = fromAccount,
-                                account2 = toAccount,
-                                purpose = GetAccountsApiCallPurposeEnum.VIA,
-                                dateTimeInText = dateTimeInText
-                            )
-                        ) {
-                            return
-                        }
+                        return processChooseAccountResult(
+                            chooseAccountResult = chooseViaTop(userId = userId),
+                            userId = userId,
+                            username = username,
+                            transactionType = transactionType,
+                            account1 = fromAccount,
+                            account2 = toAccount,
+                            purpose = GetAccountsApiCallPurposeEnum.VIA,
+                            dateTimeInText = dateTimeInText,
+                            transactionParticulars = transactionParticulars,
+                            transactionAmount = transactionAmount
+                        )
                     } else {
                         invalidOptionMessage()
                     }
@@ -412,19 +430,18 @@ object InsertOperations {
 
                     if (transactionType == TransactionTypeEnum.VIA) {
 
-                        if (processChooseAccountResult(
-                                chooseAccountResult = chooseViaFull(userId = userId),
-                                userId = userId,
-                                username = username,
-                                transactionType = transactionType,
-                                account1 = fromAccount,
-                                account2 = toAccount,
-                                purpose = GetAccountsApiCallPurposeEnum.VIA,
-                                dateTimeInText = dateTimeInText
-                            )
-                        ) {
-                            return
-                        }
+                        return processChooseAccountResult(
+                            chooseAccountResult = chooseViaFull(userId = userId),
+                            userId = userId,
+                            username = username,
+                            transactionType = transactionType,
+                            account1 = fromAccount,
+                            account2 = toAccount,
+                            purpose = GetAccountsApiCallPurposeEnum.VIA,
+                            dateTimeInText = dateTimeInText,
+                            transactionParticulars = transactionParticulars,
+                            transactionAmount = transactionAmount
+                        )
                     } else {
                         invalidOptionMessage()
                     }
@@ -438,7 +455,7 @@ object InsertOperations {
                             ChooseAccountUtils.chooseAccountById(userId = userId)
                         if (chooseAccountResult.chosenAccountId != 0u) {
 
-                            processSelectedAccount(
+                            return processSelectedAccount(
                                 selectedAccount = chooseAccountResult.chosenAccount!!,
                                 userId = userId,
                                 username = username,
@@ -446,23 +463,28 @@ object InsertOperations {
                                 account1 = fromAccount,
                                 account2 = toAccount,
                                 purpose = GetAccountsApiCallPurposeEnum.VIA,
-                                dateTimeInText = dateTimeInText
+                                dateTimeInText = dateTimeInText,
+                                transactionParticulars = transactionParticulars,
+                                transactionAmount = transactionAmount
                             )
-                            return
                         }
                     } else {
                         invalidOptionMessage()
                     }
                 }
 
-                "0" -> {}
+                "0" -> {
+                    return InsertTransactionResult(isSuccess = false)
+                }
+
                 else -> invalidOptionMessage()
             }
-        } while (choice != "0")
+        } while (true)
     }
 
 
     private fun processChooseAccountResult(
+
         chooseAccountResult: HandleAccountsApiResponseResult,
         userId: UInt,
         username: String,
@@ -470,10 +492,16 @@ object InsertOperations {
         account1: AccountResponse,
         account2: AccountResponse,
         purpose: GetAccountsApiCallPurposeEnum,
-        dateTimeInText: String
-    ): Boolean {
+        dateTimeInText: String,
+        transactionParticulars: String,
+        transactionAmount: Float
+
+    ): InsertTransactionResult {
+
         if (chooseAccountResult.isAccountIdSelected) {
-            processSelectedAccount(
+
+            return processSelectedAccount(
+
                 selectedAccount = chooseAccountResult.selectedAccount!!,
                 userId = userId,
                 username = username,
@@ -481,14 +509,16 @@ object InsertOperations {
                 account1 = account1,
                 account2 = account2,
                 purpose = purpose,
-                dateTimeInText = dateTimeInText
+                dateTimeInText = dateTimeInText,
+                transactionParticulars = transactionParticulars,
+                transactionAmount = transactionAmount
             )
-            return true
         }
-        return false
+        return InsertTransactionResult(isSuccess = false)
     }
 
     private fun processSelectedAccount(
+
         selectedAccount: AccountResponse,
         userId: UInt,
         username: String,
@@ -496,64 +526,86 @@ object InsertOperations {
         account1: AccountResponse,
         account2: AccountResponse,
         purpose: GetAccountsApiCallPurposeEnum,
-        dateTimeInText: String
-    ) {
+        dateTimeInText: String,
+        transactionParticulars: String,
+        transactionAmount: Float
+
+    ): InsertTransactionResult {
+
         when (purpose) {
+
             GetAccountsApiCallPurposeEnum.TO -> {
-                transactionContinueCheck(
+
+                return transactionContinueCheck(
                     userId = userId,
                     username = username,
                     transactionType = transactionType,
                     fromAccount = account1,
                     viaAccount = account2,
                     toAccount = selectedAccount,
-                    dateTimeInText = dateTimeInText
+                    dateTimeInText = dateTimeInText,
+                    transactionParticulars = transactionParticulars,
+                    transactionAmount = transactionAmount
                 )
             }
 
             GetAccountsApiCallPurposeEnum.FROM -> {
-                transactionContinueCheck(
+
+                return transactionContinueCheck(
                     userId = userId,
                     username = username,
                     transactionType = transactionType,
                     fromAccount = selectedAccount,
                     viaAccount = account1,
                     toAccount = account2,
-                    dateTimeInText = dateTimeInText
+                    dateTimeInText = dateTimeInText,
+                    transactionParticulars = transactionParticulars,
+                    transactionAmount = transactionAmount
                 )
             }
 
             GetAccountsApiCallPurposeEnum.VIA -> {
-                transactionContinueCheck(
+
+                return transactionContinueCheck(
                     userId = userId,
                     username = username,
                     transactionType = transactionType,
                     fromAccount = account1,
                     viaAccount = selectedAccount,
                     toAccount = account2,
-                    dateTimeInText = dateTimeInText
+                    dateTimeInText = dateTimeInText,
+                    transactionParticulars = transactionParticulars,
+                    transactionAmount = transactionAmount
                 )
             }
         }
     }
 
     private fun invokeContinueTransactionAfterExchangeOfFromAndToAccounts(
+
         userId: UInt,
         username: String,
         transactionType: TransactionTypeEnum,
         fromAccount: AccountResponse,
         viaAccount: AccountResponse,
         toAccount: AccountResponse,
-        dateTimeInText: String
-    ) {
-        transactionContinueCheck(
+        dateTimeInText: String,
+        transactionParticulars: String,
+        transactionAmount: Float
+
+    ): InsertTransactionResult {
+
+        return transactionContinueCheck(
+
             userId = userId,
             username = username,
             transactionType = transactionType,
             fromAccount = toAccount,
             viaAccount = viaAccount,
             toAccount = fromAccount,
-            dateTimeInText = dateTimeInText
+            dateTimeInText = dateTimeInText,
+            transactionParticulars = transactionParticulars,
+            transactionAmount = transactionAmount
         )
     }
 
@@ -589,7 +641,7 @@ object InsertOperations {
         menuItems = menuItems + listOf(
             "Deposit Account - ${toAccount.id} : ${toAccount.fullName}",
         )
-        if (isViaStep || isTwoWayStep) {
+        if (isViaStep) {
 
             return InsertTransactionResult(
                 isSuccess = automatedInsertTransaction(
@@ -597,8 +649,24 @@ object InsertOperations {
                     eventDateTime = localDateTimeInText,
                     particulars = localTransactionParticulars,
                     amount = localTransactionAmount,
-                    fromAccount = fromAccount,
+                    fromAccount = viaAccount,
                     toAccount = toAccount
+                ),
+                dateTimeInText = localDateTimeInText,
+                transactionParticulars = localTransactionParticulars,
+                transactionAmount = localTransactionAmount
+            )
+
+        } else if (isTwoWayStep) {
+
+            return InsertTransactionResult(
+                isSuccess = automatedInsertTransaction(
+                    userId = userId,
+                    eventDateTime = localDateTimeInText,
+                    particulars = localTransactionParticulars,
+                    amount = localTransactionAmount,
+                    fromAccount = toAccount,
+                    toAccount = fromAccount
                 ),
                 dateTimeInText = localDateTimeInText,
                 transactionParticulars = localTransactionParticulars,
@@ -777,19 +845,43 @@ object InsertOperations {
                         when (readLine()!!) {
 
                             "Y", "" -> {
-                                return InsertTransactionResult(
-                                    isSuccess = insertTransaction(
-                                        userid = userId,
-                                        eventDateTime = localDateTimeInText,
-                                        particulars = localTransactionParticulars,
-                                        amount = localTransactionAmount,
-                                        fromAccount = fromAccount,
-                                        toAccount = toAccount
-                                    ),
-                                    dateTimeInText = localDateTimeInText,
-                                    transactionParticulars = localTransactionParticulars,
-                                    transactionAmount = localTransactionAmount
-                                )
+
+                                when (transactionType) {
+
+                                    TransactionTypeEnum.NORMAL, TransactionTypeEnum.TWO_WAY -> {
+
+                                        return InsertTransactionResult(
+                                            isSuccess = insertTransaction(
+                                                userid = userId,
+                                                eventDateTime = localDateTimeInText,
+                                                particulars = localTransactionParticulars,
+                                                amount = localTransactionAmount,
+                                                fromAccount = fromAccount,
+                                                toAccount = toAccount
+                                            ),
+                                            dateTimeInText = localDateTimeInText,
+                                            transactionParticulars = localTransactionParticulars,
+                                            transactionAmount = localTransactionAmount
+                                        )
+                                    }
+
+                                    TransactionTypeEnum.VIA -> {
+
+                                        return InsertTransactionResult(
+                                            isSuccess = insertTransaction(
+                                                userid = userId,
+                                                eventDateTime = localDateTimeInText,
+                                                particulars = localTransactionParticulars,
+                                                amount = localTransactionAmount,
+                                                fromAccount = fromAccount,
+                                                toAccount = viaAccount
+                                            ),
+                                            dateTimeInText = localDateTimeInText,
+                                            transactionParticulars = localTransactionParticulars,
+                                            transactionAmount = localTransactionAmount
+                                        )
+                                    }
+                                }
                             }
                             // TODO : Back to fields
                             "N" -> return addTransactionStep2(
@@ -969,7 +1061,7 @@ object InsertOperations {
         }
     }
 
-    internal fun insertTransaction(
+    private fun insertTransaction(
 
         userid: UInt,
         eventDateTime: String,
@@ -1056,4 +1148,34 @@ object InsertOperations {
         environmentVariableName = environmentVariableName,
         environmentVariableFormalName = environmentVariableFormalName
     )
+
+    private fun automatedInsertTransaction(
+
+        userId: UInt,
+        eventDateTime: String,
+        particulars: String,
+        amount: Float,
+        fromAccount: AccountResponse,
+        toAccount: AccountResponse
+
+    ): Boolean {
+
+        commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
+            listOfCommands = listOf(
+                "\nTime - $eventDateTime",
+                "Withdraw Account - ${fromAccount.id} : ${fromAccount.fullName}",
+                "Deposit Account - ${toAccount.id} : ${toAccount.fullName}",
+                "Particulars - $particulars",
+                "Amount - $amount"
+            )
+        )
+        return insertTransaction(
+            userid = userId,
+            eventDateTime = eventDateTime,
+            particulars = particulars,
+            amount = amount,
+            fromAccount = fromAccount,
+            toAccount = toAccount
+        )
+    }
 }

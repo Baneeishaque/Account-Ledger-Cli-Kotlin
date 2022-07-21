@@ -12,7 +12,9 @@ internal fun processChildAccountScreenInput(
     username: String,
     viaAccount: AccountResponse,
     toAccount: AccountResponse,
-    dateTimeInText: String
+    dateTimeInText: String,
+    transactionParticulars: String,
+    transactionAmount: Float
 
 ): String {
 
@@ -30,7 +32,9 @@ internal fun processChildAccountScreenInput(
                 username = username,
                 viaAccount = viaAccount,
                 toAccount = toAccount,
-                dateTimeInText = dateTimeInText
+                dateTimeInText = dateTimeInText,
+                transactionParticulars = transactionParticulars,
+                transactionAmount = transactionAmount
             )
         }
 
@@ -42,7 +46,9 @@ internal fun processChildAccountScreenInput(
                 username = username,
                 viaAccount = viaAccount,
                 toAccount = toAccount,
-                dateTimeInText = dateTimeInText
+                dateTimeInText = dateTimeInText,
+                transactionParticulars = transactionParticulars,
+                transactionAmount = transactionAmount
             )
         }
 
@@ -69,7 +75,9 @@ private fun handleAccountSelection(
     username: String,
     viaAccount: AccountResponse,
     toAccount: AccountResponse,
-    dateTimeInText: String
+    dateTimeInText: String,
+    transactionParticulars: String,
+    transactionAmount: Float
 
 ) {
 
@@ -81,7 +89,9 @@ private fun handleAccountSelection(
             fromAccount = userAccountsMap[accountId]!!,
             viaAccount = viaAccount,
             toAccount = toAccount,
-            dateTimeInText = dateTimeInText
+            dateTimeInText = dateTimeInText,
+            transactionParticulars = transactionParticulars,
+            transactionAmount = transactionAmount
         )
     }
 }

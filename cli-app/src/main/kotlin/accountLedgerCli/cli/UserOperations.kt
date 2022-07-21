@@ -29,7 +29,9 @@ class UserOperations {
             isNotApiCall: Boolean = true,
             apiMethod: String = "",
             apiMethodOptions: LinkedHashMap<String, Any> = linkedMapOf(),
-            dateTimeInText: String
+            dateTimeInText: String,
+            transactionParticulars: String,
+            transactionAmount: Float
         ) {
 
             if (isNotApiCall) {
@@ -91,7 +93,9 @@ class UserOperations {
                                 login(
                                     username = username,
                                     password = password,
-                                    dateTimeInText = dateTimeInText
+                                    dateTimeInText = dateTimeInText,
+                                    transactionParticulars = transactionParticulars,
+                                    transactionAmount = transactionAmount
                                 )
                                 return
                             }
@@ -145,7 +149,9 @@ class UserOperations {
                                 userId = authenticationResponseResult.id,
                                 viaAccount = AccountUtils.blankAccount,
                                 toAccount = AccountUtils.blankAccount,
-                                dateTimeInText = dateTimeInText
+                                dateTimeInText = dateTimeInText,
+                                transactionParticulars = transactionParticulars,
+                                transactionAmount = transactionAmount
                             )
                         } else {
                             when (apiMethod) {
@@ -248,7 +254,7 @@ class UserOperations {
         }
 
         @JvmStatic
-        internal fun listUsers(dateTimeInText: String) {
+        internal fun listUsers(dateTimeInText: String, transactionParticulars: String, transactionAmount: Float) {
 
             val usersDataSource = UsersDataSource()
             println("Contacting Server...")
@@ -264,7 +270,9 @@ class UserOperations {
                     when (input) {
                         "Y", "" -> {
                             listUsers(
-                                dateTimeInText = dateTimeInText
+                                dateTimeInText = dateTimeInText,
+                                transactionParticulars = transactionParticulars,
+                                transactionAmount = transactionAmount
                             )
                         }
 
@@ -318,7 +326,9 @@ class UserOperations {
                                         userId = chosenUser.id,
                                         viaAccount = AccountUtils.blankAccount,
                                         toAccount = AccountUtils.blankAccount,
-                                        dateTimeInText = dateTimeInText
+                                        dateTimeInText = dateTimeInText,
+                                        transactionParticulars = transactionParticulars,
+                                        transactionAmount = transactionAmount
                                     )
                                 }
                             }

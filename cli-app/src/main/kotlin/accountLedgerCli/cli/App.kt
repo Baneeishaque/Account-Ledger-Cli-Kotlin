@@ -56,7 +56,7 @@ class App {
 
         @JvmStatic
         @OptIn(ExperimentalCli::class)
-        fun main(args: Array<String>) {
+        fun main(args: Array<String>, transactionParticulars: String, transactionAmount: Float) {
             if (args.isEmpty()) {
                 do {
                     val identifiedUser: String = dotenv[EnvironmentFileEntryEnum.USER_NAME.name]
@@ -82,10 +82,17 @@ class App {
                         "1" -> UserOperations.login(
                             username = if (identifiedUser == Constants.defaultValueForStringEnvironmentVariables) "" else identifiedUser,
                             password = dotenv[EnvironmentFileEntryEnum.PASSWORD.name] ?: "",
-                            dateTimeInText = dateTimeInText
+                            dateTimeInText = dateTimeInText,
+                            transactionParticulars = transactionParticulars,
+                            transactionAmount = transactionAmount
                         )
 
-                        "3" -> UserOperations.listUsers(dateTimeInText = dateTimeInText)
+                        "3" -> UserOperations.listUsers(
+                            dateTimeInText = dateTimeInText,
+                            transactionParticulars = transactionParticulars,
+                            transactionAmount = transactionAmount
+                        )
+
                         "2", "4", "5" -> ToDoUtils.showTodo()
                         "0" -> println("Thanks...")
                         else -> invalidOptionMessage()
@@ -202,7 +209,9 @@ class App {
                                 CommandLineApiMethodBalanceSheetOptionsEnum.refineLevel.name to refineLevel,
                                 CommandLineApiMethodBalanceSheetOptionsEnum.outputFormat.name to outputFormat
                             ),
-                            dateTimeInText = dateTimeInText
+                            dateTimeInText = dateTimeInText,
+                            transactionParticulars = transactionParticulars,
+                            transactionAmount = transactionAmount
                         )
                     }
                 }

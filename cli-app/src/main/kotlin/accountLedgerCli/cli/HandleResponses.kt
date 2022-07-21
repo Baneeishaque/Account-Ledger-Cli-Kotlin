@@ -14,7 +14,9 @@ internal fun handleAccountsResponseAndPrintMenu(
     userId: UInt,
     viaAccount: AccountResponse,
     toAccount: AccountResponse,
-    dateTimeInText: String
+    dateTimeInText: String,
+    transactionParticulars: String,
+    transactionAmount: Float
 ) {
 
     if (handleAccountsResponse(apiResponse)) {
@@ -41,7 +43,9 @@ internal fun handleAccountsResponseAndPrintMenu(
                     userAccountsMap = userAccountsMap, userId = userId, username = username,
                     viaAccount = viaAccount,
                     toAccount = toAccount,
-                    dateTimeInText = dateTimeInText
+                    dateTimeInText = dateTimeInText,
+                    transactionParticulars = transactionParticulars,
+                    transactionAmount = transactionAmount
                 )
         } while (choice != "0")
     }

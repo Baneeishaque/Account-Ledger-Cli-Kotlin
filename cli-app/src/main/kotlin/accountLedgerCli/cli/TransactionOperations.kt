@@ -4,7 +4,6 @@ import accountLedgerCli.api.response.AccountResponse
 import accountLedgerCli.api.response.TransactionsResponse
 import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
 import accountLedgerCli.cli.App.Companion.userAccountsMap
-import accountLedgerCli.cli.InsertOperations.addTransaction
 import accountLedgerCli.enums.FunctionCallSourceEnum
 import accountLedgerCli.enums.TransactionTypeEnum
 import accountLedgerCli.retrofit.ResponseHolder
@@ -21,7 +20,9 @@ internal fun viewTransactions(
     fromAccount: AccountResponse,
     viaAccount: AccountResponse,
     toAccount: AccountResponse,
-    dateTimeInText: String
+    dateTimeInText: String,
+    transactionParticulars: String,
+    transactionAmount: Float
 
 ): String {
 
@@ -43,7 +44,9 @@ internal fun viewTransactions(
                         fromAccount = fromAccount,
                         viaAccount = viaAccount,
                         toAccount = toAccount,
-                        dateTimeInText = dateTimeInText
+                        dateTimeInText = dateTimeInText,
+                        transactionParticulars = transactionParticulars,
+                        transactionAmount = transactionAmount
                     )
                 }
 
@@ -103,17 +106,23 @@ internal fun viewTransactions(
                     }
 
                     "5" -> {
+
                         if (functionCallSourceEnum == FunctionCallSourceEnum.FROM_CHECK_ACCOUNTS) {
+
                             invalidOptionMessage()
+
                         } else {
-                            addTransaction(
+
+                            InsertOperations.addTransaction(
                                 userId = userId,
                                 username = username,
                                 transactionType = TransactionTypeEnum.NORMAL,
                                 fromAccount = fromAccount,
                                 viaAccount = viaAccount,
                                 toAccount = toAccount,
-                                dateTimeInText = dateTimeInText
+                                dateTimeInText = dateTimeInText,
+                                transactionParticulars = transactionParticulars,
+                                transactionAmount = transactionAmount
                             )
                         }
                     }
@@ -141,7 +150,9 @@ internal fun viewTransactionsOfSpecificAccount(
     fromAccount: AccountResponse,
     viaAccount: AccountResponse,
     toAccount: AccountResponse,
-    dateTimeInText: String
+    dateTimeInText: String,
+    transactionParticulars: String,
+    transactionAmount: Float
 ) {
     print("Enter Account Index or 0 to Back : A")
     val inputAccountIndex: String = readLine()!!
@@ -162,7 +173,9 @@ internal fun viewTransactionsOfSpecificAccount(
                     fromAccount = fromAccount,
                     viaAccount = viaAccount,
                     toAccount = toAccount,
-                    dateTimeInText = dateTimeInText
+                    dateTimeInText = dateTimeInText,
+                    transactionParticulars = transactionParticulars,
+                    transactionAmount = transactionAmount
                 )
             }
         }

@@ -17,7 +17,9 @@ internal fun checkAccountsAffectedAfterSpecifiedDate(
     fromAccount: AccountResponse,
     viaAccount: AccountResponse,
     toAccount: AccountResponse,
-    dateTimeInText: String
+    dateTimeInText: String,
+    transactionParticulars: String,
+    transactionAmount: Float
 ) {
 
     val inputDate: String = InputUtils.getValidDateInNormalPattern()
@@ -49,7 +51,9 @@ internal fun checkAccountsAffectedAfterSpecifiedDate(
                             fromAccount = fromAccount,
                             viaAccount = viaAccount,
                             toAccount = toAccount,
-                            dateTimeInText = dateTimeInText
+                            dateTimeInText = dateTimeInText,
+                            transactionParticulars = transactionParticulars,
+                            transactionAmount = transactionAmount
                         )
                         return
                     }
@@ -88,7 +92,9 @@ internal fun checkAccountsAffectedAfterSpecifiedDate(
                         fromAccount = fromAccount,
                         viaAccount = viaAccount,
                         toAccount = toAccount,
-                        dateTimeInText = dateTimeInText
+                        dateTimeInText = dateTimeInText,
+                        transactionParticulars = transactionParticulars,
+                        transactionAmount = transactionAmount
                     )) {
                         "E", "0" -> {
                             break
@@ -106,7 +112,9 @@ internal fun viewChildAccounts(
     fromAccount: AccountResponse,
     viaAccount: AccountResponse,
     toAccount: AccountResponse,
-    dateTimeInText: String
+    dateTimeInText: String,
+    transactionParticulars: String,
+    transactionAmount: Float
 ) {
 
     val apiResponse: Result<AccountsResponse> = getAccounts(
@@ -127,7 +135,9 @@ internal fun viewChildAccounts(
                         fromAccount = fromAccount,
                         viaAccount = viaAccount,
                         toAccount = toAccount,
-                        dateTimeInText = dateTimeInText
+                        dateTimeInText = dateTimeInText,
+                        transactionParticulars = transactionParticulars,
+                        transactionAmount = transactionAmount
                     )
                     return
                 }
@@ -174,7 +184,9 @@ internal fun viewChildAccounts(
                     username = username,
                     viaAccount = viaAccount,
                     toAccount = toAccount,
-                    dateTimeInText = dateTimeInText
+                    dateTimeInText = dateTimeInText,
+                    transactionParticulars = transactionParticulars,
+                    transactionAmount = transactionAmount
                 )
             } while (choice != "0")
         }
