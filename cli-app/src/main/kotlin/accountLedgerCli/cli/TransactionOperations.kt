@@ -6,6 +6,8 @@ import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
 import accountLedgerCli.cli.App.Companion.userAccountsMap
 import accountLedgerCli.enums.FunctionCallSourceEnum
 import accountLedgerCli.enums.TransactionTypeEnum
+import accountLedgerCli.models.InsertTransactionResult
+import accountLedgerCli.models.ViewTransactionsOutput
 import accountLedgerCli.retrofit.ResponseHolder
 import accountLedgerCli.to_utils.ToDoUtils
 import accountLedgerCli.utils.ApiUtils
@@ -24,7 +26,7 @@ internal fun viewTransactions(
     transactionParticulars: String,
     transactionAmount: Float
 
-): String {
+): ViewTransactionsOutput {
 
     val apiResponse: ResponseHolder<TransactionsResponse> = getUserTransactions(userId = userId, accountId = accountId)
     if (apiResponse.isError()) {
@@ -32,8 +34,7 @@ internal fun viewTransactions(
         println("Error : ${(apiResponse.getValue() as Exception).localizedMessage}")
         do {
             print("Retry (Y/N) ? : ")
-            val input: String? = readLine()
-            when (input) {
+            when (readLine()!!) {
                 "Y", "" -> {
                     return viewTransactions(
                         userId = userId,
@@ -50,11 +51,22 @@ internal fun viewTransactions(
                     )
                 }
 
-                "N" -> {}
+                "N" -> {
+                    return ViewTransactionsOutput(
+                        output = "E",
+                        addTransactionResult = InsertTransactionResult(
+                            isSuccess = false,
+                            dateTimeInText = dateTimeInText,
+                            transactionParticulars = transactionParticulars,
+                            transactionAmount = transactionAmount
+                        )
+                    )
+                }
+
                 else -> invalidOptionMessage()
             }
-        } while (input != "N")
-        return "E"
+        } while (true)
+
     } else {
 
         val userTransactionsResponseResult: TransactionsResponse = apiResponse.getValue() as TransactionsResponse
@@ -62,13 +74,22 @@ internal fun viewTransactions(
 
             println("Account - $accountFullName")
             println("No Transactions...")
-            return "0"
+            return ViewTransactionsOutput(
+                output = "0",
+                addTransactionResult = InsertTransactionResult(
+                    isSuccess = false,
+                    dateTimeInText = dateTimeInText,
+                    transactionParticulars = transactionParticulars,
+                    transactionAmount = transactionAmount
+                )
+            )
+
 
         } else {
 
-            var choice = ""
+            var choice: String
             do {
-                var menuItems = listOf(
+                var menuItems: List<String> = listOf(
                     "\nUser : $username",
                     "$accountFullName - Transactions",
                     printAccountLedger(
@@ -76,31 +97,56 @@ internal fun viewTransactions(
                         currentAccountId = accountId
                     )
                 )
-                if (functionCallSourceEnum == FunctionCallSourceEnum.FROM_CHECK_ACCOUNTS) {
-                    menuItems = menuItems + listOf("0 to Back Enter to Continue : ")
-                } else if (functionCallSourceEnum == FunctionCallSourceEnum.FROM_VIEW_TRANSACTIONS_OF_ACCOUNT) {
-                    commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(menuItems)
-                    break
-                } else {
-                    menuItems = menuItems + listOf(
-                        "1 - Delete Transaction - By Index Number",
-                        "2 - Delete Transaction - By Search",
-                        "3 - Edit Transaction - By Index Number",
-                        "4 - Edit Transaction - By Search",
-                        "5 - Add Transaction",
-                        "0 - Back",
-                        "",
-                        "Enter Your Choice : "
-                    )
+                when (functionCallSourceEnum) {
+                    FunctionCallSourceEnum.FROM_CHECK_ACCOUNTS -> {
+                        menuItems = menuItems + listOf("0 to Back Enter to Continue : ")
+                    }
+
+                    FunctionCallSourceEnum.FROM_VIEW_TRANSACTIONS_OF_ACCOUNT -> {
+
+                        commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(menuItems)
+                        return ViewTransactionsOutput(
+                            output = "",
+                            addTransactionResult = InsertTransactionResult(
+                                isSuccess = false, dateTimeInText = dateTimeInText,
+                                transactionParticulars = transactionParticulars,
+                                transactionAmount = transactionAmount
+                            )
+                        )
+                    }
+
+                    else -> {
+                        menuItems = menuItems + listOf(
+                            "1 - Delete Transaction - By Index Number",
+                            "2 - Delete Transaction - By Search",
+                            "3 - Edit Transaction - By Index Number",
+                            "4 - Edit Transaction - By Search",
+                            "5 - Add Transaction",
+                            "0 - Back",
+                            "",
+                            "Enter Your Choice : "
+                        )
+                    }
                 }
                 commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(menuItems)
 
                 choice = readLine()!!
+                var addTransactionResult = InsertTransactionResult(
+                    isSuccess = false,
+                    dateTimeInText = dateTimeInText,
+                    transactionParticulars = transactionParticulars,
+                    transactionAmount = transactionAmount
+                )
                 when (choice) {
+
                     "1", "2", "3", "4" -> {
+
                         if (functionCallSourceEnum == FunctionCallSourceEnum.FROM_CHECK_ACCOUNTS) {
+
                             invalidOptionMessage()
+
                         } else {
+
                             ToDoUtils.showTodo()
                         }
                     }
@@ -113,24 +159,36 @@ internal fun viewTransactions(
 
                         } else {
 
-                            InsertOperations.addTransaction(
+                            addTransactionResult = InsertOperations.addTransaction(
+
                                 userId = userId,
                                 username = username,
                                 transactionType = TransactionTypeEnum.NORMAL,
                                 fromAccount = fromAccount,
                                 viaAccount = viaAccount,
                                 toAccount = toAccount,
-                                dateTimeInText = dateTimeInText,
-                                transactionParticulars = transactionParticulars,
-                                transactionAmount = transactionAmount
+                                dateTimeInText = addTransactionResult.dateTimeInText,
+                                transactionParticulars = addTransactionResult.transactionParticulars,
+                                transactionAmount = addTransactionResult.transactionAmount
                             )
                         }
                     }
 
-                    "0" -> {}
+                    "0" -> {
+                        return ViewTransactionsOutput(
+                            output = "0",
+                            addTransactionResult = addTransactionResult
+                        )
+
+                    }
+
                     "" -> {
                         if (functionCallSourceEnum == FunctionCallSourceEnum.FROM_CHECK_ACCOUNTS) {
-                            break
+
+                            return ViewTransactionsOutput(
+                                output = "",
+                                addTransactionResult = addTransactionResult
+                            )
                         } else {
                             invalidOptionMessage()
                         }
@@ -138,8 +196,7 @@ internal fun viewTransactions(
 
                     else -> invalidOptionMessage()
                 }
-            } while (choice != "0")
-            return choice
+            } while (true)
         }
     }
 }

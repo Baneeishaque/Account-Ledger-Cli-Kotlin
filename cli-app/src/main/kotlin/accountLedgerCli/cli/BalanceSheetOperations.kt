@@ -43,7 +43,8 @@ internal fun printBalanceSheetOfUser(
     if (isNotApiCall) {
         println("Contacting Server...")
     }
-    val apiResponse2: ResponseHolder<TransactionsResponse>
+    val apiResponse: ResponseHolder<TransactionsResponse>
+    // TODO : Change to data class
     val specifiedDate: Pair<Boolean, String> = MysqlUtils.normalDateStringToMysqlDateString(
         normalDateString = getUserInitialTransactionDateFromUsername(username = currentUserName).minusDays(
             1
@@ -51,19 +52,18 @@ internal fun printBalanceSheetOfUser(
     )
     if (specifiedDate.first) {
         runBlocking {
-            apiResponse2 = transactionsDataSource.selectUserTransactionsAfterSpecifiedDate(
+            apiResponse = transactionsDataSource.selectUserTransactionsAfterSpecifiedDate(
                 userId = currentUserId, specifiedDate = specifiedDate.second
             )
         }
         // println("Response : $apiResponse2")
-        if (apiResponse2.isError()) {
+        if (apiResponse.isError()) {
             if (isNotApiCall) {
 
-                println("Error : ${(apiResponse2.getValue() as Exception).localizedMessage}")
+                println("Error : ${(apiResponse.getValue() as Exception).localizedMessage}")
                 do {
                     print("Retry (Y/N) ? : ")
-                    val input: String? = readLine()
-                    when (input) {
+                    when (readLine()!!) {
                         "Y", "" -> {
                             printBalanceSheetOfUser(
                                 currentUserName = currentUserName,
@@ -75,11 +75,12 @@ internal fun printBalanceSheetOfUser(
                         }
 
                         "N" -> {
+                            return
                         }
 
                         else -> invalidOptionMessage()
                     }
-                } while (input != "N")
+                } while (true)
 
             } else {
 
@@ -88,7 +89,7 @@ internal fun printBalanceSheetOfUser(
                         serializer = BalanceSheetDataModel.serializer(),
                         value = BalanceSheetDataModel(
                             status = 1,
-                            error = "Error : ${(apiResponse2.getValue() as Exception).localizedMessage}"
+                            error = "Error : ${(apiResponse.getValue() as Exception).localizedMessage}"
                         )
                     )
                 )
@@ -96,7 +97,7 @@ internal fun printBalanceSheetOfUser(
         } else {
 
             val selectUserTransactionsAfterSpecifiedDateResult: TransactionsResponse =
-                apiResponse2.getValue() as TransactionsResponse
+                apiResponse.getValue() as TransactionsResponse
             if (selectUserTransactionsAfterSpecifiedDateResult.status == 1u) {
 
                 if (isNotApiCall) {
@@ -124,6 +125,7 @@ internal fun printBalanceSheetOfUser(
                     when (refineLevel) {
 
                         BalanceSheetRefineLevelEnum.WITHOUT_OPEN_BALANCES -> {
+                            // TODO : Change to new api methods
                             accountsToExclude = (dotenv["OPEN_BALANCE_ACCOUNT_IDS"] ?: "0").split(',')
                         }
 
@@ -180,29 +182,29 @@ internal fun printBalanceSheetOfUser(
 //                println("Affected A/Cs : $accounts")
                 val menuItems: MutableList<String> = mutableListOf("\nUser : $currentUserName Balance Sheet Ledger")
                 val balanceSheetDataRows: MutableList<BalanceSheetDataRowModel> = mutableListOf()
-                for (account in accounts) {
+                for (account: MutableMap.MutableEntry<UInt, String> in accounts) {
 
-                    val apiResponse3: ResponseHolder<TransactionsResponse> =
+                    val apiResponse2: ResponseHolder<TransactionsResponse> =
                         getUserTransactions(
                             userId = currentUserId,
                             accountId = account.key,
                             isNotFromBalanceSheet = false
                         )
-                    if (apiResponse3.isError()) {
+                    if (apiResponse2.isError()) {
 
                         if (isNotApiCall) {
-                            println("Error : ${(apiResponse3.getValue() as Exception).localizedMessage}")
-                            do {
-                                print("Retry (Y/N) ? : ")
-                                val input: String? = readLine()
-                                when (input) {
-                                    "Y", "" -> {
-                                    }
-
-                                    "N" -> {}
-                                    else -> invalidOptionMessage()
-                                }
-                            } while (input != "N")
+                            println("Error : ${(apiResponse2.getValue() as Exception).localizedMessage}")
+//                            do {
+//                                print("Retry (Y/N) ? : ")
+//                                val input: String = readLine()!!
+//                                when (input) {
+//                                    "Y", "" -> {
+//                                    }
+//
+//                                    "N" -> {}
+//                                    else -> invalidOptionMessage()
+//                                }
+//                            } while (input != "N")
                         } else {
 
                             print(
@@ -210,7 +212,7 @@ internal fun printBalanceSheetOfUser(
                                     serializer = BalanceSheetDataModel.serializer(),
                                     value = BalanceSheetDataModel(
                                         status = 1,
-                                        error = "Error : ${(apiResponse3.getValue() as Exception).localizedMessage}"
+                                        error = "Error : ${(apiResponse2.getValue() as Exception).localizedMessage}"
                                     )
                                 )
                             )
@@ -218,7 +220,7 @@ internal fun printBalanceSheetOfUser(
                     } else {
 
                         val userTransactionsResponseResult: TransactionsResponse =
-                            apiResponse3.getValue() as TransactionsResponse
+                            apiResponse2.getValue() as TransactionsResponse
                         if (userTransactionsResponseResult.status == 0u) {
 
                             var currentBalance = 0.0F
@@ -241,6 +243,23 @@ internal fun printBalanceSheetOfUser(
                                         accountId = account.key,
                                         accountName = account.value,
                                         accountBalance = currentBalance
+                                    )
+                                )
+                            }
+                        } else {
+
+                            if (isNotApiCall) {
+
+                                println("Server Execution Error...")
+
+                            } else {
+                                print(
+                                    Json.encodeToString(
+                                        serializer = BalanceSheetDataModel.serializer(),
+                                        value = BalanceSheetDataModel(
+                                            status = 1,
+                                            error = "Server Execution Error, Execution Status is ${userTransactionsResponseResult.status}"
+                                        )
                                     )
                                 )
                             }

@@ -24,11 +24,11 @@ internal fun <T> getValidIndex(
         )
     )
 
-    val accountIdInput: String = readLine()!!
-    if (accountIdInput == "0") return 0u
+    val idInput: String = readLine()!!
+    if (idInput == "0") return 0u
 
-    val inputForIndex = InputUtils.getValidInt(
-        inputString = accountIdInput,
+    val inputForIndex:UInt = InputUtils.getValidInt(
+        inputString = idInput,
         invalidMessage = "Invalid $itemSpecification Index...\nEnter $itemSpecification Index, or O to back : ${itemSpecification.first()}"
     )
     if (inputForIndex == 0u) {

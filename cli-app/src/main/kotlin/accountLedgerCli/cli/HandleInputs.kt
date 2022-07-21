@@ -2,8 +2,9 @@ package accountLedgerCli.cli
 
 import accountLedgerCli.api.response.AccountResponse
 import accountLedgerCli.api.response.UserResponse
-import accountLedgerCli.models.ChooseAccountResult
 import accountLedgerCli.models.ChooseUserResult
+import accountLedgerCli.models.InsertTransactionResult
+import accountLedgerCli.models.ViewTransactionsOutput
 import accountLedgerCli.to_utils.ToDoUtils
 
 internal fun processChildAccountScreenInput(
@@ -17,12 +18,18 @@ internal fun processChildAccountScreenInput(
     transactionParticulars: String,
     transactionAmount: Float
 
-): String {
+): ViewTransactionsOutput {
 
     val choice: String = readLine()!!
+    var accountHomeOutput = InsertTransactionResult(
+        isSuccess = false,
+        dateTimeInText = dateTimeInText,
+        transactionParticulars = transactionParticulars,
+        transactionAmount = transactionAmount
+    )
     when (choice) {
         "1" -> {
-            handleAccountSelection(
+            accountHomeOutput = handleAccountSelection(
                 accountId = getValidIndex(
                     map = userAccountsMap,
                     itemSpecification = Constants.accountText,
@@ -40,7 +47,7 @@ internal fun processChildAccountScreenInput(
         }
 
         "2" -> {
-            handleAccountSelection(
+            accountHomeOutput = handleAccountSelection(
                 accountId = searchAccount(userAccountsMap = userAccountsMap),
                 userAccountsMap = userAccountsMap,
                 userId = userId,
@@ -56,16 +63,18 @@ internal fun processChildAccountScreenInput(
         "3" -> {
 
             ToDoUtils.showTodo()
+            return ViewTransactionsOutput(output = "3", addTransactionResult = accountHomeOutput)
         }
 
         "0" -> {
+            return ViewTransactionsOutput(output = "0", addTransactionResult = accountHomeOutput)
         }
 
         else -> {
             invalidOptionMessage()
         }
     }
-    return choice
+    return ViewTransactionsOutput(output = choice, addTransactionResult = accountHomeOutput)
 }
 
 private fun handleAccountSelection(
@@ -80,11 +89,11 @@ private fun handleAccountSelection(
     transactionParticulars: String,
     transactionAmount: Float
 
-) {
+): InsertTransactionResult {
 
     if (accountId != 0u) {
 
-        Screens.accountHome(
+        return Screens.accountHome(
             userId = userId,
             username = username,
             fromAccount = userAccountsMap[accountId]!!,
@@ -95,6 +104,12 @@ private fun handleAccountSelection(
             transactionAmount = transactionAmount
         )
     }
+    return InsertTransactionResult(
+        isSuccess = false,
+        dateTimeInText = dateTimeInText,
+        transactionParticulars = transactionParticulars,
+        transactionAmount = transactionAmount
+    )
 }
 
 internal fun handleUserSelection(

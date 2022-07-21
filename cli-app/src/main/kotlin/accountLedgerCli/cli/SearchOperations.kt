@@ -8,9 +8,9 @@ internal fun searchAccount(userAccountsMap: LinkedHashMap<UInt, AccountResponse>
     commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
         listOf("\nEnter Search Key : ")
     )
-    val searchKeyInput = readLine()
-    val searchResult =
-        searchOnHashMapValues(hashMap = userAccountsMap, searchKey = searchKeyInput!!)
+    val searchKeyInput: String = readLine()!!
+    val searchResult: LinkedHashMap<UInt, AccountResponse> =
+        searchOnHashMapValues(hashMap = userAccountsMap, searchKey = searchKeyInput)
     if (searchResult.isEmpty()) {
 
         do {
@@ -23,7 +23,7 @@ internal fun searchAccount(userAccountsMap: LinkedHashMap<UInt, AccountResponse>
                     "Enter Your Choice : "
                 )
             )
-            val input = readLine()
+            val input: String = readLine()!!
             if (input == "1") return searchAccount(userAccountsMap = userAccountsMap)
             else if (input != "0") invalidOptionMessage()
         } while (input != "0")
@@ -40,10 +40,12 @@ internal fun searchAccount(userAccountsMap: LinkedHashMap<UInt, AccountResponse>
                     "Enter Your Choice : "
                 )
             )
-            val input = readLine()
+            val input: String = readLine()!!
             if (input == "1") {
                 return getValidIndex(
-                    map = searchResult, itemSpecification = Constants.accountText, items = userAccountsToStringFromLinkedHashMap(userAccountsMap = searchResult)
+                    map = searchResult,
+                    itemSpecification = Constants.accountText,
+                    items = userAccountsToStringFromLinkedHashMap(userAccountsMap = searchResult)
                 )
             } else if (input != "0") {
                 invalidOptionMessage()

@@ -44,6 +44,7 @@ object InsertOperations {
     )
 
     internal fun insertQuickTransactionFromAccount1toAccount2(
+
         account1: EnvironmentVariableForAny<*>,
         account2: EnvironmentVariableForAny<*>,
         userId: UInt,
@@ -53,7 +54,9 @@ object InsertOperations {
         dateTimeInText: String,
         transactionParticulars: String,
         transactionAmount: Float
+
     ): InsertTransactionResult {
+
         if (EnvironmentFileOperations.isEnvironmentVariablesAreAvailable(
                 environmentVariables = listOf(
                     account1, account2
@@ -72,10 +75,16 @@ object InsertOperations {
                 transactionAmount = transactionAmount
             )
         }
-        return InsertTransactionResult(isSuccess = false)
+        return InsertTransactionResult(
+            isSuccess = false,
+            dateTimeInText = dateTimeInText,
+            transactionParticulars = transactionParticulars,
+            transactionAmount = transactionAmount
+        )
     }
 
     internal fun openSpecifiedAccountHome(
+
         account: EnvironmentVariableForWholeNumber,
         userId: UInt,
         userAccountsMapLocal: LinkedHashMap<UInt, AccountResponse>,
@@ -84,12 +93,13 @@ object InsertOperations {
         toAccount: AccountResponse,
         dateTimeInText: String,
         transactionParticulars: String,
-        transactionAmount: Float,
-    ) {
+        transactionAmount: Float
+
+    ): InsertTransactionResult {
 
         if (account.isAvailable && handleAccountsResponse(ApiUtils.getAccountsFull(userId = userId))) {
 
-            Screens.accountHome(
+            return Screens.accountHome(
                 userId = userId,
                 username = username,
                 fromAccount = userAccountsMapLocal[account.value]!!,
@@ -100,6 +110,12 @@ object InsertOperations {
                 transactionAmount = transactionAmount
             )
         }
+        return InsertTransactionResult(
+            isSuccess = false,
+            dateTimeInText = dateTimeInText,
+            transactionParticulars = transactionParticulars,
+            transactionAmount = transactionAmount
+        )
     }
 
     internal fun addTransaction(
@@ -475,7 +491,12 @@ object InsertOperations {
                 }
 
                 "0" -> {
-                    return InsertTransactionResult(isSuccess = false)
+                    return InsertTransactionResult(
+                        isSuccess = false,
+                        dateTimeInText = dateTimeInText,
+                        transactionParticulars = transactionParticulars,
+                        transactionAmount = transactionAmount
+                    )
                 }
 
                 else -> invalidOptionMessage()
@@ -515,7 +536,12 @@ object InsertOperations {
                 transactionAmount = transactionAmount
             )
         }
-        return InsertTransactionResult(isSuccess = false)
+        return InsertTransactionResult(
+            isSuccess = false,
+            dateTimeInText = dateTimeInText,
+            transactionParticulars = transactionParticulars,
+            transactionAmount = transactionAmount
+        )
     }
 
     private fun processSelectedAccount(

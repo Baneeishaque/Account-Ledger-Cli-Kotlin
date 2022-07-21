@@ -5,6 +5,8 @@ import accountLedgerCli.api.response.AccountsResponse
 import accountLedgerCli.api.response.TransactionsResponse
 import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
 import accountLedgerCli.enums.FunctionCallSourceEnum
+import accountLedgerCli.models.InsertTransactionResult
+import accountLedgerCli.models.ViewTransactionsOutput
 import accountLedgerCli.retrofit.ResponseHolder
 import accountLedgerCli.retrofit.data.TransactionsDataSource
 import accountLedgerCli.to_utils.InputUtils
@@ -12,6 +14,7 @@ import accountLedgerCli.to_utils.MysqlUtils
 import kotlinx.coroutines.runBlocking
 
 internal fun checkAccountsAffectedAfterSpecifiedDate(
+
     userId: UInt,
     username: String,
     fromAccount: AccountResponse,
@@ -42,8 +45,7 @@ internal fun checkAccountsAffectedAfterSpecifiedDate(
             println("Error : ${(apiResponse.getValue() as Exception).localizedMessage}")
             do {
                 print("Retry (Y/N) ? : ")
-                val input: String = readLine()!!
-                when (input) {
+                when (readLine()!!) {
                     "Y", "" -> {
                         checkAccountsAffectedAfterSpecifiedDate(
                             userId = userId,
@@ -59,11 +61,12 @@ internal fun checkAccountsAffectedAfterSpecifiedDate(
                     }
 
                     "N" -> {
+                        return
                     }
 
                     else -> invalidOptionMessage()
                 }
-            } while (input != "N")
+            } while (true)
         } else {
 
             val selectUserTransactionsAfterSpecifiedDateResult: TransactionsResponse =
@@ -84,6 +87,7 @@ internal fun checkAccountsAffectedAfterSpecifiedDate(
                 for (account: MutableMap.MutableEntry<UInt, String> in accounts) {
 
                     when (viewTransactions(
+
                         userId = userId,
                         username = username,
                         accountId = account.key,
@@ -95,8 +99,11 @@ internal fun checkAccountsAffectedAfterSpecifiedDate(
                         dateTimeInText = dateTimeInText,
                         transactionParticulars = transactionParticulars,
                         transactionAmount = transactionAmount
-                    )) {
+
+                    ).output) {
+
                         "E", "0" -> {
+
                             break
                         }
                     }
@@ -107,6 +114,7 @@ internal fun checkAccountsAffectedAfterSpecifiedDate(
 }
 
 internal fun viewChildAccounts(
+
     username: String,
     userId: UInt,
     fromAccount: AccountResponse,
@@ -115,22 +123,24 @@ internal fun viewChildAccounts(
     dateTimeInText: String,
     transactionParticulars: String,
     transactionAmount: Float
-) {
+
+): InsertTransactionResult {
 
     val apiResponse: Result<AccountsResponse> = getAccounts(
         userId = userId,
         parentAccountId = fromAccount.id
     )
 
+    var processChildAccountScreenInputInsertTransactionResult = InsertTransactionResult(isSuccess = false)
+
     if (apiResponse.isFailure) {
 
         println("Error : ${(apiResponse.exceptionOrNull() as Exception).localizedMessage}")
         do {
             print("Retry (Y/N) ? : ")
-            val input: String = readLine()!!
-            when (input) {
+            when (readLine()!!) {
                 "Y", "" -> {
-                    viewChildAccounts(
+                    return viewChildAccounts(
                         username = username, userId = userId,
                         fromAccount = fromAccount,
                         viaAccount = viaAccount,
@@ -139,15 +149,15 @@ internal fun viewChildAccounts(
                         transactionParticulars = transactionParticulars,
                         transactionAmount = transactionAmount
                     )
-                    return
                 }
 
                 "N" -> {
+                    return InsertTransactionResult(isSuccess = false)
                 }
 
                 else -> invalidOptionMessage()
             }
-        } while (input != "N")
+        } while (true)
     } else {
 
         val accountsResponseResult: AccountsResponse = apiResponse.getOrNull() as AccountsResponse
@@ -178,7 +188,7 @@ internal fun viewChildAccounts(
                     )
                 )
 
-                val choice: String = processChildAccountScreenInput(
+                val processChildAccountScreenInputResult: ViewTransactionsOutput = processChildAccountScreenInput(
                     userAccountsMap = userAccountsMap,
                     userId = userId,
                     username = username,
@@ -188,7 +198,13 @@ internal fun viewChildAccounts(
                     transactionParticulars = transactionParticulars,
                     transactionAmount = transactionAmount
                 )
+
+                val choice: String = processChildAccountScreenInputResult.output
+                processChildAccountScreenInputInsertTransactionResult =
+                    processChildAccountScreenInputResult.addTransactionResult
+
             } while (choice != "0")
         }
     }
+    return processChildAccountScreenInputInsertTransactionResult
 }

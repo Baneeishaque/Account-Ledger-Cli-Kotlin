@@ -6,9 +6,12 @@ import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
 import accountLedgerCli.cli.App.Companion.userAccountsMap
 import accountLedgerCli.enums.GetAccountsApiCallPurposeEnum
 import accountLedgerCli.enums.HandleAccountsApiResponseResult
+import accountLedgerCli.models.InsertTransactionResult
+import accountLedgerCli.models.ViewTransactionsOutput
 import accountLedgerCli.utils.AccountUtils
 
 internal fun handleAccountsResponseAndPrintMenu(
+
     apiResponse: Result<AccountsResponse>,
     username: String,
     userId: UInt,
@@ -17,7 +20,15 @@ internal fun handleAccountsResponseAndPrintMenu(
     dateTimeInText: String,
     transactionParticulars: String,
     transactionAmount: Float
-) {
+
+): InsertTransactionResult {
+
+    var insertTransactionResult = InsertTransactionResult(
+        isSuccess = false,
+        dateTimeInText = dateTimeInText,
+        transactionParticulars = transactionParticulars,
+        transactionAmount = transactionAmount
+    )
 
     if (handleAccountsResponse(apiResponse)) {
 
@@ -38,17 +49,22 @@ internal fun handleAccountsResponseAndPrintMenu(
                 )
             )
 
-            val choice: String =
-                processChildAccountScreenInput(
-                    userAccountsMap = userAccountsMap, userId = userId, username = username,
-                    viaAccount = viaAccount,
-                    toAccount = toAccount,
-                    dateTimeInText = dateTimeInText,
-                    transactionParticulars = transactionParticulars,
-                    transactionAmount = transactionAmount
-                )
-        } while (choice != "0")
+            val processChildAccountScreenInputResult: ViewTransactionsOutput = processChildAccountScreenInput(
+
+                userAccountsMap = userAccountsMap,
+                userId = userId,
+                username = username,
+                viaAccount = viaAccount,
+                toAccount = toAccount,
+                dateTimeInText = insertTransactionResult.dateTimeInText,
+                transactionParticulars = insertTransactionResult.transactionParticulars,
+                transactionAmount = insertTransactionResult.transactionAmount
+            )
+            insertTransactionResult = processChildAccountScreenInputResult.addTransactionResult
+
+        } while (processChildAccountScreenInputResult.output != "0")
     }
+    return insertTransactionResult
 }
 
 internal fun handleAccountsResponse(apiResponse: Result<AccountsResponse>): Boolean {

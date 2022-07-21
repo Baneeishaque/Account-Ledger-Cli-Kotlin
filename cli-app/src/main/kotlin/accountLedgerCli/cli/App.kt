@@ -3,7 +3,9 @@ package accountLedgerCli.cli
 import accountLedgerCli.api.response.AccountResponse
 import accountLedgerCli.enums.*
 import accountLedgerCli.models.BalanceSheetDataModel
+import accountLedgerCli.models.InsertTransactionResult
 import accountLedgerCli.to_utils.*
+import accountLedgerCli.utils.AccountUtils
 import io.github.cdimascio.dotenv.Dotenv
 import io.github.cdimascio.dotenv.dotenv
 import kotlinx.cli.*
@@ -14,6 +16,13 @@ class App {
     companion object {
 
         private var dateTimeInText: String = DateTimeUtils.getCurrentDateTimeText()
+
+        private var fromAccount: AccountResponse = AccountUtils.blankAccount
+        private var toAccount: AccountResponse = AccountUtils.blankAccount
+        private var viaAccount: AccountResponse = AccountUtils.blankAccount
+
+        private var transactionParticulars: String = ""
+        private var transactionAmount: Float = 0F
 
         @JvmStatic
         internal var userAccountsMap = LinkedHashMap<UInt, AccountResponse>()
@@ -39,15 +48,10 @@ class App {
 
         @JvmStatic
         @OptIn(ExperimentalCli::class)
-        fun main(
-            args: Array<String>,
-            transactionParticulars: String,
-            transactionAmount: Float,
-            viaAccount: AccountResponse,
-            toAccount: AccountResponse,
-            fromAccount: AccountResponse
-        ) {
+        fun main(args: Array<String>) {
+
             if (args.isEmpty()) {
+
                 do {
                     val identifiedUser: String = dotenv[EnvironmentFileEntryEnum.USER_NAME.name]
                         ?: Constants.defaultValueForStringEnvironmentVariables
@@ -67,33 +71,53 @@ class App {
                             "Enter Your Choice : "
                         )
                     )
-                    val choice: String? = readLine()
+                    val choice: String = readLine()!!
                     when (choice) {
-                        "1" -> UserOperations.login(
-                            username = if (identifiedUser == Constants.defaultValueForStringEnvironmentVariables) "" else identifiedUser,
-                            password = dotenv[EnvironmentFileEntryEnum.PASSWORD.name] ?: "",
-                            fromAccount = fromAccount,
-                            viaAccount = viaAccount,
-                            toAccount = toAccount,
-                            dateTimeInText = dateTimeInText,
-                            transactionParticulars = transactionParticulars,
-                            transactionAmount = transactionAmount
-                        )
+                        "1" -> {
 
-                        "3" -> UserOperations.listUsers(
-                            fromAccount = fromAccount,
-                            viaAccount = viaAccount,
-                            toAccount = toAccount,
-                            dateTimeInText = dateTimeInText,
-                            transactionParticulars = transactionParticulars,
-                            transactionAmount = transactionAmount,
-                        )
+                            processInsertTransactionResult(
+                                insertTransactionResult = UserOperations.login(
 
-                        "2", "4", "5" -> ToDoUtils.showTodo()
-                        "0" -> println("Thanks...")
-                        else -> invalidOptionMessage()
+                                    username = if (identifiedUser == Constants.defaultValueForStringEnvironmentVariables) "" else identifiedUser,
+                                    password = dotenv[EnvironmentFileEntryEnum.PASSWORD.name] ?: "",
+                                    fromAccount = fromAccount,
+                                    viaAccount = viaAccount,
+                                    toAccount = toAccount,
+                                    dateTimeInText = dateTimeInText,
+                                    transactionParticulars = transactionParticulars,
+                                    transactionAmount = transactionAmount
+                                )
+                            )
+                        }
+
+                        "3" -> {
+
+                            processInsertTransactionResult(
+                                insertTransactionResult = UserOperations.listUsers(
+                                    fromAccount = fromAccount,
+                                    viaAccount = viaAccount,
+                                    toAccount = toAccount,
+                                    dateTimeInText = dateTimeInText,
+                                    transactionParticulars = transactionParticulars,
+                                    transactionAmount = transactionAmount,
+                                )
+                            )
+                        }
+
+                        "2", "4", "5" -> {
+                            ToDoUtils.showTodo()
+                        }
+
+                        "0" -> {
+                            println("Thanks...")
+                            return
+                        }
+
+                        else -> {
+                            invalidOptionMessage()
+                        }
                     }
-                } while (choice != "0")
+                } while (true)
 
             } else {
 
@@ -220,6 +244,13 @@ class App {
 
                 parser.parse(args = args)
             }
+        }
+
+        private fun processInsertTransactionResult(insertTransactionResult: InsertTransactionResult) {
+
+            dateTimeInText = insertTransactionResult.dateTimeInText
+            transactionParticulars = insertTransactionResult.transactionParticulars
+            transactionAmount = insertTransactionResult.transactionAmount
         }
     }
 }
