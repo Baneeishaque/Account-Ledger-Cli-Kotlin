@@ -71,8 +71,7 @@ class App {
                             "Enter Your Choice : "
                         )
                     )
-                    val choice: String = readLine()!!
-                    when (choice) {
+                    when (readLine()!!) {
                         "1" -> {
 
                             processInsertTransactionResult(
