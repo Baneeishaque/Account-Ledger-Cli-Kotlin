@@ -1,6 +1,6 @@
-package accountLedgerCli.cli
+package accountLedgerCli.constants
 
-object Constants {
+internal object Constants {
     internal const val defaultValueForStringEnvironmentVariables: String = "N/A"
     internal const val defaultValueForIntegerEnvironmentVariables: Int = 0
     internal const val accountText: String = "Account"

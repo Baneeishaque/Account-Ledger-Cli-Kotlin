@@ -2,6 +2,7 @@ package accountLedgerCli.cli
 
 import accountLedgerCli.api.response.AccountResponse
 import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
+import accountLedgerCli.constants.Constants
 
 internal fun searchAccount(userAccountsMap: LinkedHashMap<UInt, AccountResponse>): UInt {
 
