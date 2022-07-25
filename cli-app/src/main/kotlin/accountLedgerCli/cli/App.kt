@@ -25,8 +25,6 @@ class App {
         private var transactionParticulars: String = ""
         private var transactionAmount: Float = 0F
 
-        @JvmStatic
-        internal var userAccountsMap = LinkedHashMap<UInt, AccountResponse>()
         private val commandLinePrintMenu = CommandLinePrintMenu()
 
         @JvmStatic

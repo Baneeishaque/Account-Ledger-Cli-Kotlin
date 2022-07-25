@@ -3,13 +3,13 @@ package accountLedgerCli.cli
 import accountLedgerCli.api.response.AccountResponse
 import accountLedgerCli.api.response.TransactionsResponse
 import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
-import accountLedgerCli.cli.App.Companion.userAccountsMap
 import accountLedgerCli.constants.Constants
 import accountLedgerCli.enums.FunctionCallSourceEnum
 import accountLedgerCli.enums.TransactionTypeEnum
 import accountLedgerCli.models.InsertTransactionResult
 import accountLedgerCli.models.ViewTransactionsOutput
 import accountLedgerCli.retrofit.ResponseHolder
+import accountLedgerCli.to_models.IsOkModel
 import accountLedgerCli.to_utils.ToDoUtils
 import accountLedgerCli.utils.ApiUtils
 
@@ -203,6 +203,7 @@ internal fun viewTransactions(
 }
 
 internal fun viewTransactionsOfSpecificAccount(
+
     userId: UInt,
     username: String,
     fromAccount: AccountResponse,
@@ -211,31 +212,42 @@ internal fun viewTransactionsOfSpecificAccount(
     dateTimeInText: String,
     transactionParticulars: String,
     transactionAmount: Float
+
 ) {
     print("Enter Account Index or 0 to Back : A")
     val inputAccountIndex: String = readLine()!!
     if (inputAccountIndex != "0") {
-        if (handleAccountsResponse(ApiUtils.getAccountsFull(userId = userId))) {
-            val accountIndex: UInt = getValidIndex(
-                map = userAccountsMap,
-                itemSpecification = Constants.accountText,
-                items = userAccountsToStringFromLinkedHashMap(userAccountsMap = userAccountsMap),
-            )
-            if (accountIndex != 0u) {
-                viewTransactions(
-                    userId = userId,
-                    username = username,
-                    accountId = accountIndex,
-                    accountFullName = userAccountsMap[accountIndex]!!.fullName,
-                    functionCallSourceEnum = FunctionCallSourceEnum.FROM_VIEW_TRANSACTIONS_OF_ACCOUNT,
-                    fromAccount = fromAccount,
-                    viaAccount = viaAccount,
-                    toAccount = toAccount,
-                    dateTimeInText = dateTimeInText,
-                    transactionParticulars = transactionParticulars,
-                    transactionAmount = transactionAmount
+
+        val getUserAccountsMapResult: IsOkModel<LinkedHashMap<UInt, AccountResponse>> =
+            HandleResponses.getUserAccountsMap(apiResponse = ApiUtils.getAccountsFull(userId = userId))
+
+        HandleResponses.isOkModelHandler(
+
+            isOkModel = getUserAccountsMapResult,
+            data = Unit,
+            actionsAfterGetSuccess = fun() {
+
+                val accountIndex: UInt = getValidIndex(
+
+                    map = getUserAccountsMapResult.data!!,
+                    itemSpecification = Constants.accountText,
+                    items = userAccountsToStringFromLinkedHashMap(userAccountsMap = getUserAccountsMapResult.data),
                 )
-            }
-        }
+                if (accountIndex != 0u) {
+                    viewTransactions(
+                        userId = userId,
+                        username = username,
+                        accountId = accountIndex,
+                        accountFullName = getUserAccountsMapResult.data[accountIndex]!!.fullName,
+                        functionCallSourceEnum = FunctionCallSourceEnum.FROM_VIEW_TRANSACTIONS_OF_ACCOUNT,
+                        fromAccount = fromAccount,
+                        viaAccount = viaAccount,
+                        toAccount = toAccount,
+                        dateTimeInText = dateTimeInText,
+                        transactionParticulars = transactionParticulars,
+                        transactionAmount = transactionAmount
+                    )
+                }
+            })
     }
 }

@@ -51,7 +51,6 @@ object InsertOperations {
         account1: EnvironmentVariableForAny<*>,
         account2: EnvironmentVariableForAny<*>,
         userId: UInt,
-        userAccountsMapLocal: LinkedHashMap<UInt, AccountResponse>,
         username: String,
         viaAccount: AccountResponse,
         dateTimeInText: String,
@@ -60,37 +59,50 @@ object InsertOperations {
 
     ): InsertTransactionResult {
 
-        if (EnvironmentFileOperations.isEnvironmentVariablesAreAvailable(
-                environmentVariables = listOf(
-                    account1, account2
-                )
-            ) && handleAccountsResponse(ApiUtils.getAccountsFull(userId = userId))
-        ) {
-            return transactionContinueCheck(
-                userId = userId,
-                username = username,
-                transactionType = TransactionTypeEnum.NORMAL,
-                fromAccount = userAccountsMapLocal[account1.value]!!,
-                viaAccount = viaAccount,
-                toAccount = userAccountsMapLocal[account2.value]!!,
-                dateTimeInText = dateTimeInText,
-                transactionParticulars = transactionParticulars,
-                transactionAmount = transactionAmount
-            )
-        }
-        return InsertTransactionResult(
+        val insertTransactionResult = InsertTransactionResult(
+
             isSuccess = false,
             dateTimeInText = dateTimeInText,
             transactionParticulars = transactionParticulars,
             transactionAmount = transactionAmount
         )
+
+        if (EnvironmentFileOperations.isEnvironmentVariablesAreAvailable(
+                environmentVariables = listOf(
+                    account1, account2
+                )
+            )
+        ) {
+            val getUserAccountsMapResult: IsOkModel<LinkedHashMap<UInt, AccountResponse>> =
+                HandleResponses.getUserAccountsMap(apiResponse = ApiUtils.getAccountsFull(userId = userId))
+
+            return HandleResponses.isOkModelHandler(
+
+                isOkModel = getUserAccountsMapResult,
+                data = insertTransactionResult,
+                actionsAfterGetSuccess = fun(): InsertTransactionResult {
+
+                    return transactionContinueCheck(
+                        userId = userId,
+                        username = username,
+                        transactionType = TransactionTypeEnum.NORMAL,
+                        fromAccount = getUserAccountsMapResult.data!![account1.value]!!,
+                        viaAccount = viaAccount,
+                        toAccount = getUserAccountsMapResult.data[account2.value]!!,
+                        dateTimeInText = dateTimeInText,
+                        transactionParticulars = transactionParticulars,
+                        transactionAmount = transactionAmount
+                    )
+                }
+            )
+        }
+        return insertTransactionResult
     }
 
     internal fun openSpecifiedAccountHome(
 
         account: EnvironmentVariableForWholeNumber,
         userId: UInt,
-        userAccountsMapLocal: LinkedHashMap<UInt, AccountResponse>,
         username: String,
         viaAccount: AccountResponse,
         toAccount: AccountResponse,
@@ -100,25 +112,37 @@ object InsertOperations {
 
     ): InsertTransactionResult {
 
-        if (account.isAvailable && handleAccountsResponse(ApiUtils.getAccountsFull(userId = userId))) {
+        val insertTransactionResult = InsertTransactionResult(
 
-            return Screens.accountHome(
-                userId = userId,
-                username = username,
-                fromAccount = userAccountsMapLocal[account.value]!!,
-                viaAccount = viaAccount,
-                toAccount = toAccount,
-                dateTimeInText = dateTimeInText,
-                transactionParticulars = transactionParticulars,
-                transactionAmount = transactionAmount
-            )
-        }
-        return InsertTransactionResult(
             isSuccess = false,
             dateTimeInText = dateTimeInText,
             transactionParticulars = transactionParticulars,
             transactionAmount = transactionAmount
         )
+
+        if (account.isAvailable) {
+
+            val getUserAccountsMapResult: IsOkModel<LinkedHashMap<UInt, AccountResponse>> =
+                HandleResponses.getUserAccountsMap(apiResponse = ApiUtils.getAccountsFull(userId = userId))
+
+            return HandleResponses.isOkModelHandler(
+                isOkModel = getUserAccountsMapResult,
+                data = insertTransactionResult,
+                actionsAfterGetSuccess = fun(): InsertTransactionResult {
+                    return Screens.accountHome(
+                        userId = userId,
+                        username = username,
+                        fromAccount = getUserAccountsMapResult.data!![account.value]!!,
+                        viaAccount = viaAccount,
+                        toAccount = toAccount,
+                        dateTimeInText = dateTimeInText,
+                        transactionParticulars = transactionParticulars,
+                        transactionAmount = transactionAmount
+                    )
+
+                })
+        }
+        return insertTransactionResult
     }
 
     internal fun addTransaction(
@@ -845,14 +869,15 @@ object InsertOperations {
                         localTransactionParticulars = transactionParticularsInput
                     }
 
-                    print("Enter Amount (Current Value - $localTransactionAmount) : ")
+                    val inputPrompt = "Enter Amount (Current Value - $localTransactionAmount) : "
+                    print(inputPrompt)
                     val transactionAmountInput: String = readLine()!!
                     if (transactionAmountInput.isNotEmpty()) {
 
                         localTransactionAmount =
                             InputUtils.getValidFloat(
                                 inputString = transactionAmountInput,
-                                invalidMessage = "Invalid Amount, Try Again : "
+                                invalidMessage = "Invalid Amount, $inputPrompt : "
                             )
                     }
 
@@ -1157,43 +1182,29 @@ object InsertOperations {
 
                     val readFrequencyOfAccountsFileResult: IsOkModel<FrequencyOfAccountsModel> =
                         JsonFileUtils.readJsonFile(Constants.frequencyOfAccountsFileName)
+//                    println("readFrequencyOfAccountsFileResult : $readFrequencyOfAccountsFileResult")
+
                     if (readFrequencyOfAccountsFileResult.isOK) {
 
-                        val frequencyOfAccounts: FrequencyOfAccountsModel = readFrequencyOfAccountsFileResult.data!!
+                        var frequencyOfAccounts: FrequencyOfAccountsModel = readFrequencyOfAccountsFileResult.data!!
                         val user: UserModel? = frequencyOfAccounts.users.find { user: UserModel -> user.id == userId }
                         if (user != null) {
 
-                            val accountFrequencies: List<AccountFrequencyModel> =
-                                user.accountFrequencies.filter { accountFrequency: AccountFrequencyModel ->
-                                    accountFrequency.accountID == fromAccount.id || accountFrequency.accountID == toAccount.id
-                                }
-                            if (accountFrequencies.isEmpty()) {
-
-                                frequencyOfAccounts.users.find { localUser: UserModel -> localUser.id == userId }!!.accountFrequencies.plus(
-                                    elements = listOf(
-                                        AccountFrequencyModel(
-                                            accountID = fromAccount.id,
-                                            accountName = fromAccount.fullName,
-                                            countOfRepetition = 1u
-                                        ),
-                                        AccountFrequencyModel(
-                                            accountID = toAccount.id,
-                                            accountName = toAccount.fullName,
-                                            countOfRepetition = 1u
-                                        )
-                                    )
-                                )
-
-                            } else {
-
-                                accountFrequencies.forEach { accountFrequency: AccountFrequencyModel ->
-
-                                    frequencyOfAccounts.users.find { localUser: UserModel -> localUser.id == userId }!!.accountFrequencies.find { localAccountFrequency: AccountFrequencyModel -> localAccountFrequency.accountID == accountFrequency.accountID }!!.countOfRepetition++
-                                }
-                            }
+                            frequencyOfAccounts = updateAccountFrequency(
+                                user = user,
+                                account = fromAccount,
+                                frequencyOfAccounts = frequencyOfAccounts,
+                                userId = userId
+                            )
+                            frequencyOfAccounts = updateAccountFrequency(
+                                user = user,
+                                account = toAccount,
+                                frequencyOfAccounts = frequencyOfAccounts,
+                                userId = userId
+                            )
 
                         } else {
-                            frequencyOfAccounts.users.plusElement(
+                            frequencyOfAccounts.users = frequencyOfAccounts.users.plusElement(
                                 element = getInitialUserTransactionObject(
                                     userId = userId,
                                     fromAccount = fromAccount,
@@ -1232,6 +1243,43 @@ object InsertOperations {
             println("Date Error : ${eventDateTimeConversionResult.second}")
         }
         return false
+    }
+
+    private fun updateAccountFrequency(
+
+        user: UserModel,
+        account: AccountResponse,
+        frequencyOfAccounts: FrequencyOfAccountsModel,
+        userId: UInt
+
+    ): FrequencyOfAccountsModel {
+
+//        println("frequencyOfAccounts : $frequencyOfAccounts")
+
+        val accountFrequency: AccountFrequencyModel? =
+            user.accountFrequencies.find { accountFrequency: AccountFrequencyModel ->
+                accountFrequency.accountID == account.id
+            }
+//        println("accountFrequency : $accountFrequency")
+
+        if (accountFrequency == null) {
+
+            frequencyOfAccounts.users.find { localUser: UserModel -> localUser.id == userId }!!.accountFrequencies =
+
+                frequencyOfAccounts.users.find { localUser: UserModel -> localUser.id == userId }!!.accountFrequencies.plusElement(
+                    element = AccountFrequencyModel(
+                        accountID = account.id,
+                        accountName = account.fullName,
+                        countOfRepetition = 1u
+                    )
+                )
+
+        } else {
+
+            frequencyOfAccounts.users.find { localUser: UserModel -> localUser.id == userId }!!.accountFrequencies.find { localAccountFrequency: AccountFrequencyModel -> localAccountFrequency.accountID == account.id }!!.countOfRepetition++
+        }
+//        println("frequencyOfAccounts : $frequencyOfAccounts")
+        return frequencyOfAccounts
     }
 
     private fun getInitialUserTransactionObject(

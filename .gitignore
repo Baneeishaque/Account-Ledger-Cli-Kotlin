@@ -19,7 +19,7 @@
 # Sensitive or high-churn files
 .idea/**/dataSources/
 .idea/**/dataSources.ids
-#.idea/**/dataSources.local.xml
+.idea/**/dataSources.local.xml
 .idea/**/sqlDataSources.xml
 .idea/**/dynamic.xml
 .idea/**/uiDesigner.xml
@@ -223,4 +223,4 @@ gradle-app.setting
 /AccountLedgerCli.bin
 .env
 /api/http-client.env.json
-.idea/dataSources.local.xml
+/frequencyOfAccounts.json

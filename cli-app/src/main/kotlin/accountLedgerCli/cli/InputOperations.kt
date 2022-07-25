@@ -27,7 +27,7 @@ internal fun <T> getValidIndex(
     val idInput: String = readLine()!!
     if (idInput == "0") return 0u
 
-    val inputForIndex:UInt = InputUtils.getValidInt(
+    val inputForIndex: UInt = InputUtils.getValidInt(
         inputString = idInput,
         invalidMessage = "Invalid $itemSpecification Index...\nEnter $itemSpecification Index, or O to back : ${itemSpecification.first()}"
     )
@@ -81,7 +81,7 @@ internal fun <T> getValidIndex(
 
 internal fun chooseDepositTop(userId: UInt): HandleAccountsApiResponseResult {
 
-    return handleAccountsApiResponse(
+    return HandleResponses.handleAccountsApiResponse(
         apiResponse = getAccounts(userId = userId),
         purpose = GetAccountsApiCallPurposeEnum.TO
     )
@@ -89,7 +89,7 @@ internal fun chooseDepositTop(userId: UInt): HandleAccountsApiResponseResult {
 
 internal fun chooseDepositFull(userId: UInt): HandleAccountsApiResponseResult {
 
-    return handleAccountsApiResponse(
+    return HandleResponses.handleAccountsApiResponse(
         apiResponse = ApiUtils.getAccountsFull(userId = userId),
         purpose = GetAccountsApiCallPurposeEnum.TO
     )
@@ -97,7 +97,7 @@ internal fun chooseDepositFull(userId: UInt): HandleAccountsApiResponseResult {
 
 internal fun chooseWithdrawTop(userId: UInt): HandleAccountsApiResponseResult {
 
-    return handleAccountsApiResponse(
+    return HandleResponses.handleAccountsApiResponse(
         apiResponse = getAccounts(userId = userId),
         purpose = GetAccountsApiCallPurposeEnum.FROM
     )
@@ -105,7 +105,7 @@ internal fun chooseWithdrawTop(userId: UInt): HandleAccountsApiResponseResult {
 
 internal fun chooseWithdrawFull(userId: UInt): HandleAccountsApiResponseResult {
 
-    return handleAccountsApiResponse(
+    return HandleResponses.handleAccountsApiResponse(
         apiResponse = ApiUtils.getAccountsFull(userId),
         purpose = GetAccountsApiCallPurposeEnum.FROM
     )
@@ -113,7 +113,7 @@ internal fun chooseWithdrawFull(userId: UInt): HandleAccountsApiResponseResult {
 
 internal fun chooseViaTop(userId: UInt): HandleAccountsApiResponseResult {
 
-    return handleAccountsApiResponse(
+    return HandleResponses.handleAccountsApiResponse(
         apiResponse = getAccounts(userId = userId),
         purpose = GetAccountsApiCallPurposeEnum.VIA
     )
@@ -121,7 +121,7 @@ internal fun chooseViaTop(userId: UInt): HandleAccountsApiResponseResult {
 
 internal fun chooseViaFull(userId: UInt): HandleAccountsApiResponseResult {
 
-    return handleAccountsApiResponse(
+    return HandleResponses.handleAccountsApiResponse(
         apiResponse = ApiUtils.getAccountsFull(userId),
         purpose = GetAccountsApiCallPurposeEnum.VIA
     )

@@ -131,7 +131,12 @@ internal fun viewChildAccounts(
         parentAccountId = fromAccount.id
     )
 
-    var processChildAccountScreenInputInsertTransactionResult = InsertTransactionResult(isSuccess = false)
+    var processChildAccountScreenInputInsertTransactionResult = InsertTransactionResult(
+        isSuccess = false,
+        dateTimeInText = dateTimeInText,
+        transactionParticulars = transactionParticulars,
+        transactionAmount = transactionAmount
+    )
 
     if (apiResponse.isFailure) {
 
@@ -152,7 +157,12 @@ internal fun viewChildAccounts(
                 }
 
                 "N" -> {
-                    return InsertTransactionResult(isSuccess = false)
+                    return InsertTransactionResult(
+                        isSuccess = false,
+                        dateTimeInText = dateTimeInText,
+                        transactionParticulars = transactionParticulars,
+                        transactionAmount = transactionAmount
+                    )
                 }
 
                 else -> invalidOptionMessage()

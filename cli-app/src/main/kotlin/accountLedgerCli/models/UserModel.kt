@@ -10,5 +10,5 @@ internal data class UserModel(
     @SerialName(UserJsonObjectFields.id)
     val id: UInt,
     @SerialName(UserJsonObjectFields.accountFrequencies)
-    val accountFrequencies: List<AccountFrequencyModel>
+    var accountFrequencies: List<AccountFrequencyModel>
 )

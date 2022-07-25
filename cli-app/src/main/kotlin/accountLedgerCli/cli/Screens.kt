@@ -14,7 +14,7 @@ import accountLedgerCli.to_models.IsOkModel
 import accountLedgerCli.to_utils.JsonFileUtils
 import accountLedgerCli.to_utils.ToDoUtils
 import accountLedgerCli.utils.ApiUtils
-import kotlinx.serialization.ExperimentalSerializationApi
+import accountLedgerCli.to_constants.Constants as CommonConstants
 
 object Screens {
     internal fun userScreen(
@@ -103,7 +103,7 @@ object Screens {
             )
             when (readLine()!!) {
                 "1" -> {
-                    insertTransactionResult = handleAccountsResponseAndPrintMenu(
+                    insertTransactionResult = HandleResponses.handleAccountsResponseAndPrintMenu(
 
                         apiResponse = getAccounts(userId = userId),
                         username = username,
@@ -121,7 +121,6 @@ object Screens {
 
                         account = InsertOperations.walletAccount,
                         userId = userId,
-                        userAccountsMapLocal = App.userAccountsMap,
                         username = username,
                         viaAccount = viaAccount,
                         toAccount = toAccount,
@@ -137,7 +136,6 @@ object Screens {
                         account1 = InsertOperations.walletAccount,
                         account2 = InsertOperations.frequent1Account,
                         userId = userId,
-                        userAccountsMapLocal = App.userAccountsMap,
                         username = username,
                         viaAccount = viaAccount,
                         dateTimeInText = insertTransactionResult.dateTimeInText,
@@ -152,7 +150,6 @@ object Screens {
                         account1 = InsertOperations.walletAccount,
                         account2 = InsertOperations.frequent2Account,
                         userId = userId,
-                        userAccountsMapLocal = App.userAccountsMap,
                         username = username,
                         viaAccount = viaAccount,
                         dateTimeInText = insertTransactionResult.dateTimeInText,
@@ -167,7 +164,6 @@ object Screens {
                         account1 = InsertOperations.walletAccount,
                         account2 = InsertOperations.frequent3Account,
                         userId = userId,
-                        userAccountsMapLocal = App.userAccountsMap,
                         username = username,
                         viaAccount = viaAccount,
                         dateTimeInText = insertTransactionResult.dateTimeInText,
@@ -181,7 +177,6 @@ object Screens {
 
                         account = InsertOperations.bankAccount,
                         userId = userId,
-                        userAccountsMapLocal = App.userAccountsMap,
                         username = username,
                         viaAccount = viaAccount,
                         toAccount = toAccount,
@@ -197,7 +192,6 @@ object Screens {
                         account1 = InsertOperations.bankAccount,
                         account2 = InsertOperations.frequent1Account,
                         userId = userId,
-                        userAccountsMapLocal = App.userAccountsMap,
                         username = username,
                         viaAccount = viaAccount,
                         dateTimeInText = insertTransactionResult.dateTimeInText,
@@ -212,7 +206,6 @@ object Screens {
                         account1 = InsertOperations.bankAccount,
                         account2 = InsertOperations.frequent2Account,
                         userId = userId,
-                        userAccountsMapLocal = App.userAccountsMap,
                         username = username,
                         viaAccount = viaAccount,
                         dateTimeInText = insertTransactionResult.dateTimeInText,
@@ -227,7 +220,6 @@ object Screens {
                         account1 = InsertOperations.frequent1Account,
                         account2 = InsertOperations.frequent3Account,
                         userId = userId,
-                        userAccountsMapLocal = App.userAccountsMap,
                         username = username,
                         viaAccount = viaAccount,
                         dateTimeInText = insertTransactionResult.dateTimeInText,
@@ -242,7 +234,6 @@ object Screens {
 
                         account = InsertOperations.walletAccount,
                         userId = userId,
-                        userAccountsMapLocal = App.userAccountsMap,
                         username = username,
                         viaAccount = viaAccount,
                         toAccount = toAccount,
@@ -257,7 +248,6 @@ object Screens {
 
                         account = InsertOperations.frequent2Account,
                         userId = userId,
-                        userAccountsMapLocal = App.userAccountsMap,
                         username = username,
                         viaAccount = viaAccount,
                         toAccount = toAccount,
@@ -272,7 +262,6 @@ object Screens {
 
                         account = InsertOperations.frequent3Account,
                         userId = userId,
-                        userAccountsMapLocal = App.userAccountsMap,
                         username = username,
                         viaAccount = viaAccount,
                         toAccount = toAccount,
@@ -283,7 +272,7 @@ object Screens {
                 }
 
                 "13" -> {
-                    insertTransactionResult = handleAccountsResponseAndPrintMenu(
+                    insertTransactionResult = HandleResponses.handleAccountsResponseAndPrintMenu(
 
                         apiResponse = ApiUtils.getAccountsFull(userId = userId),
                         username = username,
@@ -402,17 +391,24 @@ object Screens {
                 frequencyOfAccounts = readFrequencyOfAccountsFileResult.data!!,
                 userId = userId
 
-            )?.sortedByDescending { accountFrequency: AccountFrequencyModel -> accountFrequency.countOfRepetition }!!
-                .take(n = 10)
-                .forEach { accountFrequency: AccountFrequencyModel -> result += "${accountFrequency.accountID} : ${accountFrequency.accountName}\n" }
+            )?.sortedByDescending { accountFrequency: AccountFrequencyModel ->
+
+                accountFrequency.countOfRepetition
+
+            }?.take(n = 10)
+
+                ?.forEach { accountFrequency: AccountFrequencyModel ->
+
+                    result += "${accountFrequency.accountID} : ${accountFrequency.accountName}\n"
+                }
         }
         return if (result.isEmpty()) {
 
-            getDashedLineSeparator()
+            CommonConstants.dashedLineSeparator
 
         } else {
 
-            getDashedLineSeparator() + "\n" + result + getDashedLineSeparator()
+            CommonConstants.dashedLineSeparator + "\n" + result + CommonConstants.dashedLineSeparator
         }
     }
 
@@ -424,11 +420,6 @@ object Screens {
     ): List<AccountFrequencyModel>? {
 
         return frequencyOfAccounts.users.find { user: UserModel -> user.id == userId }?.accountFrequencies
-    }
-
-    @JvmStatic
-    internal fun getDashedLineSeparator(): String {
-        return "---------------------------------------------------"
     }
 
     private fun getEnvironmentVariableValueForUserScreen(environmentVariableName: String) =
@@ -572,7 +563,9 @@ object Screens {
 
         var menuItems: List<String> = listOf(
             "\nUser : $username",
-            "Transaction Type : $transactionType",
+            "Transaction Type : ${
+                transactionType.name.lowercase().replaceFirstChar { character -> character.uppercaseChar() }
+            }",
             "From Account - ${fromAccount.id} : ${fromAccount.fullName}"
         )
         if (transactionType == TransactionTypeEnum.VIA) {
