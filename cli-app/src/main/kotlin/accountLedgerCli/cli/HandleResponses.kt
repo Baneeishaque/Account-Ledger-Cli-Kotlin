@@ -38,9 +38,7 @@ internal fun handleAccountsResponseAndPrintMenu(
                 listOf(
                     "\nUser : $username",
                     "Accounts",
-                    userAccountsToStringFromLinkedHashMapLimitedTo10(
-                        userAccountsMap = userAccountsMap
-                    ),
+                    userAccountsToStringFromListPair(userAccountsList = userAccountsMap.toList().takeLast(10)),
                     "1 - Choose Account - By Index Number",
                     "2 - Choose Account - By Search",
                     "3 - Add Account",

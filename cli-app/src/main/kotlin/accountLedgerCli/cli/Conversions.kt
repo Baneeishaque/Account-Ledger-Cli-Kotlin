@@ -3,14 +3,7 @@ package accountLedgerCli.cli
 import accountLedgerCli.api.response.AccountResponse
 import accountLedgerCli.api.response.UserResponse
 
-internal fun userAccountsToStringFromLinkedHashMapLimitedTo10(
-    userAccountsMap: LinkedHashMap<UInt, AccountResponse>
-): String {
-
-    return userAccountsToStringFromListPair(getLast10ItemsFromLinkedHashMap(userAccountsMap))
-}
-
-private fun userAccountsToStringFromListPair(
+internal fun userAccountsToStringFromListPair(
     userAccountsList: List<Pair<UInt, AccountResponse>>
 ): String {
 

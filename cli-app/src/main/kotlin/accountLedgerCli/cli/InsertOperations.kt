@@ -3,17 +3,20 @@ package accountLedgerCli.cli
 import accountLedgerCli.api.response.AccountResponse
 import accountLedgerCli.api.response.InsertionResponse
 import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
+import accountLedgerCli.constants.Constants
 import accountLedgerCli.enums.AccountExchangeTypeEnum
 import accountLedgerCli.enums.GetAccountsApiCallPurposeEnum
 import accountLedgerCli.enums.HandleAccountsApiResponseResult
 import accountLedgerCli.enums.TransactionTypeEnum
-import accountLedgerCli.models.ChooseAccountResult
-import accountLedgerCli.models.InsertTransactionResult
+import accountLedgerCli.models.*
 import accountLedgerCli.retrofit.data.TransactionDataSource
+import accountLedgerCli.to_models.IsOkModel
 import accountLedgerCli.to_utils.DateTimeUtils
 import accountLedgerCli.to_utils.InputUtils
+import accountLedgerCli.to_utils.JsonFileUtils
 import accountLedgerCli.to_utils.MysqlUtils
-import accountLedgerCli.utils.*
+import accountLedgerCli.utils.ApiUtils
+import accountLedgerCli.utils.ChooseAccountUtils
 import kotlinx.coroutines.runBlocking
 
 object InsertOperations {
@@ -879,7 +882,7 @@ object InsertOperations {
 
                                         return InsertTransactionResult(
                                             isSuccess = insertTransaction(
-                                                userid = userId,
+                                                userId = userId,
                                                 eventDateTime = localDateTimeInText,
                                                 particulars = localTransactionParticulars,
                                                 amount = localTransactionAmount,
@@ -896,7 +899,7 @@ object InsertOperations {
 
                                         return InsertTransactionResult(
                                             isSuccess = insertTransaction(
-                                                userid = userId,
+                                                userId = userId,
                                                 eventDateTime = localDateTimeInText,
                                                 particulars = localTransactionParticulars,
                                                 amount = localTransactionAmount,
@@ -1090,7 +1093,7 @@ object InsertOperations {
 
     private fun insertTransaction(
 
-        userid: UInt,
+        userId: UInt,
         eventDateTime: String,
         particulars: String,
         amount: Float,
@@ -1111,7 +1114,7 @@ object InsertOperations {
             println("Contacting Server...")
             runBlocking {
                 apiResponse = userTransactionDataSource.insertTransaction(
-                    userId = userid,
+                    userId = userId,
                     fromAccountId = fromAccount.id,
                     eventDateTimeString = eventDateTimeConversionResult.second,
                     particulars = particulars,
@@ -1125,11 +1128,10 @@ object InsertOperations {
                 println("Error : ${(apiResponse.exceptionOrNull() as Exception).localizedMessage}")
                 do {
                     print("Retry (Y/N) ? : ")
-                    val input: String? = readLine()
-                    when (input) {
+                    when (readLine()!!) {
                         "Y", "" -> {
                             return insertTransaction(
-                                userid = userid,
+                                userId = userId,
                                 eventDateTime = eventDateTime,
                                 particulars = particulars,
                                 amount = amount,
@@ -1139,11 +1141,12 @@ object InsertOperations {
                         }
 
                         "N" -> {
+                            return false
                         }
 
                         else -> println("Invalid option, try again...")
                     }
-                } while (input != "N")
+                } while (true)
 
             } else {
 
@@ -1151,6 +1154,72 @@ object InsertOperations {
                 if (insertionResponseResult.status == 0u) {
 
                     println("OK...")
+
+                    val readFrequencyOfAccountsFileResult: IsOkModel<FrequencyOfAccountsModel> =
+                        JsonFileUtils.readJsonFile(Constants.frequencyOfAccountsFileName)
+                    if (readFrequencyOfAccountsFileResult.isOK) {
+
+                        val frequencyOfAccounts: FrequencyOfAccountsModel = readFrequencyOfAccountsFileResult.data!!
+                        val user: UserModel? = frequencyOfAccounts.users.find { user: UserModel -> user.id == userId }
+                        if (user != null) {
+
+                            val accountFrequencies: List<AccountFrequencyModel> =
+                                user.accountFrequencies.filter { accountFrequency: AccountFrequencyModel ->
+                                    accountFrequency.accountID == fromAccount.id || accountFrequency.accountID == toAccount.id
+                                }
+                            if (accountFrequencies.isEmpty()) {
+
+                                frequencyOfAccounts.users.find { localUser: UserModel -> localUser.id == userId }!!.accountFrequencies.plus(
+                                    elements = listOf(
+                                        AccountFrequencyModel(
+                                            accountID = fromAccount.id,
+                                            accountName = fromAccount.fullName,
+                                            countOfRepetition = 1u
+                                        ),
+                                        AccountFrequencyModel(
+                                            accountID = toAccount.id,
+                                            accountName = toAccount.fullName,
+                                            countOfRepetition = 1u
+                                        )
+                                    )
+                                )
+
+                            } else {
+
+                                accountFrequencies.forEach { accountFrequency: AccountFrequencyModel ->
+
+                                    frequencyOfAccounts.users.find { localUser: UserModel -> localUser.id == userId }!!.accountFrequencies.find { localAccountFrequency: AccountFrequencyModel -> localAccountFrequency.accountID == accountFrequency.accountID }!!.countOfRepetition++
+                                }
+                            }
+
+                        } else {
+                            frequencyOfAccounts.users.plusElement(
+                                element = getInitialUserTransactionObject(
+                                    userId = userId,
+                                    fromAccount = fromAccount,
+                                    toAccount = toAccount
+                                )
+                            )
+                        }
+                        JsonFileUtils.writeJsonFile(
+                            fileName = Constants.frequencyOfAccountsFileName,
+                            data = frequencyOfAccounts
+                        )
+                    } else {
+
+                        JsonFileUtils.writeJsonFile(
+                            fileName = Constants.frequencyOfAccountsFileName, data = FrequencyOfAccountsModel(
+                                users = listOf(
+                                    getInitialUserTransactionObject(
+                                        userId = userId,
+                                        fromAccount = fromAccount,
+                                        toAccount = toAccount
+                                    )
+                                )
+                            )
+                        )
+                    }
+
                     return true
 
                 } else {
@@ -1164,6 +1233,29 @@ object InsertOperations {
         }
         return false
     }
+
+    private fun getInitialUserTransactionObject(
+
+        userId: UInt,
+        fromAccount: AccountResponse,
+        toAccount: AccountResponse
+
+    ) = UserModel(
+
+        id = userId, accountFrequencies = listOf(
+            AccountFrequencyModel(
+                accountID = fromAccount.id,
+                accountName = fromAccount.fullName,
+                countOfRepetition = 1u
+            ),
+            AccountFrequencyModel
+                (
+                accountID = toAccount.id,
+                accountName = toAccount.fullName,
+                countOfRepetition = 1u
+            )
+        )
+    )
 
     private fun getEnvironmentVariableValueForInsertOperation(
 
@@ -1197,7 +1289,7 @@ object InsertOperations {
             )
         )
         return insertTransaction(
-            userid = userId,
+            userId = userId,
             eventDateTime = eventDateTime,
             particulars = particulars,
             amount = amount,

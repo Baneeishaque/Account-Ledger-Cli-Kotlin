@@ -6,9 +6,15 @@ import accountLedgerCli.constants.Constants
 import accountLedgerCli.enums.BalanceSheetRefineLevelEnum
 import accountLedgerCli.enums.EnvironmentFileEntryEnum
 import accountLedgerCli.enums.TransactionTypeEnum
+import accountLedgerCli.models.AccountFrequencyModel
+import accountLedgerCli.models.FrequencyOfAccountsModel
 import accountLedgerCli.models.InsertTransactionResult
+import accountLedgerCli.models.UserModel
+import accountLedgerCli.to_models.IsOkModel
+import accountLedgerCli.to_utils.JsonFileUtils
 import accountLedgerCli.to_utils.ToDoUtils
 import accountLedgerCli.utils.ApiUtils
+import kotlinx.serialization.ExperimentalSerializationApi
 
 object Screens {
     internal fun userScreen(
@@ -36,6 +42,7 @@ object Screens {
             commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
                 listOf(
                     "\nUser : $username",
+                    getFrequentlyUsedTop10Accounts(userId = userId),
                     "1 - List Accounts : Top Levels",
                     "2 - Insert Quick Transaction On : Wallet",
                     "3 - Insert Quick Transaction On : Wallet To : ${
@@ -380,6 +387,48 @@ object Screens {
                 }
             }
         } while (true)
+    }
+
+    internal fun getFrequentlyUsedTop10Accounts(userId: UInt): String {
+
+        var result = ""
+
+        val readFrequencyOfAccountsFileResult: IsOkModel<FrequencyOfAccountsModel> =
+            JsonFileUtils.readJsonFile(Constants.frequencyOfAccountsFileName)
+        if (readFrequencyOfAccountsFileResult.isOK) {
+
+            getAccountFrequenciesForUser(
+
+                frequencyOfAccounts = readFrequencyOfAccountsFileResult.data!!,
+                userId = userId
+
+            )?.sortedByDescending { accountFrequency: AccountFrequencyModel -> accountFrequency.countOfRepetition }!!
+                .take(n = 10)
+                .forEach { accountFrequency: AccountFrequencyModel -> result += "${accountFrequency.accountID} : ${accountFrequency.accountName}\n" }
+        }
+        return if (result.isEmpty()) {
+
+            getDashedLineSeparator()
+
+        } else {
+
+            getDashedLineSeparator() + "\n" + result + getDashedLineSeparator()
+        }
+    }
+
+    internal fun getAccountFrequenciesForUser(
+
+        frequencyOfAccounts: FrequencyOfAccountsModel,
+        userId: UInt
+
+    ): List<AccountFrequencyModel>? {
+
+        return frequencyOfAccounts.users.find { user: UserModel -> user.id == userId }?.accountFrequencies
+    }
+
+    @JvmStatic
+    internal fun getDashedLineSeparator(): String {
+        return "---------------------------------------------------"
     }
 
     private fun getEnvironmentVariableValueForUserScreen(environmentVariableName: String) =

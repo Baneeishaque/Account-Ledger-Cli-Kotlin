@@ -5,7 +5,6 @@ import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithContinuePrompt
 import accountLedgerCli.enums.TransactionTypeEnum
 import accountLedgerCli.models.InsertTransactionResult
 import accountLedgerCli.to_utils.DateTimeUtils
-import accountLedgerCli.utils.AccountUtils
 
 internal fun isAccountsAreAvailable(
 
@@ -80,7 +79,12 @@ internal fun transactionContinueCheck(
             }
 
             "N" -> {
-                return InsertTransactionResult(isSuccess = false)
+                return InsertTransactionResult(
+                    isSuccess = false,
+                    dateTimeInText = dateTimeInText,
+                    transactionParticulars = transactionParticulars,
+                    transactionAmount = transactionAmount
+                )
             }
 
             else -> invalidOptionMessage()
@@ -128,9 +132,9 @@ internal fun addTransactionWithAccountAvailabilityCheck(
 
                     return InsertTransactionResult(
                         isSuccess = true,
-                        dateTimeInText = DateTimeUtils.add5MinutesToDateTimeString(dateTimeInText = addTransactionStep2Result.dateTimeInText!!),
-                        transactionParticulars = addTransactionStep2Result.transactionParticulars!!,
-                        transactionAmount = addTransactionStep2Result.transactionAmount!!
+                        dateTimeInText = DateTimeUtils.add5MinutesToDateTimeString(dateTimeInText = addTransactionStep2Result.dateTimeInText),
+                        transactionParticulars = addTransactionStep2Result.transactionParticulars,
+                        transactionAmount = addTransactionStep2Result.transactionAmount
                     )
                 }
             }
@@ -158,17 +162,17 @@ internal fun addTransactionWithAccountAvailabilityCheck(
                         viaAccount = viaAccount,
                         toAccount = toAccount,
                         isViaStep = true,
-                        dateTimeInText = DateTimeUtils.add5MinutesToDateTimeString(dateTimeInText = addTransactionStep2Result.dateTimeInText!!),
-                        transactionParticulars = addTransactionStep2Result.transactionParticulars!!,
-                        transactionAmount = addTransactionStep2Result.transactionAmount!!
+                        dateTimeInText = DateTimeUtils.add5MinutesToDateTimeString(dateTimeInText = addTransactionStep2Result.dateTimeInText),
+                        transactionParticulars = addTransactionStep2Result.transactionParticulars,
+                        transactionAmount = addTransactionStep2Result.transactionAmount
                     )
                     if (addTransactionStep2Result.isSuccess
                     ) {
                         return InsertTransactionResult(
                             isSuccess = true,
-                            dateTimeInText = DateTimeUtils.add5MinutesToDateTimeString(dateTimeInText = addTransactionStep2Result.dateTimeInText!!),
-                            transactionParticulars = addTransactionStep2Result.transactionParticulars!!,
-                            transactionAmount = addTransactionStep2Result.transactionAmount!!
+                            dateTimeInText = DateTimeUtils.add5MinutesToDateTimeString(dateTimeInText = addTransactionStep2Result.dateTimeInText),
+                            transactionParticulars = addTransactionStep2Result.transactionParticulars,
+                            transactionAmount = addTransactionStep2Result.transactionAmount
                         )
                     }
                 }
@@ -197,17 +201,17 @@ internal fun addTransactionWithAccountAvailabilityCheck(
                         viaAccount = viaAccount,
                         toAccount = toAccount,
                         isTwoWayStep = true,
-                        dateTimeInText = DateTimeUtils.add5MinutesToDateTimeString(dateTimeInText = addTransactionStep2Result.dateTimeInText!!),
-                        transactionParticulars = addTransactionStep2Result.transactionParticulars!!,
-                        transactionAmount = addTransactionStep2Result.transactionAmount!!
+                        dateTimeInText = DateTimeUtils.add5MinutesToDateTimeString(dateTimeInText = addTransactionStep2Result.dateTimeInText),
+                        transactionParticulars = addTransactionStep2Result.transactionParticulars,
+                        transactionAmount = addTransactionStep2Result.transactionAmount
                     )
                     if (addTransactionStep2Result.isSuccess) {
 
                         return InsertTransactionResult(
                             isSuccess = true,
-                            dateTimeInText = DateTimeUtils.add5MinutesToDateTimeString(dateTimeInText = addTransactionStep2Result.dateTimeInText!!),
-                            transactionParticulars = addTransactionStep2Result.transactionParticulars!!,
-                            transactionAmount = addTransactionStep2Result.transactionAmount!!
+                            dateTimeInText = DateTimeUtils.add5MinutesToDateTimeString(dateTimeInText = addTransactionStep2Result.dateTimeInText),
+                            transactionParticulars = addTransactionStep2Result.transactionParticulars,
+                            transactionAmount = addTransactionStep2Result.transactionAmount
                         )
                     }
                 }
