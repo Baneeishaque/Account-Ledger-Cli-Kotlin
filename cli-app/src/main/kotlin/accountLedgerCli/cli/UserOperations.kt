@@ -393,7 +393,7 @@ class UserOperations {
                                         items = usersToStringFromLinkedHashMap(usersMap = usersMap)
                                     ), usersMap = usersMap
                                 )
-                                if (chooseUserResult.isChoosed) {
+                                if (chooseUserResult.isChosen) {
 
                                     insertTransactionResult = Screens.userScreen(
 

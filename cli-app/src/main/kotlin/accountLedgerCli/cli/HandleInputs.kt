@@ -120,9 +120,9 @@ internal fun handleUserSelection(
     if (chosenUserId != 0u) {
 
         return ChooseUserResult(
-            isChoosed = true,
+            isChosen = true,
             chosenUser = usersMap[chosenUserId]!!
         )
     }
-    return ChooseUserResult(isChoosed = false)
+    return ChooseUserResult(isChosen = false)
 }

@@ -2,4 +2,4 @@ package accountLedgerCli.models
 
 import accountLedgerCli.api.response.UserResponse
 
-internal class ChooseUserResult(internal val isChoosed: Boolean, internal val chosenUser: UserResponse? = null)
+internal data class ChooseUserResult(internal val isChosen: Boolean, internal val chosenUser: UserResponse? = null)

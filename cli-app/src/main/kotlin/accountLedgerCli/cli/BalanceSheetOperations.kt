@@ -24,7 +24,7 @@ internal fun balanceSheetOfUser(usersMap: LinkedHashMap<UInt, UserResponse>) {
 
             ), usersMap = usersMap
     )
-    if (chooseUserResult.isChoosed) {
+    if (chooseUserResult.isChosen) {
         printBalanceSheetOfUser(
             currentUserName = chooseUserResult.chosenUser!!.username,
             currentUserId = chooseUserResult.chosenUser.id
