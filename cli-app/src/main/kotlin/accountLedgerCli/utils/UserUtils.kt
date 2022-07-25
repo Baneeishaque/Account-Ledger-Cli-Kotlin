@@ -13,11 +13,4 @@ object UserUtils {
         return usersMap
     }
 
-    @JvmStatic
-    internal val blankUser: UserResponse = UserResponse(
-        id = 0u,
-        password = "",
-        status = "",
-        username = ""
-    )
 }
