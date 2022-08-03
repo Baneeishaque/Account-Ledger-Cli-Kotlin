@@ -1,6 +1,7 @@
 package accountLedgerCli.cli
 
 import accountLedgerCli.api.response.AccountResponse
+import accountLedgerCli.api.response.TransactionResponse
 import accountLedgerCli.api.response.TransactionsResponse
 import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
 import accountLedgerCli.constants.Constants
@@ -11,6 +12,7 @@ import accountLedgerCli.models.ViewTransactionsOutput
 import accountLedgerCli.retrofit.ResponseHolder
 import accountLedgerCli.to_models.IsOkModel
 import accountLedgerCli.to_utils.ToDoUtils
+import accountLedgerCli.to_utils.invalidOptionMessage
 import accountLedgerCli.utils.AccountUtils
 import accountLedgerCli.utils.ApiUtils
 import accountLedgerCli.utils.TransactionUtils
@@ -21,7 +23,7 @@ internal fun viewTransactions(
     username: String,
     accountId: UInt,
     accountFullName: String,
-    functionCallSourceEnum: FunctionCallSourceEnum = FunctionCallSourceEnum.FROM_OTHERS,
+    functionCallSource: FunctionCallSourceEnum = FunctionCallSourceEnum.FROM_OTHERS,
     fromAccount: AccountResponse,
     viaAccount: AccountResponse,
     toAccount: AccountResponse,
@@ -44,7 +46,7 @@ internal fun viewTransactions(
                         username = username,
                         accountId = accountId,
                         accountFullName = accountFullName,
-                        functionCallSourceEnum = functionCallSourceEnum,
+                        functionCallSource = functionCallSource,
                         fromAccount = fromAccount,
                         viaAccount = viaAccount,
                         toAccount = toAccount,
@@ -100,7 +102,7 @@ internal fun viewTransactions(
                         currentAccountId = accountId
                     )
                 )
-                when (functionCallSourceEnum) {
+                when (functionCallSource) {
                     FunctionCallSourceEnum.FROM_CHECK_ACCOUNTS -> {
                         menuItems = menuItems + listOf("0 to Back Enter to Continue : ")
                     }
@@ -143,53 +145,79 @@ internal fun viewTransactions(
                 )
                 when (choice) {
 
-                    "1", "2", "4" -> {
+                    "1" -> {
 
-                        if (functionCallSourceEnum == FunctionCallSourceEnum.FROM_CHECK_ACCOUNTS) {
+                        if (isCallNotFromCheckAccounts(
+                                functionCallSource = functionCallSource,
+                                furtherActionsOnFalse = { invalidOptionMessage() })
+                        ) {
 
-                            invalidOptionMessage()
+                            val transactionIndex: UInt = getValidIndex(
+                                map = TransactionUtils.prepareUserTransactionsMap(transactions = userTransactionsResponse.transactions),
+                                itemSpecification = Constants.transactionText,
+                                items = TransactionUtils.userTransactionsToStringFromList(
+                                    transactions = userTransactionsResponse.transactions,
+                                    currentAccountId = fromAccount.id
+                                )
+                            )
+                            // TODO : Take Confirmation from the user
+                            if (InsertOperations.deleteTransaction(transactionId = transactionIndex)) {
 
-                        } else {
+                                userTransactionsResponse.transactions =
+                                    userTransactionsResponse.transactions.filter { transactionResponse: TransactionResponse -> transactionResponse.id != transactionIndex }
+                            }
+                        }
+                    }
+
+                    "2", "4" -> {
+
+                        if (isCallNotFromCheckAccounts(functionCallSource = functionCallSource,
+                                furtherActionsOnFalse = { invalidOptionMessage() })
+                        ) {
 
                             ToDoUtils.showTodo()
                         }
                     }
 
                     "3" -> {
-                        val transactionIndex: UInt = getValidIndex(
-                            map = TransactionUtils.prepareUserTransactionsMap(transactions = userTransactionsResponse.transactions),
-                            itemSpecification = Constants.transactionText,
-                            items = TransactionUtils.userTransactionsToStringFromList(
-                                transactions = userTransactionsResponse.transactions,
-                                currentAccountId = fromAccount.id
+
+                        if (isCallNotFromCheckAccounts(functionCallSource = functionCallSource,
+                                furtherActionsOnFalse = { invalidOptionMessage() })
+                        ) {
+
+                            val transactionIndex: UInt = getValidIndex(
+                                map = TransactionUtils.prepareUserTransactionsMap(transactions = userTransactionsResponse.transactions),
+                                itemSpecification = Constants.transactionText,
+                                items = TransactionUtils.userTransactionsToStringFromList(
+                                    transactions = userTransactionsResponse.transactions,
+                                    currentAccountId = fromAccount.id
+                                )
                             )
-                        )
-                        // TODO : Handle errors on API request execution & response
-                        val userAccountsMap: LinkedHashMap<UInt, AccountResponse> = AccountUtils.prepareUserAccountsMap(
-                            accounts = ApiUtils.getAccountsFull(userId = userId).getOrNull()!!.accounts
-                        )
-                        addTransactionResult = InsertOperations.addTransactionStep2(
-                            userId = userId,
-                            username = username,
-                            transactionType = TransactionTypeEnum.NORMAL,
-                            fromAccount = userAccountsMap[userTransactionsResponse.transactions[transactionIndex.toInt()].from_account_id]!!,
-                            viaAccount = viaAccount,
-                            toAccount = toAccount,
-                            transactionId = transactionIndex,
-                            dateTimeInText = dateTimeInText,
-                            transactionParticulars = transactionParticulars,
-                            transactionAmount = transactionAmount,
-                            isEditStep = true
-                        )
+                            val userAccountsMap: LinkedHashMap<UInt, AccountResponse> =
+                                AccountUtils.prepareUserAccountsMap(
+                                    accounts = ApiUtils.getAccountsFull(userId = userId).getOrNull()!!.accounts
+                                )
+                            addTransactionResult = InsertOperations.addTransactionStep2(
+                                userId = userId,
+                                username = username,
+                                transactionType = TransactionTypeEnum.NORMAL,
+                                fromAccount = userAccountsMap[userTransactionsResponse.transactions[transactionIndex.toInt()].from_account_id]!!,
+                                viaAccount = viaAccount,
+                                toAccount = toAccount,
+                                transactionId = transactionIndex,
+                                dateTimeInText = dateTimeInText,
+                                transactionParticulars = transactionParticulars,
+                                transactionAmount = transactionAmount,
+                                isEditStep = true
+                            )
+                        }
                     }
 
                     "5" -> {
 
-                        if (functionCallSourceEnum == FunctionCallSourceEnum.FROM_CHECK_ACCOUNTS) {
-
-                            invalidOptionMessage()
-
-                        } else {
+                        if (isCallNotFromCheckAccounts(functionCallSource = functionCallSource,
+                                furtherActionsOnFalse = { invalidOptionMessage() })
+                        ) {
 
                             addTransactionResult = InsertOperations.addTransaction(
 
@@ -215,14 +243,16 @@ internal fun viewTransactions(
                     }
 
                     "" -> {
-                        if (functionCallSourceEnum == FunctionCallSourceEnum.FROM_CHECK_ACCOUNTS) {
+                        if (isCallFromCheckAccounts(
+                                functionCallSource = functionCallSource,
+                                furtherActionsOnFalse = { invalidOptionMessage() }
+                            )
+                        ) {
 
                             return ViewTransactionsOutput(
                                 output = "",
                                 addTransactionResult = addTransactionResult
                             )
-                        } else {
-                            invalidOptionMessage()
                         }
                     }
 
@@ -231,6 +261,38 @@ internal fun viewTransactions(
             } while (true)
         }
     }
+}
+
+private fun isCallNotFromCheckAccounts(
+
+    functionCallSource: FunctionCallSourceEnum,
+    furtherActionsOnTrue: () -> Unit = fun() {},
+    furtherActionsOnFalse: () -> Unit = fun() {}
+
+): Boolean {
+
+    return !isCallFromCheckAccounts(
+        functionCallSource = functionCallSource,
+        furtherActionsOnTrue = furtherActionsOnFalse,
+        furtherActionsOnFalse = furtherActionsOnTrue
+    )
+}
+
+private fun isCallFromCheckAccounts(
+
+    functionCallSource: FunctionCallSourceEnum,
+    furtherActionsOnTrue: () -> Unit = fun() {},
+    furtherActionsOnFalse: () -> Unit = fun() {}
+
+): Boolean {
+
+    if (functionCallSource == FunctionCallSourceEnum.FROM_CHECK_ACCOUNTS) {
+
+        furtherActionsOnTrue.invoke()
+        return true
+    }
+    furtherActionsOnFalse.invoke()
+    return false
 }
 
 internal fun viewTransactionsOfSpecificAccount(
@@ -270,7 +332,7 @@ internal fun viewTransactionsOfSpecificAccount(
                         username = username,
                         accountId = accountIndex,
                         accountFullName = getUserAccountsMapResult.data[accountIndex]!!.fullName,
-                        functionCallSourceEnum = FunctionCallSourceEnum.FROM_VIEW_TRANSACTIONS_OF_ACCOUNT,
+                        functionCallSource = FunctionCallSourceEnum.FROM_VIEW_TRANSACTIONS_OF_ACCOUNT,
                         fromAccount = fromAccount,
                         viaAccount = viaAccount,
                         toAccount = toAccount,

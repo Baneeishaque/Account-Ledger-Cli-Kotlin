@@ -6,6 +6,7 @@ import accountLedgerCli.enums.AccountTypeEnum
 import accountLedgerCli.enums.HandleAccountsApiResponseResult
 import accountLedgerCli.enums.TransactionTypeEnum
 import accountLedgerCli.to_utils.InputUtils
+import accountLedgerCli.to_utils.invalidOptionMessage
 import accountLedgerCli.utils.ApiUtils
 
 internal fun <T> getValidIndex(
@@ -81,6 +82,7 @@ internal fun <T> getValidIndex(
 
 internal fun chooseDepositTop(userId: UInt): HandleAccountsApiResponseResult {
 
+    // TODO : Remove boilerplate code
     return HandleResponses.handleAccountsApiResponse(
         apiResponse = getAccounts(userId = userId),
         purpose = AccountTypeEnum.TO
@@ -89,6 +91,7 @@ internal fun chooseDepositTop(userId: UInt): HandleAccountsApiResponseResult {
 
 internal fun chooseDepositFull(userId: UInt): HandleAccountsApiResponseResult {
 
+    // TODO : Remove boilerplate code
     return HandleResponses.handleAccountsApiResponse(
         apiResponse = ApiUtils.getAccountsFull(userId = userId),
         purpose = AccountTypeEnum.TO
@@ -97,6 +100,7 @@ internal fun chooseDepositFull(userId: UInt): HandleAccountsApiResponseResult {
 
 internal fun chooseWithdrawTop(userId: UInt): HandleAccountsApiResponseResult {
 
+    // TODO : Remove boilerplate code
     return HandleResponses.handleAccountsApiResponse(
         apiResponse = getAccounts(userId = userId),
         purpose = AccountTypeEnum.FROM
@@ -105,6 +109,7 @@ internal fun chooseWithdrawTop(userId: UInt): HandleAccountsApiResponseResult {
 
 internal fun chooseWithdrawFull(userId: UInt): HandleAccountsApiResponseResult {
 
+    // TODO : Remove boilerplate code
     return HandleResponses.handleAccountsApiResponse(
         apiResponse = ApiUtils.getAccountsFull(userId),
         purpose = AccountTypeEnum.FROM
@@ -113,6 +118,7 @@ internal fun chooseWithdrawFull(userId: UInt): HandleAccountsApiResponseResult {
 
 internal fun chooseViaTop(userId: UInt): HandleAccountsApiResponseResult {
 
+    // TODO : Remove boilerplate code
     return HandleResponses.handleAccountsApiResponse(
         apiResponse = getAccounts(userId = userId),
         purpose = AccountTypeEnum.VIA
@@ -121,6 +127,7 @@ internal fun chooseViaTop(userId: UInt): HandleAccountsApiResponseResult {
 
 internal fun chooseViaFull(userId: UInt): HandleAccountsApiResponseResult {
 
+    // TODO : Remove boilerplate code
     return HandleResponses.handleAccountsApiResponse(
         apiResponse = ApiUtils.getAccountsFull(userId),
         purpose = AccountTypeEnum.VIA

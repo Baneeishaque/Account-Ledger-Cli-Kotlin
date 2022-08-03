@@ -1,8 +1,8 @@
 package accountLedgerCli.retrofit.data
 
-import accountLedgerCli.api.response.InsertionResponse
+import accountLedgerCli.api.response.TransactionManipulationResponse
 
-internal class TransactionDataSource : AppDataSource<InsertionResponse>() {
+internal class TransactionDataSource : AppDataSource<TransactionManipulationResponse>() {
 
     internal suspend fun insertTransaction(
 
@@ -13,25 +13,18 @@ internal class TransactionDataSource : AppDataSource<InsertionResponse>() {
         fromAccountId: UInt,
         toAccountId: UInt
 
-    ): Result<InsertionResponse> {
+    ): Result<TransactionManipulationResponse> {
 
-        return try {
-
-            processApiResponse(
-                apiResponse = retrofitClient.insertTransaction(
-                    userId = userId,
-                    eventDateTimeString = eventDateTimeString,
-                    particulars = particulars,
-                    amount = amount,
-                    fromAccountId = fromAccountId,
-                    toAccountId = toAccountId
-                )
+        return handleApiResponse(
+            apiResponse = retrofitClient.insertTransaction(
+                userId = userId,
+                eventDateTimeString = eventDateTimeString,
+                particulars = particulars,
+                amount = amount,
+                fromAccountId = fromAccountId,
+                toAccountId = toAccountId
             )
-
-        } catch (exception: java.lang.Exception) {
-
-            Result.failure(exception = Exception("Exception - ${exception.localizedMessage}"))
-        }
+        )
     }
 
     internal suspend fun updateTransaction(
@@ -43,24 +36,27 @@ internal class TransactionDataSource : AppDataSource<InsertionResponse>() {
         fromAccountId: UInt,
         toAccountId: UInt
 
-    ): Result<InsertionResponse> {
+    ): Result<TransactionManipulationResponse> {
 
-        return try {
-
-            processApiResponse(
-                apiResponse = retrofitClient.updateTransaction(
-                    transactionId = transactionId,
-                    eventDateTimeString = eventDateTimeString,
-                    particulars = particulars,
-                    amount = amount,
-                    fromAccountId = fromAccountId,
-                    toAccountId = toAccountId
-                )
+        return handleApiResponse(
+            apiResponse = retrofitClient.updateTransaction(
+                transactionId = transactionId,
+                eventDateTimeString = eventDateTimeString,
+                particulars = particulars,
+                amount = amount,
+                fromAccountId = fromAccountId,
+                toAccountId = toAccountId
             )
+        )
 
-        } catch (exception: java.lang.Exception) {
+    }
 
-            Result.failure(exception = Exception("Exception - ${exception.localizedMessage}"))
-        }
+    internal suspend fun deleteTransaction(transactionId: UInt): Result<TransactionManipulationResponse> {
+
+        return handleApiResponse(
+            apiResponse = retrofitClient.deleteTransaction(
+                transactionId = transactionId
+            )
+        )
     }
 }

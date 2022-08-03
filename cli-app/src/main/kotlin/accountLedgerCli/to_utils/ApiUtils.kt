@@ -13,11 +13,19 @@ object ApiUtils {
     @JvmStatic
     fun <T> makeApiRequestWithOptionalRetries(
 
-        apiCallFunction: () -> Result<T>
+        apiCallFunction: () -> Result<T>,
+        isDevelopmentMode: Boolean = false
 
     ): IsOkModel<T> {
 
+        println("Contacting Server...")
         val apiResponse: Result<T> = apiCallFunction.invoke()
+
+        if (isDevelopmentMode) {
+
+            println("API Response : $apiResponse")
+        }
+
         if (apiResponse.isFailure) {
 
             println("Error : ${(apiResponse.exceptionOrNull() as Exception).localizedMessage}")
@@ -26,7 +34,8 @@ object ApiUtils {
                 when (readLine()!!) {
                     "Y", "" -> {
                         return makeApiRequestWithOptionalRetries(
-                            apiCallFunction = apiCallFunction
+                            apiCallFunction = apiCallFunction,
+                            isDevelopmentMode = isDevelopmentMode
                         )
                     }
 

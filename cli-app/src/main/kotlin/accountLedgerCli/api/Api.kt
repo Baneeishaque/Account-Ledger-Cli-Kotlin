@@ -2,7 +2,7 @@ package accountLedgerCli.api
 
 import accountLedgerCli.api.response.*
 import accountLedgerCli.api.response.AccountsResponse
-import accountLedgerCli.api.response.InsertionResponse
+import accountLedgerCli.api.response.TransactionManipulationResponse
 import accountLedgerCli.api.response.AuthenticationResponse
 import accountLedgerCli.api.response.TransactionsResponse
 import retrofit2.Response
@@ -43,7 +43,7 @@ internal interface Api {
         @Field("amount") amount: Float,
         @Field("from_account_id") fromAccountId: UInt,
         @Field("to_account_id") toAccountId: UInt
-    ): Response<InsertionResponse>
+    ): Response<TransactionManipulationResponse>
 
     @FormUrlEncoded
     @POST("${ApiConstants.updateTransactionMethod}.${ApiConstants.serverFileExtension}")
@@ -54,7 +54,13 @@ internal interface Api {
         @Field("from_account_id") fromAccountId: UInt,
         @Field("to_account_id") toAccountId: UInt,
         @Field("id") transactionId: UInt
-    ): Response<InsertionResponse>
+    ): Response<TransactionManipulationResponse>
+
+    @FormUrlEncoded
+    @POST("${ApiConstants.deleteTransactionMethod}.${ApiConstants.serverFileExtension}")
+    suspend fun deleteTransaction(
+        @Field("id") transactionId: UInt
+    ): Response<TransactionManipulationResponse>
 
     @GET("${ApiConstants.selectUserTransactionsAfterSpecifiedDateMethod}.${ApiConstants.serverFileExtension}")
     suspend fun selectUserTransactionsAfterSpecifiedDate(

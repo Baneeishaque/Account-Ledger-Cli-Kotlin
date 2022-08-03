@@ -46,7 +46,7 @@ internal class TransactionsDataSource {
     }
 }
 
-//    TODO : Rewrite as general function for all responses
+// TODO : Rewrite as general function for all responses
 private fun processApiResponse(apiResponse: Response<TransactionsResponse>): ResponseHolder<TransactionsResponse> {
 
     if (apiResponse.isSuccessful) {

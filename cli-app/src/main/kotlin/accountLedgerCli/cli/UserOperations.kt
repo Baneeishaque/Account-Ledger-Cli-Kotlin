@@ -16,8 +16,7 @@ import accountLedgerCli.models.UserCredentials
 import accountLedgerCli.retrofit.ResponseHolder
 import accountLedgerCli.retrofit.data.AuthenticationDataSource
 import accountLedgerCli.retrofit.data.UsersDataSource
-import accountLedgerCli.to_utils.InputUtils
-import accountLedgerCli.utils.AccountUtils
+import accountLedgerCli.to_utils.invalidOptionMessage
 import accountLedgerCli.utils.UserUtils
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json

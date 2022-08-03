@@ -11,9 +11,9 @@ internal class AccountsDataSource : AppDataSource<AccountsResponse>() {
 
     ): Result<AccountsResponse> {
 
-        return executeApiRequest(
+        return handleApiResponse(
 
-            apiRequest = retrofitClient.selectUserAccounts(
+            apiResponse = retrofitClient.selectUserAccounts(
 
                 userId = userId,
                 parentAccountId = parentAccountId
@@ -23,9 +23,9 @@ internal class AccountsDataSource : AppDataSource<AccountsResponse>() {
 
     internal suspend fun selectUserAccountsFull(userId: UInt): Result<AccountsResponse> {
 
-        return executeApiRequest(
+        return handleApiResponse(
 
-            apiRequest = retrofitClient.selectUserAccountsFull(userId = userId)
+            apiResponse = retrofitClient.selectUserAccountsFull(userId = userId)
         )
     }
 }

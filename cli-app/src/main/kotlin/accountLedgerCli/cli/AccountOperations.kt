@@ -9,8 +9,10 @@ import accountLedgerCli.models.InsertTransactionResult
 import accountLedgerCli.models.ViewTransactionsOutput
 import accountLedgerCli.retrofit.ResponseHolder
 import accountLedgerCli.retrofit.data.TransactionsDataSource
+import accountLedgerCli.to_models.IsOkModel
 import accountLedgerCli.to_utils.InputUtils
 import accountLedgerCli.to_utils.MysqlUtils
+import accountLedgerCli.to_utils.invalidOptionMessage
 import accountLedgerCli.utils.AccountUtils
 import kotlinx.coroutines.runBlocking
 
@@ -30,14 +32,14 @@ internal fun checkAccountsAffectedAfterSpecifiedDate(
     val transactionsDataSource = TransactionsDataSource()
     println("Contacting Server...")
     val apiResponse: ResponseHolder<TransactionsResponse>
-    val specifiedDate: Pair<Boolean, String> =
+    val specifiedDate: IsOkModel<String> =
         MysqlUtils.normalDateTextToMysqlDateText(normalDateText = inputDate)
-    if (specifiedDate.first) {
+    if (specifiedDate.isOK) {
         runBlocking {
             apiResponse =
                 transactionsDataSource.selectUserTransactionsAfterSpecifiedDate(
                     userId = userId,
-                    specifiedDate = specifiedDate.second
+                    specifiedDate = specifiedDate.data!!
                 )
         }
         // println("Response : $apiResponse")
@@ -93,7 +95,7 @@ internal fun checkAccountsAffectedAfterSpecifiedDate(
                         username = username,
                         accountId = account.key,
                         accountFullName = account.value,
-                        functionCallSourceEnum = FunctionCallSourceEnum.FROM_CHECK_ACCOUNTS,
+                        functionCallSource = FunctionCallSourceEnum.FROM_CHECK_ACCOUNTS,
                         fromAccount = fromAccount,
                         viaAccount = viaAccount,
                         toAccount = toAccount,

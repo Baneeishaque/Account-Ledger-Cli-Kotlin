@@ -1,5 +1,6 @@
 package accountLedgerCli.to_utils
 
+import accountLedgerCli.to_models.IsOkModel
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -13,35 +14,60 @@ object MysqlUtils {
     @JvmStatic
     val mysqlDatePattern: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")!!
 
-    //TODO : Replace with data class
     @JvmStatic
-    fun normalDateTimeTextToMysqlDateTimeText(normalDateTimeText: String): Pair<Boolean, String> {
+    fun normalDateTimeTextToMysqlDateTimeText(
+
+        normalDateTimeText: String,
+        conversionSuccessActions: () -> Unit = fun() {},
+        conversionFailureActions: () -> Unit = fun() {}
+
+    ): IsOkModel<String> {
 
         return try {
 
             val result: String = LocalDateTime.parse(normalDateTimeText, DateTimeUtils.normalDateTimePattern)
                 .format(mysqlDateTimePattern)
-            Pair(true, result)
+            conversionSuccessActions.invoke()
+            IsOkModel(isOK = true, data = result)
 
         } catch (e: DateTimeParseException) {
 
-            Pair(false, e.localizedMessage)
+            conversionFailureActions.invoke()
+            IsOkModel(isOK = false, data = e.localizedMessage)
         }
     }
 
     @JvmStatic
-    fun normalDateTextToMysqlDateText(normalDateText: String): Pair<Boolean, String> {
+    fun dateTimeTextConversionWithMessage(
+
+        dateTimeTextConversionFunction: () -> IsOkModel<String>
+
+    ): IsOkModel<String> {
+
+        val dateTimeConversionResult: IsOkModel<String> = dateTimeTextConversionFunction.invoke()
+        if (dateTimeConversionResult.isOK) {
+
+            return IsOkModel(isOK = true, data = dateTimeConversionResult.data!!)
+
+        } else {
+
+            println("Date Error : ${dateTimeConversionResult.data!!}")
+        }
+        return IsOkModel(isOK = false)
+    }
+
+    @JvmStatic
+    fun normalDateTextToMysqlDateText(normalDateText: String): IsOkModel<String> {
 
         return try {
 
             val result: String =
                 LocalDate.parse(normalDateText, DateTimeUtils.normalDatePattern).format(mysqlDatePattern)
-            Pair(true, result)
+            IsOkModel(isOK = true, data = result)
 
         } catch (e: DateTimeParseException) {
 
-            //            println("Something went wrong...")
-            Pair(false, e.localizedMessage)
+            IsOkModel(isOK = false, data = e.localizedMessage)
         }
     }
 

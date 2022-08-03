@@ -4,7 +4,7 @@ import retrofit2.Response
 
 open class CommonDataSource<T : Any> {
 
-    fun processApiResponse(apiResponse: Response<T>): Result<T> {
+    private fun processApiResponse(apiResponse: Response<T>): Result<T> {
 
         if (apiResponse.isSuccessful) {
 
@@ -21,11 +21,11 @@ open class CommonDataSource<T : Any> {
         return Result.failure(exception = Exception("Exception Code - ${apiResponse.code()}, Message - ${apiResponse.message()}"))
     }
 
-    fun executeApiRequest(apiRequest: Response<T>): Result<T> {
+    fun handleApiResponse(apiResponse: Response<T>): Result<T> {
 
         return try {
 
-            processApiResponse(apiResponse = apiRequest)
+            processApiResponse(apiResponse = apiResponse)
 
         } catch (exception: java.lang.Exception) {
 

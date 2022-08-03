@@ -1,7 +1,7 @@
 package accountLedgerCli.cli
 
 import accountLedgerCli.api.response.AccountResponse
-import accountLedgerCli.api.response.InsertionResponse
+import accountLedgerCli.api.response.TransactionManipulationResponse
 import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
 import accountLedgerCli.constants.Constants
 import accountLedgerCli.enums.AccountExchangeTypeEnum
@@ -15,32 +15,33 @@ import accountLedgerCli.to_utils.*
 import accountLedgerCli.utils.ApiUtils
 import accountLedgerCli.utils.ChooseAccountUtils
 import kotlinx.coroutines.runBlocking
+import accountLedgerCli.to_utils.ApiUtils as CommonApiUtils
 
 object InsertOperations {
 
     internal val walletAccount: EnvironmentVariableForWholeNumber = getEnvironmentVariableValueForInsertOperation(
         environmentVariableName = EnvironmentalFileEntries.walletAccountId.entryName.name,
-        environmentVariableFormalName = EnvironmentalFileEntries.walletAccountId.entryFormalName
+        environmentVariableFormalName = EnvironmentalFileEntries.walletAccountId.entryFormalName!!
     )
 
     internal val frequent1Account: EnvironmentVariableForWholeNumber = getEnvironmentVariableValueForInsertOperation(
         environmentVariableName = EnvironmentalFileEntries.frequent1AccountId.entryName.name,
-        environmentVariableFormalName = EnvironmentalFileEntries.frequent1AccountId.entryFormalName
+        environmentVariableFormalName = EnvironmentalFileEntries.frequent1AccountId.entryFormalName!!
     )
 
     internal val frequent2Account: EnvironmentVariableForWholeNumber = getEnvironmentVariableValueForInsertOperation(
         environmentVariableName = EnvironmentalFileEntries.frequent2AccountId.entryName.name,
-        environmentVariableFormalName = EnvironmentalFileEntries.frequent2AccountId.entryFormalName
+        environmentVariableFormalName = EnvironmentalFileEntries.frequent2AccountId.entryFormalName!!
     )
 
     internal val frequent3Account: EnvironmentVariableForWholeNumber = getEnvironmentVariableValueForInsertOperation(
         environmentVariableName = EnvironmentalFileEntries.frequent3AccountId.entryName.name,
-        environmentVariableFormalName = EnvironmentalFileEntries.frequent3AccountId.entryFormalName
+        environmentVariableFormalName = EnvironmentalFileEntries.frequent3AccountId.entryFormalName!!
     )
 
     internal val bankAccount: EnvironmentVariableForWholeNumber = getEnvironmentVariableValueForInsertOperation(
         environmentVariableName = EnvironmentalFileEntries.bankAccountId.entryName.name,
-        environmentVariableFormalName = EnvironmentalFileEntries.bankAccountId.entryFormalName
+        environmentVariableFormalName = EnvironmentalFileEntries.bankAccountId.entryFormalName!!
     )
 
     internal fun insertQuickTransactionFromAccount1toAccount2(
@@ -123,9 +124,11 @@ object InsertOperations {
                 HandleResponses.getUserAccountsMap(apiResponse = ApiUtils.getAccountsFull(userId = userId))
 
             return HandleResponses.isOkModelHandler(
+
                 isOkModel = getUserAccountsMapResult,
                 data = insertTransactionResult,
                 actionsAfterGetSuccess = fun(): InsertTransactionResult {
+
                     return Screens.accountHome(
                         userId = userId,
                         username = username,
@@ -136,7 +139,6 @@ object InsertOperations {
                         transactionParticulars = transactionParticulars,
                         transactionAmount = transactionAmount
                     )
-
                 })
         }
         return insertTransactionResult
@@ -652,6 +654,7 @@ object InsertOperations {
 
     ): InsertTransactionResult {
 
+        // TODO : Remove boilerplate code
         return transactionContinueCheck(
 
             userId = userId,
@@ -1153,6 +1156,58 @@ object InsertOperations {
         }
     }
 
+    private fun manipulateTransaction(
+
+        transactionManipulationApiRequest: () -> Result<TransactionManipulationResponse>,
+        transactionManipulationSuccessActions: () -> Unit
+
+    ): Boolean {
+
+        val transactionManipulationApiRequestResult: IsOkModel<TransactionManipulationResponse> =
+            CommonApiUtils.makeApiRequestWithOptionalRetries(apiCallFunction = transactionManipulationApiRequest)
+
+        if (transactionManipulationApiRequestResult.isOK) {
+
+            val transactionManipulationResponseResult: TransactionManipulationResponse =
+                transactionManipulationApiRequestResult.data!!
+            if (transactionManipulationResponseResult.status == 0u) {
+
+                println("OK...")
+                transactionManipulationSuccessActions.invoke()
+                return true
+
+            } else {
+
+                println("Server Execution Error : ${transactionManipulationResponseResult.error}")
+            }
+        }
+        return false
+    }
+
+//    private fun manipulateTransactionWithEventDateTimeCheck(
+//
+//        eventDateTime: String,
+//        transactionManipulationApiRequest: () -> Result<TransactionManipulationResponse>,
+//        transactionManipulationSuccessActions: () -> Unit
+//
+//    ): Boolean {
+//
+//        val eventDateTimeConversionResult: IsOkModel<String> = MysqlUtils.dateTimeTextConversionWithMessage(
+//            dateTimeTextConversionFunction = fun(): IsOkModel<String> {
+//                return MysqlUtils.normalDateTextToMysqlDateText(
+//                    normalDateText = eventDateTime
+//                )
+//            })
+//
+//        if (eventDateTimeConversionResult.isOK) {
+//            return manipulateTransaction(
+//                transactionManipulationApiRequest = transactionManipulationApiRequest,
+//                transactionManipulationSuccessActions = transactionManipulationSuccessActions
+//            )
+//        }
+//        return false
+//    }
+
     private fun insertTransaction(
 
         userId: UInt,
@@ -1160,125 +1215,94 @@ object InsertOperations {
         particulars: String,
         amount: Float,
         fromAccount: AccountResponse,
-        toAccount: AccountResponse
+        toAccount: AccountResponse,
+        isDevelopmentMode: Boolean = EnvironmentFileOperations.getEnvironmentVariableValueForBooleanWithDefaultValue(
+            dotenv = App.dotenv,
+            environmentVariableName = EnvironmentalFileEntries.isDevelopmentMode.entryName.name,
+            defaultValue = false
+        ).value!!
 
     ): Boolean {
 
-        //TODO : Rewrite using API Utils
-        val apiResponse: Result<InsertionResponse>
-        val userTransactionDataSource = TransactionDataSource()
-
-        // TODO : Change to data class
-        val eventDateTimeConversionResult: Pair<Boolean, String> =
-            MysqlUtils.normalDateTimeTextToMysqlDateTimeText(normalDateTimeText = eventDateTime)
-
-        if (eventDateTimeConversionResult.first) {
-
-            println("Contacting Server...")
-            runBlocking {
-                apiResponse = userTransactionDataSource.insertTransaction(
-                    userId = userId,
-                    fromAccountId = fromAccount.id,
-                    eventDateTimeString = eventDateTimeConversionResult.second,
-                    particulars = particulars,
-                    amount = amount,
-                    toAccountId = toAccount.id
+        val eventDateTimeConversionResult: IsOkModel<String> = MysqlUtils.dateTimeTextConversionWithMessage(
+            dateTimeTextConversionFunction = fun(): IsOkModel<String> {
+                return MysqlUtils.normalDateTimeTextToMysqlDateTimeText(
+                    normalDateTimeText = eventDateTime
                 )
-            }
-            //    println("Response : $apiResponse")
-            if (apiResponse.isFailure) {
+            })
 
-                println("Error : ${(apiResponse.exceptionOrNull() as Exception).localizedMessage}")
-                do {
-                    print("Retry (Y/N) ? : ")
-                    when (readLine()!!) {
-                        "Y", "" -> {
-                            return insertTransaction(
+        if (eventDateTimeConversionResult.isOK) {
+
+            return manipulateTransaction(transactionManipulationApiRequest = fun(): Result<TransactionManipulationResponse> {
+
+                return runBlocking {
+
+                    TransactionDataSource().insertTransaction(
+                        userId = userId,
+                        fromAccountId = fromAccount.id,
+                        eventDateTimeString = eventDateTimeConversionResult.data!!,
+                        particulars = particulars,
+                        amount = amount,
+                        toAccountId = toAccount.id
+                    )
+                }
+            }, transactionManipulationSuccessActions = fun() {
+
+                val readFrequencyOfAccountsFileResult: IsOkModel<FrequencyOfAccountsModel> =
+                    JsonFileUtils.readJsonFile(Constants.frequencyOfAccountsFileName)
+
+                if (isDevelopmentMode) {
+
+                    println("readFrequencyOfAccountsFileResult : $readFrequencyOfAccountsFileResult")
+                }
+
+                if (readFrequencyOfAccountsFileResult.isOK) {
+
+                    var frequencyOfAccounts: FrequencyOfAccountsModel = readFrequencyOfAccountsFileResult.data!!
+                    val user: UserModel? = frequencyOfAccounts.users.find { user: UserModel -> user.id == userId }
+                    if (user != null) {
+
+                        frequencyOfAccounts = updateAccountFrequency(
+                            user = user,
+                            account = fromAccount,
+                            frequencyOfAccounts = frequencyOfAccounts,
+                            userId = userId
+                        )
+                        frequencyOfAccounts = updateAccountFrequency(
+                            user = user,
+                            account = toAccount,
+                            frequencyOfAccounts = frequencyOfAccounts,
+                            userId = userId
+                        )
+
+                    } else {
+                        frequencyOfAccounts.users = frequencyOfAccounts.users.plusElement(
+                            element = getInitialAccountFrequencyForUser(
                                 userId = userId,
-                                eventDateTime = eventDateTime,
-                                particulars = particulars,
-                                amount = amount,
                                 fromAccount = fromAccount,
                                 toAccount = toAccount
                             )
-                        }
-
-                        "N" -> {
-                            return false
-                        }
-
-                        else -> println("Invalid option, try again...")
+                        )
                     }
-                } while (true)
+                    JsonFileUtils.writeJsonFile(
+                        fileName = Constants.frequencyOfAccountsFileName,
+                        data = frequencyOfAccounts
+                    )
+                } else {
 
-            } else {
-
-                val insertionResponseResult: InsertionResponse = apiResponse.getOrNull()!!
-                if (insertionResponseResult.status == 0u) {
-
-                    println("OK...")
-
-                    val readFrequencyOfAccountsFileResult: IsOkModel<FrequencyOfAccountsModel> =
-                        JsonFileUtils.readJsonFile(Constants.frequencyOfAccountsFileName)
-//                    println("readFrequencyOfAccountsFileResult : $readFrequencyOfAccountsFileResult")
-
-                    if (readFrequencyOfAccountsFileResult.isOK) {
-
-                        var frequencyOfAccounts: FrequencyOfAccountsModel = readFrequencyOfAccountsFileResult.data!!
-                        val user: UserModel? = frequencyOfAccounts.users.find { user: UserModel -> user.id == userId }
-                        if (user != null) {
-
-                            frequencyOfAccounts = updateAccountFrequency(
-                                user = user,
-                                account = fromAccount,
-                                frequencyOfAccounts = frequencyOfAccounts,
-                                userId = userId
-                            )
-                            frequencyOfAccounts = updateAccountFrequency(
-                                user = user,
-                                account = toAccount,
-                                frequencyOfAccounts = frequencyOfAccounts,
-                                userId = userId
-                            )
-
-                        } else {
-                            frequencyOfAccounts.users = frequencyOfAccounts.users.plusElement(
-                                element = getInitialUserTransactionObject(
+                    JsonFileUtils.writeJsonFile(
+                        fileName = Constants.frequencyOfAccountsFileName, data = FrequencyOfAccountsModel(
+                            users = listOf(
+                                getInitialAccountFrequencyForUser(
                                     userId = userId,
                                     fromAccount = fromAccount,
                                     toAccount = toAccount
                                 )
                             )
-                        }
-                        JsonFileUtils.writeJsonFile(
-                            fileName = Constants.frequencyOfAccountsFileName,
-                            data = frequencyOfAccounts
                         )
-                    } else {
-
-                        JsonFileUtils.writeJsonFile(
-                            fileName = Constants.frequencyOfAccountsFileName, data = FrequencyOfAccountsModel(
-                                users = listOf(
-                                    getInitialUserTransactionObject(
-                                        userId = userId,
-                                        fromAccount = fromAccount,
-                                        toAccount = toAccount
-                                    )
-                                )
-                            )
-                        )
-                    }
-
-                    return true
-
-                } else {
-
-                    println("Server Execution Error : ${insertionResponseResult.error}")
+                    )
                 }
-            }
-        } else {
-
-            println("Date Error : ${eventDateTimeConversionResult.second}")
+            })
         }
         return false
     }
@@ -1294,70 +1318,44 @@ object InsertOperations {
 
     ): Boolean {
 
-        // TODO : Generalize with insert transaction
-        val apiResponse: Result<InsertionResponse>
-        val userTransactionDataSource = TransactionDataSource()
-
-        val eventDateTimeConversionResult: Pair<Boolean, String> =
-            MysqlUtils.normalDateTimeTextToMysqlDateTimeText(normalDateTimeText = eventDateTime)
-
-        if (eventDateTimeConversionResult.first) {
-
-            println("Contacting Server...")
-            runBlocking {
-                apiResponse = userTransactionDataSource.updateTransaction(
-                    transactionId = transactionId,
-                    fromAccountId = fromAccount.id,
-                    eventDateTimeString = eventDateTimeConversionResult.second,
-                    particulars = particulars,
-                    amount = amount,
-                    toAccountId = toAccount.id
+        val eventDateTimeConversionResult: IsOkModel<String> = MysqlUtils.dateTimeTextConversionWithMessage(
+            dateTimeTextConversionFunction = fun(): IsOkModel<String> {
+                return MysqlUtils.normalDateTimeTextToMysqlDateTimeText(
+                    normalDateTimeText = eventDateTime
                 )
-            }
-            //    println("Response : $apiResponse")
-            if (apiResponse.isFailure) {
+            })
 
-                println("Error : ${(apiResponse.exceptionOrNull() as Exception).localizedMessage}")
-                do {
-                    print("Retry (Y/N) ? : ")
-                    when (readLine()!!) {
-                        "Y", "" -> {
-                            return updateTransaction(
-                                transactionId = transactionId,
-                                eventDateTime = eventDateTime,
-                                particulars = particulars,
-                                amount = amount,
-                                fromAccount = fromAccount,
-                                toAccount = toAccount
-                            )
-                        }
+        if (eventDateTimeConversionResult.isOK) {
 
-                        "N" -> {
-                            return false
-                        }
+            return manipulateTransaction(transactionManipulationApiRequest = fun(): Result<TransactionManipulationResponse> {
+                return runBlocking {
 
-                        else -> println("Invalid option, try again...")
-                    }
-                } while (true)
-
-            } else {
-
-                val insertionResponseResult: InsertionResponse = apiResponse.getOrNull()!!
-                if (insertionResponseResult.status == 0u) {
-
-                    println("OK...")
-                    return true
-
-                } else {
-
-                    println("Server Execution Error : ${insertionResponseResult.error}")
+                    TransactionDataSource().updateTransaction(
+                        transactionId = transactionId,
+                        fromAccountId = fromAccount.id,
+                        eventDateTimeString = eventDateTimeConversionResult.data!!,
+                        particulars = particulars,
+                        amount = amount,
+                        toAccountId = toAccount.id
+                    )
                 }
-            }
-        } else {
-
-            println("Date Error : ${eventDateTimeConversionResult.second}")
+            }, transactionManipulationSuccessActions = fun() {})
         }
         return false
+    }
+
+    internal fun deleteTransaction(
+
+        transactionId: UInt
+
+    ): Boolean {
+
+        return manipulateTransaction(transactionManipulationApiRequest = fun(): Result<TransactionManipulationResponse> {
+            return runBlocking {
+
+                TransactionDataSource().deleteTransaction(transactionId = transactionId)
+            }
+        }, transactionManipulationSuccessActions = fun() {})
     }
 
     private fun updateAccountFrequency(
@@ -1397,7 +1395,7 @@ object InsertOperations {
         return frequencyOfAccounts
     }
 
-    private fun getInitialUserTransactionObject(
+    private fun getInitialAccountFrequencyForUser(
 
         userId: UInt,
         fromAccount: AccountResponse,
@@ -1422,7 +1420,8 @@ object InsertOperations {
 
     private fun getEnvironmentVariableValueForInsertOperation(
 
-        environmentVariableName: String, environmentVariableFormalName: String
+        environmentVariableName: String,
+        environmentVariableFormalName: String
 
     ): EnvironmentVariableForWholeNumber = EnvironmentFileOperations.getEnvironmentVariableValueForWholeNumber(
 

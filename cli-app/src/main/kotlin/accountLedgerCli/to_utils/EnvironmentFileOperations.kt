@@ -1,11 +1,15 @@
-package accountLedgerCli.cli
+package accountLedgerCli.to_utils
 
 import io.github.cdimascio.dotenv.Dotenv
+import java.lang.IllegalArgumentException
 import java.lang.NumberFormatException
 
 internal open class EnvironmentVariableForAny<T>(val isAvailable: Boolean, val value: T? = null)
 internal class EnvironmentVariableForWholeNumber(isAvailable: Boolean, value: UInt? = null) :
     EnvironmentVariableForAny<UInt>(isAvailable, value)
+
+internal class EnvironmentVariableForBoolean(isAvailable: Boolean, value: Boolean? = null) :
+    EnvironmentVariableForAny<Boolean>(isAvailable, value)
 
 object EnvironmentFileOperations {
     internal fun getEnvironmentVariableValueForTextWithDefaultValue(
@@ -39,7 +43,35 @@ object EnvironmentFileOperations {
             } catch (exception: NumberFormatException) {
 
                 print("Invalid $environmentVariableFormalName (Environment File)")
-                EnvironmentVariableForWholeNumber(isAvailable = false)
+                EnvironmentVariableForWholeNumber(isAvailable = false, value = defaultValue)
+            }
+        }
+    }
+
+    internal fun getEnvironmentVariableValueForBooleanWithDefaultValue(
+
+        dotenv: Dotenv,
+        environmentVariableName: String,
+        environmentVariableFormalName: String = "",
+        defaultValue: Boolean
+
+    ): EnvironmentVariableForBoolean {
+
+        val result: String = dotenv[environmentVariableName]
+        return if (result.isEmpty()) {
+
+            EnvironmentVariableForBoolean(isAvailable = true, value = defaultValue)
+
+        } else {
+
+            try {
+
+                EnvironmentVariableForBoolean(isAvailable = true, value = result.toBooleanStrict())
+
+            } catch (exception: IllegalArgumentException) {
+
+                print("Invalid ${environmentVariableFormalName.ifEmpty { environmentVariableName }} (Environment File)")
+                EnvironmentVariableForBoolean(isAvailable = false, value = defaultValue)
             }
         }
     }

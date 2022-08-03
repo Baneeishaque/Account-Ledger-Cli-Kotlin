@@ -9,8 +9,10 @@ import accountLedgerCli.enums.BalanceSheetRefineLevelEnum
 import accountLedgerCli.models.*
 import accountLedgerCli.retrofit.ResponseHolder
 import accountLedgerCli.retrofit.data.TransactionsDataSource
+import accountLedgerCli.to_models.IsOkModel
 import accountLedgerCli.to_utils.DateTimeUtils
 import accountLedgerCli.to_utils.MysqlUtils
+import accountLedgerCli.to_utils.invalidOptionMessage
 import accountLedgerCli.utils.UserUtils
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
@@ -46,16 +48,15 @@ internal fun printBalanceSheetOfUser(
         println("Contacting Server...")
     }
     val apiResponse: ResponseHolder<TransactionsResponse>
-    // TODO : Change to data class
-    val specifiedDate: Pair<Boolean, String> = MysqlUtils.normalDateTextToMysqlDateText(
+    val specifiedDate: IsOkModel<String> = MysqlUtils.normalDateTextToMysqlDateText(
         normalDateText = getUserInitialTransactionDateFromUsername(username = currentUserName).minusDays(
             1
         ).format(DateTimeUtils.normalDatePattern)
     )
-    if (specifiedDate.first) {
+    if (specifiedDate.isOK) {
         runBlocking {
             apiResponse = transactionsDataSource.selectUserTransactionsAfterSpecifiedDate(
-                userId = currentUserId, specifiedDate = specifiedDate.second
+                userId = currentUserId, specifiedDate = specifiedDate.data!!
             )
         }
         // println("Response : $apiResponse2")
@@ -302,14 +303,14 @@ internal fun printBalanceSheetOfUser(
         }
     } else {
         if (isNotApiCall) {
-            println("Error : ${specifiedDate.second}")
+            println("Error : ${specifiedDate.data!!}")
         } else {
             print(
                 Json.encodeToString(
                     serializer = BalanceSheetDataModel.serializer(),
                     value = BalanceSheetDataModel(
                         status = 1,
-                        error = "Error : ${specifiedDate.second}"
+                        error = "Error : ${specifiedDate.data!!}"
                     )
                 )
             )

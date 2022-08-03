@@ -9,6 +9,7 @@ import kotlinx.coroutines.runBlocking
 
 internal fun getAccounts(userId: UInt, parentAccountId: UInt = 0u): Result<AccountsResponse> {
 
+    // TODO : Use new API Utils
     val apiResponse: Result<AccountsResponse>
     val userAccountsDataSource = AccountsDataSource()
     println("Contacting Server...")
@@ -23,11 +24,14 @@ internal fun getAccounts(userId: UInt, parentAccountId: UInt = 0u): Result<Accou
 }
 
 internal fun getUserTransactions(
+
     userId: UInt,
     accountId: UInt,
     isNotFromBalanceSheet: Boolean = true
+
 ): ResponseHolder<TransactionsResponse> {
 
+    // TODO : Use new API Utils
     val apiResponse: ResponseHolder<TransactionsResponse>
     val userTransactionsDataSource = TransactionsDataSource()
     if (isNotFromBalanceSheet) {
