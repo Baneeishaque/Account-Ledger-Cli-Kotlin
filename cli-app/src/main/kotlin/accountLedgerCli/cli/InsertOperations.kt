@@ -1233,7 +1233,7 @@ object InsertOperations {
         fromAccount: AccountResponse,
         toAccount: AccountResponse,
 
-    ): Boolean {
+        ): Boolean {
 
         val eventDateTimeConversionResult: IsOkModel<String> = MysqlUtils.dateTimeTextConversionWithMessage(
             dateTimeTextConversionFunction = fun(): IsOkModel<String> {
@@ -1318,25 +1318,19 @@ object InsertOperations {
         return false
     }
 
-    private fun updateTransaction(
+    internal fun updateTransaction(
 
         transactionId: UInt,
         eventDateTime: String,
         particulars: String,
         amount: Float,
         fromAccount: AccountResponse,
-        toAccount: AccountResponse
+        toAccount: AccountResponse,
+        isDateTimeUpdateOperation: Boolean = false
 
     ): Boolean {
 
-        val eventDateTimeConversionResult: IsOkModel<String> = MysqlUtils.dateTimeTextConversionWithMessage(
-            dateTimeTextConversionFunction = fun(): IsOkModel<String> {
-                return MysqlUtils.normalDateTimeTextToMySqlDateTimeText(
-                    normalDateTimeText = eventDateTime
-                )
-            })
-
-        if (eventDateTimeConversionResult.isOK) {
+        if (isDateTimeUpdateOperation) {
 
             return manipulateTransaction(transactionManipulationApiRequest = fun(): Result<TransactionManipulationResponse> {
                 return runBlocking {
@@ -1344,13 +1338,39 @@ object InsertOperations {
                     TransactionDataSource().updateTransaction(
                         transactionId = transactionId,
                         fromAccountId = fromAccount.id,
-                        eventDateTimeString = eventDateTimeConversionResult.data!!,
+                        eventDateTimeString = eventDateTime,
                         particulars = particulars,
                         amount = amount,
                         toAccountId = toAccount.id
                     )
                 }
             }, transactionManipulationSuccessActions = fun() {})
+
+        } else {
+
+            val eventDateTimeConversionResult: IsOkModel<String> = MysqlUtils.dateTimeTextConversionWithMessage(
+                dateTimeTextConversionFunction = fun(): IsOkModel<String> {
+                    return MysqlUtils.normalDateTimeTextToMySqlDateTimeText(
+                        normalDateTimeText = eventDateTime
+                    )
+                })
+
+            if (eventDateTimeConversionResult.isOK) {
+
+                return manipulateTransaction(transactionManipulationApiRequest = fun(): Result<TransactionManipulationResponse> {
+                    return runBlocking {
+
+                        TransactionDataSource().updateTransaction(
+                            transactionId = transactionId,
+                            fromAccountId = fromAccount.id,
+                            eventDateTimeString = eventDateTimeConversionResult.data!!,
+                            particulars = particulars,
+                            amount = amount,
+                            toAccountId = toAccount.id
+                        )
+                    }
+                }, transactionManipulationSuccessActions = fun() {})
+            }
         }
         return false
     }

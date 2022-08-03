@@ -13,6 +13,7 @@ internal object AccountUtils {
 
     @JvmStatic
     internal val blankAccount = AccountResponse(
+
         id = 0u,
         fullName = "",
         name = "",

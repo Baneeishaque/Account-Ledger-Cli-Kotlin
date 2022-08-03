@@ -61,6 +61,29 @@ object MysqlUtils {
     }
 
     @JvmStatic
+    fun mySqlDateTimeTextToMySqlDateTime(
+
+        mySqlDateTimeText: String,
+        conversionSuccessActions: () -> Unit = fun() {},
+        conversionFailureActions: () -> Unit = fun() {}
+
+    ): IsOkModel<LocalDateTime> {
+
+        return try {
+
+            val result: LocalDateTime = LocalDateTime.parse(mySqlDateTimeText, mysqlDateTimePattern)
+            conversionSuccessActions.invoke()
+            IsOkModel(isOK = true, data = result)
+
+        } catch (e: DateTimeParseException) {
+
+            println("Date Error : ${e.localizedMessage}")
+            conversionFailureActions.invoke()
+            IsOkModel(isOK = false)
+        }
+    }
+
+    @JvmStatic
     fun dateTimeTextConversionWithMessage(
 
         dateTimeTextConversionFunction: () -> IsOkModel<String>

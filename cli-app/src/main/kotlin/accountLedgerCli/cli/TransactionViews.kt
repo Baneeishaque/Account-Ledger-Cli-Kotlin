@@ -1,6 +1,7 @@
 package accountLedgerCli.cli
 
 import accountLedgerCli.api.response.AccountResponse
+import accountLedgerCli.api.response.AccountsResponse
 import accountLedgerCli.api.response.TransactionResponse
 import accountLedgerCli.api.response.TransactionsResponse
 import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
@@ -10,6 +11,7 @@ import accountLedgerCli.enums.TransactionTypeEnum
 import accountLedgerCli.models.InsertTransactionResult
 import accountLedgerCli.models.ViewTransactionsOutput
 import accountLedgerCli.to_models.IsOkModel
+import accountLedgerCli.to_utils.DateTimeUtils
 import accountLedgerCli.to_utils.MysqlUtils
 import accountLedgerCli.to_utils.ToDoUtils
 import accountLedgerCli.to_utils.invalidOptionMessage
@@ -68,13 +70,11 @@ internal fun viewTransactions(
                     transactionAmount = transactionAmount
                 )
             )
-
-
         } else {
 
             var choice: String
 
-            val userTransactionsMap: LinkedHashMap<UInt, TransactionResponse> =
+            var userTransactionsMap: LinkedHashMap<UInt, TransactionResponse> =
                 TransactionUtils.prepareUserTransactionsMap(transactions = userTransactionsResponse.transactions)
 
             do {
@@ -87,14 +87,15 @@ internal fun viewTransactions(
                 var menuItems: List<String> = listOf(
 
                     "\nUser : $username",
-                    "$accountFullName - Transactions",
+                    "$accountFullName [$accountId] - Transactions",
                     userTransactionsText
                 )
                 when (functionCallSource) {
 
                     FunctionCallSourceEnum.FROM_CHECK_ACCOUNTS -> {
 
-                        menuItems = menuItems + listOf("0 to Back Enter to Continue : ")
+                        menuItems =
+                            menuItems + listOf("0 to Back, V to View Transactions of the Current Account, Enter to Continue : ")
                     }
 
                     FunctionCallSourceEnum.FROM_VIEW_TRANSACTIONS_OF_ACCOUNT -> {
@@ -122,7 +123,11 @@ internal fun viewTransactions(
                             "3 - Delete Transaction - By Search",
                             "4 - Edit Transaction - By Index Number",
                             "5 - Edit Transaction - By Search",
-                            "6 - Add Transaction",
+                            "6 - Rearrange Transaction - Up a Transaction",
+                            "7 - Rearrange Transaction - Up a Series of Transactions",
+                            "8 - Rearrange Transaction - Down a Transaction",
+                            "9 - Rearrange Transaction - Down a Series of Transactions",
+                            "10 - Add Transaction",
                             "0 - Back",
                             "",
                             "Enter Your Choice : "
@@ -221,7 +226,7 @@ internal fun viewTransactions(
                         }
                     }
 
-                    "3", "5" -> {
+                    "3", "5", "7", "8", "9" -> {
 
                         if (isCallNotFromCheckAccounts(
 
@@ -295,6 +300,81 @@ internal fun viewTransactions(
                                 functionCallSource = functionCallSource,
                                 furtherActionsOnFalse = { invalidOptionMessage() })
                         ) {
+                            val upTransactionKey: UInt = getValidIndex(
+
+                                map = userTransactionsMap,
+                                itemSpecification = Constants.transactionText,
+                                items = userTransactionsText,
+                                itemSpecificationPrefix = "Up "
+                            )
+                            var upPreviousTransactionKey: UInt = 0u
+                            userTransactionsMap.keys.forEach { key ->
+                                if (key == upTransactionKey) {
+                                    return@forEach
+                                }
+                                upPreviousTransactionKey = key
+                            }
+                            if (upPreviousTransactionKey == 0u) {
+
+                                println("Up of Transaction T$upTransactionKey is NA")
+
+                            } else {
+
+                                val upTransaction: TransactionResponse = userTransactionsMap[upTransactionKey]!!
+                                val upPreviousTransaction: TransactionResponse =
+                                    userTransactionsMap[upPreviousTransactionKey]!!
+                                val newDateTime: String =
+                                    DateTimeUtils.subtract1SecondFromMySqlDateTimeText(upPreviousTransaction.event_date_time)
+
+                                if (App.isDevelopmentMode) {
+
+                                    println("upTransaction = $upTransaction")
+                                    println("upPreviousTransaction = $upPreviousTransaction")
+                                    println("newDateTime = $newDateTime")
+                                }
+                                val getAccountsFullResult: Result<AccountsResponse> =
+                                    ApiUtils.getAccountsFull(userId = userId)
+                                if (getAccountsFullResult.isSuccess) {
+
+                                    val userAccountsMap: LinkedHashMap<UInt, AccountResponse> =
+                                        AccountUtils.prepareUserAccountsMap(
+
+                                            accounts = getAccountsFullResult.getOrNull()!!.accounts
+                                        )
+
+                                    if (InsertOperations.updateTransaction(
+
+                                            transactionId = upTransactionKey,
+                                            eventDateTime = newDateTime,
+                                            particulars = upTransaction.particulars,
+                                            amount = upTransaction.amount,
+                                            fromAccount = userAccountsMap[upTransaction.from_account_id]!!,
+                                            toAccount = userAccountsMap[upTransaction.to_account_id]!!,
+                                            isDateTimeUpdateOperation = true
+                                        )
+                                    ) {
+                                        userTransactionsMap[upTransactionKey]!!.event_date_time =
+                                            DateTimeUtils.subtract1SecondFromMySqlDateTimeText(upPreviousTransaction.event_date_time)
+                                        userTransactionsMap = userTransactionsMap.toList()
+                                            .sortedBy { (_: UInt, transaction: TransactionResponse) ->
+                                                MysqlUtils.mySqlDateTimeTextToMySqlDateTime(
+                                                    mySqlDateTimeText = transaction.event_date_time
+                                                ).data!!
+                                            }
+                                            .toMap() as LinkedHashMap<UInt, TransactionResponse>
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    "10" -> {
+
+                        if (isCallNotFromCheckAccounts(
+
+                                functionCallSource = functionCallSource,
+                                furtherActionsOnFalse = { invalidOptionMessage() })
+                        ) {
 
                             addTransactionResult = InsertOperations.addTransaction(
 
@@ -318,7 +398,6 @@ internal fun viewTransactions(
                             output = "0",
                             addTransactionResult = addTransactionResult
                         )
-
                     }
 
                     "" -> {
@@ -333,6 +412,23 @@ internal fun viewTransactions(
                             return ViewTransactionsOutput(
 
                                 output = "",
+                                addTransactionResult = addTransactionResult
+                            )
+                        }
+                    }
+
+                    "V" -> {
+
+                        if (isCallFromCheckAccounts(
+
+                                functionCallSource = functionCallSource,
+                                furtherActionsOnFalse = { invalidOptionMessage() }
+                            )
+                        ) {
+
+                            return ViewTransactionsOutput(
+
+                                output = "V",
                                 addTransactionResult = addTransactionResult
                             )
                         }
@@ -377,11 +473,10 @@ private fun isCallFromCheckAccounts(
     return false
 }
 
-internal fun viewTransactionsOfSpecificAccount(
+internal fun viewTransactionsOfInputAccount(
 
     userId: UInt,
     username: String,
-    fromAccount: AccountResponse,
     viaAccount: AccountResponse,
     toAccount: AccountResponse,
     dateTimeInText: String,
@@ -409,13 +504,16 @@ internal fun viewTransactionsOfSpecificAccount(
                     items = AccountUtils.userAccountsToStringFromLinkedHashMap(userAccountsMap = getUserAccountsMapResult.data),
                 )
                 if (accountIndex != 0u) {
+
+                    val selectedAccount: AccountResponse = getUserAccountsMapResult.data[accountIndex]!!
                     viewTransactions(
+
                         userId = userId,
                         username = username,
                         accountId = accountIndex,
-                        accountFullName = getUserAccountsMapResult.data[accountIndex]!!.fullName,
+                        accountFullName = selectedAccount.fullName,
                         functionCallSource = FunctionCallSourceEnum.FROM_VIEW_TRANSACTIONS_OF_ACCOUNT,
-                        fromAccount = fromAccount,
+                        fromAccount = selectedAccount,
                         viaAccount = viaAccount,
                         toAccount = toAccount,
                         dateTimeInText = dateTimeInText,

@@ -19,22 +19,29 @@ object DateTimeUtils {
 
     @JvmStatic
     fun addDaysToDateTimeString(
+
         dateTimeString: String,
         days: Int
+
     ): String {
 
         return addDaysToDateTimeStringAsDateTime(
+
             dateTimeString = dateTimeString,
             days = days
+
         ).format(normalDateTimePattern)
     }
 
     @JvmStatic
     fun add5MinutesToDateTimeString(
+
         dateTimeInText: String
+
     ): String {
 
         return addMinutesToDateTimeString(
+
             dateTimeString = dateTimeInText,
             minutes = 5
         )
@@ -42,20 +49,26 @@ object DateTimeUtils {
 
     @JvmStatic
     fun addMinutesToDateTimeString(
+
         dateTimeString: String,
         minutes: Int
+
     ): String {
 
         return addMinutesToDateTimeStringAsDateTime(
+
             dateTimeString = dateTimeString,
             minutes = minutes
+
         ).format(normalDateTimePattern)
     }
 
     @JvmStatic
     fun addDaysToDateTimeStringAsDateTime(
+
         dateTimeString: String,
         days: Int
+
     ): LocalDateTime {
 
         return LocalDateTime.parse(
@@ -66,13 +79,58 @@ object DateTimeUtils {
 
     @JvmStatic
     fun addMinutesToDateTimeStringAsDateTime(
+
         dateTimeString: String,
         minutes: Int
+
     ): LocalDateTime {
 
         return LocalDateTime.parse(
             dateTimeString, normalDateTimePattern
         ).plusMinutes(minutes.toLong())
+    }
+
+    @JvmStatic
+    fun subtractSecondsFromMySqlDateTimeTextAsDateTime(
+
+        dateTimeText: String,
+        seconds: Int
+
+    ): LocalDateTime {
+
+        return LocalDateTime.parse(
+            dateTimeText, MysqlUtils.mysqlDateTimePattern
+        ).minusSeconds(seconds.toLong())
+    }
+
+    @JvmStatic
+    fun subtractSecondsFromMySqlDateTimeText(
+
+        dateTimeText: String,
+        seconds: Int
+
+    ): String {
+
+        return subtractSecondsFromMySqlDateTimeTextAsDateTime(
+
+            dateTimeText = dateTimeText,
+            seconds = seconds
+
+        ).format(MysqlUtils.mysqlDateTimePattern)
+    }
+
+    @JvmStatic
+    fun subtract1SecondFromMySqlDateTimeText(
+
+        dateTimeText: String
+
+    ): String {
+
+        return subtractSecondsFromMySqlDateTimeText(
+
+            dateTimeText = dateTimeText,
+            seconds = 1
+        )
     }
 
     @JvmStatic
@@ -143,6 +201,7 @@ object DateTimeUtils {
 
     @JvmStatic
     fun getCurrentDateTimeText(): String {
+
         return LocalDateTime.now().format(normalDateTimePattern)
     }
 }

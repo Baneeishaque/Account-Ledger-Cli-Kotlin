@@ -11,10 +11,7 @@ import accountLedgerCli.models.FrequencyOfAccountsModel
 import accountLedgerCli.models.InsertTransactionResult
 import accountLedgerCli.models.UserModel
 import accountLedgerCli.to_models.IsOkModel
-import accountLedgerCli.to_utils.EnumUtils
-import accountLedgerCli.to_utils.EnvironmentFileOperations
-import accountLedgerCli.to_utils.ToDoUtils
-import accountLedgerCli.to_utils.invalidOptionMessage
+import accountLedgerCli.to_utils.*
 import accountLedgerCli.utils.AccountUtils
 import accountLedgerCli.utils.ApiUtils
 
@@ -90,7 +87,7 @@ object Screens {
                     "15 - Import Transactions To : Bank : ${
                         getEnvironmentVariableValueForUserScreen(environmentVariableName = EnvironmentFileEntryEnum.BANK_ACCOUNT_NAME.name)
                     } From XLX",
-                    "16 - Check A/Cs affected after a specified date",
+                    "16 - Check Affected A/Cs : After A Specified Date",
                     "17 - View Transactions of a specific A/C",
                     "18 - View Balance Sheet Ledger (All)",
                     "19 - View Balance Sheet Ledger (Excluding Open Balances)",
@@ -103,6 +100,8 @@ object Screens {
                     "26 - View Transactions of ${getEnvironmentVariableValueForUserScreen(environmentVariableName = EnvironmentFileEntryEnum.FREQUENT_1_ACCOUNT_NAME.name)} A/C",
                     "27 - View Transactions of ${getEnvironmentVariableValueForUserScreen(environmentVariableName = EnvironmentFileEntryEnum.FREQUENT_2_ACCOUNT_NAME.name)} A/C",
                     "28 - View Transactions of ${getEnvironmentVariableValueForUserScreen(environmentVariableName = EnvironmentFileEntryEnum.FREQUENT_3_ACCOUNT_NAME.name)} A/C",
+                    "29 - Check Affected A/Cs : From First Entry",
+                    "30 - Check Affected A/Cs : From Start Date",
                     "0 - Logout",
                     "",
                     "Enter Your Choice : "
@@ -292,32 +291,31 @@ object Screens {
                     )
                 }
 
-                "14" -> {
-                    ToDoUtils.showTodo()
-                }
+                "14", "15", "29" -> {
 
-                "15" -> {
                     ToDoUtils.showTodo()
                 }
 
                 "16" -> {
-                    checkAccountsAffectedAfterSpecifiedDate(
+
+                    insertTransactionResult = checkAccountsAffectedAfterSpecifiedDate(
+
+                        desiredDate = InputUtils.getValidDateInNormalPattern(),
                         userId = userId,
                         username = username,
                         fromAccount = fromAccount,
                         viaAccount = viaAccount,
                         toAccount = toAccount,
-                        dateTimeInText = insertTransactionResult.dateTimeInText,
-                        transactionParticulars = insertTransactionResult.transactionParticulars,
-                        transactionAmount = insertTransactionResult.transactionAmount
+                        dateTimeInText = dateTimeInText,
+                        transactionParticulars = transactionParticulars,
+                        transactionAmount = transactionAmount
                     )
                 }
 
                 "17" -> {
-                    viewTransactionsOfSpecificAccount(
+                    viewTransactionsOfInputAccount(
                         userId = userId,
                         username = username,
-                        fromAccount = fromAccount,
                         viaAccount = viaAccount,
                         toAccount = toAccount,
                         dateTimeInText = insertTransactionResult.dateTimeInText,
@@ -439,6 +437,24 @@ object Screens {
                         toAccount = toAccount,
                         desiredAccountIndex = InsertOperations.frequent3Account.value!!
                     )
+                }
+
+                "30" -> {
+
+                    insertTransactionResult = checkAccountsAffectedAfterSpecifiedDate(
+
+                        desiredDate = getUserInitialTransactionDateFromUsername(username = username).minusDays(1)
+                            .format(DateTimeUtils.normalDatePattern),
+                        userId = userId,
+                        username = username,
+                        fromAccount = fromAccount,
+                        viaAccount = viaAccount,
+                        toAccount = toAccount,
+                        dateTimeInText = dateTimeInText,
+                        transactionParticulars = transactionParticulars,
+                        transactionAmount = transactionAmount
+                    )
+
                 }
 
                 "0" -> {

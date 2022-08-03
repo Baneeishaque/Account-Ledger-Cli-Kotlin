@@ -9,14 +9,15 @@ import accountLedgerCli.models.InsertTransactionResult
 import accountLedgerCli.models.ViewTransactionsOutput
 import accountLedgerCli.retrofit.data.TransactionsDataSource
 import accountLedgerCli.to_models.IsOkModel
-import accountLedgerCli.to_utils.InputUtils
 import accountLedgerCli.to_utils.MysqlUtils
 import accountLedgerCli.to_utils.invalidOptionMessage
 import accountLedgerCli.utils.AccountUtils
+import accountLedgerCli.utils.ApiUtils
 import kotlinx.coroutines.runBlocking
 
 internal fun checkAccountsAffectedAfterSpecifiedDate(
 
+    desiredDate: String,
     userId: UInt,
     username: String,
     fromAccount: AccountResponse,
@@ -25,31 +26,48 @@ internal fun checkAccountsAffectedAfterSpecifiedDate(
     dateTimeInText: String,
     transactionParticulars: String,
     transactionAmount: Float
-) {
 
-    val inputDate: String = InputUtils.getValidDateInNormalPattern()
+): InsertTransactionResult {
+
     val transactionsDataSource = TransactionsDataSource()
     println("Contacting Server...")
     val apiResponse: Result<TransactionsResponse>
-    val specifiedDate: IsOkModel<String> =
-        MysqlUtils.normalDateTextToMySqlDateText(normalDateText = inputDate)
+
+    var insertTransactionResult = InsertTransactionResult(
+
+        isSuccess = false,
+        dateTimeInText = dateTimeInText,
+        transactionParticulars = transactionParticulars,
+        transactionAmount = transactionAmount
+    )
+
+    val specifiedDate: IsOkModel<String> = MysqlUtils.normalDateTextToMySqlDateText(normalDateText = desiredDate)
     if (specifiedDate.isOK) {
+
         runBlocking {
-            apiResponse =
-                transactionsDataSource.selectUserTransactionsAfterSpecifiedDate(
-                    userId = userId,
-                    specifiedDate = specifiedDate.data!!
-                )
+
+            apiResponse = transactionsDataSource.selectUserTransactionsAfterSpecifiedDate(
+
+                userId = userId,
+                specifiedDate = specifiedDate.data!!
+            )
         }
-        // println("Response : $apiResponse")
+        if (App.isDevelopmentMode) {
+
+            println("Response : $apiResponse")
+        }
         if (apiResponse.isFailure) {
 
             println("Error : ${(apiResponse.exceptionOrNull() as Exception).localizedMessage}")
             do {
                 print("Retry (Y/N) ? : ")
                 when (readLine()!!) {
+
                     "Y", "" -> {
-                        checkAccountsAffectedAfterSpecifiedDate(
+
+                        return checkAccountsAffectedAfterSpecifiedDate(
+
+                            desiredDate = desiredDate,
                             userId = userId,
                             username = username,
                             fromAccount = fromAccount,
@@ -59,20 +77,19 @@ internal fun checkAccountsAffectedAfterSpecifiedDate(
                             transactionParticulars = transactionParticulars,
                             transactionAmount = transactionAmount
                         )
-                        return
                     }
 
                     "N" -> {
-                        return
+                        break
                     }
 
                     else -> invalidOptionMessage()
                 }
             } while (true)
+
         } else {
 
-            val selectUserTransactionsAfterSpecifiedDateResult: TransactionsResponse =
-                apiResponse.getOrNull()!!
+            val selectUserTransactionsAfterSpecifiedDateResult: TransactionsResponse = apiResponse.getOrNull()!!
             if (selectUserTransactionsAfterSpecifiedDateResult.status == 1u) {
 
                 println("No Transactions...")
@@ -85,34 +102,63 @@ internal fun checkAccountsAffectedAfterSpecifiedDate(
                     accounts.putIfAbsent(transaction.from_account_id, transaction.from_account_full_name)
                     accounts.putIfAbsent(transaction.to_account_id, transaction.to_account_full_name)
                 }
+                // TODO : Pretty Print Map
                 println("Affected A/Cs : $accounts")
-                for (account: MutableMap.MutableEntry<UInt, String> in accounts) {
 
-                    when (viewTransactions(
+                val getAccountsFullResult: Result<AccountsResponse> = ApiUtils.getAccountsFull(userId = userId)
+                if (getAccountsFullResult.isSuccess) {
 
-                        userId = userId,
-                        username = username,
-                        accountId = account.key,
-                        accountFullName = account.value,
-                        functionCallSource = FunctionCallSourceEnum.FROM_CHECK_ACCOUNTS,
-                        fromAccount = fromAccount,
-                        viaAccount = viaAccount,
-                        toAccount = toAccount,
-                        dateTimeInText = dateTimeInText,
-                        transactionParticulars = transactionParticulars,
-                        transactionAmount = transactionAmount
+                    val userAccountsMap: LinkedHashMap<UInt, AccountResponse> =
+                        AccountUtils.prepareUserAccountsMap(accounts = getAccountsFullResult.getOrNull()!!.accounts)
 
-                    ).output) {
+                    for (account: MutableMap.MutableEntry<UInt, String> in accounts) {
 
-                        "E", "0" -> {
+                        val selectedAccount: AccountResponse = userAccountsMap[account.key]!!
+                        when (viewTransactions(
 
-                            break
+                            userId = userId,
+                            username = username,
+                            accountId = account.key,
+                            accountFullName = account.value,
+                            functionCallSource = FunctionCallSourceEnum.FROM_CHECK_ACCOUNTS,
+                            fromAccount = selectedAccount,
+                            viaAccount = viaAccount,
+                            toAccount = toAccount,
+                            dateTimeInText = dateTimeInText,
+                            transactionParticulars = transactionParticulars,
+                            transactionAmount = transactionAmount
+
+                        ).output) {
+
+                            "E", "0" -> {
+
+                                break
+                            }
+
+                            "V" -> {
+
+                                insertTransactionResult = viewTransactions(
+
+                                    userId = userId,
+                                    username = username,
+                                    accountId = account.key,
+                                    accountFullName = account.value,
+                                    fromAccount = selectedAccount,
+                                    viaAccount = viaAccount,
+                                    toAccount = toAccount,
+                                    dateTimeInText = dateTimeInText,
+                                    transactionParticulars = transactionParticulars,
+                                    transactionAmount = transactionAmount
+
+                                ).addTransactionResult
+                            }
                         }
                     }
                 }
             }
         }
     }
+    return insertTransactionResult
 }
 
 internal fun viewChildAccounts(
