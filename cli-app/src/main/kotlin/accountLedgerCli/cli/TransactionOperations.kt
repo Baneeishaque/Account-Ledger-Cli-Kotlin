@@ -164,6 +164,7 @@ internal fun viewTransactions(
                                 currentAccountId = fromAccount.id
                             )
                         )
+                        // TODO : Handle errors on API request execution & response
                         val userAccountsMap: LinkedHashMap<UInt, AccountResponse> = AccountUtils.prepareUserAccountsMap(
                             accounts = ApiUtils.getAccountsFull(userId = userId).getOrNull()!!.accounts
                         )

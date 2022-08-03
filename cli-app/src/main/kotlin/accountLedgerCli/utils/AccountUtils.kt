@@ -1,8 +1,13 @@
 package accountLedgerCli.utils
 
 import accountLedgerCli.api.response.AccountResponse
+import accountLedgerCli.cli.Screens
 import accountLedgerCli.constants.Constants
+import accountLedgerCli.models.AccountFrequencyModel
 import accountLedgerCli.models.ChooseAccountResult
+import accountLedgerCli.models.FrequencyOfAccountsModel
+import accountLedgerCli.to_models.IsOkModel
+import accountLedgerCli.to_utils.JsonFileUtils
 
 internal object AccountUtils {
 
@@ -64,4 +69,38 @@ internal object AccountUtils {
         return result
     }
 
+    @JvmStatic
+    internal fun getFrequentlyUsedTop10Accounts(userId: UInt): String {
+
+        var result = ""
+
+        val readFrequencyOfAccountsFileResult: IsOkModel<FrequencyOfAccountsModel> =
+            JsonFileUtils.readJsonFile(Constants.frequencyOfAccountsFileName)
+        if (readFrequencyOfAccountsFileResult.isOK) {
+
+            Screens.getAccountFrequenciesForUser(
+
+                frequencyOfAccounts = readFrequencyOfAccountsFileResult.data!!,
+                userId = userId
+
+            )?.sortedByDescending { accountFrequency: AccountFrequencyModel ->
+
+                accountFrequency.countOfRepetition
+
+            }?.take(n = 10)
+
+                ?.forEach { accountFrequency: AccountFrequencyModel ->
+
+                    result += "${accountFrequency.accountID} : ${accountFrequency.accountName}\n"
+                }
+        }
+        return if (result.isEmpty()) {
+
+            accountLedgerCli.to_constants.Constants.dashedLineSeparator
+
+        } else {
+
+            accountLedgerCli.to_constants.Constants.dashedLineSeparator + "\n" + result + accountLedgerCli.to_constants.Constants.dashedLineSeparator
+        }
+    }
 }

@@ -1164,6 +1164,7 @@ object InsertOperations {
 
     ): Boolean {
 
+        //TODO : Rewrite using API Utils
         val apiResponse: Result<InsertionResponse>
         val userTransactionDataSource = TransactionDataSource()
 
@@ -1293,10 +1294,10 @@ object InsertOperations {
 
     ): Boolean {
 
+        // TODO : Generalize with insert transaction
         val apiResponse: Result<InsertionResponse>
         val userTransactionDataSource = TransactionDataSource()
 
-        // TODO : Change to data class
         val eventDateTimeConversionResult: Pair<Boolean, String> =
             MysqlUtils.normalDateTimeTextToMysqlDateTimeText(normalDateTimeText = eventDateTime)
 
