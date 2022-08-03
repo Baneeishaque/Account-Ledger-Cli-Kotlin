@@ -104,21 +104,8 @@ object HandleResponses {
         if (apiResponse.isFailure) {
 
             println("Error : ${(apiResponse.exceptionOrNull() as Exception).localizedMessage}")
-            do {
-                print("Retry (Y/N) ? : ")
-                when (readLine()) {
-                    "Y", "" -> {
-                        return getUserAccountsMap(apiResponse = apiResponse)
-                    }
+            return IsOkModel(isOK = false)
 
-                    "N" -> {
-                        return IsOkModel(isOK = false)
-
-                    }
-
-                    else -> println("Invalid option, try again...")
-                }
-            } while (true)
         } else {
 
             val localAccountsResponseWithStatus: AccountsResponse = apiResponse.getOrNull() as AccountsResponse

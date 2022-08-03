@@ -12,17 +12,12 @@ internal object ApiUtils {
     internal fun getAccountsFull(userId: UInt): Result<AccountsResponse> {
 
         //TODO : Change return to AccountsResponse instead of Result<AccountsResponse>
-        val getAccountsFullResult: IsOkModel<AccountsResponse> =
-            CommonApiUtils.makeApiRequestWithOptionalRetries(apiCallFunction = fun(): Result<AccountsResponse> {
-                return runBlocking { AccountsDataSource().selectUserAccountsFull(userId = userId) }
-            })
-        return if (getAccountsFullResult.isOK) {
+        return CommonApiUtils.getResultFromApiRequestWithOptionalRetries(apiCallFunction = fun(): Result<AccountsResponse> {
 
-            Result.success(value = getAccountsFullResult.data!!)
+            return runBlocking {
 
-        } else {
-
-            Result.failure(exception = Exception("Please retry the operation..."))
-        }
+                AccountsDataSource().selectUserAccountsFull(userId = userId)
+            }
+        })
     }
 }

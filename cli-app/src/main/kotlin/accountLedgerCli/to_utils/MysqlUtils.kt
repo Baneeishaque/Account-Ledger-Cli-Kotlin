@@ -15,7 +15,7 @@ object MysqlUtils {
     val mysqlDatePattern: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")!!
 
     @JvmStatic
-    fun normalDateTimeTextToMysqlDateTimeText(
+    fun normalDateTimeTextToMySqlDateTimeText(
 
         normalDateTimeText: String,
         conversionSuccessActions: () -> Unit = fun() {},
@@ -27,6 +27,29 @@ object MysqlUtils {
 
             val result: String = LocalDateTime.parse(normalDateTimeText, DateTimeUtils.normalDateTimePattern)
                 .format(mysqlDateTimePattern)
+            conversionSuccessActions.invoke()
+            IsOkModel(isOK = true, data = result)
+
+        } catch (e: DateTimeParseException) {
+
+            conversionFailureActions.invoke()
+            IsOkModel(isOK = false, data = e.localizedMessage)
+        }
+    }
+
+    @JvmStatic
+    fun mySqlDateTimeTextToNormalDateTimeText(
+
+        mySqlDateTimeText: String,
+        conversionSuccessActions: () -> Unit = fun() {},
+        conversionFailureActions: () -> Unit = fun() {}
+
+    ): IsOkModel<String> {
+
+        return try {
+
+            val result: String = LocalDateTime.parse(mySqlDateTimeText, mysqlDateTimePattern)
+                .format(DateTimeUtils.normalDateTimePattern)
             conversionSuccessActions.invoke()
             IsOkModel(isOK = true, data = result)
 
@@ -57,7 +80,7 @@ object MysqlUtils {
     }
 
     @JvmStatic
-    fun normalDateTextToMysqlDateText(normalDateText: String): IsOkModel<String> {
+    fun normalDateTextToMySqlDateText(normalDateText: String): IsOkModel<String> {
 
         return try {
 

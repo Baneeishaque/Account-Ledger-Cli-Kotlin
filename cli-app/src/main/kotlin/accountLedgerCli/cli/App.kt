@@ -46,6 +46,14 @@ class App {
         }
 
         @JvmStatic
+        internal val isDevelopmentMode: Boolean =
+            EnvironmentFileOperations.getEnvironmentVariableValueForBooleanWithDefaultValue(
+                dotenv = dotenv,
+                environmentVariableName = EnvironmentalFileEntries.isDevelopmentMode.entryName.name,
+                defaultValue = false
+            ).value!!
+
+        @JvmStatic
         @OptIn(ExperimentalCli::class)
         fun main(args: Array<String>) {
 

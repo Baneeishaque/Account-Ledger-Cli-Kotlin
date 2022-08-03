@@ -6,8 +6,9 @@ import accountLedgerCli.api.response.UserResponse
 import accountLedgerCli.cli.App.Companion.dotenv
 import accountLedgerCli.constants.Constants
 import accountLedgerCli.enums.BalanceSheetRefineLevelEnum
-import accountLedgerCli.models.*
-import accountLedgerCli.retrofit.ResponseHolder
+import accountLedgerCli.models.BalanceSheetDataModel
+import accountLedgerCli.models.BalanceSheetDataRowModel
+import accountLedgerCli.models.ChooseUserResult
 import accountLedgerCli.retrofit.data.TransactionsDataSource
 import accountLedgerCli.to_models.IsOkModel
 import accountLedgerCli.to_utils.DateTimeUtils
@@ -36,34 +37,44 @@ internal fun balanceSheetOfUser(usersMap: LinkedHashMap<UInt, UserResponse>) {
 }
 
 internal fun printBalanceSheetOfUser(
+
     currentUserName: String,
     currentUserId: UInt,
     refineLevel: BalanceSheetRefineLevelEnum = BalanceSheetRefineLevelEnum.WITHOUT_EXPENSE_ACCOUNTS,
     isNotApiCall: Boolean = true
+
 ) {
 
 //    print("currentUser : $currentUserName")
+
     val transactionsDataSource = TransactionsDataSource()
     if (isNotApiCall) {
+
         println("Contacting Server...")
     }
-    val apiResponse: ResponseHolder<TransactionsResponse>
-    val specifiedDate: IsOkModel<String> = MysqlUtils.normalDateTextToMysqlDateText(
+    val apiResponse: Result<TransactionsResponse>
+    val specifiedDate: IsOkModel<String> = MysqlUtils.normalDateTextToMySqlDateText(
         normalDateText = getUserInitialTransactionDateFromUsername(username = currentUserName).minusDays(
             1
         ).format(DateTimeUtils.normalDatePattern)
     )
     if (specifiedDate.isOK) {
+
         runBlocking {
+
             apiResponse = transactionsDataSource.selectUserTransactionsAfterSpecifiedDate(
-                userId = currentUserId, specifiedDate = specifiedDate.data!!
+
+                userId = currentUserId,
+                specifiedDate = specifiedDate.data!!
             )
         }
+
         // println("Response : $apiResponse2")
-        if (apiResponse.isError()) {
+        if (apiResponse.isFailure) {
+
             if (isNotApiCall) {
 
-                println("Error : ${(apiResponse.getValue() as Exception).localizedMessage}")
+                println("Error : ${(apiResponse.exceptionOrNull() as Exception).localizedMessage}")
                 do {
                     print("Retry (Y/N) ? : ")
                     when (readLine()!!) {
@@ -92,15 +103,14 @@ internal fun printBalanceSheetOfUser(
                         serializer = BalanceSheetDataModel.serializer(),
                         value = BalanceSheetDataModel(
                             status = 1,
-                            error = "Error : ${(apiResponse.getValue() as Exception).localizedMessage}"
+                            error = "Error : ${(apiResponse.exceptionOrNull() as Exception).localizedMessage}"
                         )
                     )
                 )
             }
         } else {
 
-            val selectUserTransactionsAfterSpecifiedDateResult: TransactionsResponse =
-                apiResponse.getValue() as TransactionsResponse
+            val selectUserTransactionsAfterSpecifiedDateResult: TransactionsResponse = apiResponse.getOrNull()!!
             if (selectUserTransactionsAfterSpecifiedDateResult.status == 1u) {
 
                 if (isNotApiCall) {
@@ -111,8 +121,10 @@ internal fun printBalanceSheetOfUser(
 
                     print(
                         Json.encodeToString(
+
                             serializer = BalanceSheetDataModel.serializer(),
                             value = BalanceSheetDataModel(
+
                                 status = 2,
                                 error = "No Transactions"
                             )
@@ -187,16 +199,16 @@ internal fun printBalanceSheetOfUser(
                 val balanceSheetDataRows: MutableList<BalanceSheetDataRowModel> = mutableListOf()
                 for (account: MutableMap.MutableEntry<UInt, String> in accounts) {
 
-                    val apiResponse2: ResponseHolder<TransactionsResponse> =
+                    val apiResponse2: Result<TransactionsResponse> =
                         getUserTransactions(
                             userId = currentUserId,
                             accountId = account.key,
                             isNotFromBalanceSheet = false
                         )
-                    if (apiResponse2.isError()) {
+                    if (apiResponse2.isFailure) {
 
                         if (isNotApiCall) {
-                            println("Error : ${(apiResponse2.getValue() as Exception).localizedMessage}")
+                            println("Error : ${(apiResponse2.exceptionOrNull() as Exception).localizedMessage}")
 //                            do {
 //                                print("Retry (Y/N) ? : ")
 //                                val input: String = readLine()!!
@@ -215,15 +227,14 @@ internal fun printBalanceSheetOfUser(
                                     serializer = BalanceSheetDataModel.serializer(),
                                     value = BalanceSheetDataModel(
                                         status = 1,
-                                        error = "Error : ${(apiResponse2.getValue() as Exception).localizedMessage}"
+                                        error = "Error : ${(apiResponse2.exceptionOrNull() as Exception).localizedMessage}"
                                     )
                                 )
                             )
                         }
                     } else {
 
-                        val userTransactionsResponseResult: TransactionsResponse =
-                            apiResponse2.getValue() as TransactionsResponse
+                        val userTransactionsResponseResult: TransactionsResponse = apiResponse2.getOrNull()!!
                         if (userTransactionsResponseResult.status == 0u) {
 
                             var currentBalance = 0.0F
@@ -302,11 +313,16 @@ internal fun printBalanceSheetOfUser(
             }
         }
     } else {
+
         if (isNotApiCall) {
+
             println("Error : ${specifiedDate.data!!}")
+
         } else {
+
             print(
                 Json.encodeToString(
+
                     serializer = BalanceSheetDataModel.serializer(),
                     value = BalanceSheetDataModel(
                         status = 1,

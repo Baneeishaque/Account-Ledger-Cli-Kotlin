@@ -1,65 +1,40 @@
 package accountLedgerCli.retrofit.data
 
 import accountLedgerCli.api.response.TransactionsResponse
-import accountLedgerCli.retrofit.ProjectRetrofitClient
-import accountLedgerCli.retrofit.ResponseHolder
-import retrofit2.Response
-import java.io.IOException
 
-internal class TransactionsDataSource {
-
-    private val retrofitClient = ProjectRetrofitClient.retrofitClient
+internal class TransactionsDataSource : AppDataSource<TransactionsResponse>() {
 
     internal suspend fun selectUserTransactions(
+
         userId: UInt,
         accountId: UInt
-    ): ResponseHolder<TransactionsResponse> {
 
-        return try {
+    ): Result<TransactionsResponse> {
 
-            processApiResponse(retrofitClient.selectUserTransactionsV2M(userId = userId, accountId = accountId))
+        return handleApiResponse(
 
-        } catch (exception: java.lang.Exception) {
+            apiResponse = retrofitClient.selectUserTransactionsV2M(
 
-            ResponseHolder.Error(Exception("Exception - ${exception.localizedMessage}"))
-        }
+                userId = userId,
+                accountId = accountId
+            )
+        )
     }
 
     internal suspend fun selectUserTransactionsAfterSpecifiedDate(
+
         userId: UInt,
         specifiedDate: String
-    ): ResponseHolder<TransactionsResponse> {
 
-        return try {
+    ): Result<TransactionsResponse> {
 
-            processApiResponse(
-                retrofitClient.selectUserTransactionsAfterSpecifiedDate(
-                    userId = userId,
-                    specifiedDate = specifiedDate
-                )
+        return handleApiResponse(
+
+            apiResponse = retrofitClient.selectUserTransactionsAfterSpecifiedDate(
+
+                userId = userId,
+                specifiedDate = specifiedDate
             )
-
-        } catch (exception: java.lang.Exception) {
-
-            ResponseHolder.Error(Exception("Exception - ${exception.localizedMessage}"))
-        }
+        )
     }
-}
-
-// TODO : Rewrite as general function for all responses
-private fun processApiResponse(apiResponse: Response<TransactionsResponse>): ResponseHolder<TransactionsResponse> {
-
-    if (apiResponse.isSuccessful) {
-
-        val userTransactionsApiResponseBody = apiResponse.body()
-        return if (userTransactionsApiResponseBody != null) {
-
-            ResponseHolder.Success(userTransactionsApiResponseBody)
-
-        } else {
-
-            ResponseHolder.Error(Exception("Invalid Response Body"))
-        }
-    }
-    return ResponseHolder.Error(IOException("Exception Code - ${apiResponse.code()}, Message - ${apiResponse.message()}"))
 }

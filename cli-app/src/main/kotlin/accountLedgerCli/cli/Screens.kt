@@ -10,6 +10,7 @@ import accountLedgerCli.models.AccountFrequencyModel
 import accountLedgerCli.models.FrequencyOfAccountsModel
 import accountLedgerCli.models.InsertTransactionResult
 import accountLedgerCli.models.UserModel
+import accountLedgerCli.to_models.IsOkModel
 import accountLedgerCli.to_utils.EnumUtils
 import accountLedgerCli.to_utils.EnvironmentFileOperations
 import accountLedgerCli.to_utils.ToDoUtils
@@ -97,6 +98,11 @@ object Screens {
                     "21 - View Balance Sheet Ledger (Excluding Open Balances, Misc. Incomes & Investment Returns)",
                     "22 - View Balance Sheet Ledger (Excluding Open Balances, Misc. Incomes, Investment Returns & Family Accounts)",
                     "23 - View Balance Sheet Ledger (Excluding Open Balances, Misc. Incomes, Investment Returns, Family & Expense Accounts)",
+                    "24 - View Transactions of Wallet A/C",
+                    "25 - View Transactions of ${getEnvironmentVariableValueForUserScreen(environmentVariableName = EnvironmentFileEntryEnum.BANK_ACCOUNT_NAME.name)} A/C",
+                    "26 - View Transactions of ${getEnvironmentVariableValueForUserScreen(environmentVariableName = EnvironmentFileEntryEnum.FREQUENT_1_ACCOUNT_NAME.name)} A/C",
+                    "27 - View Transactions of ${getEnvironmentVariableValueForUserScreen(environmentVariableName = EnvironmentFileEntryEnum.FREQUENT_2_ACCOUNT_NAME.name)} A/C",
+                    "28 - View Transactions of ${getEnvironmentVariableValueForUserScreen(environmentVariableName = EnvironmentFileEntryEnum.FREQUENT_3_ACCOUNT_NAME.name)} A/C",
                     "0 - Logout",
                     "",
                     "Enter Your Choice : "
@@ -361,10 +367,77 @@ object Screens {
                 }
 
                 "23" -> {
+
                     printBalanceSheetOfUser(
+
                         currentUserName = username,
                         currentUserId = userId,
                         refineLevel = BalanceSheetRefineLevelEnum.WITHOUT_EXPENSE_ACCOUNTS
+                    )
+                }
+
+                "24" -> {
+
+                    insertTransactionResult = viewTransactionsOfAnAccount(
+
+                        userId = userId,
+                        insertTransactionResult = insertTransactionResult,
+                        username = username,
+                        viaAccount = viaAccount,
+                        toAccount = toAccount,
+                        desiredAccountIndex = InsertOperations.walletAccount.value!!
+                    )
+                }
+
+                "25" -> {
+
+                    insertTransactionResult = viewTransactionsOfAnAccount(
+
+                        userId = userId,
+                        insertTransactionResult = insertTransactionResult,
+                        username = username,
+                        viaAccount = viaAccount,
+                        toAccount = toAccount,
+                        desiredAccountIndex = InsertOperations.bankAccount.value!!
+                    )
+                }
+
+                "26" -> {
+
+                    insertTransactionResult = viewTransactionsOfAnAccount(
+
+                        userId = userId,
+                        insertTransactionResult = insertTransactionResult,
+                        username = username,
+                        viaAccount = viaAccount,
+                        toAccount = toAccount,
+                        desiredAccountIndex = InsertOperations.frequent1Account.value!!
+                    )
+                }
+
+                "27" -> {
+
+                    insertTransactionResult = viewTransactionsOfAnAccount(
+
+                        userId = userId,
+                        insertTransactionResult = insertTransactionResult,
+                        username = username,
+                        viaAccount = viaAccount,
+                        toAccount = toAccount,
+                        desiredAccountIndex = InsertOperations.frequent2Account.value!!
+                    )
+                }
+
+                "28" -> {
+
+                    insertTransactionResult = viewTransactionsOfAnAccount(
+
+                        userId = userId,
+                        insertTransactionResult = insertTransactionResult,
+                        username = username,
+                        viaAccount = viaAccount,
+                        toAccount = toAccount,
+                        desiredAccountIndex = InsertOperations.frequent3Account.value!!
                     )
                 }
 
@@ -379,6 +452,42 @@ object Screens {
         } while (true)
     }
 
+    private fun viewTransactionsOfAnAccount(
+
+        userId: UInt,
+        insertTransactionResult: InsertTransactionResult,
+        username: String,
+        viaAccount: AccountResponse,
+        toAccount: AccountResponse,
+        desiredAccountIndex: UInt
+
+    ): InsertTransactionResult {
+
+        var localInsertTransactionResult: InsertTransactionResult = insertTransactionResult
+
+        val getUserAccountsMapResult: IsOkModel<LinkedHashMap<UInt, AccountResponse>> =
+            HandleResponses.getUserAccountsMap(apiResponse = ApiUtils.getAccountsFull(userId = userId))
+
+        if (getUserAccountsMapResult.isOK && getUserAccountsMapResult.data!!.containsKey(desiredAccountIndex)) {
+
+            val selectedAccount: AccountResponse = getUserAccountsMapResult.data[desiredAccountIndex]!!
+            localInsertTransactionResult = viewTransactions(
+
+                userId = userId,
+                username = username,
+                accountId = desiredAccountIndex,
+                accountFullName = selectedAccount.fullName,
+                fromAccount = selectedAccount,
+                viaAccount = viaAccount,
+                toAccount = toAccount,
+                dateTimeInText = localInsertTransactionResult.dateTimeInText,
+                transactionParticulars = localInsertTransactionResult.transactionParticulars,
+                transactionAmount = localInsertTransactionResult.transactionAmount
+
+            ).addTransactionResult
+        }
+        return localInsertTransactionResult
+    }
 
 
     internal fun getAccountFrequenciesForUser(

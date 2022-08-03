@@ -758,7 +758,8 @@ object InsertOperations {
                         toAccount = toAccount,
                         dateTimeInText = DateTimeUtils.add1DayWith9ClockTimeToDateTimeInText(dateTimeInText = localDateTimeInText),
                         transactionParticulars = localTransactionParticulars,
-                        transactionAmount = localTransactionAmount
+                        transactionAmount = localTransactionAmount,
+                        isEditStep = isEditStep
                     )
                 }
 
@@ -773,7 +774,8 @@ object InsertOperations {
                         toAccount = toAccount,
                         dateTimeInText = DateTimeUtils.add1DayToDateTimeInText(dateTimeInText = localDateTimeInText),
                         transactionParticulars = localTransactionParticulars,
-                        transactionAmount = localTransactionAmount
+                        transactionAmount = localTransactionAmount,
+                        isEditStep = isEditStep
                     )
                 }
 
@@ -790,7 +792,8 @@ object InsertOperations {
                             dateTimeInText = localDateTimeInText
                         ),
                         transactionParticulars = localTransactionParticulars,
-                        transactionAmount = localTransactionAmount
+                        transactionAmount = localTransactionAmount,
+                        isEditStep = isEditStep
                     )
                 }
 
@@ -805,7 +808,8 @@ object InsertOperations {
                         toAccount = toAccount,
                         dateTimeInText = DateTimeUtils.add2DaysToDateTimeString(dateTimeInText = localDateTimeInText),
                         transactionParticulars = localTransactionParticulars,
-                        transactionAmount = localTransactionAmount
+                        transactionAmount = localTransactionAmount,
+                        isEditStep = isEditStep
                     )
                 }
 
@@ -821,7 +825,8 @@ object InsertOperations {
                         dateTimeInText = localDateTimeInText,
                         transactionParticulars = localTransactionParticulars,
                         transactionAmount = localTransactionAmount,
-                        accountExchangeType = AccountExchangeTypeEnum.FROM_AND_TO
+                        accountExchangeType = AccountExchangeTypeEnum.FROM_AND_TO,
+                        isEditStep = isEditStep
                     )
                 }
 
@@ -837,7 +842,8 @@ object InsertOperations {
                         dateTimeInText = localDateTimeInText,
                         transactionParticulars = localTransactionParticulars,
                         transactionAmount = localTransactionAmount,
-                        accountExchangeType = AccountExchangeTypeEnum.FROM_AND_VIA
+                        accountExchangeType = AccountExchangeTypeEnum.FROM_AND_VIA,
+                        isEditStep = isEditStep
                     )
                 }
 
@@ -853,7 +859,8 @@ object InsertOperations {
                         dateTimeInText = localDateTimeInText,
                         transactionParticulars = localTransactionParticulars,
                         transactionAmount = localTransactionAmount,
-                        accountExchangeType = AccountExchangeTypeEnum.VIA_AND_TO
+                        accountExchangeType = AccountExchangeTypeEnum.VIA_AND_TO,
+                        isEditStep = isEditStep
                     )
                 }
 
@@ -988,7 +995,8 @@ object InsertOperations {
                                 toAccount = viaAccount,
                                 dateTimeInText = localDateTimeInText,
                                 transactionParticulars = localTransactionParticulars,
-                                transactionAmount = localTransactionAmount
+                                transactionAmount = localTransactionAmount,
+                                isEditStep = isEditStep
                             )
 
                             "Ex" -> {
@@ -1005,7 +1013,8 @@ object InsertOperations {
                                         dateTimeInText = localDateTimeInText,
                                         transactionParticulars = localTransactionParticulars,
                                         transactionAmount = localTransactionAmount,
-                                        accountExchangeType = AccountExchangeTypeEnum.FROM_AND_TO
+                                        accountExchangeType = AccountExchangeTypeEnum.FROM_AND_TO,
+                                        isEditStep = isEditStep
                                     )
 
                                 } else {
@@ -1027,7 +1036,8 @@ object InsertOperations {
                                         dateTimeInText = localDateTimeInText,
                                         transactionParticulars = localTransactionParticulars,
                                         transactionAmount = localTransactionAmount,
-                                        accountExchangeType = AccountExchangeTypeEnum.FROM_AND_TO
+                                        accountExchangeType = AccountExchangeTypeEnum.FROM_AND_TO,
+                                        isEditStep = isEditStep
                                     )
 
                                 } else {
@@ -1050,7 +1060,8 @@ object InsertOperations {
                                         dateTimeInText = localDateTimeInText,
                                         transactionParticulars = localTransactionParticulars,
                                         transactionAmount = localTransactionAmount,
-                                        accountExchangeType = AccountExchangeTypeEnum.FROM_AND_VIA
+                                        accountExchangeType = AccountExchangeTypeEnum.FROM_AND_VIA,
+                                        isEditStep = isEditStep
                                     )
                                 } else {
 
@@ -1072,7 +1083,8 @@ object InsertOperations {
                                         dateTimeInText = localDateTimeInText,
                                         transactionParticulars = localTransactionParticulars,
                                         transactionAmount = localTransactionAmount,
-                                        accountExchangeType = AccountExchangeTypeEnum.VIA_AND_TO
+                                        accountExchangeType = AccountExchangeTypeEnum.VIA_AND_TO,
+                                        isEditStep = isEditStep
                                     )
                                 } else {
                                     invalidOptionMessage()
@@ -1107,7 +1119,8 @@ object InsertOperations {
         dateTimeInText: String,
         transactionParticulars: String,
         transactionAmount: Float,
-        accountExchangeType: AccountExchangeTypeEnum
+        accountExchangeType: AccountExchangeTypeEnum,
+        isEditStep: Boolean
 
     ): InsertTransactionResult {
 
@@ -1122,7 +1135,8 @@ object InsertOperations {
                     toAccount = fromAccount,
                     dateTimeInText = dateTimeInText,
                     transactionParticulars = transactionParticulars,
-                    transactionAmount = transactionAmount
+                    transactionAmount = transactionAmount,
+                    isEditStep = isEditStep
                 )
             }
 
@@ -1136,7 +1150,8 @@ object InsertOperations {
                     toAccount = toAccount,
                     dateTimeInText = dateTimeInText,
                     transactionParticulars = transactionParticulars,
-                    transactionAmount = transactionAmount
+                    transactionAmount = transactionAmount,
+                    isEditStep = isEditStep
                 )
             }
 
@@ -1150,7 +1165,8 @@ object InsertOperations {
                     toAccount = viaAccount,
                     dateTimeInText = dateTimeInText,
                     transactionParticulars = transactionParticulars,
-                    transactionAmount = transactionAmount
+                    transactionAmount = transactionAmount,
+                    isEditStep = isEditStep
                 )
             }
         }
@@ -1216,17 +1232,12 @@ object InsertOperations {
         amount: Float,
         fromAccount: AccountResponse,
         toAccount: AccountResponse,
-        isDevelopmentMode: Boolean = EnvironmentFileOperations.getEnvironmentVariableValueForBooleanWithDefaultValue(
-            dotenv = App.dotenv,
-            environmentVariableName = EnvironmentalFileEntries.isDevelopmentMode.entryName.name,
-            defaultValue = false
-        ).value!!
 
     ): Boolean {
 
         val eventDateTimeConversionResult: IsOkModel<String> = MysqlUtils.dateTimeTextConversionWithMessage(
             dateTimeTextConversionFunction = fun(): IsOkModel<String> {
-                return MysqlUtils.normalDateTimeTextToMysqlDateTimeText(
+                return MysqlUtils.normalDateTimeTextToMySqlDateTimeText(
                     normalDateTimeText = eventDateTime
                 )
             })
@@ -1251,7 +1262,7 @@ object InsertOperations {
                 val readFrequencyOfAccountsFileResult: IsOkModel<FrequencyOfAccountsModel> =
                     JsonFileUtils.readJsonFile(Constants.frequencyOfAccountsFileName)
 
-                if (isDevelopmentMode) {
+                if (App.isDevelopmentMode) {
 
                     println("readFrequencyOfAccountsFileResult : $readFrequencyOfAccountsFileResult")
                 }
@@ -1320,7 +1331,7 @@ object InsertOperations {
 
         val eventDateTimeConversionResult: IsOkModel<String> = MysqlUtils.dateTimeTextConversionWithMessage(
             dateTimeTextConversionFunction = fun(): IsOkModel<String> {
-                return MysqlUtils.normalDateTimeTextToMysqlDateTimeText(
+                return MysqlUtils.normalDateTimeTextToMySqlDateTimeText(
                     normalDateTimeText = eventDateTime
                 )
             })

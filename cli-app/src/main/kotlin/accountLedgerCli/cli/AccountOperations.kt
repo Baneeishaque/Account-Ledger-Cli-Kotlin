@@ -7,7 +7,6 @@ import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
 import accountLedgerCli.enums.FunctionCallSourceEnum
 import accountLedgerCli.models.InsertTransactionResult
 import accountLedgerCli.models.ViewTransactionsOutput
-import accountLedgerCli.retrofit.ResponseHolder
 import accountLedgerCli.retrofit.data.TransactionsDataSource
 import accountLedgerCli.to_models.IsOkModel
 import accountLedgerCli.to_utils.InputUtils
@@ -31,9 +30,9 @@ internal fun checkAccountsAffectedAfterSpecifiedDate(
     val inputDate: String = InputUtils.getValidDateInNormalPattern()
     val transactionsDataSource = TransactionsDataSource()
     println("Contacting Server...")
-    val apiResponse: ResponseHolder<TransactionsResponse>
+    val apiResponse: Result<TransactionsResponse>
     val specifiedDate: IsOkModel<String> =
-        MysqlUtils.normalDateTextToMysqlDateText(normalDateText = inputDate)
+        MysqlUtils.normalDateTextToMySqlDateText(normalDateText = inputDate)
     if (specifiedDate.isOK) {
         runBlocking {
             apiResponse =
@@ -43,9 +42,9 @@ internal fun checkAccountsAffectedAfterSpecifiedDate(
                 )
         }
         // println("Response : $apiResponse")
-        if (apiResponse.isError()) {
+        if (apiResponse.isFailure) {
 
-            println("Error : ${(apiResponse.getValue() as Exception).localizedMessage}")
+            println("Error : ${(apiResponse.exceptionOrNull() as Exception).localizedMessage}")
             do {
                 print("Retry (Y/N) ? : ")
                 when (readLine()!!) {
@@ -73,7 +72,7 @@ internal fun checkAccountsAffectedAfterSpecifiedDate(
         } else {
 
             val selectUserTransactionsAfterSpecifiedDateResult: TransactionsResponse =
-                apiResponse.getValue() as TransactionsResponse
+                apiResponse.getOrNull()!!
             if (selectUserTransactionsAfterSpecifiedDateResult.status == 1u) {
 
                 println("No Transactions...")

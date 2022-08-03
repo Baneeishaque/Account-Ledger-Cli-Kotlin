@@ -14,11 +14,16 @@ object ApiUtils {
     fun <T> makeApiRequestWithOptionalRetries(
 
         apiCallFunction: () -> Result<T>,
+        isConsoleMode: Boolean = true,
         isDevelopmentMode: Boolean = false
 
     ): IsOkModel<T> {
 
-        println("Contacting Server...")
+        if (isConsoleMode) {
+
+            println("Contacting Server...")
+        }
+
         val apiResponse: Result<T> = apiCallFunction.invoke()
 
         if (isDevelopmentMode) {
@@ -34,7 +39,9 @@ object ApiUtils {
                 when (readLine()!!) {
                     "Y", "" -> {
                         return makeApiRequestWithOptionalRetries(
+
                             apiCallFunction = apiCallFunction,
+                            isConsoleMode = isConsoleMode,
                             isDevelopmentMode = isDevelopmentMode
                         )
                     }
@@ -50,6 +57,32 @@ object ApiUtils {
         } else {
 
             return IsOkModel(isOK = true, data = apiResponse.getOrNull()!!)
+        }
+    }
+
+    fun <T> getResultFromApiRequestWithOptionalRetries(
+
+        apiCallFunction: () -> Result<T>,
+        isConsoleMode: Boolean = true,
+        isDevelopmentMode: Boolean = false
+
+    ): Result<T> {
+
+        val apiRequestWithOptionalRetriesResult: IsOkModel<T> =
+            makeApiRequestWithOptionalRetries(
+
+                apiCallFunction = apiCallFunction,
+                isConsoleMode = isConsoleMode,
+                isDevelopmentMode = isDevelopmentMode
+            )
+
+        return if (apiRequestWithOptionalRetriesResult.isOK) {
+
+            Result.success(value = apiRequestWithOptionalRetriesResult.data!!)
+
+        } else {
+
+            Result.failure(exception = Exception("Please retry the operation..."))
         }
     }
 }

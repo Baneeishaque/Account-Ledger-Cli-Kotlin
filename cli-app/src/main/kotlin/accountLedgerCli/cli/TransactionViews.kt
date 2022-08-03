@@ -9,8 +9,8 @@ import accountLedgerCli.enums.FunctionCallSourceEnum
 import accountLedgerCli.enums.TransactionTypeEnum
 import accountLedgerCli.models.InsertTransactionResult
 import accountLedgerCli.models.ViewTransactionsOutput
-import accountLedgerCli.retrofit.ResponseHolder
 import accountLedgerCli.to_models.IsOkModel
+import accountLedgerCli.to_utils.MysqlUtils
 import accountLedgerCli.to_utils.ToDoUtils
 import accountLedgerCli.to_utils.invalidOptionMessage
 import accountLedgerCli.utils.AccountUtils
@@ -29,57 +29,37 @@ internal fun viewTransactions(
     toAccount: AccountResponse,
     dateTimeInText: String,
     transactionParticulars: String,
-    transactionAmount: Float
+    transactionAmount: Float,
 
-): ViewTransactionsOutput {
+    ): ViewTransactionsOutput {
 
-    val apiResponse: ResponseHolder<TransactionsResponse> = getUserTransactions(userId = userId, accountId = accountId)
-    if (apiResponse.isError()) {
+    val apiResponse: Result<TransactionsResponse> = getUserTransactions(
 
-        println("Error : ${(apiResponse.getValue() as Exception).localizedMessage}")
-        do {
-            print("Retry (Y/N) ? : ")
-            when (readLine()!!) {
-                "Y", "" -> {
-                    return viewTransactions(
-                        userId = userId,
-                        username = username,
-                        accountId = accountId,
-                        accountFullName = accountFullName,
-                        functionCallSource = functionCallSource,
-                        fromAccount = fromAccount,
-                        viaAccount = viaAccount,
-                        toAccount = toAccount,
-                        dateTimeInText = dateTimeInText,
-                        transactionParticulars = transactionParticulars,
-                        transactionAmount = transactionAmount
-                    )
-                }
+        userId = userId,
+        accountId = accountId
+    )
+    if (apiResponse.isFailure) {
 
-                "N" -> {
-                    return ViewTransactionsOutput(
-                        output = "E",
-                        addTransactionResult = InsertTransactionResult(
-                            isSuccess = false,
-                            dateTimeInText = dateTimeInText,
-                            transactionParticulars = transactionParticulars,
-                            transactionAmount = transactionAmount
-                        )
-                    )
-                }
+        return ViewTransactionsOutput(
 
-                else -> invalidOptionMessage()
-            }
-        } while (true)
-
+            output = "E",
+            addTransactionResult = InsertTransactionResult(
+                isSuccess = false,
+                dateTimeInText = dateTimeInText,
+                transactionParticulars = transactionParticulars,
+                transactionAmount = transactionAmount
+            )
+        )
     } else {
 
-        val userTransactionsResponse: TransactionsResponse = apiResponse.getValue() as TransactionsResponse
+        val userTransactionsResponse: TransactionsResponse = apiResponse.getOrNull()!!
         if (userTransactionsResponse.status == 1u) {
 
             println("Account - $accountFullName")
             println("No Transactions...")
+
             return ViewTransactionsOutput(
+
                 output = "0",
                 addTransactionResult = InsertTransactionResult(
                     isSuccess = false,
@@ -93,24 +73,36 @@ internal fun viewTransactions(
         } else {
 
             var choice: String
+
+            val userTransactionsMap: LinkedHashMap<UInt, TransactionResponse> =
+                TransactionUtils.prepareUserTransactionsMap(transactions = userTransactionsResponse.transactions)
+
             do {
+                val userTransactionsText: String = TransactionUtils.userTransactionsToTextFromMap(
+
+                    transactionsMap = userTransactionsMap,
+                    currentAccountId = fromAccount.id
+                )
+
                 var menuItems: List<String> = listOf(
+
                     "\nUser : $username",
                     "$accountFullName - Transactions",
-                    TransactionUtils.userTransactionsToTextFromList(
-                        transactions = userTransactionsResponse.transactions,
-                        currentAccountId = accountId
-                    )
+                    userTransactionsText
                 )
                 when (functionCallSource) {
+
                     FunctionCallSourceEnum.FROM_CHECK_ACCOUNTS -> {
+
                         menuItems = menuItems + listOf("0 to Back Enter to Continue : ")
                     }
 
                     FunctionCallSourceEnum.FROM_VIEW_TRANSACTIONS_OF_ACCOUNT -> {
 
                         commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(menuItems)
+
                         return ViewTransactionsOutput(
+
                             output = "",
                             addTransactionResult = InsertTransactionResult(
                                 isSuccess = false,
@@ -122,7 +114,9 @@ internal fun viewTransactions(
                     }
 
                     else -> {
+
                         menuItems = menuItems + listOf(
+
                             "1 - Delete Transaction - By Index Number",
                             "2 - Delete Transactions - From Index to Index",
                             "3 - Delete Transaction - By Search",
@@ -138,75 +132,84 @@ internal fun viewTransactions(
                 commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(menuItems)
 
                 choice = readLine()!!
+
                 var addTransactionResult = InsertTransactionResult(
+
                     isSuccess = false,
                     dateTimeInText = dateTimeInText,
                     transactionParticulars = transactionParticulars,
                     transactionAmount = transactionAmount
                 )
+
                 when (choice) {
 
                     "1" -> {
 
                         if (isCallNotFromCheckAccounts(
+
                                 functionCallSource = functionCallSource,
                                 furtherActionsOnFalse = { invalidOptionMessage() })
                         ) {
 
                             val transactionIndex: UInt = getValidIndex(
-                                map = TransactionUtils.prepareUserTransactionsMap(transactions = userTransactionsResponse.transactions),
+
+                                map = userTransactionsMap,
                                 itemSpecification = Constants.transactionText,
-                                items = TransactionUtils.userTransactionsToTextFromList(
-                                    transactions = userTransactionsResponse.transactions,
-                                    currentAccountId = fromAccount.id
-                                )
+                                items = userTransactionsText
                             )
+
                             // TODO : Take Confirmation from the user
                             if (InsertOperations.deleteTransaction(transactionId = transactionIndex)) {
 
-                                userTransactionsResponse.transactions =
-                                    userTransactionsResponse.transactions.filter { transactionResponse: TransactionResponse -> transactionResponse.id != transactionIndex }
+                                userTransactionsMap.remove(key = transactionIndex)
                             }
                         }
                     }
 
                     "2" -> {
+
                         if (isCallNotFromCheckAccounts(
+
                                 functionCallSource = functionCallSource,
                                 furtherActionsOnFalse = { invalidOptionMessage() })
                         ) {
-                            val userTransactionsMap: LinkedHashMap<UInt, TransactionResponse> =
-                                TransactionUtils.prepareUserTransactionsMap(transactions = userTransactionsResponse.transactions)
-                            val userTransactionsText: String = TransactionUtils.userTransactionsToTextFromList(
-                                transactions = userTransactionsResponse.transactions,
-                                currentAccountId = fromAccount.id
-                            )
 
                             val transactionStartIndex: UInt = getValidIndex(
+
                                 map = userTransactionsMap,
                                 itemSpecification = Constants.transactionText,
                                 items = userTransactionsText,
                                 itemSpecificationPrefix = "Start "
                             )
+
                             if (transactionStartIndex != 0u) {
 
+                                val reducedUserTransactionsMap: Map<UInt, TransactionResponse> =
+                                    userTransactionsMap.filterKeys { transactionId: UInt -> transactionId > transactionStartIndex }
+
                                 val transactionEndIndex: UInt = getValidIndex(
-                                    map = userTransactionsMap.filterKeys { transactionId: UInt -> transactionId > transactionStartIndex },
+
+                                    map = reducedUserTransactionsMap,
                                     itemSpecification = Constants.transactionText,
-                                    items = userTransactionsText,
+                                    items = TransactionUtils.userTransactionsToTextFromMap(
+
+                                        transactionsMap = reducedUserTransactionsMap,
+                                        currentAccountId = fromAccount.id
+                                    ),
                                     itemSpecificationPrefix = "End "
                                 )
+
                                 if (transactionEndIndex != 0u) {
 
                                     userTransactionsMap.filterKeys { transactionId: UInt ->
                                         transactionId in transactionStartIndex..transactionEndIndex
                                     }
-                                        .forEach { transactionMapEntry: Map.Entry<UInt, TransactionResponse> ->
+                                        .forEach { transactionMapEntryForDelete: Map.Entry<UInt, TransactionResponse> ->
 
-                                            if (InsertOperations.deleteTransaction(transactionId = transactionMapEntry.key)) {
+                                            if (InsertOperations.deleteTransaction(transactionId = transactionMapEntryForDelete.key)) {
 
-                                                userTransactionsResponse.transactions =
-                                                    userTransactionsResponse.transactions.filter { transactionResponse: TransactionResponse -> transactionResponse.id != transactionMapEntry.key }
+                                                userTransactionsMap.remove(key = transactionMapEntryForDelete.key)
+
                                             } else {
 
                                                 // TODO : Continue with confirmation
@@ -220,7 +223,9 @@ internal fun viewTransactions(
 
                     "3", "5" -> {
 
-                        if (isCallNotFromCheckAccounts(functionCallSource = functionCallSource,
+                        if (isCallNotFromCheckAccounts(
+
+                                functionCallSource = functionCallSource,
                                 furtherActionsOnFalse = { invalidOptionMessage() })
                         ) {
 
@@ -230,41 +235,64 @@ internal fun viewTransactions(
 
                     "4" -> {
 
-                        if (isCallNotFromCheckAccounts(functionCallSource = functionCallSource,
+                        if (isCallNotFromCheckAccounts(
+
+                                functionCallSource = functionCallSource,
                                 furtherActionsOnFalse = { invalidOptionMessage() })
                         ) {
 
                             val transactionIndex: UInt = getValidIndex(
-                                map = TransactionUtils.prepareUserTransactionsMap(transactions = userTransactionsResponse.transactions),
+
+                                map = userTransactionsMap,
                                 itemSpecification = Constants.transactionText,
-                                items = TransactionUtils.userTransactionsToTextFromList(
-                                    transactions = userTransactionsResponse.transactions,
-                                    currentAccountId = fromAccount.id
-                                )
+                                items = userTransactionsText
                             )
                             val userAccountsMap: LinkedHashMap<UInt, AccountResponse> =
                                 AccountUtils.prepareUserAccountsMap(
+
                                     accounts = ApiUtils.getAccountsFull(userId = userId).getOrNull()!!.accounts
                                 )
-                            addTransactionResult = InsertOperations.addTransactionStep2(
-                                userId = userId,
-                                username = username,
-                                transactionType = TransactionTypeEnum.NORMAL,
-                                fromAccount = userAccountsMap[userTransactionsResponse.transactions[transactionIndex.toInt()].from_account_id]!!,
-                                viaAccount = viaAccount,
-                                toAccount = toAccount,
-                                transactionId = transactionIndex,
-                                dateTimeInText = dateTimeInText,
-                                transactionParticulars = transactionParticulars,
-                                transactionAmount = transactionAmount,
-                                isEditStep = true
-                            )
+
+                            val selectedTransaction: TransactionResponse = userTransactionsMap[transactionIndex]!!
+                            val selectedTransactionDateTimeConversionResult: IsOkModel<String> =
+
+                                MysqlUtils.dateTimeTextConversionWithMessage(dateTimeTextConversionFunction = fun(): IsOkModel<String> {
+
+                                    return MysqlUtils.mySqlDateTimeTextToNormalDateTimeText(mySqlDateTimeText = selectedTransaction.event_date_time)
+                                })
+                            if (selectedTransactionDateTimeConversionResult.isOK) {
+
+                                val updateTransactionResult: InsertTransactionResult =
+                                    InsertOperations.addTransactionStep2(
+
+                                        userId = userId,
+                                        username = username,
+                                        transactionType = TransactionTypeEnum.NORMAL,
+                                        fromAccount = userAccountsMap[selectedTransaction.from_account_id]!!,
+                                        viaAccount = viaAccount,
+                                        toAccount = userAccountsMap[selectedTransaction.to_account_id]!!,
+                                        transactionId = transactionIndex,
+                                        dateTimeInText = selectedTransactionDateTimeConversionResult.data!!,
+                                        transactionParticulars = selectedTransaction.particulars,
+                                        transactionAmount = selectedTransaction.amount,
+                                        isEditStep = true
+                                    )
+
+                                userTransactionsMap[transactionIndex]!!.event_date_time =
+                                    updateTransactionResult.dateTimeInText
+                                userTransactionsMap[transactionIndex]!!.particulars =
+                                    updateTransactionResult.transactionParticulars
+                                userTransactionsMap[transactionIndex]!!.amount =
+                                    updateTransactionResult.transactionAmount
+                            }
                         }
                     }
 
                     "6" -> {
 
-                        if (isCallNotFromCheckAccounts(functionCallSource = functionCallSource,
+                        if (isCallNotFromCheckAccounts(
+
+                                functionCallSource = functionCallSource,
                                 furtherActionsOnFalse = { invalidOptionMessage() })
                         ) {
 
@@ -284,7 +312,9 @@ internal fun viewTransactions(
                     }
 
                     "0" -> {
+
                         return ViewTransactionsOutput(
+
                             output = "0",
                             addTransactionResult = addTransactionResult
                         )
@@ -292,13 +322,16 @@ internal fun viewTransactions(
                     }
 
                     "" -> {
+
                         if (isCallFromCheckAccounts(
+
                                 functionCallSource = functionCallSource,
                                 furtherActionsOnFalse = { invalidOptionMessage() }
                             )
                         ) {
 
                             return ViewTransactionsOutput(
+
                                 output = "",
                                 addTransactionResult = addTransactionResult
                             )
