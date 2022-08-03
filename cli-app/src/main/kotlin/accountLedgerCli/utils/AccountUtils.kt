@@ -1,6 +1,7 @@
 package accountLedgerCli.utils
 
 import accountLedgerCli.api.response.AccountResponse
+import accountLedgerCli.constants.Constants
 import accountLedgerCli.models.ChooseAccountResult
 
 internal object AccountUtils {
@@ -31,4 +32,36 @@ internal object AccountUtils {
 
     @JvmStatic
     internal val blankChosenAccount = ChooseAccountResult(chosenAccountId = 0u)
+
+    internal fun userAccountsToStringFromListPair(
+
+        userAccountsList: List<Pair<UInt, AccountResponse>>
+
+    ): String {
+
+        var result = ""
+        userAccountsList.forEach { accountEntry -> result += "${Constants.accountText}${accountEntry.first} - ${accountEntry.second.fullName}\n" }
+        return result
+    }
+
+    internal fun userAccountsToStringFromLinkedHashMap(
+
+        userAccountsMap: LinkedHashMap<UInt, AccountResponse>
+
+    ): String {
+
+        var result = ""
+        userAccountsMap.forEach { account -> result += "${Constants.accountText}${account.key} - ${account.value.fullName}\n" }
+        return result
+    }
+
+    //TODO : Write List to String, then rewrite userAccountsToStringFromList, usersToStringFromLinkedHashMap, userAccountsToStringFromLinkedHashMap & userAccountsToStringFromListPair
+
+    internal fun userAccountsToStringFromList(accounts: List<AccountResponse>): String {
+
+        var result = ""
+        accounts.forEach { account -> result += "${Constants.accountText}${account.id} - ${account.name}\n" }
+        return result
+    }
+
 }

@@ -17,6 +17,7 @@ import accountLedgerCli.retrofit.ResponseHolder
 import accountLedgerCli.retrofit.data.AuthenticationDataSource
 import accountLedgerCli.retrofit.data.UsersDataSource
 import accountLedgerCli.to_utils.InputUtils
+import accountLedgerCli.utils.AccountUtils
 import accountLedgerCli.utils.UserUtils
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
@@ -52,7 +53,7 @@ class UserOperations {
             var user: UserCredentials
             if (username.isEmpty() || password.isEmpty()) {
 
-                user = InputUtils.getUserCredentials()
+                user = UserUtils.getUserCredentials()
 
             } else {
 
@@ -71,7 +72,7 @@ class UserOperations {
                             }
 
                             "N" -> {
-                                user = InputUtils.getUserCredentials()
+                                user = UserUtils.getUserCredentials()
                             }
 
                             else -> invalidOptionMessage()
@@ -370,7 +371,7 @@ class UserOperations {
                         commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
                             listOf(
                                 "\nUsers",
-                                usersToStringFromLinkedHashMap(
+                                UserUtils.usersToStringFromLinkedHashMap(
                                     usersMap = usersMap
                                 ),
                                 "1 - Balance Sheet for an User",
@@ -390,7 +391,7 @@ class UserOperations {
                                     chosenUserId = getValidIndex(
                                         map = usersMap,
                                         itemSpecification = Constants.userText,
-                                        items = usersToStringFromLinkedHashMap(usersMap = usersMap)
+                                        items = UserUtils.usersToStringFromLinkedHashMap(usersMap = usersMap)
                                     ), usersMap = usersMap
                                 )
                                 if (chooseUserResult.isChosen) {

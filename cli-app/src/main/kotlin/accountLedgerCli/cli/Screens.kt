@@ -11,6 +11,7 @@ import accountLedgerCli.models.FrequencyOfAccountsModel
 import accountLedgerCli.models.InsertTransactionResult
 import accountLedgerCli.models.UserModel
 import accountLedgerCli.to_models.IsOkModel
+import accountLedgerCli.to_utils.EnumUtils
 import accountLedgerCli.to_utils.JsonFileUtils
 import accountLedgerCli.to_utils.ToDoUtils
 import accountLedgerCli.utils.ApiUtils
@@ -564,7 +565,7 @@ object Screens {
         var menuItems: List<String> = listOf(
             "\nUser : $username",
             "Transaction Type : ${
-                transactionType.name.lowercase().replaceFirstChar { character -> character.uppercaseChar() }
+                EnumUtils.getEnumNameForPrint(localEnum = transactionType)
             }",
             "From Account - ${fromAccount.id} : ${fromAccount.fullName}"
         )

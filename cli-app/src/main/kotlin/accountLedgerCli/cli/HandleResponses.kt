@@ -4,7 +4,7 @@ import accountLedgerCli.api.response.AccountResponse
 import accountLedgerCli.api.response.AccountsResponse
 import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
 import accountLedgerCli.constants.Constants
-import accountLedgerCli.enums.GetAccountsApiCallPurposeEnum
+import accountLedgerCli.enums.AccountTypeEnum
 import accountLedgerCli.enums.HandleAccountsApiResponseResult
 import accountLedgerCli.models.InsertTransactionResult
 import accountLedgerCli.models.ViewTransactionsOutput
@@ -51,7 +51,7 @@ object HandleResponses {
                             CommonConstants.dashedLineSeparator,
                             "Accounts",
                             CommonConstants.dashedLineSeparator,
-                            userAccountsToStringFromListPair(
+                            AccountUtils.userAccountsToStringFromListPair(
                                 userAccountsList = getUserAccountsMapResult.data!!.toList().takeLast(10)
                             ),
                             "1 - Choose Account - By Index Number",
@@ -139,7 +139,7 @@ object HandleResponses {
     internal fun handleAccountsApiResponse(
 
         apiResponse: Result<AccountsResponse>,
-        purpose: GetAccountsApiCallPurposeEnum
+        purpose: AccountTypeEnum
 
     ): HandleAccountsApiResponseResult {
 
@@ -177,7 +177,7 @@ object HandleResponses {
                     commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
                         listOf(
                             "\nAccounts",
-                            userAccountsToStringFromLinkedHashMap(
+                            AccountUtils.userAccountsToStringFromLinkedHashMap(
                                 userAccountsMap = userAccountsMap
                             ),
                             "1 - Choose $purpose Account - By Index Number",
@@ -193,7 +193,7 @@ object HandleResponses {
                                 selectedAccountId = getValidIndex(
                                     map = userAccountsMap,
                                     itemSpecification = Constants.accountText,
-                                    items = userAccountsToStringFromLinkedHashMap(userAccountsMap = userAccountsMap)
+                                    items = AccountUtils.userAccountsToStringFromLinkedHashMap(userAccountsMap = userAccountsMap)
                                 ),
                                 userAccountsMap = userAccountsMap
                             )

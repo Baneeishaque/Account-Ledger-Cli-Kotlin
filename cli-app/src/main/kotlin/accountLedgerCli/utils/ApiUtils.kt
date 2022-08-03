@@ -2,12 +2,14 @@ package accountLedgerCli.utils
 
 import accountLedgerCli.api.response.AccountsResponse
 import accountLedgerCli.retrofit.data.AccountsDataSource
+import accountLedgerCli.to_models.IsOkModel
 import kotlinx.coroutines.runBlocking
 
 internal object ApiUtils {
 
     @JvmStatic
     internal fun getAccountsFull(userId: UInt): Result<AccountsResponse> {
+
         val apiResponse: Result<AccountsResponse>
         val userAccountsDataSource = AccountsDataSource()
         println("Contacting Server...")

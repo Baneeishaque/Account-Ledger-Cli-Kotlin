@@ -2,75 +2,106 @@ package accountLedgerCli.utils
 
 import accountLedgerCli.api.response.AccountResponse
 import accountLedgerCli.api.response.AccountsResponse
+import accountLedgerCli.constants.Constants
+import accountLedgerCli.enums.AccountTypeEnum
 import accountLedgerCli.models.ChooseAccountResult
-import java.util.*
+import accountLedgerCli.models.ChooseByIdResult
+import accountLedgerCli.to_utils.EnumUtils
 
 internal object ChooseAccountUtils {
 
     @JvmStatic
-    internal fun chooseAccountById(userId: UInt): ChooseAccountResult {
+    internal fun chooseAccountById(userId: UInt, accountType: AccountTypeEnum): ChooseAccountResult {
 
-        var accountIdInput: UInt
-        val reader = Scanner(System.`in`)
+//        var accountIdInput: UInt
+//        val reader = Scanner(System.`in`)
+//
+//        while (true) {
+//
+//            print("Enter ${EnumUtils.getEnumNameForPrint(localEnum = accountType)} Account ID or 0 to Back : ")
+//
+//            try {
+//
+//                accountIdInput = reader.nextInt().toUInt()
+//                if (accountIdInput == 0u) return AccountUtils.blankChosenAccount
+//
+//                val apiResponse: Result<AccountsResponse> = ApiUtils.getAccountsFull(userId = userId)
+//                if (apiResponse.isFailure) {
+//
+//                    println("Error : ${(apiResponse.exceptionOrNull() as Exception).localizedMessage}")
+//
+//                    do {
+//                        print("Retry (Y/N) ? : ")
+//                        when (readLine()!!) {
+//                            "Y", "" -> {
+//                                return chooseAccountById(userId = userId, accountType = AccountTypeEnum.TO)
+//                            }
+//
+//                            "N" -> {
+//                                return AccountUtils.blankChosenAccount
+//                            }
+//
+//                            else -> println("Invalid option, try again...")
+//                        }
+//                    } while (true)
+//
+//                } else {
+//
+//                    val accountsResponseResult: AccountsResponse = apiResponse.getOrNull() as AccountsResponse
+//                    if (accountsResponseResult.status == 1u) {
+//
+//                        println("No Accounts...")
+//                        return AccountUtils.blankChosenAccount
+//
+//                    } else {
+//
+//                        val userAccountsMap: LinkedHashMap<UInt, AccountResponse> =
+//                            AccountUtils.prepareUserAccountsMap(accountsResponseResult.accounts)
+//
+//                        if (userAccountsMap.containsKey(accountIdInput)) {
+//
+//                            return ChooseAccountResult(accountIdInput, userAccountsMap[accountIdInput]!!)
+//
+//                        } else {
+//
+//                            println("Invalid Account ID...")
+//                        }
+//                    }
+//                }
+//            } catch (exception: InputMismatchException) {
+//
+//                println("Invalid Account ID...")
+//            }
+//        }
 
-        while (true) {
+        val chooseByIdResult: ChooseByIdResult<AccountsResponse> = ChooseUtils.chooseById(
+            itemSpecification = Constants.accountText,
+            apiCallFunction = fun(): Result<AccountsResponse> {
+                return ApiUtils.getAccountsFull(userId = userId)
+            },
+            prefixForPrompt = "${EnumUtils.getEnumNameForPrint(localEnum = accountType)} "
+        )
+        if (chooseByIdResult.isOkWithData.isOK) {
 
-            print("Enter To Account ID or 0 to Back : ")
+            if (chooseByIdResult.isOkWithData.data!!.status == 1u) {
 
-            try {
+                println("No Accounts...")
 
-                accountIdInput = reader.nextInt().toUInt()
-                if (accountIdInput == 0u) return AccountUtils.blankChosenAccount
+            } else {
 
-                val apiResponse: Result<AccountsResponse> = ApiUtils.getAccountsFull(userId = userId)
-                if (apiResponse.isFailure) {
+                val userAccountsMap: LinkedHashMap<UInt, AccountResponse> =
+                    AccountUtils.prepareUserAccountsMap(chooseByIdResult.isOkWithData.data.accounts)
 
-                    println("Error : ${(apiResponse.exceptionOrNull() as Exception).localizedMessage}")
+                if (userAccountsMap.containsKey(chooseByIdResult.id!!)) {
 
-                    do {
-                        print("Retry (Y/N) ? : ")
-                        val input: String? = readLine()
-                        when (input) {
-                            "Y", "" -> {
-                                return chooseAccountById(userId = userId)
-                            }
-
-                            "N" -> {
-                            }
-
-                            else -> println("Invalid option, try again...")
-                        }
-                    } while (input != "N")
-
-                    return AccountUtils.blankChosenAccount
+                    return ChooseAccountResult(chooseByIdResult.id, userAccountsMap[chooseByIdResult.id]!!)
 
                 } else {
 
-                    val accountsResponseResult: AccountsResponse = apiResponse.getOrNull() as AccountsResponse
-                    if (accountsResponseResult.status == 1u) {
-
-                        println("No Accounts...")
-                        return AccountUtils.blankChosenAccount
-
-                    } else {
-
-                        val userAccountsMap: LinkedHashMap<UInt, AccountResponse> =
-                            AccountUtils.prepareUserAccountsMap(accountsResponseResult.accounts)
-
-                        if (userAccountsMap.containsKey(accountIdInput)) {
-
-                            return ChooseAccountResult(accountIdInput, userAccountsMap[accountIdInput]!!)
-
-                        } else {
-
-                            println("Invalid Account ID...")
-                        }
-                    }
+                    println("Invalid Account ID...")
                 }
-            } catch (exception: InputMismatchException) {
-
-                println("Invalid Account ID...")
             }
         }
+        return AccountUtils.blankChosenAccount
     }
 }

@@ -11,6 +11,7 @@ import accountLedgerCli.retrofit.ResponseHolder
 import accountLedgerCli.retrofit.data.TransactionsDataSource
 import accountLedgerCli.to_utils.InputUtils
 import accountLedgerCli.to_utils.MysqlUtils
+import accountLedgerCli.utils.AccountUtils
 import kotlinx.coroutines.runBlocking
 
 internal fun checkAccountsAffectedAfterSpecifiedDate(
@@ -30,7 +31,7 @@ internal fun checkAccountsAffectedAfterSpecifiedDate(
     println("Contacting Server...")
     val apiResponse: ResponseHolder<TransactionsResponse>
     val specifiedDate: Pair<Boolean, String> =
-        MysqlUtils.normalDateStringToMysqlDateString(normalDateString = inputDate)
+        MysqlUtils.normalDateTextToMysqlDateText(normalDateText = inputDate)
     if (specifiedDate.first) {
         runBlocking {
             apiResponse =
@@ -186,7 +187,7 @@ internal fun viewChildAccounts(
                     listOf(
                         "\nUser : $username",
                         "${fromAccount.fullName} - Child Accounts",
-                        userAccountsToStringFromList(
+                        AccountUtils.userAccountsToStringFromList(
                             accounts = accountsResponseResult.accounts
                         ),
                         "1 - Choose Account - By Index Number",

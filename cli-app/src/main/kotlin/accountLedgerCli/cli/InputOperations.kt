@@ -2,7 +2,7 @@ package accountLedgerCli.cli
 
 import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
 import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithTryPrompt
-import accountLedgerCli.enums.GetAccountsApiCallPurposeEnum
+import accountLedgerCli.enums.AccountTypeEnum
 import accountLedgerCli.enums.HandleAccountsApiResponseResult
 import accountLedgerCli.enums.TransactionTypeEnum
 import accountLedgerCli.to_utils.InputUtils
@@ -83,7 +83,7 @@ internal fun chooseDepositTop(userId: UInt): HandleAccountsApiResponseResult {
 
     return HandleResponses.handleAccountsApiResponse(
         apiResponse = getAccounts(userId = userId),
-        purpose = GetAccountsApiCallPurposeEnum.TO
+        purpose = AccountTypeEnum.TO
     )
 }
 
@@ -91,7 +91,7 @@ internal fun chooseDepositFull(userId: UInt): HandleAccountsApiResponseResult {
 
     return HandleResponses.handleAccountsApiResponse(
         apiResponse = ApiUtils.getAccountsFull(userId = userId),
-        purpose = GetAccountsApiCallPurposeEnum.TO
+        purpose = AccountTypeEnum.TO
     )
 }
 
@@ -99,7 +99,7 @@ internal fun chooseWithdrawTop(userId: UInt): HandleAccountsApiResponseResult {
 
     return HandleResponses.handleAccountsApiResponse(
         apiResponse = getAccounts(userId = userId),
-        purpose = GetAccountsApiCallPurposeEnum.FROM
+        purpose = AccountTypeEnum.FROM
     )
 }
 
@@ -107,7 +107,7 @@ internal fun chooseWithdrawFull(userId: UInt): HandleAccountsApiResponseResult {
 
     return HandleResponses.handleAccountsApiResponse(
         apiResponse = ApiUtils.getAccountsFull(userId),
-        purpose = GetAccountsApiCallPurposeEnum.FROM
+        purpose = AccountTypeEnum.FROM
     )
 }
 
@@ -115,7 +115,7 @@ internal fun chooseViaTop(userId: UInt): HandleAccountsApiResponseResult {
 
     return HandleResponses.handleAccountsApiResponse(
         apiResponse = getAccounts(userId = userId),
-        purpose = GetAccountsApiCallPurposeEnum.VIA
+        purpose = AccountTypeEnum.VIA
     )
 }
 
@@ -123,7 +123,7 @@ internal fun chooseViaFull(userId: UInt): HandleAccountsApiResponseResult {
 
     return HandleResponses.handleAccountsApiResponse(
         apiResponse = ApiUtils.getAccountsFull(userId),
-        purpose = GetAccountsApiCallPurposeEnum.VIA
+        purpose = AccountTypeEnum.VIA
     )
 }
 

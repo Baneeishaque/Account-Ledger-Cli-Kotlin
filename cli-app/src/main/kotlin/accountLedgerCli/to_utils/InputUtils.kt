@@ -69,15 +69,4 @@ object InputUtils {
             getValidDateInNormalPattern()
         }
     }
-
-    @JvmStatic
-    internal fun getUserCredentials(): UserCredentials {
-
-        val user = UserCredentials(username = "", passcode = "")
-        print("Enter Your Username : ")
-        user.username = readLine().toString()
-        print("Enter Your Password : ")
-        user.passcode = readLine().toString()
-        return user
-    }
 }

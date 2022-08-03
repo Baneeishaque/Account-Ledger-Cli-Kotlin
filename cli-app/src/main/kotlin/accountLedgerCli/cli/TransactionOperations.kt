@@ -11,7 +11,9 @@ import accountLedgerCli.models.ViewTransactionsOutput
 import accountLedgerCli.retrofit.ResponseHolder
 import accountLedgerCli.to_models.IsOkModel
 import accountLedgerCli.to_utils.ToDoUtils
+import accountLedgerCli.utils.AccountUtils
 import accountLedgerCli.utils.ApiUtils
+import accountLedgerCli.utils.TransactionUtils
 
 internal fun viewTransactions(
 
@@ -70,8 +72,8 @@ internal fun viewTransactions(
 
     } else {
 
-        val userTransactionsResponseResult: TransactionsResponse = apiResponse.getValue() as TransactionsResponse
-        if (userTransactionsResponseResult.status == 1u) {
+        val userTransactionsResponse: TransactionsResponse = apiResponse.getValue() as TransactionsResponse
+        if (userTransactionsResponse.status == 1u) {
 
             println("Account - $accountFullName")
             println("No Transactions...")
@@ -93,8 +95,8 @@ internal fun viewTransactions(
                 var menuItems: List<String> = listOf(
                     "\nUser : $username",
                     "$accountFullName - Transactions",
-                    printAccountLedger(
-                        transactions = userTransactionsResponseResult.transactions,
+                    TransactionUtils.userTransactionsToStringFromList(
+                        transactions = userTransactionsResponse.transactions,
                         currentAccountId = accountId
                     )
                 )
@@ -109,7 +111,8 @@ internal fun viewTransactions(
                         return ViewTransactionsOutput(
                             output = "",
                             addTransactionResult = InsertTransactionResult(
-                                isSuccess = false, dateTimeInText = dateTimeInText,
+                                isSuccess = false,
+                                dateTimeInText = dateTimeInText,
                                 transactionParticulars = transactionParticulars,
                                 transactionAmount = transactionAmount
                             )
@@ -140,7 +143,7 @@ internal fun viewTransactions(
                 )
                 when (choice) {
 
-                    "1", "2", "3", "4" -> {
+                    "1", "2", "4" -> {
 
                         if (functionCallSourceEnum == FunctionCallSourceEnum.FROM_CHECK_ACCOUNTS) {
 
@@ -150,6 +153,33 @@ internal fun viewTransactions(
 
                             ToDoUtils.showTodo()
                         }
+                    }
+
+                    "3" -> {
+                        val transactionIndex: UInt = getValidIndex(
+                            map = TransactionUtils.prepareUserTransactionsMap(transactions = userTransactionsResponse.transactions),
+                            itemSpecification = Constants.transactionText,
+                            items = TransactionUtils.userTransactionsToStringFromList(
+                                transactions = userTransactionsResponse.transactions,
+                                currentAccountId = fromAccount.id
+                            )
+                        )
+                        val userAccountsMap: LinkedHashMap<UInt, AccountResponse> = AccountUtils.prepareUserAccountsMap(
+                            accounts = ApiUtils.getAccountsFull(userId = userId).getOrNull()!!.accounts
+                        )
+                        addTransactionResult = InsertOperations.addTransactionStep2(
+                            userId = userId,
+                            username = username,
+                            transactionType = TransactionTypeEnum.NORMAL,
+                            fromAccount = userAccountsMap[userTransactionsResponse.transactions[transactionIndex.toInt()].from_account_id]!!,
+                            viaAccount = viaAccount,
+                            toAccount = toAccount,
+                            transactionId = transactionIndex,
+                            dateTimeInText = dateTimeInText,
+                            transactionParticulars = transactionParticulars,
+                            transactionAmount = transactionAmount,
+                            isEditStep = true
+                        )
                     }
 
                     "5" -> {
@@ -231,7 +261,7 @@ internal fun viewTransactionsOfSpecificAccount(
 
                     map = getUserAccountsMapResult.data!!,
                     itemSpecification = Constants.accountText,
-                    items = userAccountsToStringFromLinkedHashMap(userAccountsMap = getUserAccountsMapResult.data),
+                    items = AccountUtils.userAccountsToStringFromLinkedHashMap(userAccountsMap = getUserAccountsMapResult.data),
                 )
                 if (accountIndex != 0u) {
                     viewTransactions(

@@ -3,6 +3,7 @@ package accountLedgerCli.cli
 import accountLedgerCli.api.response.AccountResponse
 import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
 import accountLedgerCli.constants.Constants
+import accountLedgerCli.utils.AccountUtils
 
 internal fun searchAccount(userAccountsMap: LinkedHashMap<UInt, AccountResponse>): UInt {
 
@@ -34,7 +35,7 @@ internal fun searchAccount(userAccountsMap: LinkedHashMap<UInt, AccountResponse>
             commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
                 listOf(
                     "\nSearch Results",
-                    userAccountsToStringFromLinkedHashMap(userAccountsMap = searchResult),
+                    AccountUtils.userAccountsToStringFromLinkedHashMap(userAccountsMap = searchResult),
                     "1 - Choose Deposit Account - By Index Number",
                     "0 - Back",
                     "",
@@ -46,7 +47,7 @@ internal fun searchAccount(userAccountsMap: LinkedHashMap<UInt, AccountResponse>
                 return getValidIndex(
                     map = searchResult,
                     itemSpecification = Constants.accountText,
-                    items = userAccountsToStringFromLinkedHashMap(userAccountsMap = searchResult)
+                    items = AccountUtils.userAccountsToStringFromLinkedHashMap(userAccountsMap = searchResult)
                 )
             } else if (input != "0") {
                 invalidOptionMessage()

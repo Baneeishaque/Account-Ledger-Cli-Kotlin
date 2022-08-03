@@ -1,6 +1,5 @@
 package accountLedgerCli.models
 
-
 import accountLedgerCli.constants.UserJsonObjectFields
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

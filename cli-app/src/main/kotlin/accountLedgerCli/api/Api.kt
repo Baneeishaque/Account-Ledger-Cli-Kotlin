@@ -45,6 +45,17 @@ internal interface Api {
         @Field("to_account_id") toAccountId: UInt
     ): Response<InsertionResponse>
 
+    @FormUrlEncoded
+    @POST("${ApiConstants.updateTransactionMethod}.${ApiConstants.serverFileExtension}")
+    suspend fun updateTransaction(
+        @Field("event_date_time") eventDateTimeString: String,
+        @Field("particulars") particulars: String,
+        @Field("amount") amount: Float,
+        @Field("from_account_id") fromAccountId: UInt,
+        @Field("to_account_id") toAccountId: UInt,
+        @Field("id") transactionId: UInt
+    ): Response<InsertionResponse>
+
     @GET("${ApiConstants.selectUserTransactionsAfterSpecifiedDateMethod}.${ApiConstants.serverFileExtension}")
     suspend fun selectUserTransactionsAfterSpecifiedDate(
         @Query("user_id") userId: UInt,

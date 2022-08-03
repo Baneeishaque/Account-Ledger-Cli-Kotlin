@@ -11,6 +11,7 @@ import accountLedgerCli.retrofit.ResponseHolder
 import accountLedgerCli.retrofit.data.TransactionsDataSource
 import accountLedgerCli.to_utils.DateTimeUtils
 import accountLedgerCli.to_utils.MysqlUtils
+import accountLedgerCli.utils.UserUtils
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 
@@ -20,7 +21,7 @@ internal fun balanceSheetOfUser(usersMap: LinkedHashMap<UInt, UserResponse>) {
 
             map = usersMap,
             itemSpecification = Constants.userText,
-            items = usersToStringFromLinkedHashMap(usersMap = usersMap),
+            items = UserUtils.usersToStringFromLinkedHashMap(usersMap = usersMap),
 
             ), usersMap = usersMap
     )
@@ -46,8 +47,8 @@ internal fun printBalanceSheetOfUser(
     }
     val apiResponse: ResponseHolder<TransactionsResponse>
     // TODO : Change to data class
-    val specifiedDate: Pair<Boolean, String> = MysqlUtils.normalDateStringToMysqlDateString(
-        normalDateString = getUserInitialTransactionDateFromUsername(username = currentUserName).minusDays(
+    val specifiedDate: Pair<Boolean, String> = MysqlUtils.normalDateTextToMysqlDateText(
+        normalDateText = getUserInitialTransactionDateFromUsername(username = currentUserName).minusDays(
             1
         ).format(DateTimeUtils.normalDatePattern)
     )

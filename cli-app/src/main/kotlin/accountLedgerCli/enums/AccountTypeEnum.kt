@@ -1,5 +1,5 @@
 package accountLedgerCli.enums
 
-enum class GetAccountsApiCallPurposeEnum {
+enum class AccountTypeEnum {
     TO, FROM, VIA
 }

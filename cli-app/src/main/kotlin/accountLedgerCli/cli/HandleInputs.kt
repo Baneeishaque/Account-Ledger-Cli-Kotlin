@@ -7,6 +7,7 @@ import accountLedgerCli.models.ChooseUserResult
 import accountLedgerCli.models.InsertTransactionResult
 import accountLedgerCli.models.ViewTransactionsOutput
 import accountLedgerCli.to_utils.ToDoUtils
+import accountLedgerCli.utils.AccountUtils
 
 internal fun processChildAccountScreenInput(
 
@@ -34,7 +35,7 @@ internal fun processChildAccountScreenInput(
                 accountId = getValidIndex(
                     map = userAccountsMap,
                     itemSpecification = Constants.accountText,
-                    items = userAccountsToStringFromLinkedHashMap(userAccountsMap = userAccountsMap)
+                    items = AccountUtils.userAccountsToStringFromLinkedHashMap(userAccountsMap = userAccountsMap)
                 ),
                 userAccountsMap = userAccountsMap,
                 userId = userId,

@@ -5,16 +5,13 @@ import accountLedgerCli.api.response.InsertionResponse
 import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
 import accountLedgerCli.constants.Constants
 import accountLedgerCli.enums.AccountExchangeTypeEnum
-import accountLedgerCli.enums.GetAccountsApiCallPurposeEnum
+import accountLedgerCli.enums.AccountTypeEnum
 import accountLedgerCli.enums.HandleAccountsApiResponseResult
 import accountLedgerCli.enums.TransactionTypeEnum
 import accountLedgerCli.models.*
 import accountLedgerCli.retrofit.data.TransactionDataSource
 import accountLedgerCli.to_models.IsOkModel
-import accountLedgerCli.to_utils.DateTimeUtils
-import accountLedgerCli.to_utils.InputUtils
-import accountLedgerCli.to_utils.JsonFileUtils
-import accountLedgerCli.to_utils.MysqlUtils
+import accountLedgerCli.to_utils.*
 import accountLedgerCli.utils.ApiUtils
 import accountLedgerCli.utils.ChooseAccountUtils
 import kotlinx.coroutines.runBlocking
@@ -200,7 +197,7 @@ object InsertOperations {
                         transactionType = transactionType,
                         account1 = fromAccount,
                         account2 = viaAccount,
-                        purpose = GetAccountsApiCallPurposeEnum.TO,
+                        purpose = AccountTypeEnum.TO,
                         dateTimeInText = dateTimeInText,
                         transactionParticulars = transactionParticulars,
                         transactionAmount = transactionAmount
@@ -215,7 +212,7 @@ object InsertOperations {
                         transactionType = transactionType,
                         account1 = fromAccount,
                         account2 = viaAccount,
-                        purpose = GetAccountsApiCallPurposeEnum.TO,
+                        purpose = AccountTypeEnum.TO,
                         dateTimeInText = dateTimeInText,
                         transactionParticulars = transactionParticulars,
                         transactionAmount = transactionAmount
@@ -224,7 +221,10 @@ object InsertOperations {
 
                 "3" -> {
 
-                    val chooseAccountResult: ChooseAccountResult = ChooseAccountUtils.chooseAccountById(userId = userId)
+                    val chooseAccountResult: ChooseAccountResult = ChooseAccountUtils.chooseAccountById(
+                        userId = userId,
+                        accountType = AccountTypeEnum.TO
+                    )
                     if (chooseAccountResult.chosenAccountId != 0u) {
 
                         return processSelectedAccount(
@@ -234,7 +234,7 @@ object InsertOperations {
                             transactionType = transactionType,
                             account1 = fromAccount,
                             account2 = viaAccount,
-                            purpose = GetAccountsApiCallPurposeEnum.TO,
+                            purpose = AccountTypeEnum.TO,
                             dateTimeInText = dateTimeInText,
                             transactionParticulars = transactionParticulars,
                             transactionAmount = transactionAmount
@@ -250,7 +250,7 @@ object InsertOperations {
                         transactionType = transactionType,
                         account1 = viaAccount,
                         account2 = toAccount,
-                        purpose = GetAccountsApiCallPurposeEnum.FROM,
+                        purpose = AccountTypeEnum.FROM,
                         dateTimeInText = dateTimeInText,
                         transactionParticulars = transactionParticulars,
                         transactionAmount = transactionAmount
@@ -265,7 +265,7 @@ object InsertOperations {
                         transactionType = transactionType,
                         account1 = viaAccount,
                         account2 = toAccount,
-                        purpose = GetAccountsApiCallPurposeEnum.FROM,
+                        purpose = AccountTypeEnum.FROM,
                         dateTimeInText = dateTimeInText,
                         transactionParticulars = transactionParticulars,
                         transactionAmount = transactionAmount
@@ -273,7 +273,10 @@ object InsertOperations {
                 }
 
                 "6" -> {
-                    val chooseAccountResult: ChooseAccountResult = ChooseAccountUtils.chooseAccountById(userId = userId)
+                    val chooseAccountResult: ChooseAccountResult = ChooseAccountUtils.chooseAccountById(
+                        userId = userId,
+                        accountType = AccountTypeEnum.FROM
+                    )
                     if (chooseAccountResult.chosenAccountId != 0u) {
 
                         return processSelectedAccount(
@@ -283,7 +286,7 @@ object InsertOperations {
                             transactionType = transactionType,
                             account1 = viaAccount,
                             account2 = toAccount,
-                            purpose = GetAccountsApiCallPurposeEnum.FROM,
+                            purpose = AccountTypeEnum.FROM,
                             dateTimeInText = dateTimeInText,
                             transactionParticulars = transactionParticulars,
                             transactionAmount = transactionAmount
@@ -460,7 +463,7 @@ object InsertOperations {
                             transactionType = transactionType,
                             account1 = fromAccount,
                             account2 = toAccount,
-                            purpose = GetAccountsApiCallPurposeEnum.VIA,
+                            purpose = AccountTypeEnum.VIA,
                             dateTimeInText = dateTimeInText,
                             transactionParticulars = transactionParticulars,
                             transactionAmount = transactionAmount
@@ -481,7 +484,7 @@ object InsertOperations {
                             transactionType = transactionType,
                             account1 = fromAccount,
                             account2 = toAccount,
-                            purpose = GetAccountsApiCallPurposeEnum.VIA,
+                            purpose = AccountTypeEnum.VIA,
                             dateTimeInText = dateTimeInText,
                             transactionParticulars = transactionParticulars,
                             transactionAmount = transactionAmount
@@ -496,7 +499,7 @@ object InsertOperations {
                     if (transactionType == TransactionTypeEnum.VIA) {
 
                         val chooseAccountResult: ChooseAccountResult =
-                            ChooseAccountUtils.chooseAccountById(userId = userId)
+                            ChooseAccountUtils.chooseAccountById(userId = userId, accountType = AccountTypeEnum.VIA)
                         if (chooseAccountResult.chosenAccountId != 0u) {
 
                             return processSelectedAccount(
@@ -506,7 +509,7 @@ object InsertOperations {
                                 transactionType = transactionType,
                                 account1 = fromAccount,
                                 account2 = toAccount,
-                                purpose = GetAccountsApiCallPurposeEnum.VIA,
+                                purpose = AccountTypeEnum.VIA,
                                 dateTimeInText = dateTimeInText,
                                 transactionParticulars = transactionParticulars,
                                 transactionAmount = transactionAmount
@@ -540,7 +543,7 @@ object InsertOperations {
         transactionType: TransactionTypeEnum,
         account1: AccountResponse,
         account2: AccountResponse,
-        purpose: GetAccountsApiCallPurposeEnum,
+        purpose: AccountTypeEnum,
         dateTimeInText: String,
         transactionParticulars: String,
         transactionAmount: Float
@@ -579,7 +582,7 @@ object InsertOperations {
         transactionType: TransactionTypeEnum,
         account1: AccountResponse,
         account2: AccountResponse,
-        purpose: GetAccountsApiCallPurposeEnum,
+        purpose: AccountTypeEnum,
         dateTimeInText: String,
         transactionParticulars: String,
         transactionAmount: Float
@@ -588,7 +591,7 @@ object InsertOperations {
 
         when (purpose) {
 
-            GetAccountsApiCallPurposeEnum.TO -> {
+            AccountTypeEnum.TO -> {
 
                 return transactionContinueCheck(
                     userId = userId,
@@ -603,7 +606,7 @@ object InsertOperations {
                 )
             }
 
-            GetAccountsApiCallPurposeEnum.FROM -> {
+            AccountTypeEnum.FROM -> {
 
                 return transactionContinueCheck(
                     userId = userId,
@@ -618,7 +621,7 @@ object InsertOperations {
                 )
             }
 
-            GetAccountsApiCallPurposeEnum.VIA -> {
+            AccountTypeEnum.VIA -> {
 
                 return transactionContinueCheck(
                     userId = userId,
@@ -673,9 +676,11 @@ object InsertOperations {
         toAccount: AccountResponse,
         isViaStep: Boolean = false,
         isTwoWayStep: Boolean = false,
+        transactionId: UInt = 0u,
         dateTimeInText: String,
         transactionParticulars: String,
-        transactionAmount: Float
+        transactionAmount: Float,
+        isEditStep: Boolean = false
 
     ): InsertTransactionResult {
 
@@ -901,40 +906,72 @@ object InsertOperations {
 
                             "Y", "" -> {
 
-                                when (transactionType) {
+                                if (isEditStep) {
 
-                                    TransactionTypeEnum.NORMAL, TransactionTypeEnum.TWO_WAY -> {
+                                    when (transactionType) {
 
-                                        return InsertTransactionResult(
-                                            isSuccess = insertTransaction(
-                                                userId = userId,
-                                                eventDateTime = localDateTimeInText,
-                                                particulars = localTransactionParticulars,
-                                                amount = localTransactionAmount,
-                                                fromAccount = fromAccount,
-                                                toAccount = toAccount
-                                            ),
-                                            dateTimeInText = localDateTimeInText,
-                                            transactionParticulars = localTransactionParticulars,
-                                            transactionAmount = localTransactionAmount
-                                        )
+                                        TransactionTypeEnum.NORMAL -> {
+
+                                            return InsertTransactionResult(
+                                                isSuccess = updateTransaction(
+                                                    transactionId = transactionId,
+                                                    eventDateTime = localDateTimeInText,
+                                                    particulars = localTransactionParticulars,
+                                                    amount = localTransactionAmount,
+                                                    fromAccount = fromAccount,
+                                                    toAccount = toAccount
+                                                ),
+                                                dateTimeInText = localDateTimeInText,
+                                                transactionParticulars = localTransactionParticulars,
+                                                transactionAmount = localTransactionAmount
+                                            )
+                                        }
+
+                                        TransactionTypeEnum.VIA -> {
+                                            ToDoUtils.showTodo()
+                                        }
+
+                                        TransactionTypeEnum.TWO_WAY -> {
+                                            ToDoUtils.showTodo()
+                                        }
                                     }
 
-                                    TransactionTypeEnum.VIA -> {
+                                } else {
+                                    when (transactionType) {
 
-                                        return InsertTransactionResult(
-                                            isSuccess = insertTransaction(
-                                                userId = userId,
-                                                eventDateTime = localDateTimeInText,
-                                                particulars = localTransactionParticulars,
-                                                amount = localTransactionAmount,
-                                                fromAccount = fromAccount,
-                                                toAccount = viaAccount
-                                            ),
-                                            dateTimeInText = localDateTimeInText,
-                                            transactionParticulars = localTransactionParticulars,
-                                            transactionAmount = localTransactionAmount
-                                        )
+                                        TransactionTypeEnum.NORMAL, TransactionTypeEnum.TWO_WAY -> {
+
+                                            return InsertTransactionResult(
+                                                isSuccess = insertTransaction(
+                                                    userId = userId,
+                                                    eventDateTime = localDateTimeInText,
+                                                    particulars = localTransactionParticulars,
+                                                    amount = localTransactionAmount,
+                                                    fromAccount = fromAccount,
+                                                    toAccount = toAccount
+                                                ),
+                                                dateTimeInText = localDateTimeInText,
+                                                transactionParticulars = localTransactionParticulars,
+                                                transactionAmount = localTransactionAmount
+                                            )
+                                        }
+
+                                        TransactionTypeEnum.VIA -> {
+
+                                            return InsertTransactionResult(
+                                                isSuccess = insertTransaction(
+                                                    userId = userId,
+                                                    eventDateTime = localDateTimeInText,
+                                                    particulars = localTransactionParticulars,
+                                                    amount = localTransactionAmount,
+                                                    fromAccount = fromAccount,
+                                                    toAccount = viaAccount
+                                                ),
+                                                dateTimeInText = localDateTimeInText,
+                                                transactionParticulars = localTransactionParticulars,
+                                                transactionAmount = localTransactionAmount
+                                            )
+                                        }
                                     }
                                 }
                             }
@@ -1132,7 +1169,7 @@ object InsertOperations {
 
         // TODO : Change to data class
         val eventDateTimeConversionResult: Pair<Boolean, String> =
-            MysqlUtils.normalDateTimeStringToMysqlDateTimeString(normalDateTimeString = eventDateTime)
+            MysqlUtils.normalDateTimeTextToMysqlDateTimeText(normalDateTimeText = eventDateTime)
 
         if (eventDateTimeConversionResult.first) {
 
@@ -1231,6 +1268,83 @@ object InsertOperations {
                         )
                     }
 
+                    return true
+
+                } else {
+
+                    println("Server Execution Error : ${insertionResponseResult.error}")
+                }
+            }
+        } else {
+
+            println("Date Error : ${eventDateTimeConversionResult.second}")
+        }
+        return false
+    }
+
+    private fun updateTransaction(
+
+        transactionId: UInt,
+        eventDateTime: String,
+        particulars: String,
+        amount: Float,
+        fromAccount: AccountResponse,
+        toAccount: AccountResponse
+
+    ): Boolean {
+
+        val apiResponse: Result<InsertionResponse>
+        val userTransactionDataSource = TransactionDataSource()
+
+        // TODO : Change to data class
+        val eventDateTimeConversionResult: Pair<Boolean, String> =
+            MysqlUtils.normalDateTimeTextToMysqlDateTimeText(normalDateTimeText = eventDateTime)
+
+        if (eventDateTimeConversionResult.first) {
+
+            println("Contacting Server...")
+            runBlocking {
+                apiResponse = userTransactionDataSource.updateTransaction(
+                    transactionId = transactionId,
+                    fromAccountId = fromAccount.id,
+                    eventDateTimeString = eventDateTimeConversionResult.second,
+                    particulars = particulars,
+                    amount = amount,
+                    toAccountId = toAccount.id
+                )
+            }
+            //    println("Response : $apiResponse")
+            if (apiResponse.isFailure) {
+
+                println("Error : ${(apiResponse.exceptionOrNull() as Exception).localizedMessage}")
+                do {
+                    print("Retry (Y/N) ? : ")
+                    when (readLine()!!) {
+                        "Y", "" -> {
+                            return updateTransaction(
+                                transactionId = transactionId,
+                                eventDateTime = eventDateTime,
+                                particulars = particulars,
+                                amount = amount,
+                                fromAccount = fromAccount,
+                                toAccount = toAccount
+                            )
+                        }
+
+                        "N" -> {
+                            return false
+                        }
+
+                        else -> println("Invalid option, try again...")
+                    }
+                } while (true)
+
+            } else {
+
+                val insertionResponseResult: InsertionResponse = apiResponse.getOrNull()!!
+                if (insertionResponseResult.status == 0u) {
+
+                    println("OK...")
                     return true
 
                 } else {

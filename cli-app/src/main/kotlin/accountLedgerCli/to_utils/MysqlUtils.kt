@@ -15,11 +15,11 @@ object MysqlUtils {
 
     //TODO : Replace with data class
     @JvmStatic
-    fun normalDateTimeStringToMysqlDateTimeString(normalDateTimeString: String): Pair<Boolean, String> {
+    fun normalDateTimeTextToMysqlDateTimeText(normalDateTimeText: String): Pair<Boolean, String> {
 
         return try {
 
-            val result: String = LocalDateTime.parse(normalDateTimeString, DateTimeUtils.normalDateTimePattern)
+            val result: String = LocalDateTime.parse(normalDateTimeText, DateTimeUtils.normalDateTimePattern)
                 .format(mysqlDateTimePattern)
             Pair(true, result)
 
@@ -30,12 +30,12 @@ object MysqlUtils {
     }
 
     @JvmStatic
-    fun normalDateStringToMysqlDateString(normalDateString: String): Pair<Boolean, String> {
+    fun normalDateTextToMysqlDateText(normalDateText: String): Pair<Boolean, String> {
 
         return try {
 
             val result: String =
-                LocalDate.parse(normalDateString, DateTimeUtils.normalDatePattern).format(mysqlDatePattern)
+                LocalDate.parse(normalDateText, DateTimeUtils.normalDatePattern).format(mysqlDatePattern)
             Pair(true, result)
 
         } catch (e: DateTimeParseException) {
