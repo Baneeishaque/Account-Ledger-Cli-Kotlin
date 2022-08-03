@@ -11,9 +11,10 @@ import accountLedgerCli.utils.ApiUtils
 
 internal fun <T> getValidIndex(
 
-    map: LinkedHashMap<UInt, T>,
+    map: Map<UInt, T>,
     itemSpecification: String,
-    items: String
+    items: String,
+    itemSpecificationPrefix: String = ""
 
 ): UInt {
 
@@ -21,7 +22,7 @@ internal fun <T> getValidIndex(
         listOf(
             "\n${itemSpecification}s",
             items,
-            "Enter $itemSpecification Index, or O to back : ${itemSpecification.first()}"
+            "Enter $itemSpecificationPrefix$itemSpecification Index, or O to back : ${itemSpecification.first()}"
         )
     )
 

@@ -14,7 +14,7 @@ internal object TransactionUtils {
         return userTransactionsMap
     }
 
-    internal fun userTransactionsToStringFromList(
+    internal fun userTransactionsToTextFromList(
         transactions: List<TransactionResponse>,
         currentAccountId: UInt
     ): String {

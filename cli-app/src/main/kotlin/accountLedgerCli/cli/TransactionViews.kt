@@ -97,7 +97,7 @@ internal fun viewTransactions(
                 var menuItems: List<String> = listOf(
                     "\nUser : $username",
                     "$accountFullName - Transactions",
-                    TransactionUtils.userTransactionsToStringFromList(
+                    TransactionUtils.userTransactionsToTextFromList(
                         transactions = userTransactionsResponse.transactions,
                         currentAccountId = accountId
                     )
@@ -124,10 +124,11 @@ internal fun viewTransactions(
                     else -> {
                         menuItems = menuItems + listOf(
                             "1 - Delete Transaction - By Index Number",
-                            "2 - Delete Transaction - By Search",
-                            "3 - Edit Transaction - By Index Number",
-                            "4 - Edit Transaction - By Search",
-                            "5 - Add Transaction",
+                            "2 - Delete Transactions - From Index to Index",
+                            "3 - Delete Transaction - By Search",
+                            "4 - Edit Transaction - By Index Number",
+                            "5 - Edit Transaction - By Search",
+                            "6 - Add Transaction",
                             "0 - Back",
                             "",
                             "Enter Your Choice : "
@@ -155,7 +156,7 @@ internal fun viewTransactions(
                             val transactionIndex: UInt = getValidIndex(
                                 map = TransactionUtils.prepareUserTransactionsMap(transactions = userTransactionsResponse.transactions),
                                 itemSpecification = Constants.transactionText,
-                                items = TransactionUtils.userTransactionsToStringFromList(
+                                items = TransactionUtils.userTransactionsToTextFromList(
                                     transactions = userTransactionsResponse.transactions,
                                     currentAccountId = fromAccount.id
                                 )
@@ -169,7 +170,55 @@ internal fun viewTransactions(
                         }
                     }
 
-                    "2", "4" -> {
+                    "2" -> {
+                        if (isCallNotFromCheckAccounts(
+                                functionCallSource = functionCallSource,
+                                furtherActionsOnFalse = { invalidOptionMessage() })
+                        ) {
+                            val userTransactionsMap: LinkedHashMap<UInt, TransactionResponse> =
+                                TransactionUtils.prepareUserTransactionsMap(transactions = userTransactionsResponse.transactions)
+                            val userTransactionsText: String = TransactionUtils.userTransactionsToTextFromList(
+                                transactions = userTransactionsResponse.transactions,
+                                currentAccountId = fromAccount.id
+                            )
+
+                            val transactionStartIndex: UInt = getValidIndex(
+                                map = userTransactionsMap,
+                                itemSpecification = Constants.transactionText,
+                                items = userTransactionsText,
+                                itemSpecificationPrefix = "Start "
+                            )
+                            if (transactionStartIndex != 0u) {
+
+                                val transactionEndIndex: UInt = getValidIndex(
+                                    map = userTransactionsMap.filterKeys { transactionId: UInt -> transactionId > transactionStartIndex },
+                                    itemSpecification = Constants.transactionText,
+                                    items = userTransactionsText,
+                                    itemSpecificationPrefix = "End "
+                                )
+                                if (transactionEndIndex != 0u) {
+
+                                    userTransactionsMap.filterKeys { transactionId: UInt ->
+                                        transactionId in transactionStartIndex..transactionEndIndex
+                                    }
+                                        .forEach { transactionMapEntry: Map.Entry<UInt, TransactionResponse> ->
+
+                                            if (InsertOperations.deleteTransaction(transactionId = transactionMapEntry.key)) {
+
+                                                userTransactionsResponse.transactions =
+                                                    userTransactionsResponse.transactions.filter { transactionResponse: TransactionResponse -> transactionResponse.id != transactionMapEntry.key }
+                                            } else {
+
+                                                // TODO : Continue with confirmation
+                                                return@forEach
+                                            }
+                                        }
+                                }
+                            }
+                        }
+                    }
+
+                    "3", "5" -> {
 
                         if (isCallNotFromCheckAccounts(functionCallSource = functionCallSource,
                                 furtherActionsOnFalse = { invalidOptionMessage() })
@@ -179,7 +228,7 @@ internal fun viewTransactions(
                         }
                     }
 
-                    "3" -> {
+                    "4" -> {
 
                         if (isCallNotFromCheckAccounts(functionCallSource = functionCallSource,
                                 furtherActionsOnFalse = { invalidOptionMessage() })
@@ -188,7 +237,7 @@ internal fun viewTransactions(
                             val transactionIndex: UInt = getValidIndex(
                                 map = TransactionUtils.prepareUserTransactionsMap(transactions = userTransactionsResponse.transactions),
                                 itemSpecification = Constants.transactionText,
-                                items = TransactionUtils.userTransactionsToStringFromList(
+                                items = TransactionUtils.userTransactionsToTextFromList(
                                     transactions = userTransactionsResponse.transactions,
                                     currentAccountId = fromAccount.id
                                 )
@@ -213,7 +262,7 @@ internal fun viewTransactions(
                         }
                     }
 
-                    "5" -> {
+                    "6" -> {
 
                         if (isCallNotFromCheckAccounts(functionCallSource = functionCallSource,
                                 furtherActionsOnFalse = { invalidOptionMessage() })
