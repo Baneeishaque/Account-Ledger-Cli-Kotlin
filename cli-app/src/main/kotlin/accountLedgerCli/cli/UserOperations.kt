@@ -115,7 +115,10 @@ class UserOperations {
                                     isSuccess = false,
                                     dateTimeInText = dateTimeInText,
                                     transactionParticulars = transactionParticulars,
-                                    transactionAmount = transactionAmount
+                                    transactionAmount = transactionAmount,
+                                    fromAccount = fromAccount,
+                                    viaAccount = viaAccount,
+                                    toAccount = toAccount
                                 )
                             }
 
@@ -150,7 +153,10 @@ class UserOperations {
                                 isSuccess = false,
                                 dateTimeInText = dateTimeInText,
                                 transactionParticulars = transactionParticulars,
-                                transactionAmount = transactionAmount
+                                transactionAmount = transactionAmount,
+                                fromAccount = fromAccount,
+                                viaAccount = viaAccount,
+                                toAccount = toAccount
                             )
 
                         } else {
@@ -268,7 +274,10 @@ class UserOperations {
                                 isSuccess = false,
                                 dateTimeInText = dateTimeInText,
                                 transactionParticulars = transactionParticulars,
-                                transactionAmount = transactionAmount
+                                transactionAmount = transactionAmount,
+                                fromAccount = fromAccount,
+                                viaAccount = viaAccount,
+                                toAccount = toAccount
                             )
 
                         } else {
@@ -289,7 +298,10 @@ class UserOperations {
                 isSuccess = false,
                 dateTimeInText = dateTimeInText,
                 transactionParticulars = transactionParticulars,
-                transactionAmount = transactionAmount
+                transactionAmount = transactionAmount,
+                fromAccount = fromAccount,
+                viaAccount = viaAccount,
+                toAccount = toAccount
             )
         }
 
@@ -328,7 +340,7 @@ class UserOperations {
                                 toAccount = toAccount,
                                 dateTimeInText = dateTimeInText,
                                 transactionParticulars = transactionParticulars,
-                                transactionAmount = transactionAmount,
+                                transactionAmount = transactionAmount
                             )
                         }
 
@@ -337,7 +349,10 @@ class UserOperations {
                                 isSuccess = false,
                                 dateTimeInText = dateTimeInText,
                                 transactionParticulars = transactionParticulars,
-                                transactionAmount = transactionAmount
+                                transactionAmount = transactionAmount,
+                                fromAccount = fromAccount,
+                                viaAccount = viaAccount,
+                                toAccount = toAccount
                             )
                         }
 
@@ -354,7 +369,10 @@ class UserOperations {
                         isSuccess = false,
                         dateTimeInText = dateTimeInText,
                         transactionParticulars = transactionParticulars,
-                        transactionAmount = transactionAmount
+                        transactionAmount = transactionAmount,
+                        fromAccount = fromAccount,
+                        viaAccount = viaAccount,
+                        toAccount = toAccount
                     )
 
                 } else {
@@ -364,7 +382,10 @@ class UserOperations {
                         isSuccess = false,
                         dateTimeInText = dateTimeInText,
                         transactionParticulars = transactionParticulars,
-                        transactionAmount = transactionAmount
+                        transactionAmount = transactionAmount,
+                        fromAccount = fromAccount,
+                        viaAccount = viaAccount,
+                        toAccount = toAccount
                     )
                     do {
                         commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(

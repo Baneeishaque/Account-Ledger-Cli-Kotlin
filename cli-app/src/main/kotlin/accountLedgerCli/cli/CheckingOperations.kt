@@ -84,7 +84,10 @@ internal fun transactionContinueCheck(
                     isSuccess = false,
                     dateTimeInText = dateTimeInText,
                     transactionParticulars = transactionParticulars,
-                    transactionAmount = transactionAmount
+                    transactionAmount = transactionAmount,
+                    fromAccount = fromAccount,
+                    viaAccount = viaAccount,
+                    toAccount = toAccount
                 )
             }
 
@@ -135,7 +138,10 @@ internal fun addTransactionWithAccountAvailabilityCheck(
                         isSuccess = true,
                         dateTimeInText = DateTimeUtils.add5MinutesToDateTimeString(dateTimeInText = addTransactionStep2Result.dateTimeInText),
                         transactionParticulars = addTransactionStep2Result.transactionParticulars,
-                        transactionAmount = addTransactionStep2Result.transactionAmount
+                        transactionAmount = addTransactionStep2Result.transactionAmount,
+                        fromAccount = fromAccount,
+                        viaAccount = viaAccount,
+                        toAccount = toAccount
                     )
                 }
             }
@@ -173,7 +179,10 @@ internal fun addTransactionWithAccountAvailabilityCheck(
                             isSuccess = true,
                             dateTimeInText = DateTimeUtils.add5MinutesToDateTimeString(dateTimeInText = addTransactionStep2Result.dateTimeInText),
                             transactionParticulars = addTransactionStep2Result.transactionParticulars,
-                            transactionAmount = addTransactionStep2Result.transactionAmount
+                            transactionAmount = addTransactionStep2Result.transactionAmount,
+                            fromAccount = fromAccount,
+                            viaAccount = viaAccount,
+                            toAccount = toAccount
                         )
                     }
                 }
@@ -212,7 +221,10 @@ internal fun addTransactionWithAccountAvailabilityCheck(
                             isSuccess = true,
                             dateTimeInText = DateTimeUtils.add5MinutesToDateTimeString(dateTimeInText = addTransactionStep2Result.dateTimeInText),
                             transactionParticulars = addTransactionStep2Result.transactionParticulars,
-                            transactionAmount = addTransactionStep2Result.transactionAmount
+                            transactionAmount = addTransactionStep2Result.transactionAmount,
+                            fromAccount = fromAccount,
+                            viaAccount = viaAccount,
+                            toAccount = toAccount
                         )
                     }
                 }
@@ -223,7 +235,10 @@ internal fun addTransactionWithAccountAvailabilityCheck(
         isSuccess = false,
         dateTimeInText = dateTimeInText,
         transactionParticulars = transactionParticulars,
-        transactionAmount = transactionAmount
+        transactionAmount = transactionAmount,
+        fromAccount = fromAccount,
+        viaAccount = viaAccount,
+        toAccount = toAccount
     )
 }
 

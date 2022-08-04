@@ -37,7 +37,10 @@ object Screens {
             isSuccess = false,
             dateTimeInText = dateTimeInText,
             transactionParticulars = transactionParticulars,
-            transactionAmount = transactionAmount
+            transactionAmount = transactionAmount,
+            fromAccount = fromAccount,
+            viaAccount = viaAccount,
+            toAccount = toAccount
         )
         do {
             commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
@@ -116,6 +119,7 @@ object Screens {
                         apiResponse = getAccounts(userId = userId),
                         username = username,
                         userId = userId,
+                        fromAccount = fromAccount,
                         viaAccount = viaAccount,
                         toAccount = toAccount,
                         dateTimeInText = insertTransactionResult.dateTimeInText,
@@ -130,6 +134,7 @@ object Screens {
                         account = InsertOperations.walletAccount,
                         userId = userId,
                         username = username,
+                        fromAccount=fromAccount,
                         viaAccount = viaAccount,
                         toAccount = toAccount,
                         dateTimeInText = insertTransactionResult.dateTimeInText,
@@ -145,7 +150,9 @@ object Screens {
                         account2 = InsertOperations.frequent1Account,
                         userId = userId,
                         username = username,
+                        fromAccount = fromAccount,
                         viaAccount = viaAccount,
+                        toAccount = toAccount,
                         dateTimeInText = insertTransactionResult.dateTimeInText,
                         transactionParticulars = insertTransactionResult.transactionParticulars,
                         transactionAmount = insertTransactionResult.transactionAmount
@@ -159,7 +166,9 @@ object Screens {
                         account2 = InsertOperations.frequent2Account,
                         userId = userId,
                         username = username,
+                        fromAccount = fromAccount,
                         viaAccount = viaAccount,
+                        toAccount = toAccount,
                         dateTimeInText = insertTransactionResult.dateTimeInText,
                         transactionParticulars = insertTransactionResult.transactionParticulars,
                         transactionAmount = insertTransactionResult.transactionAmount
@@ -173,7 +182,9 @@ object Screens {
                         account2 = InsertOperations.frequent3Account,
                         userId = userId,
                         username = username,
+                        fromAccount = fromAccount,
                         viaAccount = viaAccount,
+                        toAccount = toAccount,
                         dateTimeInText = insertTransactionResult.dateTimeInText,
                         transactionParticulars = insertTransactionResult.transactionParticulars,
                         transactionAmount = insertTransactionResult.transactionAmount
@@ -186,6 +197,7 @@ object Screens {
                         account = InsertOperations.bankAccount,
                         userId = userId,
                         username = username,
+                        fromAccount = fromAccount,
                         viaAccount = viaAccount,
                         toAccount = toAccount,
                         dateTimeInText = insertTransactionResult.dateTimeInText,
@@ -201,7 +213,9 @@ object Screens {
                         account2 = InsertOperations.frequent1Account,
                         userId = userId,
                         username = username,
+                        fromAccount = fromAccount,
                         viaAccount = viaAccount,
+                        toAccount = toAccount,
                         dateTimeInText = insertTransactionResult.dateTimeInText,
                         transactionParticulars = insertTransactionResult.transactionParticulars,
                         transactionAmount = insertTransactionResult.transactionAmount
@@ -215,7 +229,9 @@ object Screens {
                         account2 = InsertOperations.frequent2Account,
                         userId = userId,
                         username = username,
+                        fromAccount = fromAccount,
                         viaAccount = viaAccount,
+                        toAccount = toAccount,
                         dateTimeInText = insertTransactionResult.dateTimeInText,
                         transactionParticulars = insertTransactionResult.transactionParticulars,
                         transactionAmount = insertTransactionResult.transactionAmount
@@ -229,7 +245,9 @@ object Screens {
                         account2 = InsertOperations.frequent3Account,
                         userId = userId,
                         username = username,
+                        fromAccount = fromAccount,
                         viaAccount = viaAccount,
+                        toAccount = toAccount,
                         dateTimeInText = insertTransactionResult.dateTimeInText,
                         transactionParticulars = insertTransactionResult.transactionParticulars,
                         transactionAmount = insertTransactionResult.transactionAmount
@@ -243,6 +261,7 @@ object Screens {
                         account = InsertOperations.walletAccount,
                         userId = userId,
                         username = username,
+                        fromAccount = fromAccount,
                         viaAccount = viaAccount,
                         toAccount = toAccount,
                         dateTimeInText = insertTransactionResult.dateTimeInText,
@@ -257,6 +276,7 @@ object Screens {
                         account = InsertOperations.frequent2Account,
                         userId = userId,
                         username = username,
+                        fromAccount = fromAccount,
                         viaAccount = viaAccount,
                         toAccount = toAccount,
                         dateTimeInText = insertTransactionResult.dateTimeInText,
@@ -271,6 +291,7 @@ object Screens {
                         account = InsertOperations.frequent3Account,
                         userId = userId,
                         username = username,
+                        fromAccount = fromAccount,
                         viaAccount = viaAccount,
                         toAccount = toAccount,
                         dateTimeInText = insertTransactionResult.dateTimeInText,
@@ -285,6 +306,7 @@ object Screens {
                         apiResponse = ApiUtils.getAccountsFull(userId = userId),
                         username = username,
                         userId = userId,
+                        fromAccount = fromAccount,
                         viaAccount = viaAccount,
                         toAccount = toAccount,
                         dateTimeInText = insertTransactionResult.dateTimeInText,
@@ -558,7 +580,10 @@ object Screens {
                 isSuccess = false,
                 dateTimeInText = dateTimeInText,
                 transactionParticulars = transactionParticulars,
-                transactionAmount = transactionAmount
+                transactionAmount = transactionAmount,
+                fromAccount = fromAccount,
+                viaAccount = viaAccount,
+                toAccount = toAccount
             )
 
             when (readLine()!!) {
@@ -624,6 +649,7 @@ object Screens {
 
                 "5" -> {
                     viewTransactionsInsertTransactionResult = InsertOperations.addTransaction(
+
                         userId = userId,
                         username = username,
                         transactionType = TransactionTypeEnum.TWO_WAY,

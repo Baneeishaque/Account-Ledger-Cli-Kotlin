@@ -49,7 +49,10 @@ internal fun viewTransactions(
                 isSuccess = false,
                 dateTimeInText = dateTimeInText,
                 transactionParticulars = transactionParticulars,
-                transactionAmount = transactionAmount
+                transactionAmount = transactionAmount,
+                fromAccount = fromAccount,
+                viaAccount = viaAccount,
+                toAccount = toAccount
             )
         )
     } else {
@@ -67,7 +70,10 @@ internal fun viewTransactions(
                     isSuccess = false,
                     dateTimeInText = dateTimeInText,
                     transactionParticulars = transactionParticulars,
-                    transactionAmount = transactionAmount
+                    transactionAmount = transactionAmount,
+                    fromAccount = fromAccount,
+                    viaAccount = viaAccount,
+                    toAccount = toAccount
                 )
             )
         } else {
@@ -109,7 +115,10 @@ internal fun viewTransactions(
                                 isSuccess = false,
                                 dateTimeInText = dateTimeInText,
                                 transactionParticulars = transactionParticulars,
-                                transactionAmount = transactionAmount
+                                transactionAmount = transactionAmount,
+                                fromAccount = fromAccount,
+                                viaAccount = viaAccount,
+                                toAccount = toAccount
                             )
                         )
                     }
@@ -143,7 +152,10 @@ internal fun viewTransactions(
                     isSuccess = false,
                     dateTimeInText = dateTimeInText,
                     transactionParticulars = transactionParticulars,
-                    transactionAmount = transactionAmount
+                    transactionAmount = transactionAmount,
+                    fromAccount = fromAccount,
+                    viaAccount = viaAccount,
+                    toAccount = toAccount
                 )
 
                 when (choice) {

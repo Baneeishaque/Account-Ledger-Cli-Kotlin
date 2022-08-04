@@ -15,6 +15,7 @@ internal fun processChildAccountScreenInput(
     userAccountsMap: LinkedHashMap<UInt, AccountResponse>,
     userId: UInt,
     username: String,
+    fromAccount: AccountResponse,
     viaAccount: AccountResponse,
     toAccount: AccountResponse,
     dateTimeInText: String,
@@ -28,7 +29,10 @@ internal fun processChildAccountScreenInput(
         isSuccess = false,
         dateTimeInText = dateTimeInText,
         transactionParticulars = transactionParticulars,
-        transactionAmount = transactionAmount
+        transactionAmount = transactionAmount,
+        fromAccount = fromAccount,
+        viaAccount = viaAccount,
+        toAccount = toAccount
     )
     when (choice) {
         "1" -> {
@@ -41,6 +45,7 @@ internal fun processChildAccountScreenInput(
                 userAccountsMap = userAccountsMap,
                 userId = userId,
                 username = username,
+                fromAccount = fromAccount,
                 viaAccount = viaAccount,
                 toAccount = toAccount,
                 dateTimeInText = dateTimeInText,
@@ -50,11 +55,14 @@ internal fun processChildAccountScreenInput(
         }
 
         "2" -> {
+
             accountHomeOutput = handleAccountSelection(
+
                 accountId = searchAccount(userAccountsMap = userAccountsMap),
                 userAccountsMap = userAccountsMap,
                 userId = userId,
                 username = username,
+                fromAccount = fromAccount,
                 viaAccount = viaAccount,
                 toAccount = toAccount,
                 dateTimeInText = dateTimeInText,
@@ -86,6 +94,7 @@ private fun handleAccountSelection(
     userAccountsMap: LinkedHashMap<UInt, AccountResponse>,
     userId: UInt,
     username: String,
+    fromAccount: AccountResponse,
     viaAccount: AccountResponse,
     toAccount: AccountResponse,
     dateTimeInText: String,
@@ -111,7 +120,10 @@ private fun handleAccountSelection(
         isSuccess = false,
         dateTimeInText = dateTimeInText,
         transactionParticulars = transactionParticulars,
-        transactionAmount = transactionAmount
+        transactionAmount = transactionAmount,
+        fromAccount = fromAccount,
+        viaAccount = viaAccount,
+        toAccount = toAccount
     )
 }
 

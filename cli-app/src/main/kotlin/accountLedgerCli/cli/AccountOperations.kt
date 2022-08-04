@@ -38,7 +38,10 @@ internal fun checkAccountsAffectedAfterSpecifiedDate(
         isSuccess = false,
         dateTimeInText = dateTimeInText,
         transactionParticulars = transactionParticulars,
-        transactionAmount = transactionAmount
+        transactionAmount = transactionAmount,
+        fromAccount = fromAccount,
+        viaAccount = viaAccount,
+        toAccount = toAccount
     )
 
     val specifiedDate: IsOkModel<String> = MysqlUtils.normalDateTextToMySqlDateText(normalDateText = desiredDate)
@@ -183,7 +186,10 @@ internal fun viewChildAccounts(
         isSuccess = false,
         dateTimeInText = dateTimeInText,
         transactionParticulars = transactionParticulars,
-        transactionAmount = transactionAmount
+        transactionAmount = transactionAmount,
+        fromAccount = fromAccount,
+        viaAccount = viaAccount,
+        toAccount = toAccount
     )
 
     if (apiResponse.isFailure) {
@@ -209,7 +215,10 @@ internal fun viewChildAccounts(
                         isSuccess = false,
                         dateTimeInText = dateTimeInText,
                         transactionParticulars = transactionParticulars,
-                        transactionAmount = transactionAmount
+                        transactionAmount = transactionAmount,
+                        fromAccount = fromAccount,
+                        viaAccount = viaAccount,
+                        toAccount = toAccount
                     )
                 }
 
@@ -247,9 +256,11 @@ internal fun viewChildAccounts(
                 )
 
                 val processChildAccountScreenInputResult: ViewTransactionsOutput = processChildAccountScreenInput(
+
                     userAccountsMap = userAccountsMap,
                     userId = userId,
                     username = username,
+                    fromAccount = fromAccount,
                     viaAccount = viaAccount,
                     toAccount = toAccount,
                     dateTimeInText = dateTimeInText,

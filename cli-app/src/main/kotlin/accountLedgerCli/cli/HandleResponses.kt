@@ -21,6 +21,7 @@ object HandleResponses {
         apiResponse: Result<AccountsResponse>,
         username: String,
         userId: UInt,
+        fromAccount: AccountResponse,
         viaAccount: AccountResponse,
         toAccount: AccountResponse,
         dateTimeInText: String,
@@ -29,12 +30,15 @@ object HandleResponses {
 
     ): InsertTransactionResult {
 
-        var localInsertTransactionResult = InsertTransactionResult(
+        var insertTransactionResult = InsertTransactionResult(
 
             isSuccess = false,
             dateTimeInText = dateTimeInText,
             transactionParticulars = transactionParticulars,
-            transactionAmount = transactionAmount
+            transactionAmount = transactionAmount,
+            fromAccount = fromAccount,
+            viaAccount = viaAccount,
+            toAccount = toAccount
         )
 
         val getUserAccountsMapResult: IsOkModel<LinkedHashMap<UInt, AccountResponse>> =
@@ -43,7 +47,7 @@ object HandleResponses {
         return isOkModelHandler(
 
             isOkModel = getUserAccountsMapResult,
-            data = localInsertTransactionResult,
+            data = insertTransactionResult,
             actionsAfterGetSuccess = fun(): InsertTransactionResult {
 
                 do {
@@ -70,17 +74,18 @@ object HandleResponses {
                         userAccountsMap = getUserAccountsMapResult.data,
                         userId = userId,
                         username = username,
+                        fromAccount = fromAccount,
                         viaAccount = viaAccount,
                         toAccount = toAccount,
-                        dateTimeInText = localInsertTransactionResult.dateTimeInText,
-                        transactionParticulars = localInsertTransactionResult.transactionParticulars,
-                        transactionAmount = localInsertTransactionResult.transactionAmount
+                        dateTimeInText = insertTransactionResult.dateTimeInText,
+                        transactionParticulars = insertTransactionResult.transactionParticulars,
+                        transactionAmount = insertTransactionResult.transactionAmount
                     )
-                    localInsertTransactionResult = processChildAccountScreenInputResult.addTransactionResult
+                    insertTransactionResult = processChildAccountScreenInputResult.addTransactionResult
 
                 } while (processChildAccountScreenInputResult.output != "0")
 
-                return localInsertTransactionResult
+                return insertTransactionResult
             })
     }
 

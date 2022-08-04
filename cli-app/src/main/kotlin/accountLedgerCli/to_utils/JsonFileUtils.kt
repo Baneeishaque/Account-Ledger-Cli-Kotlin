@@ -24,7 +24,7 @@ object JsonFileUtils {
 
             jsonFile.inputStream().use { fileInputStream ->
 
-                val result: T = Json.decodeFromStream<T>(fileInputStream)
+                val result: T = Json.decodeFromStream(fileInputStream)
                 if (isDevelopmentMode) {
 
                     println("data = $result")
