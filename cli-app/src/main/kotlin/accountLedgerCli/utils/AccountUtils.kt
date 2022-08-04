@@ -59,7 +59,7 @@ internal object AccountUtils {
     ): String {
 
         var result = ""
-        userAccountsMap.forEach { account -> result += "${Constants.accountText}${account.key} - ${account.value.fullName}\n" }
+        userAccountsMap.forEach { account -> result += "${Constants.accountText.first()}${account.key} - ${account.value.fullName}\n" }
         return result
     }
 

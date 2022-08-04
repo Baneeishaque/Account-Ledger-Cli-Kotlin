@@ -13,17 +13,23 @@ object JsonFileUtils {
     @OptIn(ExperimentalSerializationApi::class)
     @JvmStatic
     inline fun <reified T> readJsonFile(fileName: String, isDevelopmentMode: Boolean = false): IsOkModel<T> {
+
         val jsonFile = File(fileName)
         if (isDevelopmentMode) {
+
             println("jsonFile = $jsonFile")
             println("jsonFile exists = ${jsonFile.exists()}")
         }
         if (jsonFile.exists()) {
+
             jsonFile.inputStream().use { fileInputStream ->
+
+                val result: T = Json.decodeFromStream<T>(fileInputStream)
                 if (isDevelopmentMode) {
-                    println("data = ${Json.decodeFromStream<T>(fileInputStream)}")
+
+                    println("data = $result")
                 }
-                return IsOkModel(isOK = true, data = Json.decodeFromStream(fileInputStream))
+                return IsOkModel(isOK = true, data = result)
             }
         }
         return IsOkModel(isOK = false)
@@ -32,7 +38,9 @@ object JsonFileUtils {
     @OptIn(ExperimentalSerializationApi::class)
     @JvmStatic
     inline fun <reified T> writeJsonFile(fileName: String, data: T) {
+
         FileOutputStream(File(fileName)).use { fileOutputStream ->
+
             Json.encodeToStream(data, fileOutputStream)
         }
     }

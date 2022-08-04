@@ -9,6 +9,7 @@ import accountLedgerCli.enums.HandleAccountsApiResponseResult
 import accountLedgerCli.models.InsertTransactionResult
 import accountLedgerCli.models.ViewTransactionsOutput
 import accountLedgerCli.to_models.IsOkModel
+import accountLedgerCli.to_utils.EnumUtils
 import accountLedgerCli.to_utils.invalidOptionMessage
 import accountLedgerCli.utils.AccountUtils
 import accountLedgerCli.to_constants.Constants as CommonConstants
@@ -134,21 +135,7 @@ object HandleResponses {
         if (apiResponse.isFailure) {
 
             println("Error : ${(apiResponse.exceptionOrNull() as Exception).localizedMessage}")
-            do {
-                print("Retry (Y/N) ? : ")
-                when (readLine()!!) {
-
-                    "Y", "" -> {
-                        return handleAccountsApiResponse(apiResponse = apiResponse, purpose = purpose)
-                    }
-
-                    "N" -> {
-                        return HandleAccountsApiResponseResult(isAccountIdSelected = false)
-                    }
-
-                    else -> println("Invalid option, try again...")
-                }
-            } while (true)
+            return HandleAccountsApiResponseResult(isAccountIdSelected = false)
 
         } else {
 
@@ -162,14 +149,15 @@ object HandleResponses {
                 val userAccountsMap: LinkedHashMap<UInt, AccountResponse> =
                     AccountUtils.prepareUserAccountsMap(accountsResponseResult.accounts)
                 do {
+                    val purposeForPrint: String = EnumUtils.getEnumNameForPrint(localEnum = purpose)
                     commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
                         listOf(
                             "\nAccounts",
                             AccountUtils.userAccountsToStringFromLinkedHashMap(
                                 userAccountsMap = userAccountsMap
                             ),
-                            "1 - Choose $purpose Account - By Index Number",
-                            "2 - Search $purpose Account - By Part Of Name",
+                            "1 - Choose $purposeForPrint Account - By Index Number",
+                            "2 - Search $purposeForPrint Account - By Part Of Name",
                             "0 - Back",
                             "",
                             "Enter Your Choice : "
@@ -178,7 +166,9 @@ object HandleResponses {
                     when (readLine()!!) {
                         "1" -> {
                             return getHandleAccountsResponseFromApiResult(
+
                                 selectedAccountId = getValidIndex(
+
                                     map = userAccountsMap,
                                     itemSpecification = Constants.accountText,
                                     items = AccountUtils.userAccountsToStringFromLinkedHashMap(userAccountsMap = userAccountsMap)
@@ -189,6 +179,7 @@ object HandleResponses {
 
                         "2" -> {
                             return getHandleAccountsResponseFromApiResult(
+
                                 selectedAccountId = searchAccount(userAccountsMap = userAccountsMap),
                                 userAccountsMap = userAccountsMap
                             )
