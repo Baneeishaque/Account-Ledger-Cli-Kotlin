@@ -35,7 +35,7 @@ internal fun viewTransactions(
 
     ): ViewTransactionsOutput {
 
-    val apiResponse: Result<TransactionsResponse> = getUserTransactions(
+    var apiResponse: Result<TransactionsResponse> = getUserTransactions(
 
         userId = userId,
         accountId = accountId
@@ -54,7 +54,7 @@ internal fun viewTransactions(
         )
     } else {
 
-        val userTransactionsResponse: TransactionsResponse = apiResponse.getOrNull()!!
+        var userTransactionsResponse: TransactionsResponse = apiResponse.getOrNull()!!
         if (userTransactionsResponse.status == 1u) {
 
             println("Account - $accountFullName")
@@ -388,6 +388,23 @@ internal fun viewTransactions(
                                 transactionParticulars = addTransactionResult.transactionParticulars,
                                 transactionAmount = addTransactionResult.transactionAmount
                             )
+                            if (addTransactionResult.isSuccess) {
+
+                                apiResponse = getUserTransactions(
+
+                                    userId = userId,
+                                    accountId = accountId
+                                )
+                                if (apiResponse.isSuccess) {
+
+                                    userTransactionsResponse = apiResponse.getOrNull()!!
+                                    if (userTransactionsResponse.status != 1u) {
+
+                                        userTransactionsMap =
+                                            TransactionUtils.prepareUserTransactionsMap(transactions = userTransactionsResponse.transactions)
+                                    }
+                                }
+                            }
                         }
                     }
 

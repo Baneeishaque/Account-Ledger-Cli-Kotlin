@@ -29,8 +29,10 @@ object Screens {
 
     ): InsertTransactionResult {
 
-//        println("Env. Variables : ${App.dotenv.entries()}")
+        if (App.isDevelopmentMode) {
 
+            println("Env. Variables : ${App.dotenv.entries()}")
+        }
         var insertTransactionResult = InsertTransactionResult(
             isSuccess = false,
             dateTimeInText = dateTimeInText,

@@ -183,7 +183,7 @@ object InsertOperations {
 
                     } else {
 
-                        "8 - Exchange Accounts\n" + "9 - Exchange Accounts, Then Continue Transaction"
+                        "8 - Exchange Accounts\n" + "9 - Exchange Accounts, Then Continue Transaction" + "10 - Input To Account ID Directly, Exchange Accounts, Then Continue Transaction\n" + "11 - Input From Account ID Directly, Exchange Accounts, Then Continue Transaction" + "12 - Choose To Account From List - Top Levels, Exchange Accounts, Then Continue Transaction\n" + "13 - Choose To Account From List - Full Names, Exchange Accounts, Then Continue Transaction" + "14 - Choose From Account From List - Top Levels, Exchange Accounts, Then Continue Transaction\n" + "15 - Choose From Account From List - Full Names, Exchange Accounts, Then Continue Transaction"
                     },
                     "0 - Back",
                     "",
@@ -191,8 +191,11 @@ object InsertOperations {
                 )
             )
             when (readLine()!!) {
+
                 "1" -> {
+
                     return processChooseAccountResult(
+
                         chooseAccountResult = chooseDepositTop(userId = userId),
                         userId = userId,
                         username = username,
@@ -207,7 +210,9 @@ object InsertOperations {
                 }
 
                 "2" -> {
+
                     return processChooseAccountResult(
+
                         chooseAccountResult = chooseDepositFull(userId = userId),
                         userId = userId,
                         username = username,
@@ -223,14 +228,12 @@ object InsertOperations {
 
                 "3" -> {
 
-                    val chooseAccountResult: ChooseAccountResult = ChooseAccountUtils.chooseAccountById(
-                        userId = userId,
-                        accountType = AccountTypeEnum.TO
-                    )
-                    if (chooseAccountResult.chosenAccountId != 0u) {
+                    val chooseToAccountResult: ChooseAccountResult = chooseToAccount(userId = userId)
+                    if (chooseToAccountResult.chosenAccountId != 0u) {
 
                         return processSelectedAccount(
-                            selectedAccount = chooseAccountResult.chosenAccount!!,
+
+                            selectedAccount = chooseToAccountResult.chosenAccount!!,
                             userId = userId,
                             username = username,
                             transactionType = transactionType,
@@ -245,7 +248,9 @@ object InsertOperations {
                 }
 
                 "4" -> {
+
                     return processChooseAccountResult(
+
                         chooseAccountResult = chooseWithdrawTop(userId = userId),
                         userId = userId,
                         username = username,
@@ -260,7 +265,9 @@ object InsertOperations {
                 }
 
                 "5" -> {
+
                     return processChooseAccountResult(
+
                         chooseAccountResult = chooseWithdrawFull(userId = userId),
                         userId = userId,
                         username = username,
@@ -275,14 +282,12 @@ object InsertOperations {
                 }
 
                 "6" -> {
-                    val chooseAccountResult: ChooseAccountResult = ChooseAccountUtils.chooseAccountById(
-                        userId = userId,
-                        accountType = AccountTypeEnum.FROM
-                    )
-                    if (chooseAccountResult.chosenAccountId != 0u) {
+                    val chooseFromAccountResult: ChooseAccountResult = chooseFromAccount(userId = userId)
+                    if (chooseFromAccountResult.chosenAccountId != 0u) {
 
                         return processSelectedAccount(
-                            selectedAccount = chooseAccountResult.chosenAccount!!,
+
+                            selectedAccount = chooseFromAccountResult.chosenAccount!!,
                             userId = userId,
                             username = username,
                             transactionType = transactionType,
@@ -360,14 +365,14 @@ object InsertOperations {
                         )
                     } else {
 
-                        return invokeContinueTransactionAfterExchangeOfFromAndToAccounts(
+                        return transactionContinueCheck(
 
                             userId = userId,
                             username = username,
                             transactionType = transactionType,
-                            fromAccount = fromAccount,
+                            fromAccount = toAccount,
                             viaAccount = viaAccount,
-                            toAccount = toAccount,
+                            toAccount = fromAccount,
                             dateTimeInText = dateTimeInText,
                             transactionParticulars = transactionParticulars,
                             transactionAmount = transactionAmount
@@ -390,7 +395,25 @@ object InsertOperations {
                             transactionAmount = transactionAmount
                         )
                     } else {
-                        invalidOptionMessage()
+
+                        val chooseToAccountResult: ChooseAccountResult = chooseToAccount(userId = userId)
+                        if (chooseToAccountResult.chosenAccountId != 0u) {
+
+                            return processSelectedAccount(
+
+                                selectedAccount = chooseToAccountResult.chosenAccount!!,
+                                userId = userId,
+                                username = username,
+                                transactionType = transactionType,
+                                account1 = fromAccount,
+                                account2 = viaAccount,
+                                purpose = AccountTypeEnum.TO,
+                                dateTimeInText = dateTimeInText,
+                                transactionParticulars = transactionParticulars,
+                                transactionAmount = transactionAmount,
+                                wantToExchange = true
+                            )
+                        }
                     }
                 }
 
@@ -410,7 +433,25 @@ object InsertOperations {
                         )
 
                     } else {
-                        invalidOptionMessage()
+
+                        val chooseFromAccountResult: ChooseAccountResult = chooseFromAccount(userId = userId)
+                        if (chooseFromAccountResult.chosenAccountId != 0u) {
+
+                            return processSelectedAccount(
+
+                                selectedAccount = chooseFromAccountResult.chosenAccount!!,
+                                userId = userId,
+                                username = username,
+                                transactionType = transactionType,
+                                account1 = viaAccount,
+                                account2 = toAccount,
+                                purpose = AccountTypeEnum.FROM,
+                                dateTimeInText = dateTimeInText,
+                                transactionParticulars = transactionParticulars,
+                                transactionAmount = transactionAmount,
+                                wantToExchange = true
+                            )
+                        }
                     }
                 }
 
@@ -418,6 +459,7 @@ object InsertOperations {
                     if (transactionType == TransactionTypeEnum.VIA) {
 
                         return addTransaction(
+
                             userId = userId,
                             username = username,
                             transactionType = transactionType,
@@ -430,27 +472,55 @@ object InsertOperations {
                         )
 
                     } else {
-                        invalidOptionMessage()
+
+                        return processChooseAccountResult(
+
+                            chooseAccountResult = chooseDepositTop(userId = userId),
+                            userId = userId,
+                            username = username,
+                            transactionType = transactionType,
+                            account1 = fromAccount,
+                            account2 = viaAccount,
+                            purpose = AccountTypeEnum.TO,
+                            dateTimeInText = dateTimeInText,
+                            transactionParticulars = transactionParticulars,
+                            transactionAmount = transactionAmount,
+                            wantToExchange = true
+                        )
                     }
                 }
 
                 "13" -> {
                     if (transactionType == TransactionTypeEnum.VIA) {
 
-                        return invokeContinueTransactionAfterExchangeOfFromAndToAccounts(
+                        return transactionContinueCheck(
 
                             userId = userId,
                             username = username,
                             transactionType = transactionType,
-                            fromAccount = fromAccount,
+                            fromAccount = toAccount,
                             viaAccount = viaAccount,
-                            toAccount = toAccount,
+                            toAccount = fromAccount,
                             dateTimeInText = dateTimeInText,
                             transactionParticulars = transactionParticulars,
                             transactionAmount = transactionAmount
                         )
                     } else {
-                        invalidOptionMessage()
+
+                        return processChooseAccountResult(
+
+                            chooseAccountResult = chooseDepositFull(userId = userId),
+                            userId = userId,
+                            username = username,
+                            transactionType = transactionType,
+                            account1 = fromAccount,
+                            account2 = viaAccount,
+                            purpose = AccountTypeEnum.TO,
+                            dateTimeInText = dateTimeInText,
+                            transactionParticulars = transactionParticulars,
+                            transactionAmount = transactionAmount,
+                            wantToExchange = true
+                        )
                     }
                 }
 
@@ -459,6 +529,7 @@ object InsertOperations {
                     if (transactionType == TransactionTypeEnum.VIA) {
 
                         return processChooseAccountResult(
+
                             chooseAccountResult = chooseViaTop(userId = userId),
                             userId = userId,
                             username = username,
@@ -471,7 +542,21 @@ object InsertOperations {
                             transactionAmount = transactionAmount
                         )
                     } else {
-                        invalidOptionMessage()
+
+                        return processChooseAccountResult(
+
+                            chooseAccountResult = chooseWithdrawTop(userId = userId),
+                            userId = userId,
+                            username = username,
+                            transactionType = transactionType,
+                            account1 = viaAccount,
+                            account2 = toAccount,
+                            purpose = AccountTypeEnum.FROM,
+                            dateTimeInText = dateTimeInText,
+                            transactionParticulars = transactionParticulars,
+                            transactionAmount = transactionAmount,
+                            wantToExchange = true
+                        )
                     }
                 }
 
@@ -480,6 +565,7 @@ object InsertOperations {
                     if (transactionType == TransactionTypeEnum.VIA) {
 
                         return processChooseAccountResult(
+
                             chooseAccountResult = chooseViaFull(userId = userId),
                             userId = userId,
                             username = username,
@@ -492,7 +578,21 @@ object InsertOperations {
                             transactionAmount = transactionAmount
                         )
                     } else {
-                        invalidOptionMessage()
+
+                        return processChooseAccountResult(
+
+                            chooseAccountResult = chooseWithdrawFull(userId = userId),
+                            userId = userId,
+                            username = username,
+                            transactionType = transactionType,
+                            account1 = viaAccount,
+                            account2 = toAccount,
+                            purpose = AccountTypeEnum.FROM,
+                            dateTimeInText = dateTimeInText,
+                            transactionParticulars = transactionParticulars,
+                            transactionAmount = transactionAmount,
+                            wantToExchange = true
+                        )
                     }
                 }
 
@@ -505,6 +605,7 @@ object InsertOperations {
                         if (chooseAccountResult.chosenAccountId != 0u) {
 
                             return processSelectedAccount(
+
                                 selectedAccount = chooseAccountResult.chosenAccount!!,
                                 userId = userId,
                                 username = username,
@@ -518,6 +619,7 @@ object InsertOperations {
                             )
                         }
                     } else {
+
                         invalidOptionMessage()
                     }
                 }
@@ -536,6 +638,22 @@ object InsertOperations {
         } while (true)
     }
 
+    private fun chooseFromAccount(userId: UInt): ChooseAccountResult {
+
+        return ChooseAccountUtils.chooseAccountById(
+
+            userId = userId,
+            accountType = AccountTypeEnum.FROM
+        )
+    }
+
+    private fun chooseToAccount(userId: UInt): ChooseAccountResult {
+
+        return ChooseAccountUtils.chooseAccountById(
+            userId = userId,
+            accountType = AccountTypeEnum.TO
+        )
+    }
 
     private fun processChooseAccountResult(
 
@@ -548,7 +666,8 @@ object InsertOperations {
         purpose: AccountTypeEnum,
         dateTimeInText: String,
         transactionParticulars: String,
-        transactionAmount: Float
+        transactionAmount: Float,
+        wantToExchange: Boolean = false
 
     ): InsertTransactionResult {
 
@@ -565,10 +684,12 @@ object InsertOperations {
                 purpose = purpose,
                 dateTimeInText = dateTimeInText,
                 transactionParticulars = transactionParticulars,
-                transactionAmount = transactionAmount
+                transactionAmount = transactionAmount,
+                wantToExchange = wantToExchange
             )
         }
         return InsertTransactionResult(
+
             isSuccess = false,
             dateTimeInText = dateTimeInText,
             transactionParticulars = transactionParticulars,
@@ -587,7 +708,8 @@ object InsertOperations {
         purpose: AccountTypeEnum,
         dateTimeInText: String,
         transactionParticulars: String,
-        transactionAmount: Float
+        transactionAmount: Float,
+        wantToExchange: Boolean = false
 
     ): InsertTransactionResult {
 
@@ -595,37 +717,76 @@ object InsertOperations {
 
             AccountTypeEnum.TO -> {
 
-                return transactionContinueCheck(
-                    userId = userId,
-                    username = username,
-                    transactionType = transactionType,
-                    fromAccount = account1,
-                    viaAccount = account2,
-                    toAccount = selectedAccount,
-                    dateTimeInText = dateTimeInText,
-                    transactionParticulars = transactionParticulars,
-                    transactionAmount = transactionAmount
-                )
+                if (wantToExchange) {
+
+                    return transactionContinueCheck(
+
+                        userId = userId,
+                        username = username,
+                        transactionType = transactionType,
+                        fromAccount = selectedAccount,
+                        viaAccount = account2,
+                        toAccount = account1,
+                        dateTimeInText = dateTimeInText,
+                        transactionParticulars = transactionParticulars,
+                        transactionAmount = transactionAmount
+                    )
+
+                } else {
+
+                    return transactionContinueCheck(
+
+                        userId = userId,
+                        username = username,
+                        transactionType = transactionType,
+                        fromAccount = account1,
+                        viaAccount = account2,
+                        toAccount = selectedAccount,
+                        dateTimeInText = dateTimeInText,
+                        transactionParticulars = transactionParticulars,
+                        transactionAmount = transactionAmount
+                    )
+                }
             }
 
             AccountTypeEnum.FROM -> {
 
-                return transactionContinueCheck(
-                    userId = userId,
-                    username = username,
-                    transactionType = transactionType,
-                    fromAccount = selectedAccount,
-                    viaAccount = account1,
-                    toAccount = account2,
-                    dateTimeInText = dateTimeInText,
-                    transactionParticulars = transactionParticulars,
-                    transactionAmount = transactionAmount
-                )
+                if (wantToExchange) {
+
+                    return transactionContinueCheck(
+
+                        userId = userId,
+                        username = username,
+                        transactionType = transactionType,
+                        fromAccount = account2,
+                        viaAccount = account1,
+                        toAccount = selectedAccount,
+                        dateTimeInText = dateTimeInText,
+                        transactionParticulars = transactionParticulars,
+                        transactionAmount = transactionAmount
+                    )
+
+                } else {
+
+                    return transactionContinueCheck(
+
+                        userId = userId,
+                        username = username,
+                        transactionType = transactionType,
+                        fromAccount = selectedAccount,
+                        viaAccount = account1,
+                        toAccount = account2,
+                        dateTimeInText = dateTimeInText,
+                        transactionParticulars = transactionParticulars,
+                        transactionAmount = transactionAmount
+                    )
+                }
             }
 
             AccountTypeEnum.VIA -> {
 
                 return transactionContinueCheck(
+
                     userId = userId,
                     username = username,
                     transactionType = transactionType,
@@ -638,35 +799,6 @@ object InsertOperations {
                 )
             }
         }
-    }
-
-    private fun invokeContinueTransactionAfterExchangeOfFromAndToAccounts(
-
-        userId: UInt,
-        username: String,
-        transactionType: TransactionTypeEnum,
-        fromAccount: AccountResponse,
-        viaAccount: AccountResponse,
-        toAccount: AccountResponse,
-        dateTimeInText: String,
-        transactionParticulars: String,
-        transactionAmount: Float
-
-    ): InsertTransactionResult {
-
-        // TODO : Remove boilerplate code
-        return transactionContinueCheck(
-
-            userId = userId,
-            username = username,
-            transactionType = transactionType,
-            fromAccount = toAccount,
-            viaAccount = viaAccount,
-            toAccount = fromAccount,
-            dateTimeInText = dateTimeInText,
-            transactionParticulars = transactionParticulars,
-            transactionAmount = transactionAmount
-        )
     }
 
     internal fun addTransactionStep2(
@@ -1260,7 +1392,10 @@ object InsertOperations {
             }, transactionManipulationSuccessActions = fun() {
 
                 val readFrequencyOfAccountsFileResult: IsOkModel<FrequencyOfAccountsModel> =
-                    JsonFileUtils.readJsonFile(Constants.frequencyOfAccountsFileName)
+                    JsonFileUtils.readJsonFile(
+                        fileName = Constants.frequencyOfAccountsFileName,
+                        isDevelopmentMode = App.isDevelopmentMode
+                    )
 
                 if (App.isDevelopmentMode) {
 

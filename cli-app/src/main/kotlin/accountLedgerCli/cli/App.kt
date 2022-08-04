@@ -79,7 +79,7 @@ class App {
                         )
                     )
                     when (readLine()!!) {
-                        "1" -> {
+                        "1", "" -> {
 
                             processInsertTransactionResult(
                                 insertTransactionResult = UserOperations.login(

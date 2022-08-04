@@ -12,10 +12,17 @@ object JsonFileUtils {
 
     @OptIn(ExperimentalSerializationApi::class)
     @JvmStatic
-    inline fun <reified T> readJsonFile(fileName: String): IsOkModel<T> {
+    inline fun <reified T> readJsonFile(fileName: String, isDevelopmentMode: Boolean = false): IsOkModel<T> {
         val jsonFile = File(fileName)
+        if (isDevelopmentMode) {
+            println("jsonFile = $jsonFile")
+            println("jsonFile exists = ${jsonFile.exists()}")
+        }
         if (jsonFile.exists()) {
             jsonFile.inputStream().use { fileInputStream ->
+                if (isDevelopmentMode) {
+                    println("data = ${Json.decodeFromStream<T>(fileInputStream)}")
+                }
                 return IsOkModel(isOK = true, data = Json.decodeFromStream(fileInputStream))
             }
         }

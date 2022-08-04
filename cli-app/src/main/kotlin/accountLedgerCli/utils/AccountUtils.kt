@@ -1,6 +1,7 @@
 package accountLedgerCli.utils
 
 import accountLedgerCli.api.response.AccountResponse
+import accountLedgerCli.cli.App
 import accountLedgerCli.cli.Screens
 import accountLedgerCli.constants.Constants
 import accountLedgerCli.models.AccountFrequencyModel
@@ -8,6 +9,7 @@ import accountLedgerCli.models.ChooseAccountResult
 import accountLedgerCli.models.FrequencyOfAccountsModel
 import accountLedgerCli.to_models.IsOkModel
 import accountLedgerCli.to_utils.JsonFileUtils
+import accountLedgerCli.to_constants.Constants as CommonConstants
 
 internal object AccountUtils {
 
@@ -76,7 +78,10 @@ internal object AccountUtils {
         var result = ""
 
         val readFrequencyOfAccountsFileResult: IsOkModel<FrequencyOfAccountsModel> =
-            JsonFileUtils.readJsonFile(Constants.frequencyOfAccountsFileName)
+            JsonFileUtils.readJsonFile(
+                fileName = Constants.frequencyOfAccountsFileName,
+                isDevelopmentMode = App.isDevelopmentMode
+            )
         if (readFrequencyOfAccountsFileResult.isOK) {
 
             Screens.getAccountFrequenciesForUser(
@@ -92,16 +97,16 @@ internal object AccountUtils {
 
                 ?.forEach { accountFrequency: AccountFrequencyModel ->
 
-                    result += "${accountFrequency.accountID} : ${accountFrequency.accountName}\n"
+                    result += "${accountFrequency.accountID} : ${accountFrequency.accountName} [${accountFrequency.countOfRepetition}]\n"
                 }
         }
         return if (result.isEmpty()) {
 
-            accountLedgerCli.to_constants.Constants.dashedLineSeparator
+            CommonConstants.dashedLineSeparator
 
         } else {
 
-            accountLedgerCli.to_constants.Constants.dashedLineSeparator + "\n" + result + accountLedgerCli.to_constants.Constants.dashedLineSeparator
+            CommonConstants.dashedLineSeparator + "\n" + result + CommonConstants.dashedLineSeparator
         }
     }
 }

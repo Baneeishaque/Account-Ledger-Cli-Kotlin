@@ -83,7 +83,6 @@ internal fun <T> getValidIndex(
 
 internal fun chooseDepositTop(userId: UInt): HandleAccountsApiResponseResult {
 
-    // TODO : Remove boilerplate code
     return HandleResponses.handleAccountsApiResponse(
         apiResponse = getAccounts(userId = userId),
         purpose = AccountTypeEnum.TO
