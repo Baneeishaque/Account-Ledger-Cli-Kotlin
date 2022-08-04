@@ -134,7 +134,7 @@ object Screens {
                         account = InsertOperations.walletAccount,
                         userId = userId,
                         username = username,
-                        fromAccount=fromAccount,
+                        fromAccount = fromAccount,
                         viaAccount = viaAccount,
                         toAccount = toAccount,
                         dateTimeInText = insertTransactionResult.dateTimeInText,
@@ -560,9 +560,20 @@ object Screens {
 
     ): InsertTransactionResult {
 
+        var viewTransactionsInsertTransactionResult = InsertTransactionResult(
+
+            isSuccess = false,
+            dateTimeInText = dateTimeInText,
+            transactionParticulars = transactionParticulars,
+            transactionAmount = transactionAmount,
+            fromAccount = fromAccount,
+            viaAccount = viaAccount,
+            toAccount = toAccount
+        )
         do {
             commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
-                listOf(
+
+                listOfCommands = listOf(
                     "\nUser : $username",
                     "Account - ${fromAccount.fullName}",
                     "1 - View Transactions",
@@ -575,17 +586,6 @@ object Screens {
                     "Enter Your Choice : "
                 )
             )
-
-            var viewTransactionsInsertTransactionResult = InsertTransactionResult(
-                isSuccess = false,
-                dateTimeInText = dateTimeInText,
-                transactionParticulars = transactionParticulars,
-                transactionAmount = transactionAmount,
-                fromAccount = fromAccount,
-                viaAccount = viaAccount,
-                toAccount = toAccount
-            )
-
             when (readLine()!!) {
 
                 "1" -> {
@@ -595,9 +595,9 @@ object Screens {
                         username = username,
                         accountId = fromAccount.id,
                         accountFullName = fromAccount.fullName,
-                        fromAccount = fromAccount,
-                        viaAccount = viaAccount,
-                        toAccount = toAccount,
+                        fromAccount = viewTransactionsInsertTransactionResult.fromAccount,
+                        viaAccount = viewTransactionsInsertTransactionResult.viaAccount,
+                        toAccount = viewTransactionsInsertTransactionResult.toAccount,
                         dateTimeInText = viewTransactionsInsertTransactionResult.dateTimeInText,
                         transactionParticulars = viewTransactionsInsertTransactionResult.transactionParticulars,
                         transactionAmount = viewTransactionsInsertTransactionResult.transactionAmount
@@ -611,9 +611,9 @@ object Screens {
                         userId = userId,
                         username = username,
                         transactionType = TransactionTypeEnum.NORMAL,
-                        fromAccount = fromAccount,
-                        viaAccount = viaAccount,
-                        toAccount = toAccount,
+                        fromAccount = viewTransactionsInsertTransactionResult.fromAccount,
+                        viaAccount = viewTransactionsInsertTransactionResult.viaAccount,
+                        toAccount = viewTransactionsInsertTransactionResult.toAccount,
                         dateTimeInText = viewTransactionsInsertTransactionResult.dateTimeInText,
                         transactionParticulars = viewTransactionsInsertTransactionResult.transactionParticulars,
                         transactionAmount = viewTransactionsInsertTransactionResult.transactionAmount
@@ -624,9 +624,9 @@ object Screens {
                     viewTransactionsInsertTransactionResult = viewChildAccounts(
                         username = username,
                         userId = userId,
-                        fromAccount = fromAccount,
-                        viaAccount = viaAccount,
-                        toAccount = toAccount,
+                        fromAccount = viewTransactionsInsertTransactionResult.fromAccount,
+                        viaAccount = viewTransactionsInsertTransactionResult.viaAccount,
+                        toAccount = viewTransactionsInsertTransactionResult.toAccount,
                         dateTimeInText = viewTransactionsInsertTransactionResult.dateTimeInText,
                         transactionParticulars = viewTransactionsInsertTransactionResult.transactionParticulars,
                         transactionAmount = viewTransactionsInsertTransactionResult.transactionAmount
@@ -638,9 +638,9 @@ object Screens {
                         userId = userId,
                         username = username,
                         transactionType = TransactionTypeEnum.VIA,
-                        fromAccount = fromAccount,
-                        viaAccount = viaAccount,
-                        toAccount = toAccount,
+                        fromAccount = viewTransactionsInsertTransactionResult.fromAccount,
+                        viaAccount = viewTransactionsInsertTransactionResult.viaAccount,
+                        toAccount = viewTransactionsInsertTransactionResult.toAccount,
                         dateTimeInText = viewTransactionsInsertTransactionResult.dateTimeInText,
                         transactionParticulars = viewTransactionsInsertTransactionResult.transactionParticulars,
                         transactionAmount = viewTransactionsInsertTransactionResult.transactionAmount
@@ -653,9 +653,9 @@ object Screens {
                         userId = userId,
                         username = username,
                         transactionType = TransactionTypeEnum.TWO_WAY,
-                        fromAccount = fromAccount,
-                        viaAccount = viaAccount,
-                        toAccount = toAccount,
+                        fromAccount = viewTransactionsInsertTransactionResult.fromAccount,
+                        viaAccount = viewTransactionsInsertTransactionResult.viaAccount,
+                        toAccount = viewTransactionsInsertTransactionResult.toAccount,
                         dateTimeInText = viewTransactionsInsertTransactionResult.dateTimeInText,
                         transactionParticulars = viewTransactionsInsertTransactionResult.transactionParticulars,
                         transactionAmount = viewTransactionsInsertTransactionResult.transactionAmount
