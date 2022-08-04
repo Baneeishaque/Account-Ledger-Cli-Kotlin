@@ -272,7 +272,7 @@ object InsertOperations {
                         } else {
 
                             localFromAccount = processSelectedAccountResult.fromAccount
-                            localViaAccount = processSelectedAccountResult.fromAccount
+                            localViaAccount = processSelectedAccountResult.viaAccount
                             localToAccount = processSelectedAccountResult.toAccount
                         }
                     }
@@ -342,7 +342,7 @@ object InsertOperations {
                         } else {
 
                             localFromAccount = processSelectedAccountResult.fromAccount
-                            localViaAccount = processSelectedAccountResult.fromAccount
+                            localViaAccount = processSelectedAccountResult.viaAccount
                             localToAccount = processSelectedAccountResult.toAccount
                         }
                     }
@@ -467,7 +467,7 @@ object InsertOperations {
                             } else {
 
                                 localFromAccount = processSelectedAccountResult.fromAccount
-                                localViaAccount = processSelectedAccountResult.fromAccount
+                                localViaAccount = processSelectedAccountResult.viaAccount
                                 localToAccount = processSelectedAccountResult.toAccount
                             }
                         }
@@ -515,7 +515,7 @@ object InsertOperations {
                             } else {
 
                                 localFromAccount = processSelectedAccountResult.fromAccount
-                                localViaAccount = processSelectedAccountResult.fromAccount
+                                localViaAccount = processSelectedAccountResult.viaAccount
                                 localToAccount = processSelectedAccountResult.toAccount
                             }
                         }
@@ -709,7 +709,7 @@ object InsertOperations {
                             } else {
 
                                 localFromAccount = processSelectedAccountResult.fromAccount
-                                localViaAccount = processSelectedAccountResult.fromAccount
+                                localViaAccount = processSelectedAccountResult.viaAccount
                                 localToAccount = processSelectedAccountResult.toAccount
                             }
                         }
@@ -799,7 +799,7 @@ object InsertOperations {
             } else {
 
                 localFromAccount = processSelectedAccountResult.fromAccount
-                localViaAccount = processSelectedAccountResult.fromAccount
+                localViaAccount = processSelectedAccountResult.viaAccount
                 localToAccount = processSelectedAccountResult.toAccount
             }
         }
