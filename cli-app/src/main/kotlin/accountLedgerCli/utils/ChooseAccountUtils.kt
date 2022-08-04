@@ -14,8 +14,10 @@ internal object ChooseAccountUtils {
     internal fun chooseAccountById(userId: UInt, accountType: AccountTypeEnum): ChooseAccountResult {
 
         val chooseByIdResult: ChooseByIdResult<AccountsResponse> = ChooseUtils.chooseById(
+
             itemSpecification = Constants.accountText,
             apiCallFunction = fun(): Result<AccountsResponse> {
+
                 return ApiUtils.getAccountsFull(userId = userId)
             },
             prefixForPrompt = "${EnumUtils.getEnumNameForPrint(localEnum = accountType)} "

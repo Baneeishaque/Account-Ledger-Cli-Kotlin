@@ -122,6 +122,7 @@ internal fun addTransactionWithAccountAvailabilityCheck(
             TransactionTypeEnum.NORMAL -> {
 
                 val addTransactionStep2Result: InsertTransactionResult = InsertOperations.addTransactionStep2(
+
                     userId = userId,
                     username = username,
                     transactionType = TransactionTypeEnum.NORMAL,
@@ -135,8 +136,9 @@ internal fun addTransactionWithAccountAvailabilityCheck(
                 if (addTransactionStep2Result.isSuccess) {
 
                     return InsertTransactionResult(
+
                         isSuccess = true,
-                        dateTimeInText = DateTimeUtils.add5MinutesToDateTimeString(dateTimeInText = addTransactionStep2Result.dateTimeInText),
+                        dateTimeInText = DateTimeUtils.add5MinutesToDateTimeInText(dateTimeInText = addTransactionStep2Result.dateTimeInText),
                         transactionParticulars = addTransactionStep2Result.transactionParticulars,
                         transactionAmount = addTransactionStep2Result.transactionAmount,
                         fromAccount = fromAccount,
@@ -162,6 +164,7 @@ internal fun addTransactionWithAccountAvailabilityCheck(
                 if (addTransactionStep2Result.isSuccess) {
 
                     addTransactionStep2Result = InsertOperations.addTransactionStep2(
+
                         userId = userId,
                         username = username,
                         transactionType = TransactionTypeEnum.VIA,
@@ -169,7 +172,7 @@ internal fun addTransactionWithAccountAvailabilityCheck(
                         viaAccount = viaAccount,
                         toAccount = toAccount,
                         isViaStep = true,
-                        dateTimeInText = DateTimeUtils.add5MinutesToDateTimeString(dateTimeInText = addTransactionStep2Result.dateTimeInText),
+                        dateTimeInText = DateTimeUtils.add5MinutesToDateTimeInText(dateTimeInText = addTransactionStep2Result.dateTimeInText),
                         transactionParticulars = addTransactionStep2Result.transactionParticulars,
                         transactionAmount = addTransactionStep2Result.transactionAmount
                     )
@@ -177,7 +180,7 @@ internal fun addTransactionWithAccountAvailabilityCheck(
                     ) {
                         return InsertTransactionResult(
                             isSuccess = true,
-                            dateTimeInText = DateTimeUtils.add5MinutesToDateTimeString(dateTimeInText = addTransactionStep2Result.dateTimeInText),
+                            dateTimeInText = DateTimeUtils.add5MinutesToDateTimeInText(dateTimeInText = addTransactionStep2Result.dateTimeInText),
                             transactionParticulars = addTransactionStep2Result.transactionParticulars,
                             transactionAmount = addTransactionStep2Result.transactionAmount,
                             fromAccount = fromAccount,
@@ -191,6 +194,7 @@ internal fun addTransactionWithAccountAvailabilityCheck(
             TransactionTypeEnum.TWO_WAY -> {
 
                 var addTransactionStep2Result: InsertTransactionResult = InsertOperations.addTransactionStep2(
+
                     userId = userId,
                     username = username,
                     transactionType = TransactionTypeEnum.TWO_WAY,
@@ -204,6 +208,7 @@ internal fun addTransactionWithAccountAvailabilityCheck(
                 if (addTransactionStep2Result.isSuccess) {
 
                     addTransactionStep2Result = InsertOperations.addTransactionStep2(
+
                         userId = userId,
                         username = username,
                         transactionType = TransactionTypeEnum.TWO_WAY,
@@ -211,7 +216,7 @@ internal fun addTransactionWithAccountAvailabilityCheck(
                         viaAccount = viaAccount,
                         toAccount = toAccount,
                         isTwoWayStep = true,
-                        dateTimeInText = DateTimeUtils.add5MinutesToDateTimeString(dateTimeInText = addTransactionStep2Result.dateTimeInText),
+                        dateTimeInText = DateTimeUtils.add5MinutesToDateTimeInText(dateTimeInText = addTransactionStep2Result.dateTimeInText),
                         transactionParticulars = addTransactionStep2Result.transactionParticulars,
                         transactionAmount = addTransactionStep2Result.transactionAmount
                     )
@@ -219,7 +224,7 @@ internal fun addTransactionWithAccountAvailabilityCheck(
 
                         return InsertTransactionResult(
                             isSuccess = true,
-                            dateTimeInText = DateTimeUtils.add5MinutesToDateTimeString(dateTimeInText = addTransactionStep2Result.dateTimeInText),
+                            dateTimeInText = DateTimeUtils.add5MinutesToDateTimeInText(dateTimeInText = addTransactionStep2Result.dateTimeInText),
                             transactionParticulars = addTransactionStep2Result.transactionParticulars,
                             transactionAmount = addTransactionStep2Result.transactionAmount,
                             fromAccount = fromAccount,
@@ -232,6 +237,7 @@ internal fun addTransactionWithAccountAvailabilityCheck(
         }
     }
     return InsertTransactionResult(
+
         isSuccess = false,
         dateTimeInText = dateTimeInText,
         transactionParticulars = transactionParticulars,

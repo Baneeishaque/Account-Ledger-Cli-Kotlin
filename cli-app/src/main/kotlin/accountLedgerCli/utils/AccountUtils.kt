@@ -59,7 +59,8 @@ internal object AccountUtils {
     ): String {
 
         var result = ""
-        userAccountsMap.forEach { account -> result += "${Constants.accountText.first()}${account.key} - ${account.value.fullName}\n" }
+        userAccountsMap.toList().takeLast(n = 10)
+            .forEach { account: Pair<UInt, AccountResponse> -> result += "${Constants.accountText.first()}${account.first} - ${account.second.fullName}\n" }
         return result
     }
 

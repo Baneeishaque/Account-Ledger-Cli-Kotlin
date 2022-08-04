@@ -1,7 +1,5 @@
 package accountLedgerCli.to_utils
 
-import accountLedgerCli.cli.App
-import accountLedgerCli.models.UserCredentials
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeParseException
@@ -9,30 +7,52 @@ import java.time.format.DateTimeParseException
 object InputUtils {
 
     @JvmStatic
-    fun getValidFloat(inputString: String, invalidMessage: String): Float {
+    fun getValidFloat(inputText: String, constructInvalidMessage: (String) -> String): Float {
 
         return try {
-            inputString.toFloat()
+            inputText.toFloat()
 
         } catch (exception: NumberFormatException) {
 
-            println(invalidMessage)
-            getValidFloat(readLine()!!, invalidMessage)
+            print(constructInvalidMessage.invoke(inputText))
+            getValidFloat(inputText = readLine()!!, constructInvalidMessage = constructInvalidMessage)
         }
     }
 
     @JvmStatic
-    fun getValidInt(inputString: String, invalidMessage: String): UInt {
+    fun getValidUnsignedInt(inputText: String, invalidMessage: String): UInt {
 
         return try {
-            inputString.toUInt()
+
+            inputText.toUInt()
 
         } catch (exception: NumberFormatException) {
 
-            App.commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
-                listOf(invalidMessage)
+            print(message = invalidMessage)
+            getValidUnsignedInt(inputText = readLine()!!, invalidMessage = invalidMessage)
+        }
+    }
+
+    @JvmStatic
+    fun getGreaterUnsignedInt(inputUInt: UInt, thresholdValue: UInt, constructInvalidMessage: (UInt) -> String): UInt {
+
+        if (inputUInt > thresholdValue) {
+
+            return inputUInt
+
+        } else {
+
+            print(message = constructInvalidMessage.invoke(inputUInt))
+            return getGreaterUnsignedInt(
+
+                inputUInt = getValidUnsignedInt(
+
+                    inputText = readLine()!!,
+                    invalidMessage = "Please Enter Valid Unsigned Integer"
+                ),
+                thresholdValue = thresholdValue,
+                constructInvalidMessage = constructInvalidMessage
             )
-            getValidInt(readLine()!!, invalidMessage)
         }
     }
 

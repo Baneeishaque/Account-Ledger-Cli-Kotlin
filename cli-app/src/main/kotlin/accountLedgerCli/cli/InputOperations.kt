@@ -19,7 +19,8 @@ internal fun <T> getValidIndex(
 ): UInt {
 
     commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
-        listOf(
+
+        listOfCommands = listOf(
             "\n${itemSpecification}s",
             items,
             "Enter $itemSpecificationPrefix$itemSpecification Index, or O to back : ${itemSpecification.first()}"
@@ -29,8 +30,9 @@ internal fun <T> getValidIndex(
     val idInput: String = readLine()!!
     if (idInput == "0") return 0u
 
-    val inputForIndex: UInt = InputUtils.getValidInt(
-        inputString = idInput,
+    val inputForIndex: UInt = InputUtils.getValidUnsignedInt(
+
+        inputText = idInput,
         invalidMessage = "Invalid $itemSpecification Index...\nEnter $itemSpecification Index, or O to back : ${itemSpecification.first()}"
     )
     if (inputForIndex == 0u) {
@@ -46,6 +48,7 @@ internal fun <T> getValidIndex(
         } else {
 
             commandLinePrintMenuWithTryPrompt.printMenuWithTryPromptFromListOfCommands(
+
                 listOfCommands = listOf("Invalid $itemSpecification Index, Try again ? (Y/N) : ")
             )
             return when (readLine()) {
@@ -84,6 +87,7 @@ internal fun <T> getValidIndex(
 internal fun chooseDepositTop(userId: UInt): HandleAccountsApiResponseResult {
 
     return HandleResponses.handleAccountsApiResponse(
+
         apiResponse = getAccounts(userId = userId),
         purpose = AccountTypeEnum.TO
     )
@@ -92,6 +96,7 @@ internal fun chooseDepositTop(userId: UInt): HandleAccountsApiResponseResult {
 internal fun chooseDepositFull(userId: UInt): HandleAccountsApiResponseResult {
 
     return HandleResponses.handleAccountsApiResponse(
+
         apiResponse = ApiUtils.getAccountsFull(userId = userId),
         purpose = AccountTypeEnum.TO
     )
@@ -100,6 +105,7 @@ internal fun chooseDepositFull(userId: UInt): HandleAccountsApiResponseResult {
 internal fun chooseWithdrawTop(userId: UInt): HandleAccountsApiResponseResult {
 
     return HandleResponses.handleAccountsApiResponse(
+
         apiResponse = getAccounts(userId = userId),
         purpose = AccountTypeEnum.FROM
     )
@@ -108,6 +114,7 @@ internal fun chooseWithdrawTop(userId: UInt): HandleAccountsApiResponseResult {
 internal fun chooseWithdrawFull(userId: UInt): HandleAccountsApiResponseResult {
 
     return HandleResponses.handleAccountsApiResponse(
+
         apiResponse = ApiUtils.getAccountsFull(userId),
         purpose = AccountTypeEnum.FROM
     )
@@ -116,6 +123,7 @@ internal fun chooseWithdrawFull(userId: UInt): HandleAccountsApiResponseResult {
 internal fun chooseViaTop(userId: UInt): HandleAccountsApiResponseResult {
 
     return HandleResponses.handleAccountsApiResponse(
+
         apiResponse = getAccounts(userId = userId),
         purpose = AccountTypeEnum.VIA
     )
@@ -124,6 +132,7 @@ internal fun chooseViaTop(userId: UInt): HandleAccountsApiResponseResult {
 internal fun chooseViaFull(userId: UInt): HandleAccountsApiResponseResult {
 
     return HandleResponses.handleAccountsApiResponse(
+
         apiResponse = ApiUtils.getAccountsFull(userId),
         purpose = AccountTypeEnum.VIA
     )
@@ -132,12 +141,13 @@ internal fun chooseViaFull(userId: UInt): HandleAccountsApiResponseResult {
 internal fun enterDateWithTime(
 
     dateTimeInText: String,
-    transactionType: TransactionTypeEnum
+    transactionType: TransactionTypeEnum,
+    isNotFromSplitTransaction: Boolean
 
 ): String {
 
     print(
-        "$dateTimeInText Correct? (Y/N), D+Tr to increase 1 Day with Time Reset, D+ to increase 1 Day, D2+Tr to increase 2 Days with Time Reset, D2+ to increase 2 Days,${if (transactionType == TransactionTypeEnum.VIA) " Ex12 to exchange From & Via A/Cs, Ex23 to exchange Via & To A/Cs, Ex13 to exchange From & To A/Cs" else " Ex to exchange From & To A/Cs"} or B to Back : "
+        "$dateTimeInText Correct? (Y/N), D+Tr to increase 1 Day with Time Reset, D+ to increase 1 Day, D- to decrease 1 Day, D2+Tr to increase 2 Days with Time Reset, D2+ to increase 2 Days, D2- to decrease 2 Days,${if (transactionType == TransactionTypeEnum.VIA) " Ex12 to exchange From & Via A/Cs, Ex23 to exchange Via & To A/Cs, Ex13 to exchange From & To A/Cs" else " Ex to exchange From & To A/Cs"}${if (isNotFromSplitTransaction) ", S to Split Transactions" else ""}, B to Back : "
     )
     when (readLine()) {
         "Y", "" -> {
@@ -160,6 +170,11 @@ internal fun enterDateWithTime(
             return "D+"
         }
 
+        "D-" -> {
+
+            return "D-"
+        }
+
         "D2+Tr" -> {
 
             return "D2+Tr"
@@ -170,11 +185,21 @@ internal fun enterDateWithTime(
             return "D2+"
         }
 
+        "D2-" -> {
+
+            return "D2-"
+        }
+
         "Ex" -> {
 
             if (transactionType == TransactionTypeEnum.VIA) {
 
-                return retryEnterDateWithTimeOnInvalidEntry(transactionType, dateTimeInText)
+                return retryEnterDateWithTimeOnInvalidEntry(
+
+                    transactionType = transactionType,
+                    dateTimeInText = dateTimeInText,
+                    isFromSplitTransaction = isNotFromSplitTransaction
+                )
             }
             return "Ex"
         }
@@ -183,7 +208,12 @@ internal fun enterDateWithTime(
 
             if (transactionType != TransactionTypeEnum.VIA) {
 
-                return retryEnterDateWithTimeOnInvalidEntry(transactionType, dateTimeInText)
+                return retryEnterDateWithTimeOnInvalidEntry(
+
+                    transactionType = transactionType,
+                    dateTimeInText = dateTimeInText,
+                    isFromSplitTransaction = isNotFromSplitTransaction
+                )
             }
             return "Ex12"
         }
@@ -192,7 +222,12 @@ internal fun enterDateWithTime(
 
             if (transactionType != TransactionTypeEnum.VIA) {
 
-                return retryEnterDateWithTimeOnInvalidEntry(transactionType, dateTimeInText)
+                return retryEnterDateWithTimeOnInvalidEntry(
+
+                    transactionType = transactionType,
+                    dateTimeInText = dateTimeInText,
+                    isFromSplitTransaction = isNotFromSplitTransaction
+                )
             }
             return "Ex23"
         }
@@ -201,25 +236,50 @@ internal fun enterDateWithTime(
 
             if (transactionType != TransactionTypeEnum.VIA) {
 
-                return retryEnterDateWithTimeOnInvalidEntry(transactionType, dateTimeInText)
+                return retryEnterDateWithTimeOnInvalidEntry(
+
+                    transactionType = transactionType,
+                    dateTimeInText = dateTimeInText,
+                    isFromSplitTransaction = isNotFromSplitTransaction
+                )
             }
             return "Ex13"
+        }
+
+        "S" -> {
+
+            if (isNotFromSplitTransaction) {
+
+                return "S"
+            }
         }
 
         "B" -> {
 
             return "B"
         }
-
-        else -> {
-
-            return retryEnterDateWithTimeOnInvalidEntry(transactionType, dateTimeInText)
-        }
     }
+    return retryEnterDateWithTimeOnInvalidEntry(
+
+        transactionType = transactionType,
+        dateTimeInText = dateTimeInText,
+        isFromSplitTransaction = isNotFromSplitTransaction
+    )
 }
 
-private fun retryEnterDateWithTimeOnInvalidEntry(transactionType: TransactionTypeEnum, dateTimeInText: String): String {
+private fun retryEnterDateWithTimeOnInvalidEntry(
+
+    transactionType: TransactionTypeEnum,
+    dateTimeInText: String,
+    isFromSplitTransaction: Boolean
+
+): String {
 
     invalidOptionMessage()
-    return enterDateWithTime(transactionType = transactionType, dateTimeInText = dateTimeInText)
+    return enterDateWithTime(
+
+        transactionType = transactionType,
+        dateTimeInText = dateTimeInText,
+        isNotFromSplitTransaction = isFromSplitTransaction
+    )
 }

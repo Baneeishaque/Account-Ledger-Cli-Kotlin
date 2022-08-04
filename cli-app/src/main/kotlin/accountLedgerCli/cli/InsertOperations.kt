@@ -4,10 +4,9 @@ import accountLedgerCli.api.response.AccountResponse
 import accountLedgerCli.api.response.TransactionManipulationResponse
 import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
 import accountLedgerCli.constants.Constants
+import accountLedgerCli.enums.*
 import accountLedgerCli.enums.AccountExchangeTypeEnum
-import accountLedgerCli.enums.AccountTypeEnum
 import accountLedgerCli.enums.HandleAccountsApiResponseResult
-import accountLedgerCli.enums.TransactionTypeEnum
 import accountLedgerCli.models.*
 import accountLedgerCli.retrofit.data.TransactionDataSource
 import accountLedgerCli.to_models.IsOkModel
@@ -96,8 +95,7 @@ object InsertOperations {
                         transactionParticulars = transactionParticulars,
                         transactionAmount = transactionAmount
                     )
-                }
-            )
+                })
         }
         return insertTransactionResult
     }
@@ -168,18 +166,25 @@ object InsertOperations {
 
     ): InsertTransactionResult {
 
-        var localFromAccount: AccountResponse = fromAccount
-        var localViaAccount: AccountResponse = viaAccount
-        var localToAccount: AccountResponse = toAccount
+        var localInsertTransactionResult = InsertTransactionResult(
+
+            isSuccess = false,
+            dateTimeInText = dateTimeInText,
+            transactionParticulars = transactionParticulars,
+            transactionAmount = transactionAmount,
+            fromAccount = fromAccount,
+            viaAccount = viaAccount,
+            toAccount = toAccount
+        )
 
         do {
             commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
                 listOfCommands = Screens.getUserWithCurrentAccountSelectionsAsText(
 
                     username = username,
-                    fromAccount = localFromAccount,
-                    viaAccount = localViaAccount,
-                    toAccount = localToAccount,
+                    fromAccount = localInsertTransactionResult.fromAccount,
+                    viaAccount = localInsertTransactionResult.viaAccount,
+                    toAccount = localInsertTransactionResult.toAccount,
                     transactionType = transactionType
 
                 ) + listOf(
@@ -200,6 +205,17 @@ object InsertOperations {
 
                         "8 - Exchange Accounts\n" + "9 - Exchange Accounts, Then Continue Transaction\n" + "10 - Input To Account ID Directly, Exchange Accounts, Then Continue Transaction\n" + "11 - Input From Account ID Directly, Exchange Accounts, Then Continue Transaction\n" + "12 - Choose To Account From List - Top Levels, Exchange Accounts, Then Continue Transaction\n" + "13 - Choose To Account From List - Full Names, Exchange Accounts, Then Continue Transaction\n" + "14 - Choose From Account From List - Top Levels, Exchange Accounts, Then Continue Transaction\n" + "15 - Choose From Account From List - Full Names, Exchange Accounts, Then Continue Transaction"
                     },
+                    "17 - ${Screens.getQuickTransactionOnWalletText()}",
+                    "18 - ${Screens.getQuickTransactionOnWalletToFrequent1Text()}",
+                    "19 - ${Screens.getQuickTransactionOnWalletToFrequent2Text()}",
+                    "20 - ${Screens.getQuickTransactionOnWalletToFrequent3Text()}",
+                    "21 - ${Screens.getQuickTransactionOnBankText()}",
+                    "22 - ${Screens.getQuickTransactionOnBankToFrequent1Text()}",
+                    "23 - ${Screens.getQuickTransactionOnBankToFrequent2Text()}",
+                    "24 - ${Screens.getQuickTransactionOnBankToFrequent3Text()}",
+                    "25 - ${Screens.getQuickTransactionOnFrequent1Text()}",
+                    "26 - ${Screens.getQuickTransactionOnFrequent2Text()}",
+                    "27 - ${Screens.getQuickTransactionOnFrequent3Text()}",
                     "0 - Back",
                     "",
                     "Enter Your Choice : "
@@ -209,41 +225,41 @@ object InsertOperations {
 
                 "1" -> {
 
-                    return processChooseAccountResult(
+                    localInsertTransactionResult = processChooseAccountResult(
 
                         chooseAccountResult = chooseDepositTop(userId = userId),
                         userId = userId,
                         username = username,
                         transactionType = transactionType,
-                        account1 = localFromAccount,
-                        account2 = localViaAccount,
+                        account1 = localInsertTransactionResult.fromAccount,
+                        account2 = localInsertTransactionResult.viaAccount,
                         purpose = AccountTypeEnum.TO,
                         dateTimeInText = dateTimeInText,
                         transactionParticulars = transactionParticulars,
                         transactionAmount = transactionAmount,
-                        fromAccount = localFromAccount,
-                        viaAccount = localViaAccount,
-                        toAccount = localToAccount
+                        fromAccount = localInsertTransactionResult.fromAccount,
+                        viaAccount = localInsertTransactionResult.viaAccount,
+                        toAccount = localInsertTransactionResult.toAccount
                     )
                 }
 
                 "2" -> {
 
-                    return processChooseAccountResult(
+                    localInsertTransactionResult = processChooseAccountResult(
 
                         chooseAccountResult = chooseDepositFull(userId = userId),
                         userId = userId,
                         username = username,
                         transactionType = transactionType,
-                        account1 = localFromAccount,
-                        account2 = localViaAccount,
+                        account1 = localInsertTransactionResult.fromAccount,
+                        account2 = localInsertTransactionResult.viaAccount,
                         purpose = AccountTypeEnum.TO,
                         dateTimeInText = dateTimeInText,
                         transactionParticulars = transactionParticulars,
                         transactionAmount = transactionAmount,
-                        fromAccount = localFromAccount,
-                        viaAccount = localViaAccount,
-                        toAccount = localToAccount
+                        fromAccount = localInsertTransactionResult.fromAccount,
+                        viaAccount = localInsertTransactionResult.viaAccount,
+                        toAccount = localInsertTransactionResult.toAccount
                     )
                 }
 
@@ -258,8 +274,8 @@ object InsertOperations {
                             userId = userId,
                             username = username,
                             transactionType = transactionType,
-                            account1 = localFromAccount,
-                            account2 = localViaAccount,
+                            account1 = localInsertTransactionResult.fromAccount,
+                            account2 = localInsertTransactionResult.viaAccount,
                             purpose = AccountTypeEnum.TO,
                             dateTimeInText = dateTimeInText,
                             transactionParticulars = transactionParticulars,
@@ -267,54 +283,54 @@ object InsertOperations {
                         )
                         if (processSelectedAccountResult.isSuccess) {
 
-                            return processSelectedAccountResult
+                            localInsertTransactionResult = processSelectedAccountResult
 
                         } else {
 
-                            localFromAccount = processSelectedAccountResult.fromAccount
-                            localViaAccount = processSelectedAccountResult.viaAccount
-                            localToAccount = processSelectedAccountResult.toAccount
+                            localInsertTransactionResult.fromAccount = processSelectedAccountResult.fromAccount
+                            localInsertTransactionResult.viaAccount = processSelectedAccountResult.viaAccount
+                            localInsertTransactionResult.toAccount = processSelectedAccountResult.toAccount
                         }
                     }
                 }
 
                 "4" -> {
 
-                    return processChooseAccountResult(
+                    localInsertTransactionResult = processChooseAccountResult(
 
                         chooseAccountResult = chooseWithdrawTop(userId = userId),
                         userId = userId,
                         username = username,
                         transactionType = transactionType,
-                        account1 = localViaAccount,
-                        account2 = localToAccount,
+                        account1 = localInsertTransactionResult.viaAccount,
+                        account2 = localInsertTransactionResult.toAccount,
                         purpose = AccountTypeEnum.FROM,
                         dateTimeInText = dateTimeInText,
                         transactionParticulars = transactionParticulars,
                         transactionAmount = transactionAmount,
-                        fromAccount = localFromAccount,
-                        viaAccount = localViaAccount,
-                        toAccount = localToAccount
+                        fromAccount = localInsertTransactionResult.fromAccount,
+                        viaAccount = localInsertTransactionResult.viaAccount,
+                        toAccount = localInsertTransactionResult.toAccount
                     )
                 }
 
                 "5" -> {
 
-                    return processChooseAccountResult(
+                    localInsertTransactionResult = processChooseAccountResult(
 
                         chooseAccountResult = chooseWithdrawFull(userId = userId),
                         userId = userId,
                         username = username,
                         transactionType = transactionType,
-                        account1 = localViaAccount,
-                        account2 = localToAccount,
+                        account1 = localInsertTransactionResult.viaAccount,
+                        account2 = localInsertTransactionResult.toAccount,
                         purpose = AccountTypeEnum.FROM,
                         dateTimeInText = dateTimeInText,
                         transactionParticulars = transactionParticulars,
                         transactionAmount = transactionAmount,
-                        fromAccount = localFromAccount,
-                        viaAccount = localViaAccount,
-                        toAccount = localToAccount
+                        fromAccount = localInsertTransactionResult.fromAccount,
+                        viaAccount = localInsertTransactionResult.viaAccount,
+                        toAccount = localInsertTransactionResult.toAccount
                     )
                 }
 
@@ -328,8 +344,8 @@ object InsertOperations {
                             userId = userId,
                             username = username,
                             transactionType = transactionType,
-                            account1 = localViaAccount,
-                            account2 = localToAccount,
+                            account1 = localInsertTransactionResult.viaAccount,
+                            account2 = localInsertTransactionResult.toAccount,
                             purpose = AccountTypeEnum.FROM,
                             dateTimeInText = dateTimeInText,
                             transactionParticulars = transactionParticulars,
@@ -337,26 +353,26 @@ object InsertOperations {
                         )
                         if (processSelectedAccountResult.isSuccess) {
 
-                            return processSelectedAccountResult
+                            localInsertTransactionResult = processSelectedAccountResult
 
                         } else {
 
-                            localFromAccount = processSelectedAccountResult.fromAccount
-                            localViaAccount = processSelectedAccountResult.viaAccount
-                            localToAccount = processSelectedAccountResult.toAccount
+                            localInsertTransactionResult.fromAccount = processSelectedAccountResult.fromAccount
+                            localInsertTransactionResult.viaAccount = processSelectedAccountResult.viaAccount
+                            localInsertTransactionResult.toAccount = processSelectedAccountResult.toAccount
                         }
                     }
                 }
 
                 "7" -> {
 
-                    return transactionContinueCheck(
+                    localInsertTransactionResult = transactionContinueCheck(
                         userId = userId,
                         username = username,
                         transactionType = transactionType,
-                        fromAccount = localFromAccount,
-                        viaAccount = localViaAccount,
-                        toAccount = localToAccount,
+                        fromAccount = localInsertTransactionResult.fromAccount,
+                        viaAccount = localInsertTransactionResult.viaAccount,
+                        toAccount = localInsertTransactionResult.toAccount,
                         dateTimeInText = dateTimeInText,
                         transactionParticulars = transactionParticulars,
                         transactionAmount = transactionAmount
@@ -367,13 +383,13 @@ object InsertOperations {
 
                     if (transactionType == TransactionTypeEnum.VIA) {
 
-                        return addTransaction(
+                        localInsertTransactionResult = addTransaction(
                             userId = userId,
                             username = username,
                             transactionType = transactionType,
-                            fromAccount = localViaAccount,
-                            viaAccount = localFromAccount,
-                            toAccount = localToAccount,
+                            fromAccount = localInsertTransactionResult.viaAccount,
+                            viaAccount = localInsertTransactionResult.fromAccount,
+                            toAccount = localInsertTransactionResult.toAccount,
                             dateTimeInText = dateTimeInText,
                             transactionParticulars = transactionParticulars,
                             transactionAmount = transactionAmount
@@ -381,13 +397,13 @@ object InsertOperations {
 
                     } else {
 
-                        return addTransaction(
+                        localInsertTransactionResult = addTransaction(
                             userId = userId,
                             username = username,
                             transactionType = transactionType,
-                            fromAccount = localToAccount,
-                            viaAccount = localViaAccount,
-                            toAccount = localFromAccount,
+                            fromAccount = localInsertTransactionResult.toAccount,
+                            viaAccount = localInsertTransactionResult.viaAccount,
+                            toAccount = localInsertTransactionResult.fromAccount,
                             dateTimeInText = dateTimeInText,
                             transactionParticulars = transactionParticulars,
                             transactionAmount = transactionAmount
@@ -399,27 +415,27 @@ object InsertOperations {
 
                     if (transactionType == TransactionTypeEnum.VIA) {
 
-                        return transactionContinueCheck(
+                        localInsertTransactionResult = transactionContinueCheck(
                             userId = userId,
                             username = username,
                             transactionType = transactionType,
-                            fromAccount = localViaAccount,
-                            viaAccount = localFromAccount,
-                            toAccount = localToAccount,
+                            fromAccount = localInsertTransactionResult.viaAccount,
+                            viaAccount = localInsertTransactionResult.fromAccount,
+                            toAccount = localInsertTransactionResult.toAccount,
                             dateTimeInText = dateTimeInText,
                             transactionParticulars = transactionParticulars,
                             transactionAmount = transactionAmount
                         )
                     } else {
 
-                        return transactionContinueCheck(
+                        localInsertTransactionResult = transactionContinueCheck(
 
                             userId = userId,
                             username = username,
                             transactionType = transactionType,
-                            fromAccount = localToAccount,
-                            viaAccount = localViaAccount,
-                            toAccount = localFromAccount,
+                            fromAccount = localInsertTransactionResult.toAccount,
+                            viaAccount = localInsertTransactionResult.viaAccount,
+                            toAccount = localInsertTransactionResult.fromAccount,
                             dateTimeInText = dateTimeInText,
                             transactionParticulars = transactionParticulars,
                             transactionAmount = transactionAmount
@@ -430,13 +446,13 @@ object InsertOperations {
                 "10" -> {
                     if (transactionType == TransactionTypeEnum.VIA) {
 
-                        return addTransaction(
+                        localInsertTransactionResult = addTransaction(
                             userId = userId,
                             username = username,
                             transactionType = transactionType,
-                            fromAccount = localFromAccount,
-                            viaAccount = localToAccount,
-                            toAccount = localViaAccount,
+                            fromAccount = localInsertTransactionResult.fromAccount,
+                            viaAccount = localInsertTransactionResult.toAccount,
+                            toAccount = localInsertTransactionResult.viaAccount,
                             dateTimeInText = dateTimeInText,
                             transactionParticulars = transactionParticulars,
                             transactionAmount = transactionAmount
@@ -452,8 +468,8 @@ object InsertOperations {
                                 userId = userId,
                                 username = username,
                                 transactionType = transactionType,
-                                account1 = localFromAccount,
-                                account2 = localViaAccount,
+                                account1 = localInsertTransactionResult.fromAccount,
+                                account2 = localInsertTransactionResult.viaAccount,
                                 purpose = AccountTypeEnum.TO,
                                 dateTimeInText = dateTimeInText,
                                 transactionParticulars = transactionParticulars,
@@ -462,13 +478,13 @@ object InsertOperations {
                             )
                             if (processSelectedAccountResult.isSuccess) {
 
-                                return processSelectedAccountResult
+                                localInsertTransactionResult = processSelectedAccountResult
 
                             } else {
 
-                                localFromAccount = processSelectedAccountResult.fromAccount
-                                localViaAccount = processSelectedAccountResult.viaAccount
-                                localToAccount = processSelectedAccountResult.toAccount
+                                localInsertTransactionResult.fromAccount = processSelectedAccountResult.fromAccount
+                                localInsertTransactionResult.viaAccount = processSelectedAccountResult.viaAccount
+                                localInsertTransactionResult.toAccount = processSelectedAccountResult.toAccount
                             }
                         }
                     }
@@ -477,13 +493,13 @@ object InsertOperations {
                 "11" -> {
                     if (transactionType == TransactionTypeEnum.VIA) {
 
-                        return transactionContinueCheck(
+                        localInsertTransactionResult = transactionContinueCheck(
                             userId = userId,
                             username = username,
                             transactionType = transactionType,
-                            fromAccount = localFromAccount,
-                            viaAccount = localToAccount,
-                            toAccount = localViaAccount,
+                            fromAccount = localInsertTransactionResult.fromAccount,
+                            viaAccount = localInsertTransactionResult.toAccount,
+                            toAccount = localInsertTransactionResult.viaAccount,
                             dateTimeInText = dateTimeInText,
                             transactionParticulars = transactionParticulars,
                             transactionAmount = transactionAmount
@@ -500,8 +516,8 @@ object InsertOperations {
                                 userId = userId,
                                 username = username,
                                 transactionType = transactionType,
-                                account1 = localViaAccount,
-                                account2 = localToAccount,
+                                account1 = localInsertTransactionResult.viaAccount,
+                                account2 = localInsertTransactionResult.toAccount,
                                 purpose = AccountTypeEnum.FROM,
                                 dateTimeInText = dateTimeInText,
                                 transactionParticulars = transactionParticulars,
@@ -510,13 +526,13 @@ object InsertOperations {
                             )
                             if (processSelectedAccountResult.isSuccess) {
 
-                                return processSelectedAccountResult
+                                localInsertTransactionResult = processSelectedAccountResult
 
                             } else {
 
-                                localFromAccount = processSelectedAccountResult.fromAccount
-                                localViaAccount = processSelectedAccountResult.viaAccount
-                                localToAccount = processSelectedAccountResult.toAccount
+                                localInsertTransactionResult.fromAccount = processSelectedAccountResult.fromAccount
+                                localInsertTransactionResult.viaAccount = processSelectedAccountResult.viaAccount
+                                localInsertTransactionResult.toAccount = processSelectedAccountResult.toAccount
                             }
                         }
                     }
@@ -525,14 +541,14 @@ object InsertOperations {
                 "12" -> {
                     if (transactionType == TransactionTypeEnum.VIA) {
 
-                        return addTransaction(
+                        localInsertTransactionResult = addTransaction(
 
                             userId = userId,
                             username = username,
                             transactionType = transactionType,
-                            fromAccount = localToAccount,
-                            viaAccount = localViaAccount,
-                            toAccount = localFromAccount,
+                            fromAccount = localInsertTransactionResult.toAccount,
+                            viaAccount = localInsertTransactionResult.viaAccount,
+                            toAccount = localInsertTransactionResult.fromAccount,
                             dateTimeInText = dateTimeInText,
                             transactionParticulars = transactionParticulars,
                             transactionAmount = transactionAmount
@@ -540,22 +556,22 @@ object InsertOperations {
 
                     } else {
 
-                        return processChooseAccountResult(
+                        localInsertTransactionResult = processChooseAccountResult(
 
                             chooseAccountResult = chooseDepositTop(userId = userId),
                             userId = userId,
                             username = username,
                             transactionType = transactionType,
-                            account1 = localFromAccount,
-                            account2 = localViaAccount,
+                            account1 = localInsertTransactionResult.fromAccount,
+                            account2 = localInsertTransactionResult.viaAccount,
                             purpose = AccountTypeEnum.TO,
                             dateTimeInText = dateTimeInText,
                             transactionParticulars = transactionParticulars,
                             transactionAmount = transactionAmount,
                             wantToExchange = true,
-                            fromAccount = localFromAccount,
-                            viaAccount = localViaAccount,
-                            toAccount = localToAccount
+                            fromAccount = localInsertTransactionResult.fromAccount,
+                            viaAccount = localInsertTransactionResult.viaAccount,
+                            toAccount = localInsertTransactionResult.toAccount
                         )
                     }
                 }
@@ -563,36 +579,36 @@ object InsertOperations {
                 "13" -> {
                     if (transactionType == TransactionTypeEnum.VIA) {
 
-                        return transactionContinueCheck(
+                        localInsertTransactionResult = transactionContinueCheck(
 
                             userId = userId,
                             username = username,
                             transactionType = transactionType,
-                            fromAccount = localToAccount,
-                            viaAccount = localViaAccount,
-                            toAccount = localFromAccount,
+                            fromAccount = localInsertTransactionResult.toAccount,
+                            viaAccount = localInsertTransactionResult.viaAccount,
+                            toAccount = localInsertTransactionResult.fromAccount,
                             dateTimeInText = dateTimeInText,
                             transactionParticulars = transactionParticulars,
                             transactionAmount = transactionAmount
                         )
                     } else {
 
-                        return processChooseAccountResult(
+                        localInsertTransactionResult = processChooseAccountResult(
 
                             chooseAccountResult = chooseDepositFull(userId = userId),
                             userId = userId,
                             username = username,
                             transactionType = transactionType,
-                            account1 = localFromAccount,
-                            account2 = localViaAccount,
+                            account1 = localInsertTransactionResult.fromAccount,
+                            account2 = localInsertTransactionResult.viaAccount,
                             purpose = AccountTypeEnum.TO,
                             dateTimeInText = dateTimeInText,
                             transactionParticulars = transactionParticulars,
                             transactionAmount = transactionAmount,
                             wantToExchange = true,
-                            fromAccount = localFromAccount,
-                            viaAccount = localViaAccount,
-                            toAccount = localToAccount
+                            fromAccount = localInsertTransactionResult.fromAccount,
+                            viaAccount = localInsertTransactionResult.viaAccount,
+                            toAccount = localInsertTransactionResult.toAccount
                         )
                     }
                 }
@@ -601,40 +617,40 @@ object InsertOperations {
 
                     if (transactionType == TransactionTypeEnum.VIA) {
 
-                        return processChooseAccountResult(
+                        localInsertTransactionResult = processChooseAccountResult(
 
                             chooseAccountResult = chooseViaTop(userId = userId),
                             userId = userId,
                             username = username,
                             transactionType = transactionType,
-                            account1 = localFromAccount,
-                            account2 = localToAccount,
+                            account1 = localInsertTransactionResult.fromAccount,
+                            account2 = localInsertTransactionResult.toAccount,
                             purpose = AccountTypeEnum.VIA,
                             dateTimeInText = dateTimeInText,
                             transactionParticulars = transactionParticulars,
                             transactionAmount = transactionAmount,
-                            fromAccount = localFromAccount,
-                            viaAccount = localViaAccount,
-                            toAccount = localToAccount
+                            fromAccount = localInsertTransactionResult.fromAccount,
+                            viaAccount = localInsertTransactionResult.viaAccount,
+                            toAccount = localInsertTransactionResult.toAccount
                         )
                     } else {
 
-                        return processChooseAccountResult(
+                        localInsertTransactionResult = processChooseAccountResult(
 
                             chooseAccountResult = chooseWithdrawTop(userId = userId),
                             userId = userId,
                             username = username,
                             transactionType = transactionType,
-                            account1 = localViaAccount,
-                            account2 = localToAccount,
+                            account1 = localInsertTransactionResult.viaAccount,
+                            account2 = localInsertTransactionResult.toAccount,
                             purpose = AccountTypeEnum.FROM,
                             dateTimeInText = dateTimeInText,
                             transactionParticulars = transactionParticulars,
                             transactionAmount = transactionAmount,
                             wantToExchange = true,
-                            fromAccount = localFromAccount,
-                            viaAccount = localViaAccount,
-                            toAccount = localToAccount
+                            fromAccount = localInsertTransactionResult.fromAccount,
+                            viaAccount = localInsertTransactionResult.viaAccount,
+                            toAccount = localInsertTransactionResult.toAccount
                         )
                     }
                 }
@@ -643,40 +659,40 @@ object InsertOperations {
 
                     if (transactionType == TransactionTypeEnum.VIA) {
 
-                        return processChooseAccountResult(
+                        localInsertTransactionResult = processChooseAccountResult(
 
                             chooseAccountResult = chooseViaFull(userId = userId),
                             userId = userId,
                             username = username,
                             transactionType = transactionType,
-                            account1 = localFromAccount,
-                            account2 = localToAccount,
+                            account1 = localInsertTransactionResult.fromAccount,
+                            account2 = localInsertTransactionResult.toAccount,
                             purpose = AccountTypeEnum.VIA,
                             dateTimeInText = dateTimeInText,
                             transactionParticulars = transactionParticulars,
                             transactionAmount = transactionAmount,
-                            fromAccount = localFromAccount,
-                            viaAccount = localViaAccount,
-                            toAccount = localToAccount
+                            fromAccount = localInsertTransactionResult.fromAccount,
+                            viaAccount = localInsertTransactionResult.viaAccount,
+                            toAccount = localInsertTransactionResult.toAccount
                         )
                     } else {
 
-                        return processChooseAccountResult(
+                        localInsertTransactionResult = processChooseAccountResult(
 
                             chooseAccountResult = chooseWithdrawFull(userId = userId),
                             userId = userId,
                             username = username,
                             transactionType = transactionType,
-                            account1 = localViaAccount,
-                            account2 = localToAccount,
+                            account1 = localInsertTransactionResult.viaAccount,
+                            account2 = localInsertTransactionResult.toAccount,
                             purpose = AccountTypeEnum.FROM,
                             dateTimeInText = dateTimeInText,
                             transactionParticulars = transactionParticulars,
                             transactionAmount = transactionAmount,
                             wantToExchange = true,
-                            fromAccount = localFromAccount,
-                            viaAccount = localViaAccount,
-                            toAccount = localToAccount
+                            fromAccount = localInsertTransactionResult.fromAccount,
+                            viaAccount = localInsertTransactionResult.viaAccount,
+                            toAccount = localInsertTransactionResult.toAccount
                         )
                     }
                 }
@@ -695,8 +711,8 @@ object InsertOperations {
                                 userId = userId,
                                 username = username,
                                 transactionType = transactionType,
-                                account1 = localFromAccount,
-                                account2 = localToAccount,
+                                account1 = localInsertTransactionResult.fromAccount,
+                                account2 = localInsertTransactionResult.toAccount,
                                 purpose = AccountTypeEnum.VIA,
                                 dateTimeInText = dateTimeInText,
                                 transactionParticulars = transactionParticulars,
@@ -704,13 +720,13 @@ object InsertOperations {
                             )
                             if (processSelectedAccountResult.isSuccess) {
 
-                                return processSelectedAccountResult
+                                localInsertTransactionResult = processSelectedAccountResult
 
                             } else {
 
-                                localFromAccount = processSelectedAccountResult.fromAccount
-                                localViaAccount = processSelectedAccountResult.viaAccount
-                                localToAccount = processSelectedAccountResult.toAccount
+                                localInsertTransactionResult.fromAccount = processSelectedAccountResult.fromAccount
+                                localInsertTransactionResult.viaAccount = processSelectedAccountResult.viaAccount
+                                localInsertTransactionResult.toAccount = processSelectedAccountResult.toAccount
                             }
                         }
                     } else {
@@ -719,16 +735,152 @@ object InsertOperations {
                     }
                 }
 
-                "0" -> {
-                    return InsertTransactionResult(
-                        isSuccess = false,
-                        dateTimeInText = dateTimeInText,
-                        transactionParticulars = transactionParticulars,
-                        transactionAmount = transactionAmount,
-                        fromAccount = localFromAccount,
-                        viaAccount = localViaAccount,
-                        toAccount = localToAccount
+                "17" -> {
+
+                    localInsertTransactionResult = Screens.quickTransactionOnWallet(
+
+                        insertTransactionResult = localInsertTransactionResult,
+                        userId = userId,
+                        username = username,
+                        fromAccount = fromAccount,
+                        viaAccount = viaAccount,
+                        toAccount = toAccount
                     )
+                }
+
+                "18" -> {
+
+                    localInsertTransactionResult = Screens.quickTransactionOnWalletToFrequent1(
+
+                        insertTransactionResult = localInsertTransactionResult,
+                        userId = userId,
+                        username = username,
+                        fromAccount = fromAccount,
+                        viaAccount = viaAccount,
+                        toAccount = toAccount
+                    )
+                }
+
+                "19" -> {
+
+                    localInsertTransactionResult = Screens.quickTransactionOnWalletToFrequent2(
+
+                        insertTransactionResult = localInsertTransactionResult,
+                        userId = userId,
+                        username = username,
+                        fromAccount = fromAccount,
+                        viaAccount = viaAccount,
+                        toAccount = toAccount
+                    )
+                }
+
+                "20" -> {
+
+                    localInsertTransactionResult = Screens.quickTransactionOnWalletToFrequent3(
+
+                        insertTransactionResult = localInsertTransactionResult,
+                        userId = userId,
+                        username = username,
+                        fromAccount = fromAccount,
+                        viaAccount = viaAccount,
+                        toAccount = toAccount
+                    )
+                }
+
+                "21" -> {
+
+                    localInsertTransactionResult = Screens.quickTransactionOnBank(
+
+                        insertTransactionResult = localInsertTransactionResult,
+                        userId = userId,
+                        username = username,
+                        fromAccount = fromAccount,
+                        viaAccount = viaAccount,
+                        toAccount = toAccount
+                    )
+                }
+
+                "22" -> {
+
+                    localInsertTransactionResult = Screens.quickTransactionOnBankToFrequent1(
+
+                        insertTransactionResult = localInsertTransactionResult,
+                        userId = userId,
+                        username = username,
+                        fromAccount = fromAccount,
+                        viaAccount = viaAccount,
+                        toAccount = toAccount
+                    )
+                }
+
+                "23" -> {
+
+                    localInsertTransactionResult = Screens.quickTransactionOnBankToFrequent2(
+
+                        insertTransactionResult = localInsertTransactionResult,
+                        userId = userId,
+                        username = username,
+                        fromAccount = fromAccount,
+                        viaAccount = viaAccount,
+                        toAccount = toAccount
+                    )
+                }
+
+                "24" -> {
+
+                    localInsertTransactionResult = Screens.quickTransactionOnBankToFrequent3(
+
+                        insertTransactionResult = localInsertTransactionResult,
+                        userId = userId,
+                        username = username,
+                        fromAccount = fromAccount,
+                        viaAccount = viaAccount,
+                        toAccount = toAccount
+                    )
+                }
+
+                "25" -> {
+
+                    localInsertTransactionResult = Screens.quickTransactionOnFrequent1(
+
+                        insertTransactionResult = localInsertTransactionResult,
+                        userId = userId,
+                        username = username,
+                        fromAccount = fromAccount,
+                        viaAccount = viaAccount,
+                        toAccount = toAccount
+                    )
+                }
+
+                "26" -> {
+
+                    localInsertTransactionResult = Screens.quickTransactionOnFrequent2(
+
+                        insertTransactionResult = localInsertTransactionResult,
+                        userId = userId,
+                        username = username,
+                        fromAccount = fromAccount,
+                        viaAccount = viaAccount,
+                        toAccount = toAccount
+                    )
+                }
+
+                "27" -> {
+
+                    localInsertTransactionResult = Screens.quickTransactionOnFrequent3(
+
+                        insertTransactionResult = localInsertTransactionResult,
+                        userId = userId,
+                        username = username,
+                        fromAccount = fromAccount,
+                        viaAccount = viaAccount,
+                        toAccount = toAccount
+                    )
+                }
+
+                "0" -> {
+
+                    return localInsertTransactionResult
                 }
 
                 else -> invalidOptionMessage()
@@ -740,16 +892,15 @@ object InsertOperations {
 
         return ChooseAccountUtils.chooseAccountById(
 
-            userId = userId,
-            accountType = AccountTypeEnum.FROM
+            userId = userId, accountType = AccountTypeEnum.FROM
         )
     }
 
     private fun chooseToAccount(userId: UInt): ChooseAccountResult {
 
         return ChooseAccountUtils.chooseAccountById(
-            userId = userId,
-            accountType = AccountTypeEnum.TO
+
+            userId = userId, accountType = AccountTypeEnum.TO
         )
     }
 
@@ -933,7 +1084,8 @@ object InsertOperations {
         dateTimeInText: String,
         transactionParticulars: String,
         transactionAmount: Float,
-        isEditStep: Boolean = false
+        isEditStep: Boolean = false,
+        splitIndex: UInt = 0u
 
     ): InsertTransactionResult {
 
@@ -942,7 +1094,7 @@ object InsertOperations {
         var localTransactionAmount: Float = transactionAmount
 
         var menuItems: List<String> = listOf(
-            "\nUser : $username",
+            "\nUser : $username${getSplitIndicator(splitCount = splitIndex)}",
             "Withdraw Account - ${fromAccount.id} : ${fromAccount.fullName}",
         )
         if (transactionType == TransactionTypeEnum.VIA) {
@@ -953,37 +1105,6 @@ object InsertOperations {
         menuItems = menuItems + listOf(
             "Deposit Account - ${toAccount.id} : ${toAccount.fullName}",
         )
-//        if (isViaStep) {
-//
-//            return InsertTransactionResult(
-//                isSuccess = automatedInsertTransaction(
-//                    userId = userId,
-//                    eventDateTime = localDateTimeInText,
-//                    particulars = localTransactionParticulars,
-//                    amount = localTransactionAmount,
-//                    fromAccount = viaAccount,
-//                    toAccount = toAccount
-//                ),
-//                dateTimeInText = localDateTimeInText,
-//                transactionParticulars = localTransactionParticulars,
-//                transactionAmount = localTransactionAmount
-//            )
-//        } else if (isTwoWayStep) {
-//
-//            return InsertTransactionResult(
-//                isSuccess = automatedInsertTransaction(
-//                    userId = userId,
-//                    eventDateTime = localDateTimeInText,
-//                    particulars = localTransactionParticulars,
-//                    amount = localTransactionAmount,
-//                    fromAccount = toAccount,
-//                    toAccount = fromAccount
-//                ),
-//                dateTimeInText = localDateTimeInText,
-//                transactionParticulars = localTransactionParticulars,
-//                transactionAmount = localTransactionAmount
-//            )
-//        } else {
 
         commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
             listOfCommands = menuItems + listOf(
@@ -992,79 +1113,147 @@ object InsertOperations {
             )
         )
         val localDateTimeInTextBackup: String = localDateTimeInText
-        localDateTimeInText =
-            enterDateWithTime(transactionType = transactionType, dateTimeInText = localDateTimeInText)
+        localDateTimeInText = enterDateWithTime(
+
+            transactionType = transactionType,
+            dateTimeInText = localDateTimeInText,
+            isNotFromSplitTransaction = splitIndex == 0u
+        )
         when (localDateTimeInText) {
 
             "D+Tr" -> {
 
                 return addTransactionStep2(
+
                     userId = userId,
                     username = username,
                     transactionType = transactionType,
                     fromAccount = fromAccount,
                     viaAccount = viaAccount,
                     toAccount = toAccount,
+                    isViaStep = isViaStep,
+                    isTwoWayStep = isTwoWayStep,
+                    transactionId = transactionId,
                     dateTimeInText = DateTimeUtils.add1DayWith9ClockTimeToDateTimeInText(dateTimeInText = localDateTimeInTextBackup),
                     transactionParticulars = localTransactionParticulars,
                     transactionAmount = localTransactionAmount,
-                    isEditStep = isEditStep
+                    isEditStep = isEditStep,
+                    splitIndex = splitIndex
                 )
             }
 
             "D+" -> {
 
                 return addTransactionStep2(
+
                     userId = userId,
                     username = username,
                     transactionType = transactionType,
                     fromAccount = fromAccount,
                     viaAccount = viaAccount,
                     toAccount = toAccount,
+                    isViaStep = isViaStep,
+                    isTwoWayStep = isTwoWayStep,
+                    transactionId = transactionId,
                     dateTimeInText = DateTimeUtils.add1DayToDateTimeInText(dateTimeInText = localDateTimeInTextBackup),
                     transactionParticulars = localTransactionParticulars,
                     transactionAmount = localTransactionAmount,
-                    isEditStep = isEditStep
+                    isEditStep = isEditStep,
+                    splitIndex = splitIndex
+                )
+            }
+
+            "D-" -> {
+
+                return addTransactionStep2(
+
+                    userId = userId,
+                    username = username,
+                    transactionType = transactionType,
+                    fromAccount = fromAccount,
+                    viaAccount = viaAccount,
+                    toAccount = toAccount,
+                    isViaStep = isViaStep,
+                    isTwoWayStep = isTwoWayStep,
+                    transactionId = transactionId,
+                    dateTimeInText = DateTimeUtils.subtract1DayToDateTimeInText(dateTimeInText = localDateTimeInTextBackup),
+                    transactionParticulars = localTransactionParticulars,
+                    transactionAmount = localTransactionAmount,
+                    isEditStep = isEditStep,
+                    splitIndex = splitIndex
                 )
             }
 
             "D2+Tr" -> {
 
                 return addTransactionStep2(
+
                     userId = userId,
                     username = username,
                     transactionType = transactionType,
                     fromAccount = fromAccount,
                     viaAccount = viaAccount,
                     toAccount = toAccount,
+                    isViaStep = isViaStep,
+                    isTwoWayStep = isTwoWayStep,
+                    transactionId = transactionId,
                     dateTimeInText = DateTimeUtils.add2DaysWith9ClockTimeToDateTimeInText(
+
                         dateTimeInText = localDateTimeInTextBackup
                     ),
                     transactionParticulars = localTransactionParticulars,
                     transactionAmount = localTransactionAmount,
-                    isEditStep = isEditStep
+                    isEditStep = isEditStep,
+                    splitIndex = splitIndex
                 )
             }
 
             "D2+" -> {
 
                 return addTransactionStep2(
+
                     userId = userId,
                     username = username,
                     transactionType = transactionType,
                     fromAccount = fromAccount,
                     viaAccount = viaAccount,
                     toAccount = toAccount,
-                    dateTimeInText = DateTimeUtils.add2DaysToDateTimeString(dateTimeInText = localDateTimeInTextBackup),
+                    isViaStep = isViaStep,
+                    isTwoWayStep = isTwoWayStep,
+                    transactionId = transactionId,
+                    dateTimeInText = DateTimeUtils.add2DaysToDateTimeInText(dateTimeInText = localDateTimeInTextBackup),
                     transactionParticulars = localTransactionParticulars,
                     transactionAmount = localTransactionAmount,
-                    isEditStep = isEditStep
+                    isEditStep = isEditStep,
+                    splitIndex = splitIndex
+                )
+            }
+
+            "D2-" -> {
+
+                return addTransactionStep2(
+
+                    userId = userId,
+                    username = username,
+                    transactionType = transactionType,
+                    fromAccount = fromAccount,
+                    viaAccount = viaAccount,
+                    toAccount = toAccount,
+                    isViaStep = isViaStep,
+                    isTwoWayStep = isTwoWayStep,
+                    transactionId = transactionId,
+                    dateTimeInText = DateTimeUtils.subtract2DaysToDateTimeInText(dateTimeInText = localDateTimeInTextBackup),
+                    transactionParticulars = localTransactionParticulars,
+                    transactionAmount = localTransactionAmount,
+                    isEditStep = isEditStep,
+                    splitIndex = splitIndex
                 )
             }
 
             "Ex", "Ex13" -> {
 
                 return invokeAddTransactionStep2AfterExchangeOfAccounts(
+
                     userId = userId,
                     username = username,
                     transactionType = transactionType,
@@ -1075,13 +1264,17 @@ object InsertOperations {
                     transactionParticulars = localTransactionParticulars,
                     transactionAmount = localTransactionAmount,
                     accountExchangeType = AccountExchangeTypeEnum.FROM_AND_TO,
-                    isEditStep = isEditStep
+                    isEditStep = isEditStep,
+                    isViaStep = isViaStep,
+                    isTwoWayStep = isTwoWayStep,
+                    transactionId = transactionId
                 )
             }
 
             "Ex12" -> {
 
                 return invokeAddTransactionStep2AfterExchangeOfAccounts(
+
                     userId = userId,
                     username = username,
                     transactionType = transactionType,
@@ -1092,13 +1285,17 @@ object InsertOperations {
                     transactionParticulars = localTransactionParticulars,
                     transactionAmount = localTransactionAmount,
                     accountExchangeType = AccountExchangeTypeEnum.FROM_AND_VIA,
-                    isEditStep = isEditStep
+                    isEditStep = isEditStep,
+                    isViaStep = isViaStep,
+                    isTwoWayStep = isTwoWayStep,
+                    transactionId = transactionId
                 )
             }
 
             "Ex23" -> {
 
                 return invokeAddTransactionStep2AfterExchangeOfAccounts(
+
                     userId = userId,
                     username = username,
                     transactionType = transactionType,
@@ -1109,13 +1306,64 @@ object InsertOperations {
                     transactionParticulars = localTransactionParticulars,
                     transactionAmount = localTransactionAmount,
                     accountExchangeType = AccountExchangeTypeEnum.VIA_AND_TO,
-                    isEditStep = isEditStep
+                    isEditStep = isEditStep,
+                    isViaStep = isViaStep,
+                    isTwoWayStep = isTwoWayStep,
+                    transactionId = transactionId
                 )
+            }
+
+            "S" -> {
+
+                print("Enter No. of Splits : ")
+                val thresholdValue: UInt = 0u
+                val noOfSplits: UInt = InputUtils.getGreaterUnsignedInt(
+
+                    inputUInt = InputUtils.getValidUnsignedInt(
+
+                        inputText = readLine()!!, invalidMessage = "Please Enter Valid Unsigned Integer"
+
+                    ), thresholdValue = thresholdValue, constructInvalidMessage = fun(currentUInt: UInt): String {
+
+                        return "Please Enter Unsigned Integer > $thresholdValue (Current Value is $currentUInt) : "
+                    })
+
+                var localInsertTransactionResult = InsertTransactionResult(
+
+                    isSuccess = false,
+                    dateTimeInText = localDateTimeInTextBackup,
+                    transactionParticulars = localTransactionParticulars,
+                    transactionAmount = localTransactionAmount,
+                    fromAccount = fromAccount,
+                    viaAccount = viaAccount,
+                    toAccount = toAccount
+                )
+                for (index: UInt in 1u..noOfSplits) {
+
+                    localInsertTransactionResult = addTransactionStep2(
+
+                        userId = userId,
+                        username = username,
+                        transactionType = transactionType,
+                        fromAccount = localInsertTransactionResult.fromAccount,
+                        viaAccount = localInsertTransactionResult.viaAccount,
+                        toAccount = localInsertTransactionResult.toAccount,
+                        isViaStep = isViaStep,
+                        isTwoWayStep = isTwoWayStep,
+                        transactionId = transactionId,
+                        dateTimeInText = localInsertTransactionResult.dateTimeInText,
+                        transactionParticulars = localInsertTransactionResult.transactionParticulars,
+                        transactionAmount = localInsertTransactionResult.transactionAmount,
+                        splitIndex = index
+                    )
+                }
+                return localInsertTransactionResult
             }
 
             "B" -> {
 
                 return InsertTransactionResult(
+
                     isSuccess = false,
                     dateTimeInText = localDateTimeInTextBackup,
                     transactionParticulars = localTransactionParticulars,
@@ -1128,48 +1376,102 @@ object InsertOperations {
 
             else -> {
 
-                if (isTwoWayStep || isViaStep) {
+                val reversedTransactionParticulars: String =
+                    SentenceUtils.reverseOrderOfWords(sentence = localTransactionParticulars)
+                print("Enter Particulars (Current Value - $localTransactionParticulars), R to Reverse (Reversed Value - $reversedTransactionParticulars), AS to Add Suffix, AP to Add Prefix : ")
 
-                    val reversedTransactionParticulars: String =
-                        SentenceUtils.reverseOrderOfWords(sentence = localTransactionParticulars)
-                    print("Enter Particulars (Current Value - $localTransactionParticulars), R to Reverse (Reversed Value - $reversedTransactionParticulars): ")
-                    // TODO : Prefix Particulars
-                    // TODO : Suffix Particulars
-                    // TODO : Other String Manipulations
+                val transactionParticularsInput: String = readLine()!!
+                if (transactionParticularsInput.isNotEmpty()) {
 
-                    val transactionParticularsInput: String = readLine()!!
-                    if (transactionParticularsInput.isNotEmpty()) {
+                    localTransactionParticulars = if (transactionParticularsInput == "R") {
 
-                        localTransactionParticulars = if (transactionParticularsInput == "R") {
+                        reversedTransactionParticulars
 
-                            reversedTransactionParticulars
+                    } else if (transactionParticularsInput == "AS") {
 
-                        } else {
+                        print("Enter Suffix : ")
+                        val transactionSuffixInput: String = readLine()!!
+                        val suffixedTransactionParticulars = "$localTransactionParticulars$transactionSuffixInput"
 
-                            transactionParticularsInput
-                        }
-                    }
-                } else {
+                        do {
+                            print("Particulars (Current Value - $localTransactionParticulars), (Suffixed Value - $suffixedTransactionParticulars), Do you want to Continue (Y/N) : ")
 
-                    print("Enter Particulars (Current Value - $localTransactionParticulars): ")
-                    // TODO : Back to fields, or complete back
-                    val transactionParticularsInput: String = readLine()!!
-                    if (transactionParticularsInput.isNotEmpty()) {
+                            when (readLine()!!) {
 
-                        localTransactionParticulars = transactionParticularsInput
+                                "Y", "" -> {
+
+                                    localTransactionParticulars = suffixedTransactionParticulars
+                                    break
+                                }
+
+                                "N" -> {
+
+                                    break
+                                }
+
+                                else -> {
+
+                                    invalidOptionMessage()
+                                }
+                            }
+                        } while (true)
+
+                        localTransactionParticulars
+
+                    } else if (transactionParticularsInput == "AP") {
+
+                        print("Enter Prefix : ")
+                        val transactionPrefixInput: String = readLine()!!
+                        val prefixedTransactionParticulars = "$transactionPrefixInput$localTransactionParticulars"
+
+                        do {
+                            print("Particulars (Current Value - $localTransactionParticulars), (Preffixed Value - $prefixedTransactionParticulars), Do you want to Continue (Y/N) : ")
+
+                            when (readLine()!!) {
+
+                                "Y" -> {
+
+                                    localTransactionParticulars = prefixedTransactionParticulars
+                                }
+
+                                "N" -> {
+
+                                    break
+                                }
+
+                                else -> {
+
+                                    invalidOptionMessage()
+                                }
+                            }
+                        } while (true)
+
+                        localTransactionParticulars
+
+                    } else {
+
+                        transactionParticularsInput
                     }
                 }
 
-                val inputPrompt = "Enter Amount (Current Value - $localTransactionAmount) : "
-                print(inputPrompt)
-                val transactionAmountInput: String = readLine()!!
+                if (isTwoWayStep || isViaStep) {
+
+                    // TODO : Prefix Particulars
+                    // TODO : Suffix Particulars
+                    // TODO : Other String Manipulations
+                }
+
+                print("Enter Amount (Current Value - $localTransactionAmount) : ")
+                val transactionAmountInput
+
+                        : String = readLine()!!
                 if (transactionAmountInput.isNotEmpty()) {
 
-                    localTransactionAmount =
-                        InputUtils.getValidFloat(
-                            inputString = transactionAmountInput,
-                            invalidMessage = "Invalid Amount, $inputPrompt : "
-                        )
+                    localTransactionAmount = InputUtils.getValidFloat(
+                        inputText = transactionAmountInput,
+                        constructInvalidMessage = fun(inputText: String): String {
+                            return "Invalid Amount, Enter Amount (Current Value - $inputText) : "
+                        })
                 }
 
                 do {
@@ -1201,7 +1503,9 @@ object InsertOperations {
                                     TransactionTypeEnum.NORMAL -> {
 
                                         return InsertTransactionResult(
+
                                             isSuccess = updateTransaction(
+
                                                 transactionId = transactionId,
                                                 eventDateTime = localDateTimeInText,
                                                 particulars = localTransactionParticulars,
@@ -1219,10 +1523,12 @@ object InsertOperations {
                                     }
 
                                     TransactionTypeEnum.VIA -> {
+
                                         ToDoUtils.showTodo()
                                     }
 
                                     TransactionTypeEnum.TWO_WAY -> {
+
                                         ToDoUtils.showTodo()
                                     }
                                 }
@@ -1268,12 +1574,15 @@ object InsertOperations {
                                     toAccount = toAccount
                                 )
                             } else {
+
                                 when (transactionType) {
 
                                     TransactionTypeEnum.NORMAL, TransactionTypeEnum.TWO_WAY -> {
 
                                         return InsertTransactionResult(
+
                                             isSuccess = insertTransaction(
+
                                                 userId = userId,
                                                 eventDateTime = localDateTimeInText,
                                                 particulars = localTransactionParticulars,
@@ -1281,7 +1590,11 @@ object InsertOperations {
                                                 fromAccount = fromAccount,
                                                 toAccount = toAccount
                                             ),
-                                            dateTimeInText = localDateTimeInText,
+                                            dateTimeInText = if (splitIndex > 0u) DateTimeUtils.add5MinutesToDateTimeInText(
+
+                                                dateTimeInText = localDateTimeInText
+
+                                            ) else localDateTimeInText,
                                             transactionParticulars = localTransactionParticulars,
                                             transactionAmount = localTransactionAmount,
                                             fromAccount = fromAccount,
@@ -1293,7 +1606,9 @@ object InsertOperations {
                                     TransactionTypeEnum.VIA -> {
 
                                         return InsertTransactionResult(
+
                                             isSuccess = insertTransaction(
+
                                                 userId = userId,
                                                 eventDateTime = localDateTimeInText,
                                                 particulars = localTransactionParticulars,
@@ -1301,7 +1616,11 @@ object InsertOperations {
                                                 fromAccount = fromAccount,
                                                 toAccount = viaAccount
                                             ),
-                                            dateTimeInText = localDateTimeInText,
+                                            dateTimeInText = if (splitIndex > 0u) DateTimeUtils.add5MinutesToDateTimeInText(
+
+                                                dateTimeInText = localDateTimeInText
+
+                                            ) else localDateTimeInText,
                                             transactionParticulars = localTransactionParticulars,
                                             transactionAmount = localTransactionAmount,
                                             fromAccount = fromAccount,
@@ -1314,16 +1633,21 @@ object InsertOperations {
                         }
                         // TODO : Back to fields
                         "N" -> return addTransactionStep2(
+
                             userId = userId,
                             username = username,
                             transactionType = transactionType,
                             fromAccount = fromAccount,
                             viaAccount = toAccount,
                             toAccount = viaAccount,
+                            isViaStep = isViaStep,
+                            isTwoWayStep = isTwoWayStep,
+                            transactionId = transactionId,
                             dateTimeInText = localDateTimeInText,
                             transactionParticulars = localTransactionParticulars,
                             transactionAmount = localTransactionAmount,
-                            isEditStep = isEditStep
+                            isEditStep = isEditStep,
+                            splitIndex = splitIndex
                         )
 
                         "Ex" -> {
@@ -1341,7 +1665,10 @@ object InsertOperations {
                                     transactionParticulars = localTransactionParticulars,
                                     transactionAmount = localTransactionAmount,
                                     accountExchangeType = AccountExchangeTypeEnum.FROM_AND_TO,
-                                    isEditStep = isEditStep
+                                    isEditStep = isEditStep,
+                                    isViaStep = isViaStep,
+                                    isTwoWayStep = isTwoWayStep,
+                                    transactionId = transactionId
                                 )
 
                             } else {
@@ -1351,6 +1678,7 @@ object InsertOperations {
                         }
 
                         "Ex13" -> {
+
                             if (transactionType == TransactionTypeEnum.VIA) {
 
                                 return invokeAddTransactionStep2AfterExchangeOfAccounts(
@@ -1364,7 +1692,10 @@ object InsertOperations {
                                     transactionParticulars = localTransactionParticulars,
                                     transactionAmount = localTransactionAmount,
                                     accountExchangeType = AccountExchangeTypeEnum.FROM_AND_TO,
-                                    isEditStep = isEditStep
+                                    isEditStep = isEditStep,
+                                    isViaStep = isViaStep,
+                                    isTwoWayStep = isTwoWayStep,
+                                    transactionId = transactionId
                                 )
 
                             } else {
@@ -1388,7 +1719,10 @@ object InsertOperations {
                                     transactionParticulars = localTransactionParticulars,
                                     transactionAmount = localTransactionAmount,
                                     accountExchangeType = AccountExchangeTypeEnum.FROM_AND_VIA,
-                                    isEditStep = isEditStep
+                                    isEditStep = isEditStep,
+                                    isViaStep = isViaStep,
+                                    isTwoWayStep = isTwoWayStep,
+                                    transactionId = transactionId
                                 )
                             } else {
 
@@ -1411,15 +1745,21 @@ object InsertOperations {
                                     transactionParticulars = localTransactionParticulars,
                                     transactionAmount = localTransactionAmount,
                                     accountExchangeType = AccountExchangeTypeEnum.VIA_AND_TO,
-                                    isEditStep = isEditStep
+                                    isEditStep = isEditStep,
+                                    isViaStep = isViaStep,
+                                    isTwoWayStep = isTwoWayStep,
+                                    transactionId = transactionId
                                 )
                             } else {
+
                                 invalidOptionMessage()
                             }
                         }
 
                         "B" -> {
+
                             return InsertTransactionResult(
+
                                 isSuccess = false,
                                 dateTimeInText = localDateTimeInText,
                                 transactionParticulars = localTransactionParticulars,
@@ -1435,7 +1775,15 @@ object InsertOperations {
                 } while (true)
             }
         }
-//        }
+    }
+
+    private fun getSplitIndicator(splitCount: UInt): String {
+
+        if (splitCount > 0u) {
+
+            return " [S$splitCount]"
+        }
+        return ""
     }
 
     private fun invokeAddTransactionStep2AfterExchangeOfAccounts(
@@ -1450,19 +1798,28 @@ object InsertOperations {
         transactionParticulars: String,
         transactionAmount: Float,
         accountExchangeType: AccountExchangeTypeEnum,
-        isEditStep: Boolean
+        isEditStep: Boolean,
+        isViaStep: Boolean,
+        isTwoWayStep: Boolean,
+        transactionId: UInt
 
     ): InsertTransactionResult {
 
         when (accountExchangeType) {
+
             AccountExchangeTypeEnum.FROM_AND_TO -> {
+
                 return addTransactionStep2(
+
                     userId = userId,
                     username = username,
                     transactionType = transactionType,
                     fromAccount = toAccount,
                     viaAccount = viaAccount,
                     toAccount = fromAccount,
+                    isViaStep = isViaStep,
+                    isTwoWayStep = isTwoWayStep,
+                    transactionId = transactionId,
                     dateTimeInText = dateTimeInText,
                     transactionParticulars = transactionParticulars,
                     transactionAmount = transactionAmount,
@@ -1471,13 +1828,18 @@ object InsertOperations {
             }
 
             AccountExchangeTypeEnum.FROM_AND_VIA -> {
+
                 return addTransactionStep2(
+
                     userId = userId,
                     username = username,
                     transactionType = transactionType,
                     fromAccount = viaAccount,
                     viaAccount = fromAccount,
                     toAccount = toAccount,
+                    isViaStep = isViaStep,
+                    isTwoWayStep = isTwoWayStep,
+                    transactionId = transactionId,
                     dateTimeInText = dateTimeInText,
                     transactionParticulars = transactionParticulars,
                     transactionAmount = transactionAmount,
@@ -1486,13 +1848,18 @@ object InsertOperations {
             }
 
             AccountExchangeTypeEnum.VIA_AND_TO -> {
+
                 return addTransactionStep2(
+
                     userId = userId,
                     username = username,
                     transactionType = transactionType,
                     fromAccount = fromAccount,
                     viaAccount = toAccount,
                     toAccount = viaAccount,
+                    isViaStep = isViaStep,
+                    isTwoWayStep = isTwoWayStep,
+                    transactionId = transactionId,
                     dateTimeInText = dateTimeInText,
                     transactionParticulars = transactionParticulars,
                     transactionAmount = transactionAmount,
@@ -1565,8 +1932,8 @@ object InsertOperations {
 
         ): Boolean {
 
-        val eventDateTimeConversionResult: IsOkModel<String> = MysqlUtils.dateTimeTextConversionWithMessage(
-            dateTimeTextConversionFunction = fun(): IsOkModel<String> {
+        val eventDateTimeConversionResult: IsOkModel<String> =
+            MysqlUtils.dateTimeTextConversionWithMessage(dateTimeTextConversionFunction = fun(): IsOkModel<String> {
                 return MysqlUtils.normalDateTimeTextToMySqlDateTimeText(
                     normalDateTimeText = eventDateTime
                 )
@@ -1589,11 +1956,9 @@ object InsertOperations {
                 }
             }, transactionManipulationSuccessActions = fun() {
 
-                val readFrequencyOfAccountsFileResult: IsOkModel<FrequencyOfAccountsModel> =
-                    JsonFileUtils.readJsonFile(
-                        fileName = Constants.frequencyOfAccountsFileName,
-                        isDevelopmentMode = App.isDevelopmentMode
-                    )
+                val readFrequencyOfAccountsFileResult: IsOkModel<FrequencyOfAccountsModel> = JsonFileUtils.readJsonFile(
+                    fileName = Constants.frequencyOfAccountsFileName, isDevelopmentMode = App.isDevelopmentMode
+                )
 
                 if (App.isDevelopmentMode) {
 
@@ -1613,24 +1978,18 @@ object InsertOperations {
                             userId = userId
                         )
                         frequencyOfAccounts = updateAccountFrequency(
-                            user = user,
-                            account = toAccount,
-                            frequencyOfAccounts = frequencyOfAccounts,
-                            userId = userId
+                            user = user, account = toAccount, frequencyOfAccounts = frequencyOfAccounts, userId = userId
                         )
 
                     } else {
                         frequencyOfAccounts.users = frequencyOfAccounts.users.plusElement(
                             element = getInitialAccountFrequencyForUser(
-                                userId = userId,
-                                fromAccount = fromAccount,
-                                toAccount = toAccount
+                                userId = userId, fromAccount = fromAccount, toAccount = toAccount
                             )
                         )
                     }
                     JsonFileUtils.writeJsonFile(
-                        fileName = Constants.frequencyOfAccountsFileName,
-                        data = frequencyOfAccounts
+                        fileName = Constants.frequencyOfAccountsFileName, data = frequencyOfAccounts
                     )
                 } else {
 
@@ -1638,9 +1997,7 @@ object InsertOperations {
                         fileName = Constants.frequencyOfAccountsFileName, data = FrequencyOfAccountsModel(
                             users = listOf(
                                 getInitialAccountFrequencyForUser(
-                                    userId = userId,
-                                    fromAccount = fromAccount,
-                                    toAccount = toAccount
+                                    userId = userId, fromAccount = fromAccount, toAccount = toAccount
                                 )
                             )
                         )
@@ -1681,8 +2038,8 @@ object InsertOperations {
 
         } else {
 
-            val eventDateTimeConversionResult: IsOkModel<String> = MysqlUtils.dateTimeTextConversionWithMessage(
-                dateTimeTextConversionFunction = fun(): IsOkModel<String> {
+            val eventDateTimeConversionResult: IsOkModel<String> =
+                MysqlUtils.dateTimeTextConversionWithMessage(dateTimeTextConversionFunction = fun(): IsOkModel<String> {
                     return MysqlUtils.normalDateTimeTextToMySqlDateTimeText(
                         normalDateTimeText = eventDateTime
                     )
@@ -1724,10 +2081,7 @@ object InsertOperations {
 
     private fun updateAccountFrequency(
 
-        user: UserModel,
-        account: AccountResponse,
-        frequencyOfAccounts: FrequencyOfAccountsModel,
-        userId: UInt
+        user: UserModel, account: AccountResponse, frequencyOfAccounts: FrequencyOfAccountsModel, userId: UInt
 
     ): FrequencyOfAccountsModel {
 
@@ -1745,9 +2099,7 @@ object InsertOperations {
 
                 frequencyOfAccounts.users.find { localUser: UserModel -> localUser.id == userId }!!.accountFrequencies.plusElement(
                     element = AccountFrequencyModel(
-                        accountID = account.id,
-                        accountName = account.fullName,
-                        countOfRepetition = 1u
+                        accountID = account.id, accountName = account.fullName, countOfRepetition = 1u
                     )
                 )
 
@@ -1761,31 +2113,22 @@ object InsertOperations {
 
     private fun getInitialAccountFrequencyForUser(
 
-        userId: UInt,
-        fromAccount: AccountResponse,
-        toAccount: AccountResponse
+        userId: UInt, fromAccount: AccountResponse, toAccount: AccountResponse
 
     ) = UserModel(
 
         id = userId, accountFrequencies = listOf(
             AccountFrequencyModel(
-                accountID = fromAccount.id,
-                accountName = fromAccount.fullName,
-                countOfRepetition = 1u
-            ),
-            AccountFrequencyModel
-                (
-                accountID = toAccount.id,
-                accountName = toAccount.fullName,
-                countOfRepetition = 1u
+                accountID = fromAccount.id, accountName = fromAccount.fullName, countOfRepetition = 1u
+            ), AccountFrequencyModel(
+                accountID = toAccount.id, accountName = toAccount.fullName, countOfRepetition = 1u
             )
         )
     )
 
     private fun getEnvironmentVariableValueForInsertOperation(
 
-        environmentVariableName: String,
-        environmentVariableFormalName: String
+        environmentVariableName: String, environmentVariableFormalName: String
 
     ): EnvironmentVariableForWholeNumber = EnvironmentFileOperations.getEnvironmentVariableValueForWholeNumber(
 

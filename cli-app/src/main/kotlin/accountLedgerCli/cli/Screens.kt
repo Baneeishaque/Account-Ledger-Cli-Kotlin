@@ -48,43 +48,17 @@ object Screens {
                     "\nUser : $username",
                     AccountUtils.getFrequentlyUsedTop10Accounts(userId = userId),
                     "1 - List Accounts : Top Levels",
-                    "2 - Insert Quick Transaction On : Wallet",
-                    "3 - Insert Quick Transaction On : Wallet To : ${
-                        getEnvironmentVariableValueForUserScreen(environmentVariableName = EnvironmentFileEntryEnum.FREQUENT_1_ACCOUNT_NAME.name)
-                    }",
-                    "4 - Insert Quick Transaction On : Wallet To : ${
-                        getEnvironmentVariableValueForUserScreen(environmentVariableName = EnvironmentFileEntryEnum.FREQUENT_2_ACCOUNT_NAME.name)
-                    }",
-                    "5 - Insert Quick Transaction On : Wallet To : ${
-                        getEnvironmentVariableValueForUserScreen(environmentVariableName = EnvironmentFileEntryEnum.FREQUENT_3_ACCOUNT_NAME.name)
-                    }",
-                    "6 - Insert Quick Transaction On : Bank : ${
-                        getEnvironmentVariableValueForUserScreen(environmentVariableName = EnvironmentFileEntryEnum.BANK_ACCOUNT_NAME.name)
-                    }",
-                    "7 - Insert Quick Transaction On : Bank : ${
-                        getEnvironmentVariableValueForUserScreen(environmentVariableName = EnvironmentFileEntryEnum.BANK_ACCOUNT_NAME.name)
-                    } To : ${
-                        getEnvironmentVariableValueForUserScreen(environmentVariableName = EnvironmentFileEntryEnum.FREQUENT_1_ACCOUNT_NAME.name)
-                    }",
-                    "8 - Insert Quick Transaction On : Bank : ${
-                        getEnvironmentVariableValueForUserScreen(environmentVariableName = EnvironmentFileEntryEnum.BANK_ACCOUNT_NAME.name)
-                    } To : ${
-                        getEnvironmentVariableValueForUserScreen(environmentVariableName = EnvironmentFileEntryEnum.FREQUENT_2_ACCOUNT_NAME.name)
-                    }",
-                    "9 - Insert Quick Transaction On : Bank : ${
-                        getEnvironmentVariableValueForUserScreen(environmentVariableName = EnvironmentFileEntryEnum.BANK_ACCOUNT_NAME.name)
-                    } To : ${
-                        getEnvironmentVariableValueForUserScreen(environmentVariableName = EnvironmentFileEntryEnum.FREQUENT_3_ACCOUNT_NAME.name)
-                    }",
-                    "10 - Insert Quick Transaction On : ${
-                        getEnvironmentVariableValueForUserScreen(environmentVariableName = EnvironmentFileEntryEnum.FREQUENT_1_ACCOUNT_NAME.name)
-                    }",
-                    "11 - Insert Quick Transaction On : ${
-                        getEnvironmentVariableValueForUserScreen(environmentVariableName = EnvironmentFileEntryEnum.FREQUENT_2_ACCOUNT_NAME.name)
-                    }",
-                    "12 - Insert Quick Transaction On : ${
-                        getEnvironmentVariableValueForUserScreen(environmentVariableName = EnvironmentFileEntryEnum.FREQUENT_3_ACCOUNT_NAME.name)
-                    }",
+                    "2 - ${getQuickTransactionOnWalletText()}",
+                    "3 - ${getQuickTransactionOnWalletToFrequent1Text()}",
+                    "4 - ${getQuickTransactionOnWalletToFrequent2Text()}",
+                    "5 - ${getQuickTransactionOnWalletToFrequent3Text()}",
+                    "6 - ${getQuickTransactionOnBankText()}",
+                    "7 - ${getQuickTransactionOnBankToFrequent1Text()}",
+                    "8 - ${getQuickTransactionOnBankToFrequent2Text()}",
+                    "9 - ${getQuickTransactionOnBankToFrequent3Text()}",
+                    "10 - ${getQuickTransactionOnFrequent1Text()}",
+                    "11 - ${getQuickTransactionOnFrequent2Text()}",
+                    "12 - ${getQuickTransactionOnFrequent3Text()}",
                     "13 - List Accounts : Full Names",
                     "14 - Import Transactions To : Bank : ${
                         getEnvironmentVariableValueForUserScreen(environmentVariableName = EnvironmentFileEntryEnum.BANK_ACCOUNT_NAME.name)
@@ -113,7 +87,9 @@ object Screens {
                 )
             )
             when (readLine()!!) {
+
                 "1" -> {
+
                     insertTransactionResult = HandleResponses.handleAccountsResponseAndPrintMenu(
 
                         apiResponse = getAccounts(userId = userId),
@@ -129,178 +105,150 @@ object Screens {
                 }
 
                 "2" -> {
-                    insertTransactionResult = InsertOperations.openSpecifiedAccountHome(
 
-                        account = InsertOperations.walletAccount,
+                    insertTransactionResult = quickTransactionOnWallet(
+
+                        insertTransactionResult = insertTransactionResult,
                         userId = userId,
                         username = username,
                         fromAccount = fromAccount,
                         viaAccount = viaAccount,
-                        toAccount = toAccount,
-                        dateTimeInText = insertTransactionResult.dateTimeInText,
-                        transactionParticulars = insertTransactionResult.transactionParticulars,
-                        transactionAmount = insertTransactionResult.transactionAmount
+                        toAccount = toAccount
                     )
                 }
 
                 "3" -> {
-                    insertTransactionResult = InsertOperations.insertQuickTransactionFromAccount1toAccount2(
 
-                        account1 = InsertOperations.walletAccount,
-                        account2 = InsertOperations.frequent1Account,
+                    insertTransactionResult = quickTransactionOnWalletToFrequent1(
+
                         userId = userId,
                         username = username,
                         fromAccount = fromAccount,
                         viaAccount = viaAccount,
                         toAccount = toAccount,
-                        dateTimeInText = insertTransactionResult.dateTimeInText,
-                        transactionParticulars = insertTransactionResult.transactionParticulars,
-                        transactionAmount = insertTransactionResult.transactionAmount
+                        insertTransactionResult = insertTransactionResult
                     )
                 }
 
                 "4" -> {
-                    insertTransactionResult = InsertOperations.insertQuickTransactionFromAccount1toAccount2(
 
-                        account1 = InsertOperations.walletAccount,
-                        account2 = InsertOperations.frequent2Account,
+                    insertTransactionResult = quickTransactionOnWalletToFrequent2(
+
                         userId = userId,
                         username = username,
                         fromAccount = fromAccount,
                         viaAccount = viaAccount,
                         toAccount = toAccount,
-                        dateTimeInText = insertTransactionResult.dateTimeInText,
-                        transactionParticulars = insertTransactionResult.transactionParticulars,
-                        transactionAmount = insertTransactionResult.transactionAmount
+                        insertTransactionResult = insertTransactionResult
                     )
                 }
 
                 "5" -> {
-                    insertTransactionResult = InsertOperations.insertQuickTransactionFromAccount1toAccount2(
 
-                        account1 = InsertOperations.walletAccount,
-                        account2 = InsertOperations.frequent3Account,
+                    insertTransactionResult = quickTransactionOnWalletToFrequent3(
+
                         userId = userId,
                         username = username,
                         fromAccount = fromAccount,
                         viaAccount = viaAccount,
                         toAccount = toAccount,
-                        dateTimeInText = insertTransactionResult.dateTimeInText,
-                        transactionParticulars = insertTransactionResult.transactionParticulars,
-                        transactionAmount = insertTransactionResult.transactionAmount
+                        insertTransactionResult = insertTransactionResult
                     )
                 }
 
                 "6" -> {
-                    insertTransactionResult = InsertOperations.openSpecifiedAccountHome(
 
-                        account = InsertOperations.bankAccount,
+                    insertTransactionResult = quickTransactionOnBank(
+
                         userId = userId,
                         username = username,
                         fromAccount = fromAccount,
                         viaAccount = viaAccount,
                         toAccount = toAccount,
-                        dateTimeInText = insertTransactionResult.dateTimeInText,
-                        transactionParticulars = insertTransactionResult.transactionParticulars,
-                        transactionAmount = insertTransactionResult.transactionAmount
+                        insertTransactionResult = insertTransactionResult
                     )
                 }
 
                 "7" -> {
-                    insertTransactionResult = InsertOperations.insertQuickTransactionFromAccount1toAccount2(
 
-                        account1 = InsertOperations.bankAccount,
-                        account2 = InsertOperations.frequent1Account,
+                    insertTransactionResult = quickTransactionOnBankToFrequent1(
+
                         userId = userId,
                         username = username,
                         fromAccount = fromAccount,
                         viaAccount = viaAccount,
                         toAccount = toAccount,
-                        dateTimeInText = insertTransactionResult.dateTimeInText,
-                        transactionParticulars = insertTransactionResult.transactionParticulars,
-                        transactionAmount = insertTransactionResult.transactionAmount
+                        insertTransactionResult = insertTransactionResult
                     )
                 }
 
                 "8" -> {
-                    insertTransactionResult = InsertOperations.insertQuickTransactionFromAccount1toAccount2(
 
-                        account1 = InsertOperations.bankAccount,
-                        account2 = InsertOperations.frequent2Account,
+                    insertTransactionResult = quickTransactionOnBankToFrequent2(
+
                         userId = userId,
                         username = username,
                         fromAccount = fromAccount,
                         viaAccount = viaAccount,
                         toAccount = toAccount,
-                        dateTimeInText = insertTransactionResult.dateTimeInText,
-                        transactionParticulars = insertTransactionResult.transactionParticulars,
-                        transactionAmount = insertTransactionResult.transactionAmount
+                        insertTransactionResult = insertTransactionResult
                     )
                 }
 
                 "9" -> {
-                    insertTransactionResult = InsertOperations.insertQuickTransactionFromAccount1toAccount2(
 
-                        account1 = InsertOperations.frequent1Account,
-                        account2 = InsertOperations.frequent3Account,
+                    insertTransactionResult = quickTransactionOnBankToFrequent3(
+
                         userId = userId,
                         username = username,
                         fromAccount = fromAccount,
                         viaAccount = viaAccount,
                         toAccount = toAccount,
-                        dateTimeInText = insertTransactionResult.dateTimeInText,
-                        transactionParticulars = insertTransactionResult.transactionParticulars,
-                        transactionAmount = insertTransactionResult.transactionAmount
+                        insertTransactionResult = insertTransactionResult
                     )
                 }
 
                 "10" -> {
 
-                    insertTransactionResult = InsertOperations.openSpecifiedAccountHome(
+                    insertTransactionResult = quickTransactionOnFrequent1(
 
-                        account = InsertOperations.walletAccount,
                         userId = userId,
                         username = username,
                         fromAccount = fromAccount,
                         viaAccount = viaAccount,
                         toAccount = toAccount,
-                        dateTimeInText = insertTransactionResult.dateTimeInText,
-                        transactionParticulars = insertTransactionResult.transactionParticulars,
-                        transactionAmount = insertTransactionResult.transactionAmount
+                        insertTransactionResult = insertTransactionResult
                     )
                 }
 
                 "11" -> {
-                    insertTransactionResult = InsertOperations.openSpecifiedAccountHome(
 
-                        account = InsertOperations.frequent2Account,
+                    insertTransactionResult = quickTransactionOnFrequent2(
+
                         userId = userId,
                         username = username,
                         fromAccount = fromAccount,
                         viaAccount = viaAccount,
                         toAccount = toAccount,
-                        dateTimeInText = insertTransactionResult.dateTimeInText,
-                        transactionParticulars = insertTransactionResult.transactionParticulars,
-                        transactionAmount = insertTransactionResult.transactionAmount
+                        insertTransactionResult = insertTransactionResult
                     )
                 }
 
                 "12" -> {
-                    insertTransactionResult = InsertOperations.openSpecifiedAccountHome(
 
-                        account = InsertOperations.frequent3Account,
+                    insertTransactionResult = quickTransactionOnFrequent3(
+
                         userId = userId,
                         username = username,
                         fromAccount = fromAccount,
                         viaAccount = viaAccount,
                         toAccount = toAccount,
-                        dateTimeInText = insertTransactionResult.dateTimeInText,
-                        transactionParticulars = insertTransactionResult.transactionParticulars,
-                        transactionAmount = insertTransactionResult.transactionAmount
+                        insertTransactionResult = insertTransactionResult
                     )
                 }
 
                 "13" -> {
+
                     insertTransactionResult = HandleResponses.handleAccountsResponseAndPrintMenu(
 
                         apiResponse = ApiUtils.getAccountsFull(userId = userId),
@@ -337,7 +285,9 @@ object Screens {
                 }
 
                 "17" -> {
+
                     viewTransactionsOfInputAccount(
+
                         userId = userId,
                         username = username,
                         viaAccount = viaAccount,
@@ -349,7 +299,9 @@ object Screens {
                 }
 
                 "18" -> {
+
                     printBalanceSheetOfUser(
+
                         currentUserName = username,
                         currentUserId = userId,
                         refineLevel = BalanceSheetRefineLevelEnum.ALL
@@ -357,7 +309,9 @@ object Screens {
                 }
 
                 "19" -> {
+
                     printBalanceSheetOfUser(
+
                         currentUserName = username,
                         currentUserId = userId,
                         refineLevel = BalanceSheetRefineLevelEnum.WITHOUT_OPEN_BALANCES
@@ -365,7 +319,9 @@ object Screens {
                 }
 
                 "20" -> {
+
                     printBalanceSheetOfUser(
+
                         currentUserName = username,
                         currentUserId = userId,
                         refineLevel = BalanceSheetRefineLevelEnum.WITHOUT_MISC_INCOMES
@@ -373,7 +329,9 @@ object Screens {
                 }
 
                 "21" -> {
+
                     printBalanceSheetOfUser(
+
                         currentUserName = username,
                         currentUserId = userId,
                         refineLevel = BalanceSheetRefineLevelEnum.WITHOUT_INVESTMENT_RETURNS
@@ -381,7 +339,9 @@ object Screens {
                 }
 
                 "22" -> {
+
                     printBalanceSheetOfUser(
+
                         currentUserName = username,
                         currentUserId = userId,
                         refineLevel = BalanceSheetRefineLevelEnum.WITHOUT_FAMILY_ACCOUNTS
@@ -482,14 +442,320 @@ object Screens {
                 }
 
                 "0" -> {
+
                     return insertTransactionResult
                 }
 
                 else -> {
+
                     invalidOptionMessage()
                 }
             }
         } while (true)
+    }
+
+    internal fun getQuickTransactionOnBankToFrequent1Text() =
+        getQuickTransactionOnBankToFrequentXText(environmentVariableName = EnvironmentFileEntryEnum.FREQUENT_1_ACCOUNT_NAME.name)
+
+    internal fun getQuickTransactionOnBankToFrequent2Text() =
+        getQuickTransactionOnBankToFrequentXText(environmentVariableName = EnvironmentFileEntryEnum.FREQUENT_2_ACCOUNT_NAME.name)
+
+    internal fun getQuickTransactionOnBankToFrequent3Text() =
+        getQuickTransactionOnBankToFrequentXText(environmentVariableName = EnvironmentFileEntryEnum.FREQUENT_3_ACCOUNT_NAME.name)
+
+    internal fun getQuickTransactionOnWalletToFrequent1Text() =
+        getQuickTransactionOnWalletToFrequentXText(environmentVariableName = EnvironmentFileEntryEnum.FREQUENT_1_ACCOUNT_NAME.name)
+
+    internal fun getQuickTransactionOnWalletToFrequent2Text() =
+        getQuickTransactionOnWalletToFrequentXText(environmentVariableName = EnvironmentFileEntryEnum.FREQUENT_2_ACCOUNT_NAME.name)
+
+    internal fun getQuickTransactionOnWalletToFrequent3Text() =
+        getQuickTransactionOnWalletToFrequentXText(environmentVariableName = EnvironmentFileEntryEnum.FREQUENT_3_ACCOUNT_NAME.name)
+
+    private fun getQuickTransactionOnWalletToFrequentXText(environmentVariableName: String) =
+        "${getQuickTransactionOnWalletText()} To : ${
+            getEnvironmentVariableValueForUserScreen(environmentVariableName = environmentVariableName)
+        }"
+
+    private fun getQuickTransactionOnBankToFrequentXText(environmentVariableName: String) =
+        "${getQuickTransactionOnBankText()} To : ${
+            getEnvironmentVariableValueForUserScreen(environmentVariableName = environmentVariableName)
+        }"
+
+    internal fun getQuickTransactionOnBankText() = getQuickTransactionOnXText(
+        itemSpecification = "Bank : ${
+            getEnvironmentVariableValueForUserScreen(environmentVariableName = EnvironmentFileEntryEnum.BANK_ACCOUNT_NAME.name)
+        }"
+    )
+
+    internal fun getQuickTransactionOnFrequent1Text() = getQuickTransactionOnXText(
+        itemSpecification = getEnvironmentVariableValueForUserScreen(environmentVariableName = EnvironmentFileEntryEnum.FREQUENT_1_ACCOUNT_NAME.name)
+    )
+
+    internal fun getQuickTransactionOnFrequent2Text() = getQuickTransactionOnXText(
+        itemSpecification = getEnvironmentVariableValueForUserScreen(environmentVariableName = EnvironmentFileEntryEnum.FREQUENT_2_ACCOUNT_NAME.name)
+    )
+
+    internal fun getQuickTransactionOnFrequent3Text() = getQuickTransactionOnXText(
+        itemSpecification = getEnvironmentVariableValueForUserScreen(environmentVariableName = EnvironmentFileEntryEnum.FREQUENT_3_ACCOUNT_NAME.name)
+    )
+
+    internal fun getQuickTransactionOnWalletText() = getQuickTransactionOnXText(itemSpecification = "Wallet")
+
+    private fun getQuickTransactionOnXText(itemSpecification: String) =
+        "Insert Quick Transaction On : $itemSpecification"
+
+    internal fun quickTransactionOnFrequent3(
+
+        userId: UInt,
+        username: String,
+        fromAccount: AccountResponse,
+        viaAccount: AccountResponse,
+        toAccount: AccountResponse,
+        insertTransactionResult: InsertTransactionResult
+
+    ) = InsertOperations.openSpecifiedAccountHome(
+
+        account = InsertOperations.frequent3Account,
+        userId = userId,
+        username = username,
+        fromAccount = fromAccount,
+        viaAccount = viaAccount,
+        toAccount = toAccount,
+        dateTimeInText = insertTransactionResult.dateTimeInText,
+        transactionParticulars = insertTransactionResult.transactionParticulars,
+        transactionAmount = insertTransactionResult.transactionAmount
+    )
+
+    internal fun quickTransactionOnFrequent2(
+
+        userId: UInt,
+        username: String,
+        fromAccount: AccountResponse,
+        viaAccount: AccountResponse,
+        toAccount: AccountResponse,
+        insertTransactionResult: InsertTransactionResult
+
+    ) = InsertOperations.openSpecifiedAccountHome(
+
+        account = InsertOperations.frequent2Account,
+        userId = userId,
+        username = username,
+        fromAccount = fromAccount,
+        viaAccount = viaAccount,
+        toAccount = toAccount,
+        dateTimeInText = insertTransactionResult.dateTimeInText,
+        transactionParticulars = insertTransactionResult.transactionParticulars,
+        transactionAmount = insertTransactionResult.transactionAmount
+    )
+
+    internal fun quickTransactionOnFrequent1(
+
+        userId: UInt,
+        username: String,
+        fromAccount: AccountResponse,
+        viaAccount: AccountResponse,
+        toAccount: AccountResponse,
+        insertTransactionResult: InsertTransactionResult
+
+    ) = InsertOperations.openSpecifiedAccountHome(
+
+        account = InsertOperations.frequent1Account,
+        userId = userId,
+        username = username,
+        fromAccount = fromAccount,
+        viaAccount = viaAccount,
+        toAccount = toAccount,
+        dateTimeInText = insertTransactionResult.dateTimeInText,
+        transactionParticulars = insertTransactionResult.transactionParticulars,
+        transactionAmount = insertTransactionResult.transactionAmount
+    )
+
+    internal fun quickTransactionOnBankToFrequent3(
+
+        userId: UInt,
+        username: String,
+        fromAccount: AccountResponse,
+        viaAccount: AccountResponse,
+        toAccount: AccountResponse,
+        insertTransactionResult: InsertTransactionResult
+
+    ) = InsertOperations.insertQuickTransactionFromAccount1toAccount2(
+
+        account1 = InsertOperations.bankAccount,
+        account2 = InsertOperations.frequent3Account,
+        userId = userId,
+        username = username,
+        fromAccount = fromAccount,
+        viaAccount = viaAccount,
+        toAccount = toAccount,
+        dateTimeInText = insertTransactionResult.dateTimeInText,
+        transactionParticulars = insertTransactionResult.transactionParticulars,
+        transactionAmount = insertTransactionResult.transactionAmount
+    )
+
+    internal fun quickTransactionOnBankToFrequent2(
+
+        userId: UInt,
+        username: String,
+        fromAccount: AccountResponse,
+        viaAccount: AccountResponse,
+        toAccount: AccountResponse,
+        insertTransactionResult: InsertTransactionResult
+
+    ) = InsertOperations.insertQuickTransactionFromAccount1toAccount2(
+
+        account1 = InsertOperations.bankAccount,
+        account2 = InsertOperations.frequent2Account,
+        userId = userId,
+        username = username,
+        fromAccount = fromAccount,
+        viaAccount = viaAccount,
+        toAccount = toAccount,
+        dateTimeInText = insertTransactionResult.dateTimeInText,
+        transactionParticulars = insertTransactionResult.transactionParticulars,
+        transactionAmount = insertTransactionResult.transactionAmount
+    )
+
+    internal fun quickTransactionOnBankToFrequent1(
+
+        userId: UInt,
+        username: String,
+        fromAccount: AccountResponse,
+        viaAccount: AccountResponse,
+        toAccount: AccountResponse,
+        insertTransactionResult: InsertTransactionResult
+
+    ) = InsertOperations.insertQuickTransactionFromAccount1toAccount2(
+
+        account1 = InsertOperations.bankAccount,
+        account2 = InsertOperations.frequent1Account,
+        userId = userId,
+        username = username,
+        fromAccount = fromAccount,
+        viaAccount = viaAccount,
+        toAccount = toAccount,
+        dateTimeInText = insertTransactionResult.dateTimeInText,
+        transactionParticulars = insertTransactionResult.transactionParticulars,
+        transactionAmount = insertTransactionResult.transactionAmount
+    )
+
+    internal fun quickTransactionOnBank(
+
+        userId: UInt,
+        username: String,
+        fromAccount: AccountResponse,
+        viaAccount: AccountResponse,
+        toAccount: AccountResponse,
+        insertTransactionResult: InsertTransactionResult
+
+    ) = InsertOperations.openSpecifiedAccountHome(
+
+        account = InsertOperations.bankAccount,
+        userId = userId,
+        username = username,
+        fromAccount = fromAccount,
+        viaAccount = viaAccount,
+        toAccount = toAccount,
+        dateTimeInText = insertTransactionResult.dateTimeInText,
+        transactionParticulars = insertTransactionResult.transactionParticulars,
+        transactionAmount = insertTransactionResult.transactionAmount
+    )
+
+    internal fun quickTransactionOnWalletToFrequent3(
+
+        userId: UInt,
+        username: String,
+        fromAccount: AccountResponse,
+        viaAccount: AccountResponse,
+        toAccount: AccountResponse,
+        insertTransactionResult: InsertTransactionResult
+
+    ) = InsertOperations.insertQuickTransactionFromAccount1toAccount2(
+
+        account1 = InsertOperations.walletAccount,
+        account2 = InsertOperations.frequent3Account,
+        userId = userId,
+        username = username,
+        fromAccount = fromAccount,
+        viaAccount = viaAccount,
+        toAccount = toAccount,
+        dateTimeInText = insertTransactionResult.dateTimeInText,
+        transactionParticulars = insertTransactionResult.transactionParticulars,
+        transactionAmount = insertTransactionResult.transactionAmount
+    )
+
+    internal fun quickTransactionOnWalletToFrequent2(
+
+        userId: UInt,
+        username: String,
+        fromAccount: AccountResponse,
+        viaAccount: AccountResponse,
+        toAccount: AccountResponse,
+        insertTransactionResult: InsertTransactionResult
+
+    ) = InsertOperations.insertQuickTransactionFromAccount1toAccount2(
+
+        account1 = InsertOperations.walletAccount,
+        account2 = InsertOperations.frequent2Account,
+        userId = userId,
+        username = username,
+        fromAccount = fromAccount,
+        viaAccount = viaAccount,
+        toAccount = toAccount,
+        dateTimeInText = insertTransactionResult.dateTimeInText,
+        transactionParticulars = insertTransactionResult.transactionParticulars,
+        transactionAmount = insertTransactionResult.transactionAmount
+    )
+
+    internal fun quickTransactionOnWalletToFrequent1(
+
+        userId: UInt,
+        username: String,
+        fromAccount: AccountResponse,
+        viaAccount: AccountResponse,
+        toAccount: AccountResponse,
+        insertTransactionResult: InsertTransactionResult
+
+    ) = InsertOperations.insertQuickTransactionFromAccount1toAccount2(
+
+        account1 = InsertOperations.walletAccount,
+        account2 = InsertOperations.frequent1Account,
+        userId = userId,
+        username = username,
+        fromAccount = fromAccount,
+        viaAccount = viaAccount,
+        toAccount = toAccount,
+        dateTimeInText = insertTransactionResult.dateTimeInText,
+        transactionParticulars = insertTransactionResult.transactionParticulars,
+        transactionAmount = insertTransactionResult.transactionAmount
+    )
+
+    internal fun quickTransactionOnWallet(
+
+        insertTransactionResult: InsertTransactionResult,
+        userId: UInt,
+        username: String,
+        fromAccount: AccountResponse,
+        viaAccount: AccountResponse,
+        toAccount: AccountResponse
+
+    ): InsertTransactionResult {
+
+        var localInsertTransactionResult: InsertTransactionResult = insertTransactionResult
+        localInsertTransactionResult = InsertOperations.openSpecifiedAccountHome(
+
+            account = InsertOperations.walletAccount,
+            userId = userId,
+            username = username,
+            fromAccount = fromAccount,
+            viaAccount = viaAccount,
+            toAccount = toAccount,
+            dateTimeInText = localInsertTransactionResult.dateTimeInText,
+            transactionParticulars = localInsertTransactionResult.transactionParticulars,
+            transactionAmount = localInsertTransactionResult.transactionAmount
+        )
+        return localInsertTransactionResult
     }
 
     private fun viewTransactionsOfAnAccount(
@@ -542,6 +808,7 @@ object Screens {
 
     private fun getEnvironmentVariableValueForUserScreen(environmentVariableName: String) =
         EnvironmentFileOperations.getEnvironmentVariableValueForTextWithDefaultValue(
+
             dotenv = App.dotenv,
             environmentVariableName = environmentVariableName,
             defaultValue = Constants.defaultValueForStringEnvironmentVariables
@@ -560,7 +827,7 @@ object Screens {
 
     ): InsertTransactionResult {
 
-        var viewTransactionsInsertTransactionResult = InsertTransactionResult(
+        var localInsertTransactionResult = InsertTransactionResult(
 
             isSuccess = false,
             dateTimeInText = dateTimeInText,
@@ -581,6 +848,17 @@ object Screens {
                     "3 - View Child Accounts",
                     "4 - Add Via. Transaction",
                     "5 - Add Two Way Transaction",
+                    "17 - ${getQuickTransactionOnWalletText()}",
+                    "18 - ${getQuickTransactionOnWalletToFrequent1Text()}",
+                    "19 - ${getQuickTransactionOnWalletToFrequent2Text()}",
+                    "20 - ${getQuickTransactionOnWalletToFrequent3Text()}",
+                    "21 - ${getQuickTransactionOnBankText()}",
+                    "22 - ${getQuickTransactionOnBankToFrequent1Text()}",
+                    "23 - ${getQuickTransactionOnBankToFrequent2Text()}",
+                    "24 - ${getQuickTransactionOnBankToFrequent3Text()}",
+                    "25 - ${getQuickTransactionOnFrequent1Text()}",
+                    "26 - ${getQuickTransactionOnFrequent2Text()}",
+                    "27 - ${getQuickTransactionOnFrequent3Text()}",
                     "0 - Back",
                     "",
                     "Enter Your Choice : "
@@ -589,81 +867,225 @@ object Screens {
             when (readLine()!!) {
 
                 "1" -> {
-                    viewTransactionsInsertTransactionResult = viewTransactions(
+                    localInsertTransactionResult = viewTransactions(
 
                         userId = userId,
                         username = username,
                         accountId = fromAccount.id,
                         accountFullName = fromAccount.fullName,
-                        fromAccount = viewTransactionsInsertTransactionResult.fromAccount,
-                        viaAccount = viewTransactionsInsertTransactionResult.viaAccount,
-                        toAccount = viewTransactionsInsertTransactionResult.toAccount,
-                        dateTimeInText = viewTransactionsInsertTransactionResult.dateTimeInText,
-                        transactionParticulars = viewTransactionsInsertTransactionResult.transactionParticulars,
-                        transactionAmount = viewTransactionsInsertTransactionResult.transactionAmount
+                        fromAccount = localInsertTransactionResult.fromAccount,
+                        viaAccount = localInsertTransactionResult.viaAccount,
+                        toAccount = localInsertTransactionResult.toAccount,
+                        dateTimeInText = localInsertTransactionResult.dateTimeInText,
+                        transactionParticulars = localInsertTransactionResult.transactionParticulars,
+                        transactionAmount = localInsertTransactionResult.transactionAmount
 
                     ).addTransactionResult
                 }
 
                 "2" -> {
-                    viewTransactionsInsertTransactionResult = InsertOperations.addTransaction(
+                    localInsertTransactionResult = InsertOperations.addTransaction(
 
                         userId = userId,
                         username = username,
                         transactionType = TransactionTypeEnum.NORMAL,
-                        fromAccount = viewTransactionsInsertTransactionResult.fromAccount,
-                        viaAccount = viewTransactionsInsertTransactionResult.viaAccount,
-                        toAccount = viewTransactionsInsertTransactionResult.toAccount,
-                        dateTimeInText = viewTransactionsInsertTransactionResult.dateTimeInText,
-                        transactionParticulars = viewTransactionsInsertTransactionResult.transactionParticulars,
-                        transactionAmount = viewTransactionsInsertTransactionResult.transactionAmount
+                        fromAccount = localInsertTransactionResult.fromAccount,
+                        viaAccount = localInsertTransactionResult.viaAccount,
+                        toAccount = localInsertTransactionResult.toAccount,
+                        dateTimeInText = localInsertTransactionResult.dateTimeInText,
+                        transactionParticulars = localInsertTransactionResult.transactionParticulars,
+                        transactionAmount = localInsertTransactionResult.transactionAmount
                     )
                 }
 
                 "3" -> {
-                    viewTransactionsInsertTransactionResult = viewChildAccounts(
+                    localInsertTransactionResult = viewChildAccounts(
                         username = username,
                         userId = userId,
-                        fromAccount = viewTransactionsInsertTransactionResult.fromAccount,
-                        viaAccount = viewTransactionsInsertTransactionResult.viaAccount,
-                        toAccount = viewTransactionsInsertTransactionResult.toAccount,
-                        dateTimeInText = viewTransactionsInsertTransactionResult.dateTimeInText,
-                        transactionParticulars = viewTransactionsInsertTransactionResult.transactionParticulars,
-                        transactionAmount = viewTransactionsInsertTransactionResult.transactionAmount
+                        fromAccount = localInsertTransactionResult.fromAccount,
+                        viaAccount = localInsertTransactionResult.viaAccount,
+                        toAccount = localInsertTransactionResult.toAccount,
+                        dateTimeInText = localInsertTransactionResult.dateTimeInText,
+                        transactionParticulars = localInsertTransactionResult.transactionParticulars,
+                        transactionAmount = localInsertTransactionResult.transactionAmount
                     )
                 }
 
                 "4" -> {
-                    viewTransactionsInsertTransactionResult = InsertOperations.addTransaction(
+                    localInsertTransactionResult = InsertOperations.addTransaction(
                         userId = userId,
                         username = username,
                         transactionType = TransactionTypeEnum.VIA,
-                        fromAccount = viewTransactionsInsertTransactionResult.fromAccount,
-                        viaAccount = viewTransactionsInsertTransactionResult.viaAccount,
-                        toAccount = viewTransactionsInsertTransactionResult.toAccount,
-                        dateTimeInText = viewTransactionsInsertTransactionResult.dateTimeInText,
-                        transactionParticulars = viewTransactionsInsertTransactionResult.transactionParticulars,
-                        transactionAmount = viewTransactionsInsertTransactionResult.transactionAmount
+                        fromAccount = localInsertTransactionResult.fromAccount,
+                        viaAccount = localInsertTransactionResult.viaAccount,
+                        toAccount = localInsertTransactionResult.toAccount,
+                        dateTimeInText = localInsertTransactionResult.dateTimeInText,
+                        transactionParticulars = localInsertTransactionResult.transactionParticulars,
+                        transactionAmount = localInsertTransactionResult.transactionAmount
                     )
                 }
 
                 "5" -> {
-                    viewTransactionsInsertTransactionResult = InsertOperations.addTransaction(
+                    localInsertTransactionResult = InsertOperations.addTransaction(
 
                         userId = userId,
                         username = username,
                         transactionType = TransactionTypeEnum.TWO_WAY,
-                        fromAccount = viewTransactionsInsertTransactionResult.fromAccount,
-                        viaAccount = viewTransactionsInsertTransactionResult.viaAccount,
-                        toAccount = viewTransactionsInsertTransactionResult.toAccount,
-                        dateTimeInText = viewTransactionsInsertTransactionResult.dateTimeInText,
-                        transactionParticulars = viewTransactionsInsertTransactionResult.transactionParticulars,
-                        transactionAmount = viewTransactionsInsertTransactionResult.transactionAmount
+                        fromAccount = localInsertTransactionResult.fromAccount,
+                        viaAccount = localInsertTransactionResult.viaAccount,
+                        toAccount = localInsertTransactionResult.toAccount,
+                        dateTimeInText = localInsertTransactionResult.dateTimeInText,
+                        transactionParticulars = localInsertTransactionResult.transactionParticulars,
+                        transactionAmount = localInsertTransactionResult.transactionAmount
+                    )
+                }
+
+                "17" -> {
+
+                    localInsertTransactionResult = quickTransactionOnWallet(
+
+                        insertTransactionResult = localInsertTransactionResult,
+                        userId = userId,
+                        username = username,
+                        fromAccount = fromAccount,
+                        viaAccount = viaAccount,
+                        toAccount = toAccount
+                    )
+                }
+
+                "18" -> {
+
+                    localInsertTransactionResult = quickTransactionOnWalletToFrequent1(
+
+                        insertTransactionResult = localInsertTransactionResult,
+                        userId = userId,
+                        username = username,
+                        fromAccount = fromAccount,
+                        viaAccount = viaAccount,
+                        toAccount = toAccount
+                    )
+                }
+
+                "19" -> {
+
+                    localInsertTransactionResult = quickTransactionOnWalletToFrequent2(
+
+                        insertTransactionResult = localInsertTransactionResult,
+                        userId = userId,
+                        username = username,
+                        fromAccount = fromAccount,
+                        viaAccount = viaAccount,
+                        toAccount = toAccount
+                    )
+                }
+
+                "20" -> {
+
+                    localInsertTransactionResult = quickTransactionOnWalletToFrequent3(
+
+                        insertTransactionResult = localInsertTransactionResult,
+                        userId = userId,
+                        username = username,
+                        fromAccount = fromAccount,
+                        viaAccount = viaAccount,
+                        toAccount = toAccount
+                    )
+                }
+
+                "21" -> {
+
+                    localInsertTransactionResult = quickTransactionOnBank(
+
+                        insertTransactionResult = localInsertTransactionResult,
+                        userId = userId,
+                        username = username,
+                        fromAccount = fromAccount,
+                        viaAccount = viaAccount,
+                        toAccount = toAccount
+                    )
+                }
+
+                "22" -> {
+
+                    localInsertTransactionResult = quickTransactionOnBankToFrequent1(
+
+                        insertTransactionResult = localInsertTransactionResult,
+                        userId = userId,
+                        username = username,
+                        fromAccount = fromAccount,
+                        viaAccount = viaAccount,
+                        toAccount = toAccount
+                    )
+                }
+
+                "23" -> {
+
+                    localInsertTransactionResult = quickTransactionOnBankToFrequent2(
+
+                        insertTransactionResult = localInsertTransactionResult,
+                        userId = userId,
+                        username = username,
+                        fromAccount = fromAccount,
+                        viaAccount = viaAccount,
+                        toAccount = toAccount
+                    )
+                }
+
+                "24" -> {
+
+                    localInsertTransactionResult = quickTransactionOnBankToFrequent3(
+
+                        insertTransactionResult = localInsertTransactionResult,
+                        userId = userId,
+                        username = username,
+                        fromAccount = fromAccount,
+                        viaAccount = viaAccount,
+                        toAccount = toAccount
+                    )
+                }
+
+                "25" -> {
+
+                    localInsertTransactionResult = quickTransactionOnFrequent1(
+
+                        insertTransactionResult = localInsertTransactionResult,
+                        userId = userId,
+                        username = username,
+                        fromAccount = fromAccount,
+                        viaAccount = viaAccount,
+                        toAccount = toAccount
+                    )
+                }
+
+                "26" -> {
+
+                    localInsertTransactionResult = quickTransactionOnFrequent2(
+
+                        insertTransactionResult = localInsertTransactionResult,
+                        userId = userId,
+                        username = username,
+                        fromAccount = fromAccount,
+                        viaAccount = viaAccount,
+                        toAccount = toAccount
+                    )
+                }
+
+                "27" -> {
+
+                    localInsertTransactionResult = quickTransactionOnFrequent3(
+
+                        insertTransactionResult = localInsertTransactionResult,
+                        userId = userId,
+                        username = username,
+                        fromAccount = fromAccount,
+                        viaAccount = viaAccount,
+                        toAccount = toAccount
                     )
                 }
 
                 "0" -> {
-                    return viewTransactionsInsertTransactionResult
+
+                    return localInsertTransactionResult
                 }
 
                 else -> {
