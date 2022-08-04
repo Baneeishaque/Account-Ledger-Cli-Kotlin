@@ -376,11 +376,10 @@ internal fun viewTransactions(
                                 furtherActionsOnFalse = { invalidOptionMessage() })
                         ) {
 
-                            addTransactionResult = InsertOperations.addTransaction(
+                            addTransactionResult = Screens.accountHome(
 
                                 userId = userId,
                                 username = username,
-                                transactionType = TransactionTypeEnum.NORMAL,
                                 fromAccount = fromAccount,
                                 viaAccount = viaAccount,
                                 toAccount = toAccount,
