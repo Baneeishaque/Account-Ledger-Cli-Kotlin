@@ -13,6 +13,7 @@ import accountLedgerCli.to_utils.EnumUtils
 import accountLedgerCli.to_utils.invalidOptionMessage
 import accountLedgerCli.utils.AccountUtils
 import accountLedgerCli.to_constants.Constants as CommonConstants
+import accountLedgerCli.to_utils.HandleResponses as CommonHandleResponses
 
 object HandleResponses {
 
@@ -21,34 +22,20 @@ object HandleResponses {
         apiResponse: Result<AccountsResponse>,
         username: String,
         userId: UInt,
-        fromAccount: AccountResponse,
-        viaAccount: AccountResponse,
-        toAccount: AccountResponse,
-        dateTimeInText: String,
-        transactionParticulars: String,
-        transactionAmount: Float
+        insertTransactionResult: InsertTransactionResult
 
     ): InsertTransactionResult {
 
-        var insertTransactionResult = InsertTransactionResult(
-
-            isSuccess = false,
-            dateTimeInText = dateTimeInText,
-            transactionParticulars = transactionParticulars,
-            transactionAmount = transactionAmount,
-            fromAccount = fromAccount,
-            viaAccount = viaAccount,
-            toAccount = toAccount
-        )
+        var localInsertTransactionResult: InsertTransactionResult = insertTransactionResult
 
         val getUserAccountsMapResult: IsOkModel<LinkedHashMap<UInt, AccountResponse>> =
             getUserAccountsMap(apiResponse = apiResponse)
 
-        return isOkModelHandler(
+        return CommonHandleResponses.isOkModelHandler(
 
             isOkModel = getUserAccountsMapResult,
-            data = insertTransactionResult,
-            actionsAfterGetSuccess = fun(): InsertTransactionResult {
+            data = localInsertTransactionResult,
+            successActions = fun(): InsertTransactionResult {
 
                 do {
                     commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
@@ -58,7 +45,7 @@ object HandleResponses {
                             "Accounts",
                             CommonConstants.dashedLineSeparator,
                             AccountUtils.userAccountsToStringFromListPair(
-                                userAccountsList = getUserAccountsMapResult.data!!.toList().takeLast(10)
+                                userAccountsList = getUserAccountsMapResult.data!!.toList().takeLast(n = 10)
                             ),
                             "1 - Choose Account - By Index Number",
                             "2 - Choose Account - By Search",
@@ -74,35 +61,19 @@ object HandleResponses {
                         userAccountsMap = getUserAccountsMapResult.data,
                         userId = userId,
                         username = username,
-                        fromAccount = fromAccount,
-                        viaAccount = viaAccount,
-                        toAccount = toAccount,
-                        dateTimeInText = insertTransactionResult.dateTimeInText,
-                        transactionParticulars = insertTransactionResult.transactionParticulars,
-                        transactionAmount = insertTransactionResult.transactionAmount
+                        fromAccount = localInsertTransactionResult.fromAccount,
+                        viaAccount = localInsertTransactionResult.viaAccount,
+                        toAccount = localInsertTransactionResult.toAccount,
+                        dateTimeInText = localInsertTransactionResult.dateTimeInText,
+                        transactionParticulars = localInsertTransactionResult.transactionParticulars,
+                        transactionAmount = localInsertTransactionResult.transactionAmount
                     )
-                    insertTransactionResult = processChildAccountScreenInputResult.addTransactionResult
+                    localInsertTransactionResult = processChildAccountScreenInputResult.addTransactionResult
 
                 } while (processChildAccountScreenInputResult.output != "0")
 
-                return insertTransactionResult
+                return localInsertTransactionResult
             })
-    }
-
-    internal fun <T> isOkModelHandler(
-
-        isOkModel: IsOkModel<*>,
-        data: T,
-        actionsAfterGetSuccess: () -> T
-
-    ): T {
-
-        var localData: T = data
-        if (isOkModel.isOK) {
-
-            localData = actionsAfterGetSuccess.invoke()
-        }
-        return localData
     }
 
     internal fun getUserAccountsMap(apiResponse: Result<AccountsResponse>): IsOkModel<LinkedHashMap<UInt, AccountResponse>> {
@@ -172,11 +143,12 @@ object HandleResponses {
                         "1" -> {
                             return getHandleAccountsResponseFromApiResult(
 
-                                selectedAccountId = getValidIndex(
+                                selectedAccountId = getValidIndexWithInputPrompt(
 
                                     map = userAccountsMap,
                                     itemSpecification = Constants.accountText,
-                                    items = AccountUtils.userAccountsToStringFromLinkedHashMap(userAccountsMap = userAccountsMap)
+                                    items = AccountUtils.userAccountsToStringFromLinkedHashMap(userAccountsMap = userAccountsMap),
+                                    backValue = 0u
                                 ),
                                 userAccountsMap = userAccountsMap
                             )

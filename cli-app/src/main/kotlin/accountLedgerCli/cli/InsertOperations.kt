@@ -3,6 +3,7 @@ package accountLedgerCli.cli
 import accountLedgerCli.api.response.AccountResponse
 import accountLedgerCli.api.response.TransactionManipulationResponse
 import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
+import accountLedgerCli.cli.Screens.quickTransactionOnWallet
 import accountLedgerCli.constants.Constants
 import accountLedgerCli.enums.*
 import accountLedgerCli.enums.AccountExchangeTypeEnum
@@ -15,6 +16,7 @@ import accountLedgerCli.utils.ApiUtils
 import accountLedgerCli.utils.ChooseAccountUtils
 import kotlinx.coroutines.runBlocking
 import accountLedgerCli.to_utils.ApiUtils as CommonApiUtils
+import accountLedgerCli.to_utils.HandleResponses as CommonHandleResponses
 
 object InsertOperations {
 
@@ -78,11 +80,11 @@ object InsertOperations {
             val getUserAccountsMapResult: IsOkModel<LinkedHashMap<UInt, AccountResponse>> =
                 HandleResponses.getUserAccountsMap(apiResponse = ApiUtils.getAccountsFull(userId = userId))
 
-            return HandleResponses.isOkModelHandler(
+            return CommonHandleResponses.isOkModelHandler(
 
                 isOkModel = getUserAccountsMapResult,
                 data = insertTransactionResult,
-                actionsAfterGetSuccess = fun(): InsertTransactionResult {
+                successActions = fun(): InsertTransactionResult {
 
                     return transactionContinueCheck(
                         userId = userId,
@@ -130,11 +132,11 @@ object InsertOperations {
             val getUserAccountsMapResult: IsOkModel<LinkedHashMap<UInt, AccountResponse>> =
                 HandleResponses.getUserAccountsMap(apiResponse = ApiUtils.getAccountsFull(userId = userId))
 
-            return HandleResponses.isOkModelHandler(
+            return CommonHandleResponses.isOkModelHandler(
 
                 isOkModel = getUserAccountsMapResult,
                 data = insertTransactionResult,
-                actionsAfterGetSuccess = fun(): InsertTransactionResult {
+                successActions = fun(): InsertTransactionResult {
 
                     return Screens.accountHome(
 
@@ -737,14 +739,11 @@ object InsertOperations {
 
                 "17" -> {
 
-                    localInsertTransactionResult = Screens.quickTransactionOnWallet(
+                    localInsertTransactionResult = quickTransactionOnWallet(
 
                         insertTransactionResult = localInsertTransactionResult,
                         userId = userId,
-                        username = username,
-                        fromAccount = fromAccount,
-                        viaAccount = viaAccount,
-                        toAccount = toAccount
+                        username = username
                     )
                 }
 
@@ -752,12 +751,9 @@ object InsertOperations {
 
                     localInsertTransactionResult = Screens.quickTransactionOnWalletToFrequent1(
 
-                        insertTransactionResult = localInsertTransactionResult,
                         userId = userId,
                         username = username,
-                        fromAccount = fromAccount,
-                        viaAccount = viaAccount,
-                        toAccount = toAccount
+                        insertTransactionResult = localInsertTransactionResult
                     )
                 }
 
@@ -765,12 +761,9 @@ object InsertOperations {
 
                     localInsertTransactionResult = Screens.quickTransactionOnWalletToFrequent2(
 
-                        insertTransactionResult = localInsertTransactionResult,
                         userId = userId,
                         username = username,
-                        fromAccount = fromAccount,
-                        viaAccount = viaAccount,
-                        toAccount = toAccount
+                        insertTransactionResult = localInsertTransactionResult
                     )
                 }
 
@@ -778,12 +771,9 @@ object InsertOperations {
 
                     localInsertTransactionResult = Screens.quickTransactionOnWalletToFrequent3(
 
-                        insertTransactionResult = localInsertTransactionResult,
                         userId = userId,
                         username = username,
-                        fromAccount = fromAccount,
-                        viaAccount = viaAccount,
-                        toAccount = toAccount
+                        insertTransactionResult = localInsertTransactionResult
                     )
                 }
 
@@ -791,12 +781,9 @@ object InsertOperations {
 
                     localInsertTransactionResult = Screens.quickTransactionOnBank(
 
-                        insertTransactionResult = localInsertTransactionResult,
                         userId = userId,
                         username = username,
-                        fromAccount = fromAccount,
-                        viaAccount = viaAccount,
-                        toAccount = toAccount
+                        insertTransactionResult = localInsertTransactionResult
                     )
                 }
 
@@ -804,12 +791,9 @@ object InsertOperations {
 
                     localInsertTransactionResult = Screens.quickTransactionOnBankToFrequent1(
 
-                        insertTransactionResult = localInsertTransactionResult,
                         userId = userId,
                         username = username,
-                        fromAccount = fromAccount,
-                        viaAccount = viaAccount,
-                        toAccount = toAccount
+                        insertTransactionResult = localInsertTransactionResult
                     )
                 }
 
@@ -817,12 +801,9 @@ object InsertOperations {
 
                     localInsertTransactionResult = Screens.quickTransactionOnBankToFrequent2(
 
-                        insertTransactionResult = localInsertTransactionResult,
                         userId = userId,
                         username = username,
-                        fromAccount = fromAccount,
-                        viaAccount = viaAccount,
-                        toAccount = toAccount
+                        insertTransactionResult = localInsertTransactionResult
                     )
                 }
 
@@ -830,12 +811,9 @@ object InsertOperations {
 
                     localInsertTransactionResult = Screens.quickTransactionOnBankToFrequent3(
 
-                        insertTransactionResult = localInsertTransactionResult,
                         userId = userId,
                         username = username,
-                        fromAccount = fromAccount,
-                        viaAccount = viaAccount,
-                        toAccount = toAccount
+                        insertTransactionResult = localInsertTransactionResult
                     )
                 }
 
@@ -843,12 +821,9 @@ object InsertOperations {
 
                     localInsertTransactionResult = Screens.quickTransactionOnFrequent1(
 
-                        insertTransactionResult = localInsertTransactionResult,
                         userId = userId,
                         username = username,
-                        fromAccount = fromAccount,
-                        viaAccount = viaAccount,
-                        toAccount = toAccount
+                        insertTransactionResult = localInsertTransactionResult
                     )
                 }
 
@@ -856,12 +831,9 @@ object InsertOperations {
 
                     localInsertTransactionResult = Screens.quickTransactionOnFrequent2(
 
-                        insertTransactionResult = localInsertTransactionResult,
                         userId = userId,
                         username = username,
-                        fromAccount = fromAccount,
-                        viaAccount = viaAccount,
-                        toAccount = toAccount
+                        insertTransactionResult = localInsertTransactionResult
                     )
                 }
 
@@ -869,12 +841,9 @@ object InsertOperations {
 
                     localInsertTransactionResult = Screens.quickTransactionOnFrequent3(
 
-                        insertTransactionResult = localInsertTransactionResult,
                         userId = userId,
                         username = username,
-                        fromAccount = fromAccount,
-                        viaAccount = viaAccount,
-                        toAccount = toAccount
+                        insertTransactionResult = localInsertTransactionResult
                     )
                 }
 

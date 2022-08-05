@@ -26,6 +26,7 @@ internal fun processChildAccountScreenInput(
 
     val choice: String = readLine()!!
     var accountHomeOutput = InsertTransactionResult(
+
         isSuccess = false,
         dateTimeInText = dateTimeInText,
         transactionParticulars = transactionParticulars,
@@ -37,10 +38,11 @@ internal fun processChildAccountScreenInput(
     when (choice) {
         "1" -> {
             accountHomeOutput = handleAccountSelection(
-                accountId = getValidIndex(
+                accountId = getValidIndexWithInputPrompt(
                     map = userAccountsMap,
                     itemSpecification = Constants.accountText,
-                    items = AccountUtils.userAccountsToStringFromLinkedHashMap(userAccountsMap = userAccountsMap)
+                    items = AccountUtils.userAccountsToStringFromLinkedHashMap(userAccountsMap = userAccountsMap),
+                    backValue = 0u
                 ),
                 userAccountsMap = userAccountsMap,
                 userId = userId,

@@ -27,7 +27,7 @@ internal fun getAccounts(
     })
 }
 
-internal fun getUserTransactions(
+internal fun getUserTransactionsForAnAccount(
 
     userId: UInt,
     accountId: UInt,

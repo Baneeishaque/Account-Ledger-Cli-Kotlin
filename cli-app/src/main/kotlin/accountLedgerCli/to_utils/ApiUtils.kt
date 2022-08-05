@@ -60,6 +60,7 @@ object ApiUtils {
         }
     }
 
+    @JvmStatic
     fun <T> getResultFromApiRequestWithOptionalRetries(
 
         apiCallFunction: () -> Result<T>,
@@ -83,6 +84,83 @@ object ApiUtils {
         } else {
 
             Result.failure(exception = Exception("Please retry the operation..."))
+        }
+    }
+
+    @JvmStatic
+    fun <T> isNoDataResponse(
+
+        responseStatus: T,
+        noDataIndicator: T,
+        noDataActions: () -> Unit
+
+    ): Boolean {
+
+        if (responseStatus == noDataIndicator) {
+
+            noDataActions.invoke()
+            return true
+        }
+        return false
+    }
+
+    @JvmStatic
+    fun <T> isNoDataResponseWithMessage(
+
+        responseStatus: T,
+        noDataIndicator: T,
+        noDataActions: () -> Unit = fun() {},
+        itemSpecification: String
+
+    ): Boolean {
+
+        return isNoDataResponse(
+
+            responseStatus = responseStatus,
+            noDataIndicator = noDataIndicator,
+            noDataActions = fun() {
+
+                noDataActions.invoke()
+                println("No ${itemSpecification}s...")
+            })
+    }
+
+    @JvmStatic
+    fun isNoDataResponseWithMessageIncludingBeforeMessageActionsAnd1AsIndicator(
+
+        responseStatus: UInt,
+        noDataMessageBeforeActions: () -> Unit = fun() {},
+        itemSpecification: String
+
+    ): Boolean {
+
+        return isNoDataResponse(
+
+            responseStatus = responseStatus,
+            noDataIndicator = 1u,
+            noDataActions = fun() {
+
+                noDataMessageBeforeActions.invoke()
+                println("No ${itemSpecification}s...")
+            })
+    }
+
+    @JvmStatic
+    fun <T> apiResponseHandler(
+
+        apiResponse: Result<T>,
+        apiFailureActions: () -> Unit = fun() {},
+        apiSuccessActions: () -> Unit
+
+    ) {
+
+        if (apiResponse.isFailure) {
+
+            apiFailureActions.invoke()
+
+        } else {
+
+            apiSuccessActions.invoke()
         }
     }
 }

@@ -34,6 +34,11 @@ internal interface Api {
         @Query("account_id") accountId: UInt
     ): Response<TransactionsResponse>
 
+    @GET("${ApiConstants.selectTransactionsV2MMethod}.${ApiConstants.serverFileExtension}")
+    suspend fun selectTransactionsV2M(
+        @Query("user_id") userId: UInt
+    ): Response<TransactionsResponse>
+
     @FormUrlEncoded
     @POST("${ApiConstants.insertTransactionMethod}.${ApiConstants.serverFileExtension}")
     suspend fun insertTransaction(

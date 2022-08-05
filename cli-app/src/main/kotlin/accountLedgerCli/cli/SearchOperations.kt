@@ -50,11 +50,12 @@ internal fun searchAccount(userAccountsMap: LinkedHashMap<UInt, AccountResponse>
             val input: String = readLine()!!
             if (input == "1") {
 
-                return getValidIndex(
+                return getValidIndexWithInputPrompt(
 
                     map = searchResult,
                     itemSpecification = Constants.accountText,
-                    items = AccountUtils.userAccountsToStringFromLinkedHashMap(userAccountsMap = searchResult)
+                    items = AccountUtils.userAccountsToStringFromLinkedHashMap(userAccountsMap = searchResult),
+                    backValue = 0u
                 )
             } else if (input != "0") {
 

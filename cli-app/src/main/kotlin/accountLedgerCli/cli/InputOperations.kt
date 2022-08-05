@@ -9,12 +9,13 @@ import accountLedgerCli.to_utils.InputUtils
 import accountLedgerCli.to_utils.invalidOptionMessage
 import accountLedgerCli.utils.ApiUtils
 
-internal fun <T> getValidIndex(
+internal fun <T> getValidIndexWithInputPrompt(
 
     map: Map<UInt, T>,
     itemSpecification: String,
     items: String,
-    itemSpecificationPrefix: String = ""
+    itemSpecificationPrefix: String = "",
+    backValue: UInt
 
 ): UInt {
 
@@ -23,62 +24,102 @@ internal fun <T> getValidIndex(
         listOfCommands = listOf(
             "\n${itemSpecification}s",
             items,
-            "Enter $itemSpecificationPrefix$itemSpecification Index, or O to back : ${itemSpecification.first()}"
+            "Enter $itemSpecificationPrefix$itemSpecification Index, or $backValue to back : ${itemSpecification.first()}"
         )
     )
 
     val idInput: String = readLine()!!
-    if (idInput == "0") return 0u
+    if (idInput == backValue.toString()) return backValue
 
-    val inputForIndex: UInt = InputUtils.getValidUnsignedInt(
+    return getValidIndex(
 
-        inputText = idInput,
-        invalidMessage = "Invalid $itemSpecification Index...\nEnter $itemSpecification Index, or O to back : ${itemSpecification.first()}"
+        inputForIndex = InputUtils.getValidUnsignedInt(
+
+            inputText = idInput,
+            invalidMessage = "Invalid $itemSpecification Index...\nEnter $itemSpecification Index, or $backValue to back : ${itemSpecification.first()}"
+        ),
+        map = map,
+        itemSpecification = itemSpecification,
+        items = items,
+        backValue = backValue
     )
-    if (inputForIndex == 0u) {
+}
 
-        return 0u
+internal fun <T> getValidIndexOrBack(
+
+    userInputForIndex: String,
+    map: Map<UInt, T>,
+    itemSpecification: String,
+    items: String,
+    backValue: UInt
+
+): UInt {
+
+    return if (userInputForIndex == backValue.toString()) {
+
+        backValue
 
     } else {
 
-        if (map.containsKey(inputForIndex)) {
+        val inputForIndex: UInt = InputUtils.getValidUnsignedInt(
 
-            return inputForIndex
+            inputText = userInputForIndex,
+            invalidMessage = "Invalid $itemSpecification Index...\nEnter $itemSpecification Index, or $backValue to back : ${itemSpecification.first()}"
+        )
+        getValidIndex(map, inputForIndex, itemSpecification, items, backValue)
+    }
+}
 
-        } else {
+private fun <T> getValidIndex(
 
-            commandLinePrintMenuWithTryPrompt.printMenuWithTryPromptFromListOfCommands(
+    map: Map<UInt, T>,
+    inputForIndex: UInt,
+    itemSpecification: String,
+    items: String,
+    backValue: UInt
 
-                listOfCommands = listOf("Invalid $itemSpecification Index, Try again ? (Y/N) : ")
-            )
-            return when (readLine()) {
+): UInt {
 
-                "Y", "" -> {
+    if (map.containsKey(inputForIndex)) {
 
-                    getValidIndex(
+        return inputForIndex
 
-                        map = map,
-                        itemSpecification = itemSpecification,
-                        items = items
-                    )
-                }
+    } else {
 
-                "N" -> {
-                    0u
-                }
+        commandLinePrintMenuWithTryPrompt.printMenuWithTryPromptFromListOfCommands(
 
-                else -> {
+            listOfCommands = listOf("Invalid $itemSpecification Index, Try again ? (Y/N) : ")
+        )
+        return when (readLine()) {
 
-                    commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
-                        listOfCommands = listOf("Invalid Entry...")
-                    )
-                    getValidIndex(
+            "Y", "" -> {
 
-                        map = map,
-                        itemSpecification = itemSpecification,
-                        items = items
-                    )
-                }
+                getValidIndexWithInputPrompt(
+
+                    map = map,
+                    itemSpecification = itemSpecification,
+                    items = items,
+                    backValue = backValue
+                )
+            }
+
+            "N" -> {
+
+                backValue
+            }
+
+            else -> {
+
+                commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
+                    listOfCommands = listOf("Invalid Entry...")
+                )
+                getValidIndexWithInputPrompt(
+
+                    map = map,
+                    itemSpecification = itemSpecification,
+                    items = items,
+                    backValue = backValue
+                )
             }
         }
     }

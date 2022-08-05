@@ -20,13 +20,13 @@ import kotlinx.serialization.json.Json
 
 internal fun balanceSheetOfUser(usersMap: LinkedHashMap<UInt, UserResponse>) {
     val chooseUserResult: ChooseUserResult = handleUserSelection(
-        chosenUserId = getValidIndex(
+        chosenUserId = getValidIndexWithInputPrompt(
 
             map = usersMap,
             itemSpecification = Constants.userText,
             items = UserUtils.usersToStringFromLinkedHashMap(usersMap = usersMap),
-
-            ), usersMap = usersMap
+            backValue = 0u
+        ), usersMap = usersMap
     )
     if (chooseUserResult.isChosen) {
         printBalanceSheetOfUser(
@@ -200,7 +200,7 @@ internal fun printBalanceSheetOfUser(
                 for (account: MutableMap.MutableEntry<UInt, String> in accounts) {
 
                     val apiResponse2: Result<TransactionsResponse> =
-                        getUserTransactions(
+                        getUserTransactionsForAnAccount(
                             userId = currentUserId,
                             accountId = account.key,
                             isNotFromBalanceSheet = false

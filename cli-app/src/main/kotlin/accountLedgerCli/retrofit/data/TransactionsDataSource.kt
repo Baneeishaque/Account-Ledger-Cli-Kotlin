@@ -21,6 +21,21 @@ internal class TransactionsDataSource : AppDataSource<TransactionsResponse>() {
         )
     }
 
+    internal suspend fun selectTransactions(
+
+        userId: UInt
+
+    ): Result<TransactionsResponse> {
+
+        return handleApiResponse(
+
+            apiResponse = retrofitClient.selectTransactionsV2M(
+
+                userId = userId
+            )
+        )
+    }
+
     internal suspend fun selectUserTransactionsAfterSpecifiedDate(
 
         userId: UInt,

@@ -1,21 +1,28 @@
 package accountLedgerCli.cli
 
 import accountLedgerCli.api.response.AccountResponse
+import accountLedgerCli.api.response.TransactionsResponse
 import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
 import accountLedgerCli.constants.Constants
 import accountLedgerCli.enums.BalanceSheetRefineLevelEnum
 import accountLedgerCli.enums.EnvironmentFileEntryEnum
+import accountLedgerCli.enums.FunctionCallSourceEnum
 import accountLedgerCli.enums.TransactionTypeEnum
 import accountLedgerCli.models.AccountFrequencyModel
 import accountLedgerCli.models.FrequencyOfAccountsModel
 import accountLedgerCli.models.InsertTransactionResult
 import accountLedgerCli.models.UserModel
+import accountLedgerCli.retrofit.data.TransactionsDataSource
 import accountLedgerCli.to_models.IsOkModel
 import accountLedgerCli.to_utils.*
 import accountLedgerCli.utils.AccountUtils
 import accountLedgerCli.utils.ApiUtils
+import kotlinx.coroutines.runBlocking
+import accountLedgerCli.to_utils.ApiUtils as CommonApiUtils
+import accountLedgerCli.to_utils.HandleResponses as CommonHandleResponses
 
 object Screens {
+
     internal fun userScreen(
 
         username: String,
@@ -34,6 +41,7 @@ object Screens {
             println("Env. Variables : ${App.dotenv.entries()}")
         }
         var insertTransactionResult = InsertTransactionResult(
+
             isSuccess = false,
             dateTimeInText = dateTimeInText,
             transactionParticulars = transactionParticulars,
@@ -67,7 +75,7 @@ object Screens {
                         getEnvironmentVariableValueForUserScreen(environmentVariableName = EnvironmentFileEntryEnum.BANK_ACCOUNT_NAME.name)
                     } From XLX",
                     "16 - Check Affected A/Cs : After A Specified Date",
-                    "17 - View Transactions of a specific A/C",
+                    "17 - View Transactions of a Specific A/C",
                     "18 - View Balance Sheet Ledger (All)",
                     "19 - View Balance Sheet Ledger (Excluding Open Balances)",
                     "20 - View Balance Sheet Ledger (Excluding Open Balances & Misc. Incomes)",
@@ -81,6 +89,7 @@ object Screens {
                     "28 - View Transactions of ${getEnvironmentVariableValueForUserScreen(environmentVariableName = EnvironmentFileEntryEnum.FREQUENT_3_ACCOUNT_NAME.name)} A/C",
                     "29 - Check Affected A/Cs : From First Entry",
                     "30 - Check Affected A/Cs : From Start Date",
+                    "31 - View Last 10 Transactions",
                     "0 - Logout",
                     "",
                     "Enter Your Choice : "
@@ -95,12 +104,7 @@ object Screens {
                         apiResponse = getAccounts(userId = userId),
                         username = username,
                         userId = userId,
-                        fromAccount = fromAccount,
-                        viaAccount = viaAccount,
-                        toAccount = toAccount,
-                        dateTimeInText = insertTransactionResult.dateTimeInText,
-                        transactionParticulars = insertTransactionResult.transactionParticulars,
-                        transactionAmount = insertTransactionResult.transactionAmount
+                        insertTransactionResult = insertTransactionResult
                     )
                 }
 
@@ -110,10 +114,7 @@ object Screens {
 
                         insertTransactionResult = insertTransactionResult,
                         userId = userId,
-                        username = username,
-                        fromAccount = fromAccount,
-                        viaAccount = viaAccount,
-                        toAccount = toAccount
+                        username = username
                     )
                 }
 
@@ -123,9 +124,6 @@ object Screens {
 
                         userId = userId,
                         username = username,
-                        fromAccount = fromAccount,
-                        viaAccount = viaAccount,
-                        toAccount = toAccount,
                         insertTransactionResult = insertTransactionResult
                     )
                 }
@@ -136,9 +134,6 @@ object Screens {
 
                         userId = userId,
                         username = username,
-                        fromAccount = fromAccount,
-                        viaAccount = viaAccount,
-                        toAccount = toAccount,
                         insertTransactionResult = insertTransactionResult
                     )
                 }
@@ -149,9 +144,6 @@ object Screens {
 
                         userId = userId,
                         username = username,
-                        fromAccount = fromAccount,
-                        viaAccount = viaAccount,
-                        toAccount = toAccount,
                         insertTransactionResult = insertTransactionResult
                     )
                 }
@@ -162,9 +154,6 @@ object Screens {
 
                         userId = userId,
                         username = username,
-                        fromAccount = fromAccount,
-                        viaAccount = viaAccount,
-                        toAccount = toAccount,
                         insertTransactionResult = insertTransactionResult
                     )
                 }
@@ -175,9 +164,6 @@ object Screens {
 
                         userId = userId,
                         username = username,
-                        fromAccount = fromAccount,
-                        viaAccount = viaAccount,
-                        toAccount = toAccount,
                         insertTransactionResult = insertTransactionResult
                     )
                 }
@@ -188,9 +174,6 @@ object Screens {
 
                         userId = userId,
                         username = username,
-                        fromAccount = fromAccount,
-                        viaAccount = viaAccount,
-                        toAccount = toAccount,
                         insertTransactionResult = insertTransactionResult
                     )
                 }
@@ -201,9 +184,6 @@ object Screens {
 
                         userId = userId,
                         username = username,
-                        fromAccount = fromAccount,
-                        viaAccount = viaAccount,
-                        toAccount = toAccount,
                         insertTransactionResult = insertTransactionResult
                     )
                 }
@@ -214,9 +194,6 @@ object Screens {
 
                         userId = userId,
                         username = username,
-                        fromAccount = fromAccount,
-                        viaAccount = viaAccount,
-                        toAccount = toAccount,
                         insertTransactionResult = insertTransactionResult
                     )
                 }
@@ -227,9 +204,6 @@ object Screens {
 
                         userId = userId,
                         username = username,
-                        fromAccount = fromAccount,
-                        viaAccount = viaAccount,
-                        toAccount = toAccount,
                         insertTransactionResult = insertTransactionResult
                     )
                 }
@@ -240,9 +214,6 @@ object Screens {
 
                         userId = userId,
                         username = username,
-                        fromAccount = fromAccount,
-                        viaAccount = viaAccount,
-                        toAccount = toAccount,
                         insertTransactionResult = insertTransactionResult
                     )
                 }
@@ -254,12 +225,7 @@ object Screens {
                         apiResponse = ApiUtils.getAccountsFull(userId = userId),
                         username = username,
                         userId = userId,
-                        fromAccount = fromAccount,
-                        viaAccount = viaAccount,
-                        toAccount = toAccount,
-                        dateTimeInText = insertTransactionResult.dateTimeInText,
-                        transactionParticulars = insertTransactionResult.transactionParticulars,
-                        transactionAmount = insertTransactionResult.transactionAmount
+                        insertTransactionResult = insertTransactionResult
                     )
                 }
 
@@ -270,31 +236,22 @@ object Screens {
 
                 "16" -> {
 
-                    insertTransactionResult = checkAccountsAffectedAfterSpecifiedDate(
+                    insertTransactionResult = checkAffectedAccountsAfterSpecifiedDate(
 
                         desiredDate = InputUtils.getValidDateInNormalPattern(),
                         userId = userId,
                         username = username,
-                        fromAccount = fromAccount,
-                        viaAccount = viaAccount,
-                        toAccount = toAccount,
-                        dateTimeInText = dateTimeInText,
-                        transactionParticulars = transactionParticulars,
-                        transactionAmount = transactionAmount
+                        insertTransactionResult = insertTransactionResult
                     )
                 }
 
                 "17" -> {
 
-                    viewTransactionsOfInputAccount(
+                    TransactionViews.viewTransactionsOfInputAccount(
 
                         userId = userId,
                         username = username,
-                        viaAccount = viaAccount,
-                        toAccount = toAccount,
-                        dateTimeInText = insertTransactionResult.dateTimeInText,
-                        transactionParticulars = insertTransactionResult.transactionParticulars,
-                        transactionAmount = insertTransactionResult.transactionAmount
+                        insertTransactionResult = insertTransactionResult
                     )
                 }
 
@@ -360,85 +317,105 @@ object Screens {
 
                 "24" -> {
 
-                    insertTransactionResult = viewTransactionsOfAnAccount(
+                    insertTransactionResult = viewTransactionsOfAnAccountIndex(
 
                         userId = userId,
                         insertTransactionResult = insertTransactionResult,
                         username = username,
-                        viaAccount = viaAccount,
-                        toAccount = toAccount,
                         desiredAccountIndex = InsertOperations.walletAccount.value!!
                     )
                 }
 
                 "25" -> {
 
-                    insertTransactionResult = viewTransactionsOfAnAccount(
+                    insertTransactionResult = viewTransactionsOfAnAccountIndex(
 
                         userId = userId,
                         insertTransactionResult = insertTransactionResult,
                         username = username,
-                        viaAccount = viaAccount,
-                        toAccount = toAccount,
                         desiredAccountIndex = InsertOperations.bankAccount.value!!
                     )
                 }
 
                 "26" -> {
 
-                    insertTransactionResult = viewTransactionsOfAnAccount(
+                    insertTransactionResult = viewTransactionsOfAnAccountIndex(
 
                         userId = userId,
                         insertTransactionResult = insertTransactionResult,
                         username = username,
-                        viaAccount = viaAccount,
-                        toAccount = toAccount,
                         desiredAccountIndex = InsertOperations.frequent1Account.value!!
                     )
                 }
 
                 "27" -> {
 
-                    insertTransactionResult = viewTransactionsOfAnAccount(
+                    insertTransactionResult = viewTransactionsOfAnAccountIndex(
 
                         userId = userId,
                         insertTransactionResult = insertTransactionResult,
                         username = username,
-                        viaAccount = viaAccount,
-                        toAccount = toAccount,
                         desiredAccountIndex = InsertOperations.frequent2Account.value!!
                     )
                 }
 
                 "28" -> {
 
-                    insertTransactionResult = viewTransactionsOfAnAccount(
+                    insertTransactionResult = viewTransactionsOfAnAccountIndex(
 
                         userId = userId,
                         insertTransactionResult = insertTransactionResult,
                         username = username,
-                        viaAccount = viaAccount,
-                        toAccount = toAccount,
                         desiredAccountIndex = InsertOperations.frequent3Account.value!!
                     )
                 }
 
                 "30" -> {
 
-                    insertTransactionResult = checkAccountsAffectedAfterSpecifiedDate(
+                    insertTransactionResult = checkAffectedAccountsAfterSpecifiedDate(
 
                         desiredDate = getUserInitialTransactionDateFromUsername(username = username).minusDays(1)
                             .format(DateTimeUtils.normalDatePattern),
                         userId = userId,
                         username = username,
-                        fromAccount = fromAccount,
-                        viaAccount = viaAccount,
-                        toAccount = toAccount,
-                        dateTimeInText = dateTimeInText,
-                        transactionParticulars = transactionParticulars,
-                        transactionAmount = transactionAmount
+                        insertTransactionResult = insertTransactionResult
                     )
+                }
 
+                "31" -> {
+
+                    val getTransactionsResult: IsOkModel<TransactionsResponse> =
+                        CommonApiUtils.makeApiRequestWithOptionalRetries(apiCallFunction = fun(): Result<TransactionsResponse> {
+
+                            return runBlocking {
+
+                                TransactionsDataSource().selectTransactions(userId = userId)
+                            }
+                        })
+
+                    CommonHandleResponses.isOkModelHandler(
+
+                        isOkModel = getTransactionsResult,
+                        data = Unit,
+                        successActions = fun() {
+
+                            insertTransactionResult = TransactionViews.viewTransactions(
+
+                                userTransactionsResponse = getTransactionsResult.data!!,
+                                accountFullName = "Last 10",
+                                dateTimeInText = insertTransactionResult.dateTimeInText,
+                                transactionParticulars = insertTransactionResult.transactionParticulars,
+                                transactionAmount = insertTransactionResult.transactionAmount,
+                                fromAccount = insertTransactionResult.fromAccount,
+                                viaAccount = insertTransactionResult.viaAccount,
+                                toAccount = insertTransactionResult.toAccount,
+                                username = username,
+                                accountId = 0u,
+                                functionCallSource = FunctionCallSourceEnum.FROM_VIEW_TRANSACTIONS_OF_AN_ACCOUNT,
+                                userId = userId
+
+                            ).addTransactionResult
+                        })
                 }
 
                 "0" -> {
@@ -509,223 +486,193 @@ object Screens {
 
         userId: UInt,
         username: String,
-        fromAccount: AccountResponse,
-        viaAccount: AccountResponse,
-        toAccount: AccountResponse,
         insertTransactionResult: InsertTransactionResult
 
-    ) = InsertOperations.openSpecifiedAccountHome(
+    ) = quickTransactionOnX(
 
         account = InsertOperations.frequent3Account,
+        insertTransactionResult = insertTransactionResult,
         userId = userId,
-        username = username,
-        fromAccount = fromAccount,
-        viaAccount = viaAccount,
-        toAccount = toAccount,
-        dateTimeInText = insertTransactionResult.dateTimeInText,
-        transactionParticulars = insertTransactionResult.transactionParticulars,
-        transactionAmount = insertTransactionResult.transactionAmount
+        username = username
     )
+
 
     internal fun quickTransactionOnFrequent2(
 
         userId: UInt,
         username: String,
-        fromAccount: AccountResponse,
-        viaAccount: AccountResponse,
-        toAccount: AccountResponse,
         insertTransactionResult: InsertTransactionResult
 
-    ) = InsertOperations.openSpecifiedAccountHome(
+    ) = quickTransactionOnX(
 
         account = InsertOperations.frequent2Account,
+        insertTransactionResult = insertTransactionResult,
         userId = userId,
-        username = username,
-        fromAccount = fromAccount,
-        viaAccount = viaAccount,
-        toAccount = toAccount,
-        dateTimeInText = insertTransactionResult.dateTimeInText,
-        transactionParticulars = insertTransactionResult.transactionParticulars,
-        transactionAmount = insertTransactionResult.transactionAmount
+        username = username
     )
+
 
     internal fun quickTransactionOnFrequent1(
 
         userId: UInt,
         username: String,
-        fromAccount: AccountResponse,
-        viaAccount: AccountResponse,
-        toAccount: AccountResponse,
         insertTransactionResult: InsertTransactionResult
 
-    ) = InsertOperations.openSpecifiedAccountHome(
+    ) = quickTransactionOnX(
 
         account = InsertOperations.frequent1Account,
+        insertTransactionResult = insertTransactionResult,
         userId = userId,
-        username = username,
-        fromAccount = fromAccount,
-        viaAccount = viaAccount,
-        toAccount = toAccount,
-        dateTimeInText = insertTransactionResult.dateTimeInText,
-        transactionParticulars = insertTransactionResult.transactionParticulars,
-        transactionAmount = insertTransactionResult.transactionAmount
+        username = username
     )
 
     internal fun quickTransactionOnBankToFrequent3(
 
         userId: UInt,
         username: String,
-        fromAccount: AccountResponse,
-        viaAccount: AccountResponse,
-        toAccount: AccountResponse,
         insertTransactionResult: InsertTransactionResult
 
-    ) = InsertOperations.insertQuickTransactionFromAccount1toAccount2(
+    ) = quickTransactionOnBankToX(
 
-        account1 = InsertOperations.bankAccount,
         account2 = InsertOperations.frequent3Account,
         userId = userId,
         username = username,
-        fromAccount = fromAccount,
-        viaAccount = viaAccount,
-        toAccount = toAccount,
-        dateTimeInText = insertTransactionResult.dateTimeInText,
-        transactionParticulars = insertTransactionResult.transactionParticulars,
-        transactionAmount = insertTransactionResult.transactionAmount
+        insertTransactionResult = insertTransactionResult
     )
 
     internal fun quickTransactionOnBankToFrequent2(
 
         userId: UInt,
         username: String,
-        fromAccount: AccountResponse,
-        viaAccount: AccountResponse,
-        toAccount: AccountResponse,
         insertTransactionResult: InsertTransactionResult
 
-    ) = InsertOperations.insertQuickTransactionFromAccount1toAccount2(
+    ) = quickTransactionOnBankToX(
 
-        account1 = InsertOperations.bankAccount,
         account2 = InsertOperations.frequent2Account,
         userId = userId,
         username = username,
-        fromAccount = fromAccount,
-        viaAccount = viaAccount,
-        toAccount = toAccount,
-        dateTimeInText = insertTransactionResult.dateTimeInText,
-        transactionParticulars = insertTransactionResult.transactionParticulars,
-        transactionAmount = insertTransactionResult.transactionAmount
+        insertTransactionResult = insertTransactionResult
     )
 
     internal fun quickTransactionOnBankToFrequent1(
 
         userId: UInt,
         username: String,
-        fromAccount: AccountResponse,
-        viaAccount: AccountResponse,
-        toAccount: AccountResponse,
         insertTransactionResult: InsertTransactionResult
 
-    ) = InsertOperations.insertQuickTransactionFromAccount1toAccount2(
+    ) = quickTransactionOnBankToX(
 
-        account1 = InsertOperations.bankAccount,
         account2 = InsertOperations.frequent1Account,
         userId = userId,
         username = username,
-        fromAccount = fromAccount,
-        viaAccount = viaAccount,
-        toAccount = toAccount,
-        dateTimeInText = insertTransactionResult.dateTimeInText,
-        transactionParticulars = insertTransactionResult.transactionParticulars,
-        transactionAmount = insertTransactionResult.transactionAmount
+        insertTransactionResult = insertTransactionResult
     )
 
     internal fun quickTransactionOnBank(
 
         userId: UInt,
         username: String,
-        fromAccount: AccountResponse,
-        viaAccount: AccountResponse,
-        toAccount: AccountResponse,
         insertTransactionResult: InsertTransactionResult
 
-    ) = InsertOperations.openSpecifiedAccountHome(
+    ) = quickTransactionOnX(
 
         account = InsertOperations.bankAccount,
+        insertTransactionResult = insertTransactionResult,
         userId = userId,
-        username = username,
-        fromAccount = fromAccount,
-        viaAccount = viaAccount,
-        toAccount = toAccount,
-        dateTimeInText = insertTransactionResult.dateTimeInText,
-        transactionParticulars = insertTransactionResult.transactionParticulars,
-        transactionAmount = insertTransactionResult.transactionAmount
+        username = username
     )
 
     internal fun quickTransactionOnWalletToFrequent3(
 
         userId: UInt,
         username: String,
-        fromAccount: AccountResponse,
-        viaAccount: AccountResponse,
-        toAccount: AccountResponse,
         insertTransactionResult: InsertTransactionResult
 
-    ) = InsertOperations.insertQuickTransactionFromAccount1toAccount2(
+    ) = quickTransactionOnWalletToX(
 
-        account1 = InsertOperations.walletAccount,
         account2 = InsertOperations.frequent3Account,
         userId = userId,
         username = username,
-        fromAccount = fromAccount,
-        viaAccount = viaAccount,
-        toAccount = toAccount,
-        dateTimeInText = insertTransactionResult.dateTimeInText,
-        transactionParticulars = insertTransactionResult.transactionParticulars,
-        transactionAmount = insertTransactionResult.transactionAmount
+        insertTransactionResult = insertTransactionResult
     )
 
     internal fun quickTransactionOnWalletToFrequent2(
 
         userId: UInt,
         username: String,
-        fromAccount: AccountResponse,
-        viaAccount: AccountResponse,
-        toAccount: AccountResponse,
         insertTransactionResult: InsertTransactionResult
 
-    ) = InsertOperations.insertQuickTransactionFromAccount1toAccount2(
+    ) = quickTransactionOnWalletToX(
 
-        account1 = InsertOperations.walletAccount,
         account2 = InsertOperations.frequent2Account,
         userId = userId,
         username = username,
-        fromAccount = fromAccount,
-        viaAccount = viaAccount,
-        toAccount = toAccount,
-        dateTimeInText = insertTransactionResult.dateTimeInText,
-        transactionParticulars = insertTransactionResult.transactionParticulars,
-        transactionAmount = insertTransactionResult.transactionAmount
+        insertTransactionResult = insertTransactionResult
     )
 
     internal fun quickTransactionOnWalletToFrequent1(
 
         userId: UInt,
         username: String,
-        fromAccount: AccountResponse,
-        viaAccount: AccountResponse,
-        toAccount: AccountResponse,
+        insertTransactionResult: InsertTransactionResult
+
+    ) = quickTransactionOnWalletToX(
+
+        account2 = InsertOperations.frequent1Account,
+        userId = userId,
+        username = username,
+        insertTransactionResult = insertTransactionResult
+    )
+
+    private fun quickTransactionOnWalletToX(
+
+        account2: EnvironmentVariableForWholeNumber,
+        userId: UInt,
+        username: String,
+        insertTransactionResult: InsertTransactionResult
+
+    ) = quickTransactionOnXToY(
+
+        account1 = InsertOperations.walletAccount,
+        account2 = account2,
+        userId = userId,
+        username = username,
+        insertTransactionResult = insertTransactionResult
+    )
+
+    private fun quickTransactionOnBankToX(
+
+        account2: EnvironmentVariableForWholeNumber,
+        userId: UInt,
+        username: String,
+        insertTransactionResult: InsertTransactionResult
+
+    ) = quickTransactionOnXToY(
+
+        account1 = InsertOperations.bankAccount,
+        account2 = account2,
+        userId = userId,
+        username = username,
+        insertTransactionResult = insertTransactionResult
+    )
+
+    private fun quickTransactionOnXToY(
+
+        account1: EnvironmentVariableForWholeNumber,
+        account2: EnvironmentVariableForWholeNumber,
+        userId: UInt,
+        username: String,
         insertTransactionResult: InsertTransactionResult
 
     ) = InsertOperations.insertQuickTransactionFromAccount1toAccount2(
 
-        account1 = InsertOperations.walletAccount,
-        account2 = InsertOperations.frequent1Account,
+        account1 = account1,
+        account2 = account2,
         userId = userId,
         username = username,
-        fromAccount = fromAccount,
-        viaAccount = viaAccount,
-        toAccount = toAccount,
+        fromAccount = insertTransactionResult.fromAccount,
+        viaAccount = insertTransactionResult.viaAccount,
+        toAccount = insertTransactionResult.toAccount,
         dateTimeInText = insertTransactionResult.dateTimeInText,
         transactionParticulars = insertTransactionResult.transactionParticulars,
         transactionAmount = insertTransactionResult.transactionAmount
@@ -735,36 +682,44 @@ object Screens {
 
         insertTransactionResult: InsertTransactionResult,
         userId: UInt,
-        username: String,
-        fromAccount: AccountResponse,
-        viaAccount: AccountResponse,
-        toAccount: AccountResponse
+        username: String
+
+    ) = quickTransactionOnX(
+
+        account = InsertOperations.walletAccount,
+        insertTransactionResult = insertTransactionResult,
+        userId = userId,
+        username = username
+    )
+
+    private fun quickTransactionOnX(
+
+        account: EnvironmentVariableForWholeNumber,
+        insertTransactionResult: InsertTransactionResult,
+        userId: UInt,
+        username: String
 
     ): InsertTransactionResult {
 
-        var localInsertTransactionResult: InsertTransactionResult = insertTransactionResult
-        localInsertTransactionResult = InsertOperations.openSpecifiedAccountHome(
+        return InsertOperations.openSpecifiedAccountHome(
 
-            account = InsertOperations.walletAccount,
+            account = account,
             userId = userId,
             username = username,
-            fromAccount = fromAccount,
-            viaAccount = viaAccount,
-            toAccount = toAccount,
-            dateTimeInText = localInsertTransactionResult.dateTimeInText,
-            transactionParticulars = localInsertTransactionResult.transactionParticulars,
-            transactionAmount = localInsertTransactionResult.transactionAmount
+            fromAccount = insertTransactionResult.fromAccount,
+            viaAccount = insertTransactionResult.viaAccount,
+            toAccount = insertTransactionResult.toAccount,
+            dateTimeInText = insertTransactionResult.dateTimeInText,
+            transactionParticulars = insertTransactionResult.transactionParticulars,
+            transactionAmount = insertTransactionResult.transactionAmount
         )
-        return localInsertTransactionResult
     }
 
-    private fun viewTransactionsOfAnAccount(
+    private fun viewTransactionsOfAnAccountIndex(
 
         userId: UInt,
         insertTransactionResult: InsertTransactionResult,
         username: String,
-        viaAccount: AccountResponse,
-        toAccount: AccountResponse,
         desiredAccountIndex: UInt
 
     ): InsertTransactionResult {
@@ -777,18 +732,14 @@ object Screens {
         if (getUserAccountsMapResult.isOK && getUserAccountsMapResult.data!!.containsKey(desiredAccountIndex)) {
 
             val selectedAccount: AccountResponse = getUserAccountsMapResult.data[desiredAccountIndex]!!
-            localInsertTransactionResult = viewTransactions(
+            localInsertTransactionResult = TransactionViews.viewTransactionsForAnAccount(
 
                 userId = userId,
                 username = username,
                 accountId = desiredAccountIndex,
                 accountFullName = selectedAccount.fullName,
-                fromAccount = selectedAccount,
-                viaAccount = viaAccount,
-                toAccount = toAccount,
-                dateTimeInText = localInsertTransactionResult.dateTimeInText,
-                transactionParticulars = localInsertTransactionResult.transactionParticulars,
-                transactionAmount = localInsertTransactionResult.transactionAmount
+                insertTransactionResult = insertTransactionResult,
+                fromAccount = selectedAccount
 
             ).addTransactionResult
         }
@@ -867,18 +818,14 @@ object Screens {
             when (readLine()!!) {
 
                 "1" -> {
-                    localInsertTransactionResult = viewTransactions(
+                    localInsertTransactionResult = TransactionViews.viewTransactionsForAnAccount(
 
                         userId = userId,
                         username = username,
                         accountId = fromAccount.id,
                         accountFullName = fromAccount.fullName,
-                        fromAccount = localInsertTransactionResult.fromAccount,
-                        viaAccount = localInsertTransactionResult.viaAccount,
-                        toAccount = localInsertTransactionResult.toAccount,
-                        dateTimeInText = localInsertTransactionResult.dateTimeInText,
-                        transactionParticulars = localInsertTransactionResult.transactionParticulars,
-                        transactionAmount = localInsertTransactionResult.transactionAmount
+                        insertTransactionResult = localInsertTransactionResult,
+                        fromAccount = localInsertTransactionResult.fromAccount
 
                     ).addTransactionResult
                 }
@@ -946,10 +893,7 @@ object Screens {
 
                         insertTransactionResult = localInsertTransactionResult,
                         userId = userId,
-                        username = username,
-                        fromAccount = fromAccount,
-                        viaAccount = viaAccount,
-                        toAccount = toAccount
+                        username = username
                     )
                 }
 
@@ -957,12 +901,9 @@ object Screens {
 
                     localInsertTransactionResult = quickTransactionOnWalletToFrequent1(
 
-                        insertTransactionResult = localInsertTransactionResult,
                         userId = userId,
                         username = username,
-                        fromAccount = fromAccount,
-                        viaAccount = viaAccount,
-                        toAccount = toAccount
+                        insertTransactionResult = localInsertTransactionResult
                     )
                 }
 
@@ -970,12 +911,9 @@ object Screens {
 
                     localInsertTransactionResult = quickTransactionOnWalletToFrequent2(
 
-                        insertTransactionResult = localInsertTransactionResult,
                         userId = userId,
                         username = username,
-                        fromAccount = fromAccount,
-                        viaAccount = viaAccount,
-                        toAccount = toAccount
+                        insertTransactionResult = localInsertTransactionResult
                     )
                 }
 
@@ -983,12 +921,9 @@ object Screens {
 
                     localInsertTransactionResult = quickTransactionOnWalletToFrequent3(
 
-                        insertTransactionResult = localInsertTransactionResult,
                         userId = userId,
                         username = username,
-                        fromAccount = fromAccount,
-                        viaAccount = viaAccount,
-                        toAccount = toAccount
+                        insertTransactionResult = localInsertTransactionResult
                     )
                 }
 
@@ -996,12 +931,9 @@ object Screens {
 
                     localInsertTransactionResult = quickTransactionOnBank(
 
-                        insertTransactionResult = localInsertTransactionResult,
                         userId = userId,
                         username = username,
-                        fromAccount = fromAccount,
-                        viaAccount = viaAccount,
-                        toAccount = toAccount
+                        insertTransactionResult = localInsertTransactionResult
                     )
                 }
 
@@ -1009,12 +941,9 @@ object Screens {
 
                     localInsertTransactionResult = quickTransactionOnBankToFrequent1(
 
-                        insertTransactionResult = localInsertTransactionResult,
                         userId = userId,
                         username = username,
-                        fromAccount = fromAccount,
-                        viaAccount = viaAccount,
-                        toAccount = toAccount
+                        insertTransactionResult = localInsertTransactionResult
                     )
                 }
 
@@ -1022,12 +951,9 @@ object Screens {
 
                     localInsertTransactionResult = quickTransactionOnBankToFrequent2(
 
-                        insertTransactionResult = localInsertTransactionResult,
                         userId = userId,
                         username = username,
-                        fromAccount = fromAccount,
-                        viaAccount = viaAccount,
-                        toAccount = toAccount
+                        insertTransactionResult = localInsertTransactionResult
                     )
                 }
 
@@ -1035,12 +961,9 @@ object Screens {
 
                     localInsertTransactionResult = quickTransactionOnBankToFrequent3(
 
-                        insertTransactionResult = localInsertTransactionResult,
                         userId = userId,
                         username = username,
-                        fromAccount = fromAccount,
-                        viaAccount = viaAccount,
-                        toAccount = toAccount
+                        insertTransactionResult = localInsertTransactionResult
                     )
                 }
 
@@ -1048,12 +971,9 @@ object Screens {
 
                     localInsertTransactionResult = quickTransactionOnFrequent1(
 
-                        insertTransactionResult = localInsertTransactionResult,
                         userId = userId,
                         username = username,
-                        fromAccount = fromAccount,
-                        viaAccount = viaAccount,
-                        toAccount = toAccount
+                        insertTransactionResult = localInsertTransactionResult
                     )
                 }
 
@@ -1061,12 +981,9 @@ object Screens {
 
                     localInsertTransactionResult = quickTransactionOnFrequent2(
 
-                        insertTransactionResult = localInsertTransactionResult,
                         userId = userId,
                         username = username,
-                        fromAccount = fromAccount,
-                        viaAccount = viaAccount,
-                        toAccount = toAccount
+                        insertTransactionResult = localInsertTransactionResult
                     )
                 }
 
@@ -1074,12 +991,9 @@ object Screens {
 
                     localInsertTransactionResult = quickTransactionOnFrequent3(
 
-                        insertTransactionResult = localInsertTransactionResult,
                         userId = userId,
                         username = username,
-                        fromAccount = fromAccount,
-                        viaAccount = viaAccount,
-                        toAccount = toAccount
+                        insertTransactionResult = localInsertTransactionResult
                     )
                 }
 

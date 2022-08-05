@@ -408,10 +408,13 @@ class UserOperations {
 
                             "2" -> {
                                 val chooseUserResult: ChooseUserResult = handleUserSelection(
-                                    chosenUserId = getValidIndex(
+                                    chosenUserId = getValidIndexWithInputPrompt(
+
                                         map = usersMap,
                                         itemSpecification = Constants.userText,
-                                        items = UserUtils.usersToStringFromLinkedHashMap(usersMap = usersMap)
+                                        items = UserUtils.usersToStringFromLinkedHashMap(usersMap = usersMap),
+                                        backValue = 0u
+
                                     ), usersMap = usersMap
                                 )
                                 if (chooseUserResult.isChosen) {

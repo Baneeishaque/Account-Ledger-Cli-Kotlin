@@ -15,41 +15,27 @@ import accountLedgerCli.utils.AccountUtils
 import accountLedgerCli.utils.ApiUtils
 import kotlinx.coroutines.runBlocking
 
-internal fun checkAccountsAffectedAfterSpecifiedDate(
+internal fun checkAffectedAccountsAfterSpecifiedDate(
 
     desiredDate: String,
     userId: UInt,
     username: String,
-    fromAccount: AccountResponse,
-    viaAccount: AccountResponse,
-    toAccount: AccountResponse,
-    dateTimeInText: String,
-    transactionParticulars: String,
-    transactionAmount: Float
+    insertTransactionResult: InsertTransactionResult
 
 ): InsertTransactionResult {
 
-    val transactionsDataSource = TransactionsDataSource()
+    var localInsertTransactionResult: InsertTransactionResult = insertTransactionResult
+    localInsertTransactionResult.isSuccess = false
+
     println("Contacting Server...")
     val apiResponse: Result<TransactionsResponse>
-
-    var insertTransactionResult = InsertTransactionResult(
-
-        isSuccess = false,
-        dateTimeInText = dateTimeInText,
-        transactionParticulars = transactionParticulars,
-        transactionAmount = transactionAmount,
-        fromAccount = fromAccount,
-        viaAccount = viaAccount,
-        toAccount = toAccount
-    )
 
     val specifiedDate: IsOkModel<String> = MysqlUtils.normalDateTextToMySqlDateText(normalDateText = desiredDate)
     if (specifiedDate.isOK) {
 
         runBlocking {
 
-            apiResponse = transactionsDataSource.selectUserTransactionsAfterSpecifiedDate(
+            apiResponse = TransactionsDataSource().selectUserTransactionsAfterSpecifiedDate(
 
                 userId = userId,
                 specifiedDate = specifiedDate.data!!
@@ -59,6 +45,8 @@ internal fun checkAccountsAffectedAfterSpecifiedDate(
 
             println("Response : $apiResponse")
         }
+
+        // TODO : Update to new API Methods
         if (apiResponse.isFailure) {
 
             println("Error : ${(apiResponse.exceptionOrNull() as Exception).localizedMessage}")
@@ -68,21 +56,17 @@ internal fun checkAccountsAffectedAfterSpecifiedDate(
 
                     "Y", "" -> {
 
-                        return checkAccountsAffectedAfterSpecifiedDate(
+                        return checkAffectedAccountsAfterSpecifiedDate(
 
                             desiredDate = desiredDate,
                             userId = userId,
                             username = username,
-                            fromAccount = fromAccount,
-                            viaAccount = viaAccount,
-                            toAccount = toAccount,
-                            dateTimeInText = dateTimeInText,
-                            transactionParticulars = transactionParticulars,
-                            transactionAmount = transactionAmount
+                            insertTransactionResult = localInsertTransactionResult
                         )
                     }
 
                     "N" -> {
+
                         break
                     }
 
@@ -93,11 +77,11 @@ internal fun checkAccountsAffectedAfterSpecifiedDate(
         } else {
 
             val selectUserTransactionsAfterSpecifiedDateResult: TransactionsResponse = apiResponse.getOrNull()!!
-            if (selectUserTransactionsAfterSpecifiedDateResult.status == 1u) {
+            if (ApiUtils.isNotNoTransactionsResponseWithMessage(
 
-                println("No Transactions...")
-
-            } else {
+                    responseStatus = selectUserTransactionsAfterSpecifiedDateResult.status
+                )
+            ) {
 
                 val accounts: MutableMap<UInt, String> = mutableMapOf()
                 selectUserTransactionsAfterSpecifiedDateResult.transactions.forEach { transaction ->
@@ -117,19 +101,15 @@ internal fun checkAccountsAffectedAfterSpecifiedDate(
                     for (account: MutableMap.MutableEntry<UInt, String> in accounts) {
 
                         val selectedAccount: AccountResponse = userAccountsMap[account.key]!!
-                        when (viewTransactions(
+                        when (TransactionViews.viewTransactionsForAnAccount(
 
                             userId = userId,
                             username = username,
                             accountId = account.key,
                             accountFullName = account.value,
                             functionCallSource = FunctionCallSourceEnum.FROM_CHECK_ACCOUNTS,
-                            fromAccount = selectedAccount,
-                            viaAccount = viaAccount,
-                            toAccount = toAccount,
-                            dateTimeInText = dateTimeInText,
-                            transactionParticulars = transactionParticulars,
-                            transactionAmount = transactionAmount
+                            insertTransactionResult = insertTransactionResult,
+                            fromAccount = selectedAccount
 
                         ).output) {
 
@@ -140,18 +120,14 @@ internal fun checkAccountsAffectedAfterSpecifiedDate(
 
                             "V" -> {
 
-                                insertTransactionResult = viewTransactions(
+                                localInsertTransactionResult = TransactionViews.viewTransactionsForAnAccount(
 
                                     userId = userId,
                                     username = username,
                                     accountId = account.key,
                                     accountFullName = account.value,
-                                    fromAccount = selectedAccount,
-                                    viaAccount = viaAccount,
-                                    toAccount = toAccount,
-                                    dateTimeInText = dateTimeInText,
-                                    transactionParticulars = transactionParticulars,
-                                    transactionAmount = transactionAmount
+                                    insertTransactionResult = localInsertTransactionResult,
+                                    fromAccount = selectedAccount
 
                                 ).addTransactionResult
                             }
@@ -161,7 +137,7 @@ internal fun checkAccountsAffectedAfterSpecifiedDate(
             }
         }
     }
-    return insertTransactionResult
+    return localInsertTransactionResult
 }
 
 internal fun viewChildAccounts(

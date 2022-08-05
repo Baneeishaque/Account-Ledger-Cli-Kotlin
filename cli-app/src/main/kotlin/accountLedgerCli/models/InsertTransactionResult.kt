@@ -4,7 +4,7 @@ import accountLedgerCli.api.response.AccountResponse
 
 internal data class InsertTransactionResult(
 
-    internal val isSuccess: Boolean,
+    internal var isSuccess: Boolean,
     internal var dateTimeInText: String,
     internal var transactionParticulars: String,
     internal var transactionAmount: Float,

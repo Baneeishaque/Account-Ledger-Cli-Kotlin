@@ -1,7 +1,8 @@
 package accountLedgerCli.utils
 
 import accountLedgerCli.api.response.TransactionResponse
-import accountLedgerCli.models.AppendToTransactionLedgerResult
+import accountLedgerCli.cli.App
+import accountLedgerCli.models.TransactionLedgerInText
 
 internal object TransactionUtils {
 
@@ -18,13 +19,16 @@ internal object TransactionUtils {
     internal fun userTransactionsToTextFromList(
 
         transactions: List<TransactionResponse>,
-        currentAccountId: UInt
+        currentAccountId: UInt,
+        isDevelopmentMode: Boolean = App.isDevelopmentMode
 
     ): String {
 
-        //    println("transactions = $transactions")
+        if (isDevelopmentMode) {
 
-        var currentLedger = AppendToTransactionLedgerResult(text = "", balance = 0.0F)
+            println("transactions = $transactions")
+        }
+        var currentLedger = TransactionLedgerInText(text = "", balance = 0.0F)
         transactions.forEach { currentTransaction: TransactionResponse ->
 
             currentLedger = appendToLedger(
@@ -40,32 +44,51 @@ internal object TransactionUtils {
     internal fun userTransactionsToTextFromMap(
 
         transactionsMap: Map<UInt, TransactionResponse>,
-        currentAccountId: UInt
+        currentAccountId: UInt,
+        isDevelopmentMode: Boolean = App.isDevelopmentMode
 
     ): String {
 
-        //    println("transactions = $transactions")
+        if (isDevelopmentMode) {
 
-        var currentLedger = AppendToTransactionLedgerResult(text = "", balance = 0.0F)
-        transactionsMap.forEach { currentTransactionEntry: Map.Entry<UInt, TransactionResponse> ->
-
-            currentLedger = appendToLedger(
-
-                currentTransaction = currentTransactionEntry.value,
-                currentAccountId = currentAccountId,
-                currentLedger = currentLedger
-            )
+            println("transactions = $transactionsMap")
         }
-        return currentLedger.text
+        if (currentAccountId == 0u) {
+
+            var currentTextLedger = ""
+            transactionsMap.forEach { currentTransactionEntry: Map.Entry<UInt, TransactionResponse> ->
+
+                currentTextLedger = appendToTextLedger(
+
+                    currentTransaction = currentTransactionEntry.value,
+                    currentTextLedger = currentTextLedger
+                )
+            }
+            return currentTextLedger
+
+        } else {
+
+            var currentLedger = TransactionLedgerInText(text = "", balance = 0.0F)
+            transactionsMap.forEach { currentTransactionEntry: Map.Entry<UInt, TransactionResponse> ->
+
+                currentLedger = appendToLedger(
+
+                    currentTransaction = currentTransactionEntry.value,
+                    currentAccountId = currentAccountId,
+                    currentLedger = currentLedger
+                )
+            }
+            return currentLedger.text
+        }
     }
 
     private fun appendToLedger(
 
         currentTransaction: TransactionResponse,
         currentAccountId: UInt,
-        currentLedger: AppendToTransactionLedgerResult
+        currentLedger: TransactionLedgerInText
 
-    ): AppendToTransactionLedgerResult {
+    ): TransactionLedgerInText {
 
         var localCurrentBalance: Float = currentLedger.balance
         val transactionDirection: String
@@ -83,10 +106,20 @@ internal object TransactionUtils {
             transactionDirection = "+"
             secondAccountName = currentTransaction.from_account_name
         }
-        return AppendToTransactionLedgerResult(
+        return TransactionLedgerInText(
 
-            text = "${currentLedger.text}[${currentTransaction.id}] ${currentTransaction.event_date_time}\t${currentTransaction.particulars}\t${transactionDirection}${currentTransaction.amount}\t${secondAccountName}\t${localCurrentBalance}\n",
+            text = "${currentLedger.text}[${currentTransaction.id}] [${currentTransaction.event_date_time}]\t[${currentTransaction.particulars}]\t[${transactionDirection}${currentTransaction.amount}]\t[${secondAccountName}]\t[${localCurrentBalance}]\n",
             balance = localCurrentBalance
         )
+    }
+
+    private fun appendToTextLedger(
+
+        currentTransaction: TransactionResponse,
+        currentTextLedger: String
+
+    ): String {
+
+        return "${currentTextLedger}[${currentTransaction.id}] [${currentTransaction.event_date_time}]\t[(${currentTransaction.from_account_full_name}) -> (${currentTransaction.to_account_full_name})]\t[${currentTransaction.particulars}]\t[${currentTransaction.amount}]\n"
     }
 }
