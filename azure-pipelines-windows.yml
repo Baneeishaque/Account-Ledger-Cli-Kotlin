@@ -22,7 +22,7 @@ steps:
       path: $(GRADLE_USER_HOME)
     displayName: Gradle Build Cache
 
-  - task: Gradle@2
+  - task: Gradle@3.208.0
     displayName: 'Gradle Build : Tar Distribution'
     inputs:
       gradleOptions: '-Xmx3072m'
