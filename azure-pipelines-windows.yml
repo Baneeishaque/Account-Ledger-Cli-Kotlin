@@ -15,7 +15,7 @@ variables:
   # MAPPED_FTP_PWD: $(FTP_PWD)
 
 steps:
-  - task: Cache@2
+  - task: Cache@2.198.0
     inputs:
       key: 'gradle | "$(Agent.OS)"'
       restoreKeys: gradle
