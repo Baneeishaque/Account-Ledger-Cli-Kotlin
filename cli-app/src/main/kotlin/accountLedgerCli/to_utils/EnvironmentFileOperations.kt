@@ -57,8 +57,8 @@ object EnvironmentFileOperations {
 
     ): EnvironmentVariableForBoolean {
 
-        val result: String = dotenv[environmentVariableName]
-        return if (result.isEmpty()) {
+        val result: String? = dotenv[environmentVariableName]
+        return if (result == null || result.isEmpty()) {
 
             EnvironmentVariableForBoolean(isAvailable = true, value = defaultValue)
 
