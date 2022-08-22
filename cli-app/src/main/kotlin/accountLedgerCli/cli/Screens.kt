@@ -317,6 +317,7 @@ object Screens {
 
                 "24" -> {
 
+                    // TODO : Check for env. variable availability
                     insertTransactionResult = viewTransactionsOfAnAccountIndex(
 
                         userId = userId,
