@@ -8,8 +8,10 @@ import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
 import accountLedgerCli.constants.Constants
 import accountLedgerCli.enums.FunctionCallSourceEnum
 import accountLedgerCli.enums.TransactionTypeEnum
+import accountLedgerCli.enums.AccountTypeEnum
 import accountLedgerCli.models.InsertTransactionResult
 import accountLedgerCli.models.ViewTransactionsOutput
+import accountLedgerCli.models.ChooseAccountResult
 import accountLedgerCli.to_models.IsOkModel
 import accountLedgerCli.to_utils.DateTimeUtils
 import accountLedgerCli.to_utils.MysqlUtils
@@ -18,6 +20,7 @@ import accountLedgerCli.to_utils.invalidOptionMessage
 import accountLedgerCli.utils.AccountUtils
 import accountLedgerCli.utils.ApiUtils
 import accountLedgerCli.utils.TransactionUtils
+import accountLedgerCli.utils.ChooseAccountUtils
 import accountLedgerCli.to_utils.ApiUtils as CommonApiUtils
 import accountLedgerCli.to_utils.HandleResponses as CommonHandleResponses
 
@@ -344,21 +347,77 @@ object TransactionViews {
                                 })
                             if (selectedTransactionDateTimeConversionResult.isOK) {
 
+                                var localFromAccount: AccountResponse = userAccountsMap[selectedTransaction.from_account_id]!!
+                                do {
+                                    print("Do you want to change Withdraw A/C (Y/N) (Default : N) : ")
+                                    when (readLine()!!) {
+                                        "Y" -> {
+
+                                            var chooseAccountResult: ChooseAccountResult =                                                    ChooseAccountUtils.chooseAccountById(
+                                                            userId = userId,
+                                                            accountType = AccountTypeEnum.FROM
+                                                    )
+                                            if(chooseAccountResult.chosenAccountId != 0u){
+
+                                                localFromAccount = chooseAccountResult.chosenAccount!!
+                                            }
+                                            break
+                                        }
+                                        "N", "" -> {
+
+                                            break
+                                        }
+                                        else -> invalidOptionMessage()
+                                    }
+                                } while (true)
+
+                                var localToAccount: AccountResponse = userAccountsMap[selectedTransaction.to_account_id]!!
+                                do {
+                                    print("Do you want to change Deposit A/C (Y/N) (Default : N) : ")
+                                    when (readLine()!!) {
+                                        "Y" -> {
+
+                                            var chooseAccountResult: ChooseAccountResult =                                                    ChooseAccountUtils.chooseAccountById(
+                                                            userId = userId,
+                                                            accountType = AccountTypeEnum.TO
+                                                    )
+                                            if(chooseAccountResult.chosenAccountId != 0u){
+
+                                                localToAccount = chooseAccountResult.chosenAccount!!
+                                            }
+                                            break
+                                        }
+                                        "N", "" -> {
+
+                                            break
+                                        }
+                                        else -> invalidOptionMessage()
+                                    }
+                                } while (true)
+
                                 val updateTransactionResult: InsertTransactionResult =
                                     InsertOperations.addTransactionStep2(
 
                                         userId = userId,
                                         username = username,
                                         transactionType = TransactionTypeEnum.NORMAL,
-                                        fromAccount = userAccountsMap[selectedTransaction.from_account_id]!!,
+                                        fromAccount = localFromAccount,
                                         viaAccount = viaAccount,
-                                        toAccount = userAccountsMap[selectedTransaction.to_account_id]!!,
+                                        toAccount = localToAccount,
                                         transactionId = transactionIndex,
                                         dateTimeInText = selectedTransactionDateTimeConversionResult.data!!,
                                         transactionParticulars = selectedTransaction.particulars,
                                         transactionAmount = selectedTransaction.amount,
                                         isEditStep = true
                                     )
+
+                                userTransactionsMap[transactionIndex]!!.from_account_id = localFromAccount.id
+                                userTransactionsMap[transactionIndex]!!.from_account_name = localFromAccount.name
+                                userTransactionsMap[transactionIndex]!!.from_account_full_name = localFromAccount.fullName
+
+                                userTransactionsMap[transactionIndex]!!.to_account_id = localToAccount.id
+                                userTransactionsMap[transactionIndex]!!.to_account_name = localToAccount.name
+                                userTransactionsMap[transactionIndex]!!.to_account_full_name = localToAccount.fullName
 
                                 userTransactionsMap[transactionIndex]!!.event_date_time =
                                     updateTransactionResult.dateTimeInText

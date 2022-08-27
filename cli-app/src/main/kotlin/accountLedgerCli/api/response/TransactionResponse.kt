@@ -7,10 +7,10 @@ internal data class TransactionResponse(
     internal var particulars: String,
     internal var amount: Float,
     internal val insertion_date_time: String,
-    internal val from_account_name: String,
-    internal val from_account_full_name: String,
-    internal val from_account_id: UInt,
-    internal val to_account_name: String,
-    internal val to_account_full_name: String,
-    internal val to_account_id: UInt
+    internal var from_account_name: String,
+    internal var from_account_full_name: String,
+    internal var from_account_id: UInt,
+    internal var to_account_name: String,
+    internal var to_account_full_name: String,
+    internal var to_account_id: UInt
 )
