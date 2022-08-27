@@ -3,6 +3,8 @@ package accountLedgerCli.utils
 import accountLedgerCli.api.response.TransactionResponse
 import accountLedgerCli.cli.App
 import accountLedgerCli.models.TransactionLedgerInText
+import accountLedgerCli.to_models.IsOkModel
+import accountLedgerCli.to_utils.MysqlUtils
 
 internal object TransactionUtils {
 
@@ -98,13 +100,23 @@ internal object TransactionUtils {
 
             localCurrentBalance -= currentTransaction.amount
             transactionDirection = "-"
-            secondAccountName = currentTransaction.to_account_name
+            secondAccountName = currentTransaction.to_account_full_name
 
         } else {
 
             localCurrentBalance += currentTransaction.amount
             transactionDirection = "+"
-            secondAccountName = currentTransaction.from_account_name
+            secondAccountName = currentTransaction.from_account_full_name
+        }
+
+        var toNormalDateTimeConversionResult:IsOkModel<String> = MysqlUtils.mySqlDateTimeTextToNormalDateTimeText(mySqlDateTimeText=currentTransaction.event_date_time)
+        if(toNormalDateTimeConversionResult.isOK){
+
+            return TransactionLedgerInText(
+
+                text = "${currentLedger.text}[${currentTransaction.id}] [${toNormalDateTimeConversionResult.data}]\t[${currentTransaction.particulars}]\t[${transactionDirection}${currentTransaction.amount}]\t[${secondAccountName}]\t[${localCurrentBalance}]\n",
+                balance = localCurrentBalance
+            )
         }
         return TransactionLedgerInText(
 
