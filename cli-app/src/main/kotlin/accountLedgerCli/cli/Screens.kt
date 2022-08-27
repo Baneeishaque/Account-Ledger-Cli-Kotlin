@@ -1010,13 +1010,15 @@ object Screens {
         } while (true)
     }
 
+    @JvmStatic
     internal fun getUserWithCurrentAccountSelectionsAsText(
 
         username: String,
         fromAccount: AccountResponse,
         viaAccount: AccountResponse,
         toAccount: AccountResponse,
-        transactionType: TransactionTypeEnum
+        transactionType: TransactionTypeEnum,
+        userId: UInt
 
     ): List<String> {
 
@@ -1030,7 +1032,7 @@ object Screens {
         if (transactionType == TransactionTypeEnum.VIA) {
             menuItems = menuItems + listOf("Via. Account - ${viaAccount.id} : ${viaAccount.fullName}")
         }
-        menuItems = menuItems + listOf("To Account - ${toAccount.id} : ${toAccount.fullName}")
+        menuItems = menuItems + listOf("To Account - ${toAccount.id} : ${toAccount.fullName}", AccountUtils.getFrequentlyUsedTop10Accounts(userId=userId))
         return menuItems
     }
 }

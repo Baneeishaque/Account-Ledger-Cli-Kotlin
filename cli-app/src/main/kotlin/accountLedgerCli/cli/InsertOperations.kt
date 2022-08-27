@@ -154,6 +154,7 @@ object InsertOperations {
         return insertTransactionResult
     }
 
+    @JvmStatic
     internal fun addTransaction(
 
         userId: UInt,
@@ -187,7 +188,8 @@ object InsertOperations {
                     fromAccount = localInsertTransactionResult.fromAccount,
                     viaAccount = localInsertTransactionResult.viaAccount,
                     toAccount = localInsertTransactionResult.toAccount,
-                    transactionType = transactionType
+                    transactionType = transactionType,
+                    userId = userId
 
                 ) + listOf(
 

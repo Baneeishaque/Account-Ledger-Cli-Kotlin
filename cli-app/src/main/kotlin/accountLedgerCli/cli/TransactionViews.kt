@@ -347,6 +347,23 @@ object TransactionViews {
                                 })
                             if (selectedTransactionDateTimeConversionResult.isOK) {
 
+                                //TODO : Present Transaction
+                                if(selectedTransaction.from_account_id == fromAccount.id){
+
+                                    print("[${selectedTransaction.id}] [${selectedTransactionDateTimeConversionResult.data!!}]\t[${selectedTransaction.particulars}]\t[-${selectedTransaction.amount}]\t[${selectedTransaction.to_account_full_name}]")
+                                }
+                                else if(selectedTransaction.to_account_id == fromAccount.id){
+
+                                    print("[${selectedTransaction.id}] [${selectedTransactionDateTimeConversionResult.data!!}]\t[${selectedTransaction.particulars}]\t[+${selectedTransaction.amount}]\t[${selectedTransaction.from_account_full_name}]")
+
+                                }
+                                else{
+
+                                    //TODO : exceptional case
+                                }
+                                
+                                //TODO : Get User Confirmation
+
                                 var localFromAccount: AccountResponse = userAccountsMap[selectedTransaction.from_account_id]!!
                                 do {
                                     print("Do you want to change Withdraw A/C (Y/N) (Default : N) : ")
@@ -411,20 +428,43 @@ object TransactionViews {
                                         isEditStep = true
                                     )
 
-                                userTransactionsMap[transactionIndex]!!.from_account_id = localFromAccount.id
-                                userTransactionsMap[transactionIndex]!!.from_account_name = localFromAccount.name
-                                userTransactionsMap[transactionIndex]!!.from_account_full_name = localFromAccount.fullName
+                                // TODO : If from or to is not current account, remove the transaction
+                                if((localFromAccount == fromAccount) || (localFromAccount == toAccount)){
 
-                                userTransactionsMap[transactionIndex]!!.to_account_id = localToAccount.id
-                                userTransactionsMap[transactionIndex]!!.to_account_name = localToAccount.name
-                                userTransactionsMap[transactionIndex]!!.to_account_full_name = localToAccount.fullName
+                                    if(localFromAccount != fromAccount) {
 
-                                userTransactionsMap[transactionIndex]!!.event_date_time =
-                                    updateTransactionResult.dateTimeInText
-                                userTransactionsMap[transactionIndex]!!.particulars =
-                                    updateTransactionResult.transactionParticulars
-                                userTransactionsMap[transactionIndex]!!.amount =
-                                    updateTransactionResult.transactionAmount
+                                        userTransactionsMap[transactionIndex]!!.from_account_id = localFromAccount.id
+                                        userTransactionsMap[transactionIndex]!!.from_account_name = localFromAccount.name
+                                        userTransactionsMap[transactionIndex]!!.from_account_full_name = localFromAccount.fullName
+                                    }
+
+                                    if(localToAccount != toAccount) {
+
+                                        userTransactionsMap[transactionIndex]!!.to_account_id = localToAccount.id
+                                        userTransactionsMap[transactionIndex]!!.to_account_name = localToAccount.name
+                                        userTransactionsMap[transactionIndex]!!.to_account_full_name = localToAccount.fullName
+                                    }
+
+                                    // TODO : Change to MySQL Datetime format
+                                    var toMySqlDateTimeConversionResult:IsOkModel<String> = MysqlUtils.normalDateTimeTextToMySqlDateTimeText(normalDateTimeText=updateTransactionResult.dateTimeInText)
+                                    if(toMySqlDateTimeConversionResult.isOK){
+
+                                        userTransactionsMap[transactionIndex]!!.event_date_time = toMySqlDateTimeConversionResult.data!!
+                                    }
+                                    else{
+
+                                        // TODO : Exceptional Case
+                                    }
+
+                                    userTransactionsMap[transactionIndex]!!.particulars =
+                                        updateTransactionResult.transactionParticulars
+                                    userTransactionsMap[transactionIndex]!!.amount =
+                                        updateTransactionResult.transactionAmount
+                                }
+                                else{
+
+                                    userTransactionsMap.remove(key=transactionIndex)
+                                }
                             }
                         }
                     }
