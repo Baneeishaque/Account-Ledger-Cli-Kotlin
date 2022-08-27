@@ -236,9 +236,9 @@ object InsertOperations {
                         account1 = localInsertTransactionResult.fromAccount,
                         account2 = localInsertTransactionResult.viaAccount,
                         purpose = AccountTypeEnum.TO,
-                        dateTimeInText = dateTimeInText,
-                        transactionParticulars = transactionParticulars,
-                        transactionAmount = transactionAmount,
+                        dateTimeInText = localInsertTransactionResult.dateTimeInText,
+                        transactionParticulars = localInsertTransactionResult.transactionParticulars,
+                        transactionAmount = localInsertTransactionResult.transactionAmount,
                         fromAccount = localInsertTransactionResult.fromAccount,
                         viaAccount = localInsertTransactionResult.viaAccount,
                         toAccount = localInsertTransactionResult.toAccount
@@ -256,9 +256,9 @@ object InsertOperations {
                         account1 = localInsertTransactionResult.fromAccount,
                         account2 = localInsertTransactionResult.viaAccount,
                         purpose = AccountTypeEnum.TO,
-                        dateTimeInText = dateTimeInText,
-                        transactionParticulars = transactionParticulars,
-                        transactionAmount = transactionAmount,
+                        dateTimeInText = localInsertTransactionResult.dateTimeInText,
+                        transactionParticulars = localInsertTransactionResult.transactionParticulars,
+                        transactionAmount = localInsertTransactionResult.transactionAmount,
                         fromAccount = localInsertTransactionResult.fromAccount,
                         viaAccount = localInsertTransactionResult.viaAccount,
                         toAccount = localInsertTransactionResult.toAccount
@@ -279,9 +279,9 @@ object InsertOperations {
                             account1 = localInsertTransactionResult.fromAccount,
                             account2 = localInsertTransactionResult.viaAccount,
                             purpose = AccountTypeEnum.TO,
-                            dateTimeInText = dateTimeInText,
-                            transactionParticulars = transactionParticulars,
-                            transactionAmount = transactionAmount
+                            dateTimeInText = localInsertTransactionResult.dateTimeInText,
+                            transactionParticulars = localInsertTransactionResult.transactionParticulars,
+                            transactionAmount = localInsertTransactionResult.transactionAmount
                         )
                         if (processSelectedAccountResult.isSuccess) {
 
@@ -307,9 +307,9 @@ object InsertOperations {
                         account1 = localInsertTransactionResult.viaAccount,
                         account2 = localInsertTransactionResult.toAccount,
                         purpose = AccountTypeEnum.FROM,
-                        dateTimeInText = dateTimeInText,
-                        transactionParticulars = transactionParticulars,
-                        transactionAmount = transactionAmount,
+                        dateTimeInText = localInsertTransactionResult.dateTimeInText,
+                        transactionParticulars = localInsertTransactionResult.transactionParticulars,
+                        transactionAmount = localInsertTransactionResult.transactionAmount,
                         fromAccount = localInsertTransactionResult.fromAccount,
                         viaAccount = localInsertTransactionResult.viaAccount,
                         toAccount = localInsertTransactionResult.toAccount
@@ -327,9 +327,9 @@ object InsertOperations {
                         account1 = localInsertTransactionResult.viaAccount,
                         account2 = localInsertTransactionResult.toAccount,
                         purpose = AccountTypeEnum.FROM,
-                        dateTimeInText = dateTimeInText,
-                        transactionParticulars = transactionParticulars,
-                        transactionAmount = transactionAmount,
+                        dateTimeInText = localInsertTransactionResult.dateTimeInText,
+                        transactionParticulars = localInsertTransactionResult.transactionParticulars,
+                        transactionAmount = localInsertTransactionResult.transactionAmount,
                         fromAccount = localInsertTransactionResult.fromAccount,
                         viaAccount = localInsertTransactionResult.viaAccount,
                         toAccount = localInsertTransactionResult.toAccount
@@ -349,9 +349,9 @@ object InsertOperations {
                             account1 = localInsertTransactionResult.viaAccount,
                             account2 = localInsertTransactionResult.toAccount,
                             purpose = AccountTypeEnum.FROM,
-                            dateTimeInText = dateTimeInText,
-                            transactionParticulars = transactionParticulars,
-                            transactionAmount = transactionAmount
+                            dateTimeInText = localInsertTransactionResult.dateTimeInText,
+                            transactionParticulars = localInsertTransactionResult.transactionParticulars,
+                            transactionAmount = localInsertTransactionResult.transactionAmount
                         )
                         if (processSelectedAccountResult.isSuccess) {
 
@@ -375,9 +375,9 @@ object InsertOperations {
                         fromAccount = localInsertTransactionResult.fromAccount,
                         viaAccount = localInsertTransactionResult.viaAccount,
                         toAccount = localInsertTransactionResult.toAccount,
-                        dateTimeInText = dateTimeInText,
-                        transactionParticulars = transactionParticulars,
-                        transactionAmount = transactionAmount
+                        dateTimeInText = localInsertTransactionResult.dateTimeInText,
+                        transactionParticulars = localInsertTransactionResult.transactionParticulars,
+                        transactionAmount = localInsertTransactionResult.transactionAmount
                     )
                 }
 
@@ -392,9 +392,9 @@ object InsertOperations {
                             fromAccount = localInsertTransactionResult.viaAccount,
                             viaAccount = localInsertTransactionResult.fromAccount,
                             toAccount = localInsertTransactionResult.toAccount,
-                            dateTimeInText = dateTimeInText,
-                            transactionParticulars = transactionParticulars,
-                            transactionAmount = transactionAmount
+                            dateTimeInText = localInsertTransactionResult.dateTimeInText,
+                            transactionParticulars = localInsertTransactionResult.transactionParticulars,
+                            transactionAmount = localInsertTransactionResult.transactionAmount
                         )
 
                     } else {
@@ -406,9 +406,9 @@ object InsertOperations {
                             fromAccount = localInsertTransactionResult.toAccount,
                             viaAccount = localInsertTransactionResult.viaAccount,
                             toAccount = localInsertTransactionResult.fromAccount,
-                            dateTimeInText = dateTimeInText,
-                            transactionParticulars = transactionParticulars,
-                            transactionAmount = transactionAmount
+                            dateTimeInText = localInsertTransactionResult.dateTimeInText,
+                            transactionParticulars = localInsertTransactionResult.transactionParticulars,
+                            transactionAmount = localInsertTransactionResult.transactionAmount
                         )
                     }
                 }
@@ -424,9 +424,9 @@ object InsertOperations {
                             fromAccount = localInsertTransactionResult.viaAccount,
                             viaAccount = localInsertTransactionResult.fromAccount,
                             toAccount = localInsertTransactionResult.toAccount,
-                            dateTimeInText = dateTimeInText,
-                            transactionParticulars = transactionParticulars,
-                            transactionAmount = transactionAmount
+                            dateTimeInText = localInsertTransactionResult.dateTimeInText,
+                            transactionParticulars = localInsertTransactionResult.transactionParticulars,
+                            transactionAmount = localInsertTransactionResult.transactionAmount
                         )
                     } else {
 
@@ -438,9 +438,9 @@ object InsertOperations {
                             fromAccount = localInsertTransactionResult.toAccount,
                             viaAccount = localInsertTransactionResult.viaAccount,
                             toAccount = localInsertTransactionResult.fromAccount,
-                            dateTimeInText = dateTimeInText,
-                            transactionParticulars = transactionParticulars,
-                            transactionAmount = transactionAmount
+                            dateTimeInText = localInsertTransactionResult.dateTimeInText,
+                            transactionParticulars = localInsertTransactionResult.transactionParticulars,
+                            transactionAmount = localInsertTransactionResult.transactionAmount
                         )
                     }
                 }
@@ -455,9 +455,9 @@ object InsertOperations {
                             fromAccount = localInsertTransactionResult.fromAccount,
                             viaAccount = localInsertTransactionResult.toAccount,
                             toAccount = localInsertTransactionResult.viaAccount,
-                            dateTimeInText = dateTimeInText,
-                            transactionParticulars = transactionParticulars,
-                            transactionAmount = transactionAmount
+                            dateTimeInText = localInsertTransactionResult.dateTimeInText,
+                            transactionParticulars = localInsertTransactionResult.transactionParticulars,
+                            transactionAmount = localInsertTransactionResult.transactionAmount
                         )
                     } else {
 
@@ -473,9 +473,9 @@ object InsertOperations {
                                 account1 = localInsertTransactionResult.fromAccount,
                                 account2 = localInsertTransactionResult.viaAccount,
                                 purpose = AccountTypeEnum.TO,
-                                dateTimeInText = dateTimeInText,
-                                transactionParticulars = transactionParticulars,
-                                transactionAmount = transactionAmount,
+                                dateTimeInText = localInsertTransactionResult.dateTimeInText,
+                                transactionParticulars = localInsertTransactionResult.transactionParticulars,
+                                transactionAmount = localInsertTransactionResult.transactionAmount,
                                 wantToExchange = true
                             )
                             if (processSelectedAccountResult.isSuccess) {
@@ -502,9 +502,9 @@ object InsertOperations {
                             fromAccount = localInsertTransactionResult.fromAccount,
                             viaAccount = localInsertTransactionResult.toAccount,
                             toAccount = localInsertTransactionResult.viaAccount,
-                            dateTimeInText = dateTimeInText,
-                            transactionParticulars = transactionParticulars,
-                            transactionAmount = transactionAmount
+                            dateTimeInText = localInsertTransactionResult.dateTimeInText,
+                            transactionParticulars = localInsertTransactionResult.transactionParticulars,
+                            transactionAmount = localInsertTransactionResult.transactionAmount
                         )
 
                     } else {
@@ -521,9 +521,9 @@ object InsertOperations {
                                 account1 = localInsertTransactionResult.viaAccount,
                                 account2 = localInsertTransactionResult.toAccount,
                                 purpose = AccountTypeEnum.FROM,
-                                dateTimeInText = dateTimeInText,
-                                transactionParticulars = transactionParticulars,
-                                transactionAmount = transactionAmount,
+                                dateTimeInText = localInsertTransactionResult.dateTimeInText,
+                                transactionParticulars = localInsertTransactionResult.transactionParticulars,
+                                transactionAmount = localInsertTransactionResult.transactionAmount,
                                 wantToExchange = true
                             )
                             if (processSelectedAccountResult.isSuccess) {
@@ -551,9 +551,9 @@ object InsertOperations {
                             fromAccount = localInsertTransactionResult.toAccount,
                             viaAccount = localInsertTransactionResult.viaAccount,
                             toAccount = localInsertTransactionResult.fromAccount,
-                            dateTimeInText = dateTimeInText,
-                            transactionParticulars = transactionParticulars,
-                            transactionAmount = transactionAmount
+                            dateTimeInText = localInsertTransactionResult.dateTimeInText,
+                            transactionParticulars = localInsertTransactionResult.transactionParticulars,
+                            transactionAmount = localInsertTransactionResult.transactionAmount
                         )
 
                     } else {
@@ -567,9 +567,9 @@ object InsertOperations {
                             account1 = localInsertTransactionResult.fromAccount,
                             account2 = localInsertTransactionResult.viaAccount,
                             purpose = AccountTypeEnum.TO,
-                            dateTimeInText = dateTimeInText,
-                            transactionParticulars = transactionParticulars,
-                            transactionAmount = transactionAmount,
+                            dateTimeInText = localInsertTransactionResult.dateTimeInText,
+                            transactionParticulars = localInsertTransactionResult.transactionParticulars,
+                            transactionAmount = localInsertTransactionResult.transactionAmount,
                             wantToExchange = true,
                             fromAccount = localInsertTransactionResult.fromAccount,
                             viaAccount = localInsertTransactionResult.viaAccount,
@@ -589,9 +589,9 @@ object InsertOperations {
                             fromAccount = localInsertTransactionResult.toAccount,
                             viaAccount = localInsertTransactionResult.viaAccount,
                             toAccount = localInsertTransactionResult.fromAccount,
-                            dateTimeInText = dateTimeInText,
-                            transactionParticulars = transactionParticulars,
-                            transactionAmount = transactionAmount
+                            dateTimeInText = localInsertTransactionResult.dateTimeInText,
+                            transactionParticulars = localInsertTransactionResult.transactionParticulars,
+                            transactionAmount = localInsertTransactionResult.transactionAmount
                         )
                     } else {
 
@@ -604,9 +604,9 @@ object InsertOperations {
                             account1 = localInsertTransactionResult.fromAccount,
                             account2 = localInsertTransactionResult.viaAccount,
                             purpose = AccountTypeEnum.TO,
-                            dateTimeInText = dateTimeInText,
-                            transactionParticulars = transactionParticulars,
-                            transactionAmount = transactionAmount,
+                            dateTimeInText = localInsertTransactionResult.dateTimeInText,
+                            transactionParticulars = localInsertTransactionResult.transactionParticulars,
+                            transactionAmount = localInsertTransactionResult.transactionAmount,
                             wantToExchange = true,
                             fromAccount = localInsertTransactionResult.fromAccount,
                             viaAccount = localInsertTransactionResult.viaAccount,
@@ -628,9 +628,9 @@ object InsertOperations {
                             account1 = localInsertTransactionResult.fromAccount,
                             account2 = localInsertTransactionResult.toAccount,
                             purpose = AccountTypeEnum.VIA,
-                            dateTimeInText = dateTimeInText,
-                            transactionParticulars = transactionParticulars,
-                            transactionAmount = transactionAmount,
+                            dateTimeInText = localInsertTransactionResult.dateTimeInText,
+                            transactionParticulars = localInsertTransactionResult.transactionParticulars,
+                            transactionAmount = localInsertTransactionResult.transactionAmount,
                             fromAccount = localInsertTransactionResult.fromAccount,
                             viaAccount = localInsertTransactionResult.viaAccount,
                             toAccount = localInsertTransactionResult.toAccount
@@ -646,9 +646,9 @@ object InsertOperations {
                             account1 = localInsertTransactionResult.viaAccount,
                             account2 = localInsertTransactionResult.toAccount,
                             purpose = AccountTypeEnum.FROM,
-                            dateTimeInText = dateTimeInText,
-                            transactionParticulars = transactionParticulars,
-                            transactionAmount = transactionAmount,
+                            dateTimeInText = localInsertTransactionResult.dateTimeInText,
+                            transactionParticulars = localInsertTransactionResult.transactionParticulars,
+                            transactionAmount = localInsertTransactionResult.transactionAmount,
                             wantToExchange = true,
                             fromAccount = localInsertTransactionResult.fromAccount,
                             viaAccount = localInsertTransactionResult.viaAccount,
@@ -670,9 +670,9 @@ object InsertOperations {
                             account1 = localInsertTransactionResult.fromAccount,
                             account2 = localInsertTransactionResult.toAccount,
                             purpose = AccountTypeEnum.VIA,
-                            dateTimeInText = dateTimeInText,
-                            transactionParticulars = transactionParticulars,
-                            transactionAmount = transactionAmount,
+                            dateTimeInText = localInsertTransactionResult.dateTimeInText,
+                            transactionParticulars = localInsertTransactionResult.transactionParticulars,
+                            transactionAmount = localInsertTransactionResult.transactionAmount,
                             fromAccount = localInsertTransactionResult.fromAccount,
                             viaAccount = localInsertTransactionResult.viaAccount,
                             toAccount = localInsertTransactionResult.toAccount
@@ -688,9 +688,9 @@ object InsertOperations {
                             account1 = localInsertTransactionResult.viaAccount,
                             account2 = localInsertTransactionResult.toAccount,
                             purpose = AccountTypeEnum.FROM,
-                            dateTimeInText = dateTimeInText,
-                            transactionParticulars = transactionParticulars,
-                            transactionAmount = transactionAmount,
+                            dateTimeInText = localInsertTransactionResult.dateTimeInText,
+                            transactionParticulars = localInsertTransactionResult.transactionParticulars,
+                            transactionAmount = localInsertTransactionResult.transactionAmount,
                             wantToExchange = true,
                             fromAccount = localInsertTransactionResult.fromAccount,
                             viaAccount = localInsertTransactionResult.viaAccount,
@@ -716,9 +716,9 @@ object InsertOperations {
                                 account1 = localInsertTransactionResult.fromAccount,
                                 account2 = localInsertTransactionResult.toAccount,
                                 purpose = AccountTypeEnum.VIA,
-                                dateTimeInText = dateTimeInText,
-                                transactionParticulars = transactionParticulars,
-                                transactionAmount = transactionAmount
+                                dateTimeInText = localInsertTransactionResult.dateTimeInText,
+                                transactionParticulars = localInsertTransactionResult.transactionParticulars,
+                                transactionAmount = localInsertTransactionResult.transactionAmount
                             )
                             if (processSelectedAccountResult.isSuccess) {
 
