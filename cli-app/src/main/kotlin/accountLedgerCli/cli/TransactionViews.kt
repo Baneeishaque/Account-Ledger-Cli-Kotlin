@@ -361,7 +361,7 @@ object TransactionViews {
 
                                     //TODO : exceptional case
                                 }
-                                
+
                                 //TODO : Get User Confirmation
 
                                 var localFromAccount: AccountResponse = userAccountsMap[selectedTransaction.from_account_id]!!
