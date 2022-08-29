@@ -196,11 +196,15 @@ object TransactionViews {
                             "3 - Delete Transaction - By Search",
                             "4 - Edit Transaction - By Index Number",
                             "5 - Edit Transaction - By Search",
-                            "6 - Rearrange Transaction - Up a Transaction",
-                            "7 - Rearrange Transaction - Up a Series of Transactions",
-                            "8 - Rearrange Transaction - Down a Transaction",
-                            "9 - Rearrange Transaction - Down a Series of Transactions",
+                            "6 - Rearrange Transaction - Up a Transaction (Key wise)",
+                            "7 - Rearrange Transaction - Up a Series of Transactions (Key wise)",
+                            "8 - Rearrange Transaction - Down a Transaction (Key wise)",
+                            "9 - Rearrange Transaction - Down a Series of Transactions (Key wise)",
                             "10 - Add Transaction",
+                            "11 - Rearrange Transaction - Up a Transaction (Time wise)",
+                            "12 - Rearrange Transaction - Up a Series of Transactions (Time wise)",
+                            "13 - Rearrange Transaction - Down a Transaction (Time wise)",
+                            "14 - Rearrange Transaction - Down a Series of Transactions (Time wise)",
                             "0 - Back",
                             "",
                             "Enter Your Choice : "
@@ -305,7 +309,7 @@ object TransactionViews {
                         }
                     }
 
-                    "3", "5", "7", "8", "9" -> {
+                    "3", "5", "7", "8", "9", "11", "12", "13", "14" -> {
 
                         if (isCallNotFromCheckAccounts(
 
