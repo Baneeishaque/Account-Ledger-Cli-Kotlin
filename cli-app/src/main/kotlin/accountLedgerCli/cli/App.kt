@@ -91,7 +91,8 @@ class App {
                                     toAccount = toAccount,
                                     dateTimeInText = dateTimeInText,
                                     transactionParticulars = transactionParticulars,
-                                    transactionAmount = transactionAmount
+                                    transactionAmount = transactionAmount,
+                                    isDevelopmentMode = isDevelopmentMode
                                 )
                             )
                         }
@@ -106,6 +107,7 @@ class App {
                                     dateTimeInText = dateTimeInText,
                                     transactionParticulars = transactionParticulars,
                                     transactionAmount = transactionAmount,
+                                    isDevelopmentMode = isDevelopmentMode
                                 )
                             )
                         }
@@ -241,6 +243,7 @@ class App {
                             dateTimeInText = dateTimeInText,
                             transactionParticulars = transactionParticulars,
                             transactionAmount = transactionAmount,
+                            isDevelopmentMode = isDevelopmentMode
                         )
                     }
                 }

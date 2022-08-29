@@ -34,7 +34,8 @@ object TransactionViews {
         accountFullName: String,
         functionCallSource: FunctionCallSourceEnum = FunctionCallSourceEnum.FROM_OTHERS,
         insertTransactionResult: InsertTransactionResult,
-        fromAccount: AccountResponse
+        fromAccount: AccountResponse,
+        isDevelopmentMode: Boolean
 
     ): ViewTransactionsOutput {
 
@@ -51,7 +52,8 @@ object TransactionViews {
             username = username,
             accountId = accountId,
             functionCallSource = functionCallSource,
-            userId = userId
+            userId = userId,
+            isDevelopmentMode = isDevelopmentMode
         )
     }
 
@@ -64,7 +66,8 @@ object TransactionViews {
         accountId: UInt,
         functionCallSource: FunctionCallSourceEnum,
         userId: UInt,
-        fromAccount: AccountResponse
+        fromAccount: AccountResponse,
+        isDevelopmentMode: Boolean
 
     ): ViewTransactionsOutput {
 
@@ -94,7 +97,8 @@ object TransactionViews {
                     username = username,
                     accountId = accountId,
                     functionCallSource = functionCallSource,
-                    userId = userId
+                    userId = userId,
+                    isDevelopmentMode = isDevelopmentMode
                 )
             })
 
@@ -114,7 +118,8 @@ object TransactionViews {
         username: String,
         accountId: UInt,
         functionCallSource: FunctionCallSourceEnum,
-        userId: UInt
+        userId: UInt,
+        isDevelopmentMode: Boolean
 
     ): ViewTransactionsOutput {
 
@@ -566,7 +571,8 @@ object TransactionViews {
                                 toAccount = toAccount,
                                 dateTimeInText = addTransactionResult.dateTimeInText,
                                 transactionParticulars = addTransactionResult.transactionParticulars,
-                                transactionAmount = addTransactionResult.transactionAmount
+                                transactionAmount = addTransactionResult.transactionAmount,
+                                isDevelopmentMode = isDevelopmentMode
                             )
                             if (addTransactionResult.isSuccess) {
 
@@ -673,7 +679,8 @@ object TransactionViews {
 
         userId: UInt,
         username: String,
-        insertTransactionResult: InsertTransactionResult
+        insertTransactionResult: InsertTransactionResult,
+        isDevelopmentMode: Boolean
 
     ) {
         print("Enter Account Index or 0 to Back : A")
@@ -708,7 +715,8 @@ object TransactionViews {
                             accountFullName = selectedAccount.fullName,
                             functionCallSource = FunctionCallSourceEnum.FROM_VIEW_TRANSACTIONS_OF_AN_ACCOUNT,
                             insertTransactionResult = insertTransactionResult,
-                            fromAccount = selectedAccount
+                            fromAccount = selectedAccount,
+                            isDevelopmentMode = isDevelopmentMode
                         )
                     }
                 })

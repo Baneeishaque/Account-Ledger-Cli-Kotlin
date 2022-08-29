@@ -20,7 +20,8 @@ internal fun checkAffectedAccountsAfterSpecifiedDate(
     desiredDate: String,
     userId: UInt,
     username: String,
-    insertTransactionResult: InsertTransactionResult
+    insertTransactionResult: InsertTransactionResult,
+    isDevelopmentMode: Boolean
 
 ): InsertTransactionResult {
 
@@ -41,7 +42,7 @@ internal fun checkAffectedAccountsAfterSpecifiedDate(
                 specifiedDate = specifiedDate.data!!
             )
         }
-        if (App.isDevelopmentMode) {
+        if (isDevelopmentMode) {
 
             println("Response : $apiResponse")
         }
@@ -61,7 +62,8 @@ internal fun checkAffectedAccountsAfterSpecifiedDate(
                             desiredDate = desiredDate,
                             userId = userId,
                             username = username,
-                            insertTransactionResult = localInsertTransactionResult
+                            insertTransactionResult = localInsertTransactionResult,
+                            isDevelopmentMode = isDevelopmentMode
                         )
                     }
 
@@ -109,7 +111,8 @@ internal fun checkAffectedAccountsAfterSpecifiedDate(
                             accountFullName = account.value,
                             functionCallSource = FunctionCallSourceEnum.FROM_CHECK_ACCOUNTS,
                             insertTransactionResult = insertTransactionResult,
-                            fromAccount = selectedAccount
+                            fromAccount = selectedAccount,
+                            isDevelopmentMode = isDevelopmentMode
 
                         ).output) {
 
@@ -127,7 +130,8 @@ internal fun checkAffectedAccountsAfterSpecifiedDate(
                                     accountId = account.key,
                                     accountFullName = account.value,
                                     insertTransactionResult = localInsertTransactionResult,
-                                    fromAccount = selectedAccount
+                                    fromAccount = selectedAccount,
+                                    isDevelopmentMode = isDevelopmentMode
 
                                 ).addTransactionResult
                             }
@@ -149,7 +153,8 @@ internal fun viewChildAccounts(
     toAccount: AccountResponse,
     dateTimeInText: String,
     transactionParticulars: String,
-    transactionAmount: Float
+    transactionAmount: Float,
+    isDevelopmentMode: Boolean
 
 ): InsertTransactionResult {
 
@@ -182,7 +187,8 @@ internal fun viewChildAccounts(
                         toAccount = toAccount,
                         dateTimeInText = dateTimeInText,
                         transactionParticulars = transactionParticulars,
-                        transactionAmount = transactionAmount
+                        transactionAmount = transactionAmount,
+                        isDevelopmentMode = isDevelopmentMode
                     )
                 }
 
@@ -241,7 +247,8 @@ internal fun viewChildAccounts(
                     toAccount = toAccount,
                     dateTimeInText = dateTimeInText,
                     transactionParticulars = transactionParticulars,
-                    transactionAmount = transactionAmount
+                    transactionAmount = transactionAmount,
+                    isDevelopmentMode = isDevelopmentMode
                 )
 
                 val choice: String = processChildAccountScreenInputResult.output

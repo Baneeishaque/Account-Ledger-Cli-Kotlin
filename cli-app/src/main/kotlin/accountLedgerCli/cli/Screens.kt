@@ -32,7 +32,8 @@ object Screens {
         toAccount: AccountResponse,
         dateTimeInText: String,
         transactionParticulars: String,
-        transactionAmount: Float
+        transactionAmount: Float,
+        isDevelopmentMode: Boolean
 
     ): InsertTransactionResult {
 
@@ -104,7 +105,8 @@ object Screens {
                         apiResponse = getAccounts(userId = userId),
                         username = username,
                         userId = userId,
-                        insertTransactionResult = insertTransactionResult
+                        insertTransactionResult = insertTransactionResult,
+                        isDevelopmentMode = isDevelopmentMode
                     )
                 }
 
@@ -114,7 +116,8 @@ object Screens {
 
                         insertTransactionResult = insertTransactionResult,
                         userId = userId,
-                        username = username
+                        username = username,
+                        isDevelopmentMode = isDevelopmentMode
                     )
                 }
 
@@ -154,7 +157,8 @@ object Screens {
 
                         userId = userId,
                         username = username,
-                        insertTransactionResult = insertTransactionResult
+                        insertTransactionResult = insertTransactionResult,
+                        isDevelopmentMode = isDevelopmentMode
                     )
                 }
 
@@ -194,7 +198,8 @@ object Screens {
 
                         userId = userId,
                         username = username,
-                        insertTransactionResult = insertTransactionResult
+                        insertTransactionResult = insertTransactionResult,
+                        isDevelopmentMode = isDevelopmentMode
                     )
                 }
 
@@ -204,7 +209,8 @@ object Screens {
 
                         userId = userId,
                         username = username,
-                        insertTransactionResult = insertTransactionResult
+                        insertTransactionResult = insertTransactionResult,
+                        isDevelopmentMode = isDevelopmentMode
                     )
                 }
 
@@ -214,7 +220,8 @@ object Screens {
 
                         userId = userId,
                         username = username,
-                        insertTransactionResult = insertTransactionResult
+                        insertTransactionResult = insertTransactionResult,
+                        isDevelopmentMode = isDevelopmentMode
                     )
                 }
 
@@ -225,7 +232,8 @@ object Screens {
                         apiResponse = ApiUtils.getAccountsFull(userId = userId),
                         username = username,
                         userId = userId,
-                        insertTransactionResult = insertTransactionResult
+                        insertTransactionResult = insertTransactionResult,
+                        isDevelopmentMode = isDevelopmentMode
                     )
                 }
 
@@ -241,7 +249,8 @@ object Screens {
                         desiredDate = InputUtils.getValidDateInNormalPattern(),
                         userId = userId,
                         username = username,
-                        insertTransactionResult = insertTransactionResult
+                        insertTransactionResult = insertTransactionResult,
+                        isDevelopmentMode = isDevelopmentMode
                     )
                 }
 
@@ -251,7 +260,8 @@ object Screens {
 
                         userId = userId,
                         username = username,
-                        insertTransactionResult = insertTransactionResult
+                        insertTransactionResult = insertTransactionResult,
+                        isDevelopmentMode = isDevelopmentMode
                     )
                 }
 
@@ -323,7 +333,8 @@ object Screens {
                         userId = userId,
                         insertTransactionResult = insertTransactionResult,
                         username = username,
-                        desiredAccountIndex = InsertOperations.walletAccount.value!!
+                        desiredAccountIndex = InsertOperations.walletAccount.value!!,
+                        isDevelopmentMode = isDevelopmentMode
                     )
                 }
 
@@ -334,7 +345,8 @@ object Screens {
                         userId = userId,
                         insertTransactionResult = insertTransactionResult,
                         username = username,
-                        desiredAccountIndex = InsertOperations.bankAccount.value!!
+                        desiredAccountIndex = InsertOperations.bankAccount.value!!,
+                        isDevelopmentMode = isDevelopmentMode
                     )
                 }
 
@@ -345,7 +357,8 @@ object Screens {
                         userId = userId,
                         insertTransactionResult = insertTransactionResult,
                         username = username,
-                        desiredAccountIndex = InsertOperations.frequent1Account.value!!
+                        desiredAccountIndex = InsertOperations.frequent1Account.value!!,
+                        isDevelopmentMode = isDevelopmentMode
                     )
                 }
 
@@ -356,7 +369,8 @@ object Screens {
                         userId = userId,
                         insertTransactionResult = insertTransactionResult,
                         username = username,
-                        desiredAccountIndex = InsertOperations.frequent2Account.value!!
+                        desiredAccountIndex = InsertOperations.frequent2Account.value!!,
+                        isDevelopmentMode = isDevelopmentMode
                     )
                 }
 
@@ -367,7 +381,8 @@ object Screens {
                         userId = userId,
                         insertTransactionResult = insertTransactionResult,
                         username = username,
-                        desiredAccountIndex = InsertOperations.frequent3Account.value!!
+                        desiredAccountIndex = InsertOperations.frequent3Account.value!!,
+                        isDevelopmentMode = isDevelopmentMode
                     )
                 }
 
@@ -379,7 +394,8 @@ object Screens {
                             .format(DateTimeUtils.normalDatePattern),
                         userId = userId,
                         username = username,
-                        insertTransactionResult = insertTransactionResult
+                        insertTransactionResult = insertTransactionResult,
+                        isDevelopmentMode = isDevelopmentMode
                     )
                 }
 
@@ -413,9 +429,9 @@ object Screens {
                                 username = username,
                                 accountId = 0u,
                                 functionCallSource = FunctionCallSourceEnum.FROM_VIEW_TRANSACTIONS_OF_AN_ACCOUNT,
-                                userId = userId
-
-                            ).addTransactionResult
+                                userId = userId,
+                                isDevelopmentMode = isDevelopmentMode
+                                ).addTransactionResult
                         })
                 }
 
@@ -487,14 +503,16 @@ object Screens {
 
         userId: UInt,
         username: String,
-        insertTransactionResult: InsertTransactionResult
+        insertTransactionResult: InsertTransactionResult,
+        isDevelopmentMode: Boolean
 
     ) = quickTransactionOnX(
 
         account = InsertOperations.frequent3Account,
         insertTransactionResult = insertTransactionResult,
         userId = userId,
-        username = username
+        username = username,
+        isDevelopmentMode = isDevelopmentMode
     )
 
 
@@ -502,14 +520,16 @@ object Screens {
 
         userId: UInt,
         username: String,
-        insertTransactionResult: InsertTransactionResult
+        insertTransactionResult: InsertTransactionResult,
+        isDevelopmentMode: Boolean
 
     ) = quickTransactionOnX(
 
         account = InsertOperations.frequent2Account,
         insertTransactionResult = insertTransactionResult,
         userId = userId,
-        username = username
+        username = username,
+        isDevelopmentMode = isDevelopmentMode
     )
 
 
@@ -517,14 +537,16 @@ object Screens {
 
         userId: UInt,
         username: String,
-        insertTransactionResult: InsertTransactionResult
+        insertTransactionResult: InsertTransactionResult,
+        isDevelopmentMode: Boolean
 
     ) = quickTransactionOnX(
 
         account = InsertOperations.frequent1Account,
         insertTransactionResult = insertTransactionResult,
         userId = userId,
-        username = username
+        username = username,
+        isDevelopmentMode = isDevelopmentMode
     )
 
     internal fun quickTransactionOnBankToFrequent3(
@@ -573,14 +595,16 @@ object Screens {
 
         userId: UInt,
         username: String,
-        insertTransactionResult: InsertTransactionResult
+        insertTransactionResult: InsertTransactionResult,
+        isDevelopmentMode: Boolean
 
     ) = quickTransactionOnX(
 
         account = InsertOperations.bankAccount,
         insertTransactionResult = insertTransactionResult,
         userId = userId,
-        username = username
+        username = username,
+        isDevelopmentMode = isDevelopmentMode
     )
 
     internal fun quickTransactionOnWalletToFrequent3(
@@ -683,14 +707,16 @@ object Screens {
 
         insertTransactionResult: InsertTransactionResult,
         userId: UInt,
-        username: String
+        username: String,
+        isDevelopmentMode: Boolean
 
     ) = quickTransactionOnX(
 
         account = InsertOperations.walletAccount,
         insertTransactionResult = insertTransactionResult,
         userId = userId,
-        username = username
+        username = username,
+        isDevelopmentMode = isDevelopmentMode
     )
 
     private fun quickTransactionOnX(
@@ -698,7 +724,8 @@ object Screens {
         account: EnvironmentVariableForWholeNumber,
         insertTransactionResult: InsertTransactionResult,
         userId: UInt,
-        username: String
+        username: String,
+        isDevelopmentMode: Boolean
 
     ): InsertTransactionResult {
 
@@ -712,7 +739,8 @@ object Screens {
             toAccount = insertTransactionResult.toAccount,
             dateTimeInText = insertTransactionResult.dateTimeInText,
             transactionParticulars = insertTransactionResult.transactionParticulars,
-            transactionAmount = insertTransactionResult.transactionAmount
+            transactionAmount = insertTransactionResult.transactionAmount,
+            isDevelopmentMode = isDevelopmentMode
         )
     }
 
@@ -721,7 +749,8 @@ object Screens {
         userId: UInt,
         insertTransactionResult: InsertTransactionResult,
         username: String,
-        desiredAccountIndex: UInt
+        desiredAccountIndex: UInt,
+        isDevelopmentMode: Boolean
 
     ): InsertTransactionResult {
 
@@ -740,7 +769,8 @@ object Screens {
                 accountId = desiredAccountIndex,
                 accountFullName = selectedAccount.fullName,
                 insertTransactionResult = insertTransactionResult,
-                fromAccount = selectedAccount
+                fromAccount = selectedAccount,
+                isDevelopmentMode = isDevelopmentMode
 
             ).addTransactionResult
         }
@@ -775,7 +805,8 @@ object Screens {
         toAccount: AccountResponse,
         dateTimeInText: String,
         transactionParticulars: String,
-        transactionAmount: Float
+        transactionAmount: Float,
+        isDevelopmentMode: Boolean
 
     ): InsertTransactionResult {
 
@@ -826,7 +857,8 @@ object Screens {
                         accountId = fromAccount.id,
                         accountFullName = fromAccount.fullName,
                         insertTransactionResult = localInsertTransactionResult,
-                        fromAccount = localInsertTransactionResult.fromAccount
+                        fromAccount = localInsertTransactionResult.fromAccount,
+                        isDevelopmentMode = isDevelopmentMode
 
                     ).addTransactionResult
                 }
@@ -842,7 +874,8 @@ object Screens {
                         toAccount = localInsertTransactionResult.toAccount,
                         dateTimeInText = localInsertTransactionResult.dateTimeInText,
                         transactionParticulars = localInsertTransactionResult.transactionParticulars,
-                        transactionAmount = localInsertTransactionResult.transactionAmount
+                        transactionAmount = localInsertTransactionResult.transactionAmount,
+                        isDevelopmentMode = isDevelopmentMode
                     )
                 }
 
@@ -855,7 +888,8 @@ object Screens {
                         toAccount = localInsertTransactionResult.toAccount,
                         dateTimeInText = localInsertTransactionResult.dateTimeInText,
                         transactionParticulars = localInsertTransactionResult.transactionParticulars,
-                        transactionAmount = localInsertTransactionResult.transactionAmount
+                        transactionAmount = localInsertTransactionResult.transactionAmount,
+                        isDevelopmentMode = isDevelopmentMode
                     )
                 }
 
@@ -869,7 +903,8 @@ object Screens {
                         toAccount = localInsertTransactionResult.toAccount,
                         dateTimeInText = localInsertTransactionResult.dateTimeInText,
                         transactionParticulars = localInsertTransactionResult.transactionParticulars,
-                        transactionAmount = localInsertTransactionResult.transactionAmount
+                        transactionAmount = localInsertTransactionResult.transactionAmount,
+                        isDevelopmentMode = isDevelopmentMode
                     )
                 }
 
@@ -884,7 +919,8 @@ object Screens {
                         toAccount = localInsertTransactionResult.toAccount,
                         dateTimeInText = localInsertTransactionResult.dateTimeInText,
                         transactionParticulars = localInsertTransactionResult.transactionParticulars,
-                        transactionAmount = localInsertTransactionResult.transactionAmount
+                        transactionAmount = localInsertTransactionResult.transactionAmount,
+                        isDevelopmentMode = isDevelopmentMode
                     )
                 }
 
@@ -894,7 +930,8 @@ object Screens {
 
                         insertTransactionResult = localInsertTransactionResult,
                         userId = userId,
-                        username = username
+                        username = username,
+                        isDevelopmentMode = isDevelopmentMode
                     )
                 }
 
@@ -934,7 +971,8 @@ object Screens {
 
                         userId = userId,
                         username = username,
-                        insertTransactionResult = localInsertTransactionResult
+                        insertTransactionResult = localInsertTransactionResult,
+                        isDevelopmentMode = isDevelopmentMode
                     )
                 }
 
@@ -974,7 +1012,8 @@ object Screens {
 
                         userId = userId,
                         username = username,
-                        insertTransactionResult = localInsertTransactionResult
+                        insertTransactionResult = localInsertTransactionResult,
+                        isDevelopmentMode = isDevelopmentMode
                     )
                 }
 
@@ -984,7 +1023,8 @@ object Screens {
 
                         userId = userId,
                         username = username,
-                        insertTransactionResult = localInsertTransactionResult
+                        insertTransactionResult = localInsertTransactionResult,
+                        isDevelopmentMode = isDevelopmentMode
                     )
                 }
 
@@ -994,7 +1034,8 @@ object Screens {
 
                         userId = userId,
                         username = username,
-                        insertTransactionResult = localInsertTransactionResult
+                        insertTransactionResult = localInsertTransactionResult,
+                        isDevelopmentMode = isDevelopmentMode
                     )
                 }
 

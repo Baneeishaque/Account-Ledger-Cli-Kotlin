@@ -22,7 +22,8 @@ object HandleResponses {
         apiResponse: Result<AccountsResponse>,
         username: String,
         userId: UInt,
-        insertTransactionResult: InsertTransactionResult
+        insertTransactionResult: InsertTransactionResult,
+        isDevelopmentMode: Boolean
 
     ): InsertTransactionResult {
 
@@ -66,7 +67,8 @@ object HandleResponses {
                         toAccount = localInsertTransactionResult.toAccount,
                         dateTimeInText = localInsertTransactionResult.dateTimeInText,
                         transactionParticulars = localInsertTransactionResult.transactionParticulars,
-                        transactionAmount = localInsertTransactionResult.transactionAmount
+                        transactionAmount = localInsertTransactionResult.transactionAmount,
+                        isDevelopmentMode = isDevelopmentMode
                     )
                     localInsertTransactionResult = processChildAccountScreenInputResult.addTransactionResult
 

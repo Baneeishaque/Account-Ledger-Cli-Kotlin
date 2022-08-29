@@ -112,7 +112,8 @@ object InsertOperations {
         toAccount: AccountResponse,
         dateTimeInText: String,
         transactionParticulars: String,
-        transactionAmount: Float
+        transactionAmount: Float,
+        isDevelopmentMode: Boolean
 
     ): InsertTransactionResult {
 
@@ -147,7 +148,8 @@ object InsertOperations {
                         toAccount = toAccount,
                         dateTimeInText = dateTimeInText,
                         transactionParticulars = transactionParticulars,
-                        transactionAmount = transactionAmount
+                        transactionAmount = transactionAmount,
+                        isDevelopmentMode = isDevelopmentMode
                     )
                 })
         }
@@ -165,7 +167,8 @@ object InsertOperations {
         toAccount: AccountResponse,
         dateTimeInText: String,
         transactionParticulars: String,
-        transactionAmount: Float
+        transactionAmount: Float,
+        isDevelopmentMode: Boolean
 
     ): InsertTransactionResult {
 
@@ -396,7 +399,8 @@ object InsertOperations {
                             toAccount = localInsertTransactionResult.toAccount,
                             dateTimeInText = localInsertTransactionResult.dateTimeInText,
                             transactionParticulars = localInsertTransactionResult.transactionParticulars,
-                            transactionAmount = localInsertTransactionResult.transactionAmount
+                            transactionAmount = localInsertTransactionResult.transactionAmount,
+                            isDevelopmentMode = isDevelopmentMode
                         )
 
                     } else {
@@ -410,7 +414,8 @@ object InsertOperations {
                             toAccount = localInsertTransactionResult.fromAccount,
                             dateTimeInText = localInsertTransactionResult.dateTimeInText,
                             transactionParticulars = localInsertTransactionResult.transactionParticulars,
-                            transactionAmount = localInsertTransactionResult.transactionAmount
+                            transactionAmount = localInsertTransactionResult.transactionAmount,
+                            isDevelopmentMode = isDevelopmentMode
                         )
                     }
                 }
@@ -459,7 +464,8 @@ object InsertOperations {
                             toAccount = localInsertTransactionResult.viaAccount,
                             dateTimeInText = localInsertTransactionResult.dateTimeInText,
                             transactionParticulars = localInsertTransactionResult.transactionParticulars,
-                            transactionAmount = localInsertTransactionResult.transactionAmount
+                            transactionAmount = localInsertTransactionResult.transactionAmount,
+                            isDevelopmentMode = isDevelopmentMode
                         )
                     } else {
 
@@ -555,7 +561,8 @@ object InsertOperations {
                             toAccount = localInsertTransactionResult.fromAccount,
                             dateTimeInText = localInsertTransactionResult.dateTimeInText,
                             transactionParticulars = localInsertTransactionResult.transactionParticulars,
-                            transactionAmount = localInsertTransactionResult.transactionAmount
+                            transactionAmount = localInsertTransactionResult.transactionAmount,
+                            isDevelopmentMode = isDevelopmentMode
                         )
 
                     } else {
@@ -745,7 +752,8 @@ object InsertOperations {
 
                         insertTransactionResult = localInsertTransactionResult,
                         userId = userId,
-                        username = username
+                        username = username,
+                        isDevelopmentMode = isDevelopmentMode
                     )
                 }
 
@@ -785,7 +793,8 @@ object InsertOperations {
 
                         userId = userId,
                         username = username,
-                        insertTransactionResult = localInsertTransactionResult
+                        insertTransactionResult = localInsertTransactionResult,
+                        isDevelopmentMode = isDevelopmentMode
                     )
                 }
 
@@ -825,7 +834,8 @@ object InsertOperations {
 
                         userId = userId,
                         username = username,
-                        insertTransactionResult = localInsertTransactionResult
+                        insertTransactionResult = localInsertTransactionResult,
+                        isDevelopmentMode = isDevelopmentMode
                     )
                 }
 
@@ -835,7 +845,8 @@ object InsertOperations {
 
                         userId = userId,
                         username = username,
-                        insertTransactionResult = localInsertTransactionResult
+                        insertTransactionResult = localInsertTransactionResult,
+                        isDevelopmentMode = isDevelopmentMode
                     )
                 }
 
@@ -845,7 +856,8 @@ object InsertOperations {
 
                         userId = userId,
                         username = username,
-                        insertTransactionResult = localInsertTransactionResult
+                        insertTransactionResult = localInsertTransactionResult,
+                        isDevelopmentMode = isDevelopmentMode
                     )
                 }
 
