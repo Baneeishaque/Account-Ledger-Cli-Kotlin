@@ -58,6 +58,7 @@ object TransactionViews {
         )
     }
 
+    @JvmStatic
     internal fun viewTransactions(
 
         apiResponse: Result<TransactionsResponse>,
@@ -211,6 +212,7 @@ object TransactionViews {
                             "12 - Rearrange Transaction - Up a Series of Transactions (Time wise)",
                             "13 - Rearrange Transaction - Down a Transaction (Time wise)",
                             "14 - Rearrange Transaction - Down a Series of Transactions (Time wise)",
+                            "15 - Rearrange Transaction - Transaction to above of Specified Index",
                             "0 - Back",
                             "",
                             "Enter Your Choice : "
@@ -379,7 +381,7 @@ object TransactionViews {
                                     when (readLine()!!) {
                                         "Y" -> {
 
-                                            var chooseAccountResult: ChooseAccountResult =
+                                            val chooseAccountResult: ChooseAccountResult =
                                                 ChooseAccountUtils.chooseAccountById(
                                                     userId = userId,
                                                     accountType = AccountTypeEnum.FROM
@@ -407,7 +409,7 @@ object TransactionViews {
                                     when (readLine()!!) {
                                         "Y" -> {
 
-                                            var chooseAccountResult: ChooseAccountResult =
+                                            val chooseAccountResult: ChooseAccountResult =
                                                 ChooseAccountUtils.chooseAccountById(
                                                     userId = userId,
                                                     accountType = AccountTypeEnum.TO
@@ -465,7 +467,7 @@ object TransactionViews {
                                     }
 
                                     // TODO : Change to MySQL Datetime format
-                                    var toMySqlDateTimeConversionResult: IsOkModel<String> =
+                                    val toMySqlDateTimeConversionResult: IsOkModel<String> =
                                         MysqlUtils.normalDateTimeTextToMySqlDateTimeText(normalDateTimeText = updateTransactionResult.dateTimeInText)
                                     if (toMySqlDateTimeConversionResult.isOK) {
 
@@ -490,9 +492,13 @@ object TransactionViews {
 
                     "6" -> {
 
-
                         if (isCallNotFromCheckAccounts(functionCallSource = functionCallSource)) {
-                            val upTransactionKey: UInt = getUpTransactionKey(userTransactionsMap, userTransactionsText)
+
+                            val upTransactionKey: UInt = getUpTransactionKey(
+
+                                userTransactionsMap = userTransactionsMap,
+                                currentAccountId = fromAccount.id
+                            )
 
                             var upPreviousTransactionKey: UInt = 0u
                             userTransactionsMap.keys.forEach { key ->
@@ -602,7 +608,7 @@ object TransactionViews {
                             val upTransactionKey: UInt = getUpTransactionKey(
 
                                 userTransactionsMap = userTransactionsMap,
-                                userTransactionsText = userTransactionsText
+                                currentAccountId = fromAccount.id
                             )
                             val upTransaction: TransactionResponse = userTransactionsMap[upTransactionKey]!!
 
@@ -624,7 +630,7 @@ object TransactionViews {
                             }
 
                             var upPreviousTransactionKey: UInt = 0u
-                            var isUpPreviousTransactionKeyNotFound: Boolean = true
+                            var isUpPreviousTransactionKeyNotFound = true
                             userTransactionsMapSortedByTime.values.forEach { currentTransaction ->
 
                                 println("Current transaction = ${currentTransaction.id} - ${currentTransaction.event_date_time}")
@@ -693,6 +699,69 @@ object TransactionViews {
                         }
                     }
 
+                    "15" -> {
+
+                        if (isCallNotFromCheckAccounts(functionCallSource = functionCallSource)
+                        ) {
+                            val upTransactionKey: UInt = getUpTransactionKey(
+
+                                userTransactionsMap = userTransactionsMap,
+                                currentAccountId = fromAccount.id
+                            )
+                            val upTransaction: TransactionResponse = userTransactionsMap[upTransactionKey]!!
+
+                            val upPreviousTransactionKey: UInt = getUpToAboveTransactionKey(
+
+                                userTransactionsMap = userTransactionsMap.filterKeys { transactionId: UInt -> transactionId != upTransactionKey },
+                                currentAccountId = fromAccount.id
+                            )
+                            val upPreviousTransaction: TransactionResponse =
+                                userTransactionsMap[upPreviousTransactionKey]!!
+                            val newDateTime: String =
+                                DateTimeUtils.subtract1SecondFromMySqlDateTimeText(upPreviousTransaction.event_date_time)
+
+                            if (isDevelopmentMode) {
+
+                                println("upTransaction = $upTransaction")
+                                println("upPreviousTransaction = $upPreviousTransaction")
+                                println("newDateTime = $newDateTime")
+                            }
+                            val getAccountsFullResult: Result<AccountsResponse> =
+                                ApiUtils.getAccountsFull(userId = userId)
+                            if (getAccountsFullResult.isSuccess) {
+
+                                val userAccountsMap: LinkedHashMap<UInt, AccountResponse> =
+                                    AccountUtils.prepareUserAccountsMap(
+
+                                        accounts = getAccountsFullResult.getOrNull()!!.accounts
+                                    )
+
+                                if (InsertOperations.updateTransaction(
+
+                                        transactionId = upTransactionKey,
+                                        eventDateTime = newDateTime,
+                                        particulars = upTransaction.particulars,
+                                        amount = upTransaction.amount,
+                                        fromAccount = userAccountsMap[upTransaction.from_account_id]!!,
+                                        toAccount = userAccountsMap[upTransaction.to_account_id]!!,
+                                        isDateTimeUpdateOperation = true
+                                    )
+                                ) {
+                                    userTransactionsMap[upTransactionKey]!!.event_date_time =
+                                        DateTimeUtils.subtract1SecondFromMySqlDateTimeText(upPreviousTransaction.event_date_time)
+                                    userTransactionsMap = userTransactionsMap.toList()
+                                        .sortedBy { (_: UInt, transaction: TransactionResponse) ->
+                                            MysqlUtils.mySqlDateTimeTextToMySqlDateTime(
+                                                mySqlDateTimeText = transaction.event_date_time
+                                            ).data!!
+                                        }
+                                        .toMap() as LinkedHashMap<UInt, TransactionResponse>
+                                }
+
+                            }
+                        }
+                    }
+
                     "0" -> {
 
                         return ViewTransactionsOutput(
@@ -743,14 +812,45 @@ object TransactionViews {
     }
 
     private fun getUpTransactionKey(
-        userTransactionsMap: LinkedHashMap<UInt, TransactionResponse>,
-        userTransactionsText: String
+
+        userTransactionsMap: Map<UInt, TransactionResponse>,
+        currentAccountId: UInt
+
+    ) = getTransactionKey(
+
+        userTransactionsMap = userTransactionsMap,
+        currentAccountId = currentAccountId,
+        transactionPrefix = "Up "
+    )
+
+    private fun getUpToAboveTransactionKey(
+
+        userTransactionsMap: Map<UInt, TransactionResponse>,
+        currentAccountId: UInt
+
+    ) = getTransactionKey(
+
+        userTransactionsMap = userTransactionsMap,
+        currentAccountId = currentAccountId,
+        transactionPrefix = "Up to Above "
+    )
+
+    private fun getTransactionKey(
+
+        userTransactionsMap: Map<UInt, TransactionResponse>,
+        currentAccountId: UInt,
+        transactionPrefix: String
+
     ) = getValidIndexWithInputPrompt(
 
         map = userTransactionsMap,
         itemSpecification = Constants.transactionText,
-        items = userTransactionsText,
-        itemSpecificationPrefix = "Up ",
+        items = TransactionUtils.userTransactionsToTextFromMap(
+
+            transactionsMap = userTransactionsMap,
+            currentAccountId = currentAccountId
+        ),
+        itemSpecificationPrefix = transactionPrefix,
         backValue = 0u
     )
 
