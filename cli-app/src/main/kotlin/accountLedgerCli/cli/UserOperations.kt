@@ -18,6 +18,7 @@ import accountLedgerCli.retrofit.data.AuthenticationDataSource
 import accountLedgerCli.retrofit.data.UsersDataSource
 import accountLedgerCli.to_utils.invalidOptionMessage
 import accountLedgerCli.utils.UserUtils
+import accountLedgerCli.to_constants.Constants as CommonConstants
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 
@@ -47,7 +48,7 @@ class UserOperations {
             if (isNotApiCall) {
 //                println("Directory : ${Paths.get("").toAbsolutePath()}")
                 println("\nAccount Ledger Authentication")
-                println("--------------------------------")
+                println(CommonConstants.dashedLineSeparator)
             }
 
             var user: UserCredentials

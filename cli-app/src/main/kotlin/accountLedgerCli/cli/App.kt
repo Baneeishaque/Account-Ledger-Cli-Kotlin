@@ -7,6 +7,7 @@ import accountLedgerCli.models.BalanceSheetDataModel
 import accountLedgerCli.models.InsertTransactionResult
 import accountLedgerCli.to_utils.*
 import accountLedgerCli.utils.AccountUtils
+import accountLedgerCli.to_constants.Constants as CommonConstants
 import io.github.cdimascio.dotenv.Dotenv
 import io.github.cdimascio.dotenv.dotenv
 import kotlinx.cli.*
@@ -65,7 +66,7 @@ class App {
                     commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
                         listOfCommands = listOf(
                             "Account Ledger",
-                            "---------------",
+                            CommonConstants.dashedLineSeparator,
                             "The identified user is $identifiedUser",
                             "",
                             "1 : Login",
