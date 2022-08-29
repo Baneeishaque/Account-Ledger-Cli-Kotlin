@@ -1,0 +1,1 @@
+cd /workspace/configurations-private && git add . && git commit -m "`date`" && git push
