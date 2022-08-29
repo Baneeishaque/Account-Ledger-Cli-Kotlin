@@ -23,6 +23,7 @@ import accountLedgerCli.utils.TransactionUtils
 import accountLedgerCli.utils.ChooseAccountUtils
 import accountLedgerCli.to_utils.ApiUtils as CommonApiUtils
 import accountLedgerCli.to_utils.HandleResponses as CommonHandleResponses
+import accountLedgerCli.to_constants.Constants as CommonConstants
 
 object TransactionViews {
 
@@ -314,7 +315,7 @@ object TransactionViews {
                         }
                     }
 
-                    "3", "5", "7", "8", "9", "11", "12", "13", "14" -> {
+                    "3", "5", "7", "8", "9", "12", "13", "14" -> {
 
                         if (isCallNotFromCheckAccounts(
 
@@ -357,66 +358,72 @@ object TransactionViews {
                             if (selectedTransactionDateTimeConversionResult.isOK) {
 
                                 //TODO : Present Transaction
-                                if(selectedTransaction.from_account_id == fromAccount.id){
+                                if (selectedTransaction.from_account_id == fromAccount.id) {
 
                                     print("[${selectedTransaction.id}] [${selectedTransactionDateTimeConversionResult.data!!}]\t[${selectedTransaction.particulars}]\t[-${selectedTransaction.amount}]\t[${selectedTransaction.to_account_full_name}]")
-                                }
-                                else if(selectedTransaction.to_account_id == fromAccount.id){
+                                } else if (selectedTransaction.to_account_id == fromAccount.id) {
 
                                     print("[${selectedTransaction.id}] [${selectedTransactionDateTimeConversionResult.data!!}]\t[${selectedTransaction.particulars}]\t[+${selectedTransaction.amount}]\t[${selectedTransaction.from_account_full_name}]")
 
-                                }
-                                else{
+                                } else {
 
                                     //TODO : exceptional case
                                 }
 
                                 //TODO : Get User Confirmation
 
-                                var localFromAccount: AccountResponse = userAccountsMap[selectedTransaction.from_account_id]!!
+                                var localFromAccount: AccountResponse =
+                                    userAccountsMap[selectedTransaction.from_account_id]!!
                                 do {
-                                    print("Do you want to change Withdraw A/C (Y/N) (Default : N) : ")
+                                    println("Do you want to change Withdraw A/C (Y/N) (Default : N) : ")
                                     when (readLine()!!) {
                                         "Y" -> {
 
-                                            var chooseAccountResult: ChooseAccountResult =                                                    ChooseAccountUtils.chooseAccountById(
-                                                            userId = userId,
-                                                            accountType = AccountTypeEnum.FROM
-                                                    )
-                                            if(chooseAccountResult.chosenAccountId != 0u){
+                                            var chooseAccountResult: ChooseAccountResult =
+                                                ChooseAccountUtils.chooseAccountById(
+                                                    userId = userId,
+                                                    accountType = AccountTypeEnum.FROM
+                                                )
+                                            if (chooseAccountResult.chosenAccountId != 0u) {
 
                                                 localFromAccount = chooseAccountResult.chosenAccount!!
                                             }
                                             break
                                         }
+
                                         "N", "" -> {
 
                                             break
                                         }
+
                                         else -> invalidOptionMessage()
                                     }
                                 } while (true)
 
-                                var localToAccount: AccountResponse = userAccountsMap[selectedTransaction.to_account_id]!!
+                                var localToAccount: AccountResponse =
+                                    userAccountsMap[selectedTransaction.to_account_id]!!
                                 do {
                                     print("Do you want to change Deposit A/C (Y/N) (Default : N) : ")
                                     when (readLine()!!) {
                                         "Y" -> {
 
-                                            var chooseAccountResult: ChooseAccountResult =                                                    ChooseAccountUtils.chooseAccountById(
-                                                            userId = userId,
-                                                            accountType = AccountTypeEnum.TO
-                                                    )
-                                            if(chooseAccountResult.chosenAccountId != 0u){
+                                            var chooseAccountResult: ChooseAccountResult =
+                                                ChooseAccountUtils.chooseAccountById(
+                                                    userId = userId,
+                                                    accountType = AccountTypeEnum.TO
+                                                )
+                                            if (chooseAccountResult.chosenAccountId != 0u) {
 
                                                 localToAccount = chooseAccountResult.chosenAccount!!
                                             }
                                             break
                                         }
+
                                         "N", "" -> {
 
                                             break
                                         }
+
                                         else -> invalidOptionMessage()
                                     }
                                 } while (true)
@@ -438,29 +445,33 @@ object TransactionViews {
                                     )
 
                                 // TODO : If from or to is not current account, remove the transaction
-                                if((localFromAccount == fromAccount) || (localFromAccount == toAccount)){
+                                if ((localFromAccount == fromAccount) || (localFromAccount == toAccount)) {
 
-                                    if(localFromAccount != fromAccount) {
+                                    if (localFromAccount != fromAccount) {
 
                                         userTransactionsMap[transactionIndex]!!.from_account_id = localFromAccount.id
-                                        userTransactionsMap[transactionIndex]!!.from_account_name = localFromAccount.name
-                                        userTransactionsMap[transactionIndex]!!.from_account_full_name = localFromAccount.fullName
+                                        userTransactionsMap[transactionIndex]!!.from_account_name =
+                                            localFromAccount.name
+                                        userTransactionsMap[transactionIndex]!!.from_account_full_name =
+                                            localFromAccount.fullName
                                     }
 
-                                    if(localToAccount != toAccount) {
+                                    if (localToAccount != toAccount) {
 
                                         userTransactionsMap[transactionIndex]!!.to_account_id = localToAccount.id
                                         userTransactionsMap[transactionIndex]!!.to_account_name = localToAccount.name
-                                        userTransactionsMap[transactionIndex]!!.to_account_full_name = localToAccount.fullName
+                                        userTransactionsMap[transactionIndex]!!.to_account_full_name =
+                                            localToAccount.fullName
                                     }
 
                                     // TODO : Change to MySQL Datetime format
-                                    var toMySqlDateTimeConversionResult:IsOkModel<String> = MysqlUtils.normalDateTimeTextToMySqlDateTimeText(normalDateTimeText=updateTransactionResult.dateTimeInText)
-                                    if(toMySqlDateTimeConversionResult.isOK){
+                                    var toMySqlDateTimeConversionResult: IsOkModel<String> =
+                                        MysqlUtils.normalDateTimeTextToMySqlDateTimeText(normalDateTimeText = updateTransactionResult.dateTimeInText)
+                                    if (toMySqlDateTimeConversionResult.isOK) {
 
-                                        userTransactionsMap[transactionIndex]!!.event_date_time = toMySqlDateTimeConversionResult.data!!
-                                    }
-                                    else{
+                                        userTransactionsMap[transactionIndex]!!.event_date_time =
+                                            toMySqlDateTimeConversionResult.data!!
+                                    } else {
 
                                         // TODO : Exceptional Case
                                     }
@@ -469,10 +480,9 @@ object TransactionViews {
                                         updateTransactionResult.transactionParticulars
                                     userTransactionsMap[transactionIndex]!!.amount =
                                         updateTransactionResult.transactionAmount
-                                }
-                                else{
+                                } else {
 
-                                    userTransactionsMap.remove(key=transactionIndex)
+                                    userTransactionsMap.remove(key = transactionIndex)
                                 }
                             }
                         }
@@ -480,19 +490,10 @@ object TransactionViews {
 
                     "6" -> {
 
-                        if (isCallNotFromCheckAccounts(
 
-                                functionCallSource = functionCallSource,
-                                furtherActionsOnFalse = { invalidOptionMessage() })
-                        ) {
-                            val upTransactionKey: UInt = getValidIndexWithInputPrompt(
+                        if (isCallNotFromCheckAccounts(functionCallSource = functionCallSource)) {
+                            val upTransactionKey: UInt = getUpTransactionKey(userTransactionsMap, userTransactionsText)
 
-                                map = userTransactionsMap,
-                                itemSpecification = Constants.transactionText,
-                                items = userTransactionsText,
-                                itemSpecificationPrefix = "Up ",
-                                backValue = 0u
-                            )
                             var upPreviousTransactionKey: UInt = 0u
                             userTransactionsMap.keys.forEach { key ->
                                 if (key == upTransactionKey) {
@@ -594,6 +595,104 @@ object TransactionViews {
                         }
                     }
 
+                    "11" -> {
+
+                        if (isCallNotFromCheckAccounts(functionCallSource = functionCallSource)
+                        ) {
+                            val upTransactionKey: UInt = getUpTransactionKey(
+
+                                userTransactionsMap = userTransactionsMap,
+                                userTransactionsText = userTransactionsText
+                            )
+                            val upTransaction: TransactionResponse = userTransactionsMap[upTransactionKey]!!
+
+                            val userTransactionsMapSortedByTime: Map<UInt, TransactionResponse> =
+                                userTransactionsMap.toList()
+                                    .sortedBy { (_: UInt, transaction: TransactionResponse): Pair<UInt, TransactionResponse> ->
+                                        MysqlUtils.mySqlDateTimeTextToMySqlDateTime(mySqlDateTimeText = transaction.event_date_time).data!!
+                                    }.toMap()
+                            if (isDevelopmentMode) {
+
+//                                println("userTransactionsMapSortedByTime = $userTransactionsMapSortedByTime")
+
+                                println("userTransactionsMapSortedByTime Event Timestamps")
+                                println(CommonConstants.dashedLineSeparator)
+                                userTransactionsMapSortedByTime.forEach { transaction: Map.Entry<UInt, TransactionResponse> ->
+
+                                    println("${transaction.value.id} - ${transaction.value.event_date_time}")
+                                }
+                            }
+
+                            var upPreviousTransactionKey: UInt = 0u
+                            var isUpPreviousTransactionKeyNotFound: Boolean = true
+                            userTransactionsMapSortedByTime.values.forEach { currentTransaction ->
+
+                                println("Current transaction = ${currentTransaction.id} - ${currentTransaction.event_date_time}")
+                                println("upTransaction = ${upTransaction.id} - ${upTransaction.event_date_time}")
+
+                                if (currentTransaction.event_date_time == upTransaction.event_date_time) {
+
+                                    isUpPreviousTransactionKeyNotFound = false
+                                }
+                                if (isUpPreviousTransactionKeyNotFound) {
+
+                                    upPreviousTransactionKey = currentTransaction.id
+                                    println("upPreviousTransactionKey = $upPreviousTransactionKey")
+                                }
+                            }
+                            if (upPreviousTransactionKey == 0u) {
+
+                                println("Up of Transaction T$upTransactionKey is NA")
+
+                            } else {
+
+                                val upPreviousTransaction: TransactionResponse =
+                                    userTransactionsMap[upPreviousTransactionKey]!!
+                                val newDateTime: String =
+                                    DateTimeUtils.subtract1SecondFromMySqlDateTimeText(upPreviousTransaction.event_date_time)
+
+                                if (isDevelopmentMode) {
+
+                                    println("upTransaction = $upTransaction")
+                                    println("upPreviousTransaction = $upPreviousTransaction")
+                                    println("newDateTime = $newDateTime")
+                                }
+                                val getAccountsFullResult: Result<AccountsResponse> =
+                                    ApiUtils.getAccountsFull(userId = userId)
+                                if (getAccountsFullResult.isSuccess) {
+
+                                    val userAccountsMap: LinkedHashMap<UInt, AccountResponse> =
+                                        AccountUtils.prepareUserAccountsMap(
+
+                                            accounts = getAccountsFullResult.getOrNull()!!.accounts
+                                        )
+
+                                    if (InsertOperations.updateTransaction(
+
+                                            transactionId = upTransactionKey,
+                                            eventDateTime = newDateTime,
+                                            particulars = upTransaction.particulars,
+                                            amount = upTransaction.amount,
+                                            fromAccount = userAccountsMap[upTransaction.from_account_id]!!,
+                                            toAccount = userAccountsMap[upTransaction.to_account_id]!!,
+                                            isDateTimeUpdateOperation = true
+                                        )
+                                    ) {
+                                        userTransactionsMap[upTransactionKey]!!.event_date_time =
+                                            DateTimeUtils.subtract1SecondFromMySqlDateTimeText(upPreviousTransaction.event_date_time)
+                                        userTransactionsMap = userTransactionsMap.toList()
+                                            .sortedBy { (_: UInt, transaction: TransactionResponse) ->
+                                                MysqlUtils.mySqlDateTimeTextToMySqlDateTime(
+                                                    mySqlDateTimeText = transaction.event_date_time
+                                                ).data!!
+                                            }
+                                            .toMap() as LinkedHashMap<UInt, TransactionResponse>
+                                    }
+                                }
+                            }
+                        }
+                    }
+
                     "0" -> {
 
                         return ViewTransactionsOutput(
@@ -641,6 +740,30 @@ object TransactionViews {
                 }
             } while (true)
         }
+    }
+
+    private fun getUpTransactionKey(
+        userTransactionsMap: LinkedHashMap<UInt, TransactionResponse>,
+        userTransactionsText: String
+    ) = getValidIndexWithInputPrompt(
+
+        map = userTransactionsMap,
+        itemSpecification = Constants.transactionText,
+        items = userTransactionsText,
+        itemSpecificationPrefix = "Up ",
+        backValue = 0u
+    )
+
+    private fun isCallNotFromCheckAccounts(functionCallSource: FunctionCallSourceEnum): Boolean {
+
+        if (isCallNotFromCheckAccounts(
+
+                functionCallSource = functionCallSource,
+                furtherActionsOnFalse = { invalidOptionMessage() })
+        ) {
+            return true
+        }
+        return false
     }
 
     private fun isCallNotFromCheckAccounts(
