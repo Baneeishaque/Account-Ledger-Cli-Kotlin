@@ -36,6 +36,7 @@ object TransactionViews {
         functionCallSource: FunctionCallSourceEnum = FunctionCallSourceEnum.FROM_OTHERS,
         insertTransactionResult: InsertTransactionResult,
         fromAccount: AccountResponse,
+        isConsoleMode: Boolean,
         isDevelopmentMode: Boolean
 
     ): ViewTransactionsOutput {
@@ -54,6 +55,7 @@ object TransactionViews {
             accountId = accountId,
             functionCallSource = functionCallSource,
             userId = userId,
+            isConsoleMode = isConsoleMode,
             isDevelopmentMode = isDevelopmentMode
         )
     }
@@ -69,6 +71,7 @@ object TransactionViews {
         functionCallSource: FunctionCallSourceEnum,
         userId: UInt,
         fromAccount: AccountResponse,
+        isConsoleMode: Boolean,
         isDevelopmentMode: Boolean
 
     ): ViewTransactionsOutput {
@@ -100,6 +103,7 @@ object TransactionViews {
                     accountId = accountId,
                     functionCallSource = functionCallSource,
                     userId = userId,
+                    isConsoleMode = isConsoleMode,
                     isDevelopmentMode = isDevelopmentMode
                 )
             })
@@ -121,6 +125,7 @@ object TransactionViews {
         accountId: UInt,
         functionCallSource: FunctionCallSourceEnum,
         userId: UInt,
+        isConsoleMode: Boolean,
         isDevelopmentMode: Boolean
 
     ): ViewTransactionsOutput {
@@ -253,7 +258,9 @@ object TransactionViews {
                             )
 
                             // TODO : Take Confirmation from the user
-                            if (InsertOperations.deleteTransaction(transactionId = transactionIndex)) {
+                            if (InsertOperations.deleteTransaction(transactionId = transactionIndex,
+                                    isConsoleMode = isConsoleMode,
+                                    isDevelopmentMode = isDevelopmentMode)) {
 
                                 userTransactionsMap.remove(key = transactionIndex)
                             }
@@ -302,7 +309,9 @@ object TransactionViews {
                                     }
                                         .forEach { transactionMapEntryForDelete: Map.Entry<UInt, TransactionResponse> ->
 
-                                            if (InsertOperations.deleteTransaction(transactionId = transactionMapEntryForDelete.key)) {
+                                            if (InsertOperations.deleteTransaction(transactionId = transactionMapEntryForDelete.key,
+                                                    isConsoleMode = isConsoleMode,
+                                                    isDevelopmentMode = isDevelopmentMode)) {
 
                                                 userTransactionsMap.remove(key = transactionMapEntryForDelete.key)
 
@@ -443,7 +452,9 @@ object TransactionViews {
                                         dateTimeInText = selectedTransactionDateTimeConversionResult.data!!,
                                         transactionParticulars = selectedTransaction.particulars,
                                         transactionAmount = selectedTransaction.amount,
-                                        isEditStep = true
+                                        isEditStep = true,
+                                        isConsoleMode = isConsoleMode,
+                                        isDevelopmentMode = isDevelopmentMode
                                     )
 
                                 // TODO : If from or to is not current account, remove the transaction
@@ -543,7 +554,9 @@ object TransactionViews {
                                             amount = upTransaction.amount,
                                             fromAccount = userAccountsMap[upTransaction.from_account_id]!!,
                                             toAccount = userAccountsMap[upTransaction.to_account_id]!!,
-                                            isDateTimeUpdateOperation = true
+                                            isDateTimeUpdateOperation = true,
+                                            isConsoleMode = isConsoleMode,
+                                            isDevelopmentMode = isDevelopmentMode
                                         )
                                     ) {
                                         userTransactionsMap[upTransactionKey]!!.event_date_time =
@@ -579,6 +592,7 @@ object TransactionViews {
                                 dateTimeInText = addTransactionResult.dateTimeInText,
                                 transactionParticulars = addTransactionResult.transactionParticulars,
                                 transactionAmount = addTransactionResult.transactionAmount,
+                                isConsoleMode = isConsoleMode,
                                 isDevelopmentMode = isDevelopmentMode
                             )
                             if (addTransactionResult.isSuccess) {
@@ -681,7 +695,9 @@ object TransactionViews {
                                             amount = upTransaction.amount,
                                             fromAccount = userAccountsMap[upTransaction.from_account_id]!!,
                                             toAccount = userAccountsMap[upTransaction.to_account_id]!!,
-                                            isDateTimeUpdateOperation = true
+                                            isDateTimeUpdateOperation = true,
+                                            isConsoleMode = isConsoleMode,
+                                            isDevelopmentMode = isDevelopmentMode
                                         )
                                     ) {
                                         userTransactionsMap[upTransactionKey]!!.event_date_time =
@@ -744,7 +760,9 @@ object TransactionViews {
                                         amount = upTransaction.amount,
                                         fromAccount = userAccountsMap[upTransaction.from_account_id]!!,
                                         toAccount = userAccountsMap[upTransaction.to_account_id]!!,
-                                        isDateTimeUpdateOperation = true
+                                        isDateTimeUpdateOperation = true,
+                                        isConsoleMode = isConsoleMode,
+                                        isDevelopmentMode = isDevelopmentMode
                                     )
                                 ) {
                                     userTransactionsMap[upTransactionKey]!!.event_date_time =
@@ -903,6 +921,7 @@ object TransactionViews {
         userId: UInt,
         username: String,
         insertTransactionResult: InsertTransactionResult,
+        isConsoleMode: Boolean,
         isDevelopmentMode: Boolean
 
     ) {
@@ -939,6 +958,7 @@ object TransactionViews {
                             functionCallSource = FunctionCallSourceEnum.FROM_VIEW_TRANSACTIONS_OF_AN_ACCOUNT,
                             insertTransactionResult = insertTransactionResult,
                             fromAccount = selectedAccount,
+                            isConsoleMode = isConsoleMode,
                             isDevelopmentMode = isDevelopmentMode
                         )
                     }

@@ -44,7 +44,9 @@ internal fun transactionContinueCheck(
     toAccount: AccountResponse,
     dateTimeInText: String,
     transactionParticulars: String,
-    transactionAmount: Float
+    transactionAmount: Float,
+    isConsoleMode: Boolean,
+    isDevelopmentMode: Boolean
 
 ): InsertTransactionResult {
 
@@ -76,7 +78,9 @@ internal fun transactionContinueCheck(
                     toAccount = toAccount,
                     dateTimeInText = dateTimeInText,
                     transactionParticulars = transactionParticulars,
-                    transactionAmount = transactionAmount
+                    transactionAmount = transactionAmount,
+                    isConsoleMode = isConsoleMode,
+                    isDevelopmentMode = isDevelopmentMode
                 )
             }
 
@@ -107,7 +111,9 @@ internal fun addTransactionWithAccountAvailabilityCheck(
     toAccount: AccountResponse,
     dateTimeInText: String,
     transactionParticulars: String,
-    transactionAmount: Float
+    transactionAmount: Float,
+    isConsoleMode: Boolean,
+    isDevelopmentMode: Boolean
 
 ): InsertTransactionResult {
 
@@ -132,7 +138,9 @@ internal fun addTransactionWithAccountAvailabilityCheck(
                     toAccount = toAccount,
                     dateTimeInText = dateTimeInText,
                     transactionParticulars = transactionParticulars,
-                    transactionAmount = transactionAmount
+                    transactionAmount = transactionAmount,
+                    isConsoleMode = isConsoleMode,
+                    isDevelopmentMode = isDevelopmentMode
                 )
                 if (addTransactionStep2Result.isSuccess) {
 
@@ -160,7 +168,9 @@ internal fun addTransactionWithAccountAvailabilityCheck(
                     toAccount = toAccount,
                     dateTimeInText = dateTimeInText,
                     transactionParticulars = transactionParticulars,
-                    transactionAmount = transactionAmount
+                    transactionAmount = transactionAmount,
+                    isConsoleMode = isConsoleMode,
+                    isDevelopmentMode = isDevelopmentMode
                 )
                 if (addTransactionStep2Result.isSuccess) {
 
@@ -175,7 +185,9 @@ internal fun addTransactionWithAccountAvailabilityCheck(
                         isViaStep = true,
                         dateTimeInText = DateTimeUtils.add5MinutesToDateTimeInText(dateTimeInText = addTransactionStep2Result.dateTimeInText),
                         transactionParticulars = addTransactionStep2Result.transactionParticulars,
-                        transactionAmount = addTransactionStep2Result.transactionAmount
+                        transactionAmount = addTransactionStep2Result.transactionAmount,
+                        isConsoleMode = isConsoleMode,
+                        isDevelopmentMode = isDevelopmentMode
                     )
                     if (addTransactionStep2Result.isSuccess
                     ) {
@@ -204,7 +216,9 @@ internal fun addTransactionWithAccountAvailabilityCheck(
                     toAccount = toAccount,
                     dateTimeInText = dateTimeInText,
                     transactionParticulars = transactionParticulars,
-                    transactionAmount = transactionAmount
+                    transactionAmount = transactionAmount,
+                    isConsoleMode = isConsoleMode,
+                    isDevelopmentMode = isDevelopmentMode
                 )
                 if (addTransactionStep2Result.isSuccess) {
 
@@ -219,7 +233,9 @@ internal fun addTransactionWithAccountAvailabilityCheck(
                         isTwoWayStep = true,
                         dateTimeInText = DateTimeUtils.add5MinutesToDateTimeInText(dateTimeInText = addTransactionStep2Result.dateTimeInText),
                         transactionParticulars = addTransactionStep2Result.transactionParticulars,
-                        transactionAmount = addTransactionStep2Result.transactionAmount
+                        transactionAmount = addTransactionStep2Result.transactionAmount,
+                        isConsoleMode = isConsoleMode,
+                        isDevelopmentMode = isDevelopmentMode
                     )
                     if (addTransactionStep2Result.isSuccess) {
 

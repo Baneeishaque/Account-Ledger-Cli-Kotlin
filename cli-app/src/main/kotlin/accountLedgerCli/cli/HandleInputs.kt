@@ -21,6 +21,7 @@ internal fun processChildAccountScreenInput(
     dateTimeInText: String,
     transactionParticulars: String,
     transactionAmount: Float,
+    isConsoleMode: Boolean,
     isDevelopmentMode: Boolean
 
 ): ViewTransactionsOutput {
@@ -54,6 +55,7 @@ internal fun processChildAccountScreenInput(
                 dateTimeInText = dateTimeInText,
                 transactionParticulars = transactionParticulars,
                 transactionAmount = transactionAmount,
+                isConsoleMode = isConsoleMode,
                 isDevelopmentMode = isDevelopmentMode
             )
         }
@@ -72,6 +74,7 @@ internal fun processChildAccountScreenInput(
                 dateTimeInText = dateTimeInText,
                 transactionParticulars = transactionParticulars,
                 transactionAmount = transactionAmount,
+                isConsoleMode = isConsoleMode,
                 isDevelopmentMode = isDevelopmentMode
             )
         }
@@ -105,6 +108,7 @@ private fun handleAccountSelection(
     dateTimeInText: String,
     transactionParticulars: String,
     transactionAmount: Float,
+    isConsoleMode: Boolean,
     isDevelopmentMode: Boolean
 
 ): InsertTransactionResult {
@@ -120,6 +124,7 @@ private fun handleAccountSelection(
             dateTimeInText = dateTimeInText,
             transactionParticulars = transactionParticulars,
             transactionAmount = transactionAmount,
+            isConsoleMode = isConsoleMode,
             isDevelopmentMode = isDevelopmentMode
         )
     }

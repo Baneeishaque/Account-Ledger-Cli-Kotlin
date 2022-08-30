@@ -21,6 +21,7 @@ internal fun checkAffectedAccountsAfterSpecifiedDate(
     userId: UInt,
     username: String,
     insertTransactionResult: InsertTransactionResult,
+    isConsoleMode: Boolean,
     isDevelopmentMode: Boolean
 
 ): InsertTransactionResult {
@@ -63,6 +64,7 @@ internal fun checkAffectedAccountsAfterSpecifiedDate(
                             userId = userId,
                             username = username,
                             insertTransactionResult = localInsertTransactionResult,
+                            isConsoleMode = isConsoleMode,
                             isDevelopmentMode = isDevelopmentMode
                         )
                     }
@@ -112,6 +114,7 @@ internal fun checkAffectedAccountsAfterSpecifiedDate(
                             functionCallSource = FunctionCallSourceEnum.FROM_CHECK_ACCOUNTS,
                             insertTransactionResult = insertTransactionResult,
                             fromAccount = selectedAccount,
+                            isConsoleMode = isConsoleMode,
                             isDevelopmentMode = isDevelopmentMode
 
                         ).output) {
@@ -131,6 +134,7 @@ internal fun checkAffectedAccountsAfterSpecifiedDate(
                                     accountFullName = account.value,
                                     insertTransactionResult = localInsertTransactionResult,
                                     fromAccount = selectedAccount,
+                                    isConsoleMode = isConsoleMode,
                                     isDevelopmentMode = isDevelopmentMode
 
                                 ).addTransactionResult
@@ -154,6 +158,7 @@ internal fun viewChildAccounts(
     dateTimeInText: String,
     transactionParticulars: String,
     transactionAmount: Float,
+    isConsoleMode: Boolean,
     isDevelopmentMode: Boolean
 
 ): InsertTransactionResult {
@@ -188,6 +193,7 @@ internal fun viewChildAccounts(
                         dateTimeInText = dateTimeInText,
                         transactionParticulars = transactionParticulars,
                         transactionAmount = transactionAmount,
+                        isConsoleMode = isConsoleMode,
                         isDevelopmentMode = isDevelopmentMode
                     )
                 }
@@ -248,6 +254,7 @@ internal fun viewChildAccounts(
                     dateTimeInText = dateTimeInText,
                     transactionParticulars = transactionParticulars,
                     transactionAmount = transactionAmount,
+                    isConsoleMode = isConsoleMode,
                     isDevelopmentMode = isDevelopmentMode
                 )
 

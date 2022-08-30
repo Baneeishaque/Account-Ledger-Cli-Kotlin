@@ -41,6 +41,7 @@ class UserOperations {
             dateTimeInText: String,
             transactionParticulars: String,
             transactionAmount: Float,
+            isConsoleMode: Boolean,
             isDevelopmentMode: Boolean
 
         ): InsertTransactionResult {
@@ -113,6 +114,7 @@ class UserOperations {
                                     dateTimeInText = dateTimeInText,
                                     transactionParticulars = transactionParticulars,
                                     transactionAmount = transactionAmount,
+                                    isConsoleMode = isConsoleMode,
                                     isDevelopmentMode = isDevelopmentMode
                                 )
                             }
@@ -194,6 +196,7 @@ class UserOperations {
                                 dateTimeInText = dateTimeInText,
                                 transactionParticulars = transactionParticulars,
                                 transactionAmount = transactionAmount,
+                                isConsoleMode = isConsoleMode,
                                 isDevelopmentMode = isDevelopmentMode
                             )
 
@@ -326,6 +329,7 @@ class UserOperations {
             dateTimeInText: String,
             transactionParticulars: String,
             transactionAmount: Float,
+            isConsoleMode: Boolean,
             isDevelopmentMode: Boolean
 
         ): InsertTransactionResult {
@@ -350,6 +354,7 @@ class UserOperations {
                                 dateTimeInText = dateTimeInText,
                                 transactionParticulars = transactionParticulars,
                                 transactionAmount = transactionAmount,
+                                isConsoleMode = isConsoleMode,
                                 isDevelopmentMode = isDevelopmentMode
                             )
                         }
@@ -439,6 +444,7 @@ class UserOperations {
                                         dateTimeInText = dateTimeInText,
                                         transactionParticulars = transactionParticulars,
                                         transactionAmount = transactionAmount,
+                                        isConsoleMode = isConsoleMode,
                                         isDevelopmentMode = isDevelopmentMode
                                     )
                                 }
