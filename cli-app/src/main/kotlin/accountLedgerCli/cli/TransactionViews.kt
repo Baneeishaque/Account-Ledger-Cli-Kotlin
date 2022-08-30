@@ -423,7 +423,7 @@ object TransactionViews {
 
                                             val chooseAccountResult: ChooseAccountResult =
                                                 ChooseAccountUtils.chooseAccountById(
-                                                    
+
                                                     userId = userId,
                                                     accountType = AccountTypeEnum.TO,
                                                     isConsoleMode = isConsoleMode,
