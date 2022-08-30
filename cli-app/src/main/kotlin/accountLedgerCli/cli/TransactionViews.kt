@@ -37,7 +37,7 @@ object TransactionViews {
         functionCallSource: FunctionCallSourceEnum = FunctionCallSourceEnum.FROM_OTHERS,
         insertTransactionResult: InsertTransactionResult,
         fromAccount: AccountResponse,
-        isUpToTimeStamp: Boolean = true,
+        isUpToTimeStamp: Boolean = false,
         upToTimeStamp: String = "",
         isConsoleMode: Boolean,
         isDevelopmentMode: Boolean
@@ -77,7 +77,7 @@ object TransactionViews {
         functionCallSource: FunctionCallSourceEnum,
         userId: UInt,
         fromAccount: AccountResponse,
-        isUpToTimeStamp: Boolean = true,
+        isUpToTimeStamp: Boolean = false,
         upToTimeStamp: String = "",
         isConsoleMode: Boolean,
         isDevelopmentMode: Boolean
@@ -135,7 +135,7 @@ object TransactionViews {
         accountId: UInt,
         functionCallSource: FunctionCallSourceEnum,
         userId: UInt,
-        isUpToTimeStamp: Boolean = true,
+        isUpToTimeStamp: Boolean = false,
         upToTimeStamp: String = "",
         isConsoleMode: Boolean,
         isDevelopmentMode: Boolean
