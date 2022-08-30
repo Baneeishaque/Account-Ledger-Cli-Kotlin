@@ -9,16 +9,25 @@ import accountLedgerCli.to_utils.ApiUtils as CommonApiUtils
 internal object ApiUtils {
 
     @JvmStatic
-    internal fun getAccountsFull(userId: UInt): Result<AccountsResponse> {
+    internal fun getAccountsFull(
+        userId: UInt,
+        isConsoleMode: Boolean,
+        isDevelopmentMode: Boolean
+    ): Result<AccountsResponse> {
 
         //TODO : Change return to AccountsResponse instead of Result<AccountsResponse>
-        return CommonApiUtils.getResultFromApiRequestWithOptionalRetries(apiCallFunction = fun(): Result<AccountsResponse> {
+        return CommonApiUtils.getResultFromApiRequestWithOptionalRetries(
 
-            return runBlocking {
+            apiCallFunction = fun(): Result<AccountsResponse> {
 
-                AccountsDataSource().selectUserAccountsFull(userId = userId)
-            }
-        })
+                return runBlocking {
+
+                    AccountsDataSource().selectUserAccountsFull(userId = userId)
+                }
+            },
+            isConsoleMode = isConsoleMode,
+            isDevelopmentMode = isDevelopmentMode
+        )
     }
 
     @JvmStatic

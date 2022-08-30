@@ -18,7 +18,8 @@ import accountLedgerCli.utils.UserUtils
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 
-internal fun balanceSheetOfUser(usersMap: LinkedHashMap<UInt, UserResponse>) {
+internal fun balanceSheetOfUser(usersMap: LinkedHashMap<UInt, UserResponse>, isConsoleMode: Boolean, isDevelopmentMode: Boolean) {
+
     val chooseUserResult: ChooseUserResult = handleUserSelection(
         chosenUserId = getValidIndexWithInputPrompt(
 
@@ -29,9 +30,13 @@ internal fun balanceSheetOfUser(usersMap: LinkedHashMap<UInt, UserResponse>) {
         ), usersMap = usersMap
     )
     if (chooseUserResult.isChosen) {
+
         printBalanceSheetOfUser(
+
             currentUserName = chooseUserResult.chosenUser!!.username,
-            currentUserId = chooseUserResult.chosenUser.id
+            currentUserId = chooseUserResult.chosenUser.id,
+            isConsoleMode = isConsoleMode,
+            isDevelopmentMode = isDevelopmentMode
         )
     }
 }
@@ -41,12 +46,16 @@ internal fun printBalanceSheetOfUser(
     currentUserName: String,
     currentUserId: UInt,
     refineLevel: BalanceSheetRefineLevelEnum = BalanceSheetRefineLevelEnum.WITHOUT_EXPENSE_ACCOUNTS,
-    isNotApiCall: Boolean = true
+    isNotApiCall: Boolean = true,
+    isConsoleMode: Boolean,
+    isDevelopmentMode: Boolean
 
 ) {
 
-//    print("currentUser : $currentUserName")
+    if(isConsoleMode) {
 
+        print("currentUser : $currentUserName")
+    }
     val transactionsDataSource = TransactionsDataSource()
     if (isNotApiCall) {
 
@@ -83,7 +92,9 @@ internal fun printBalanceSheetOfUser(
                                 currentUserName = currentUserName,
                                 currentUserId = currentUserId,
                                 refineLevel = refineLevel,
-                                isNotApiCall = isNotApiCall
+                                isNotApiCall = isNotApiCall,
+                                isConsoleMode = isConsoleMode,
+                                isDevelopmentMode = isDevelopmentMode
                             )
                             return
                         }
@@ -201,9 +212,11 @@ internal fun printBalanceSheetOfUser(
 
                     val apiResponse2: Result<TransactionsResponse> =
                         getUserTransactionsForAnAccount(
+
                             userId = currentUserId,
                             accountId = account.key,
-                            isNotFromBalanceSheet = false
+                            isNotFromBalanceSheet = false,
+                            isDevelopmentMode = isDevelopmentMode
                         )
                     if (apiResponse2.isFailure) {
 

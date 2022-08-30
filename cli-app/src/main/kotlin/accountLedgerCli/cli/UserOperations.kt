@@ -213,7 +213,9 @@ class UserOperations {
                                                         currentUserName = username,
                                                         currentUserId = authenticationResponseResult.id,
                                                         refineLevel = refineryLevel,
-                                                        isNotApiCall = false
+                                                        isNotApiCall = false,
+                                                        isConsoleMode = isConsoleMode,
+                                                        isDevelopmentMode = isDevelopmentMode
                                                     )
                                                 } else {
                                                     print(
@@ -418,7 +420,12 @@ class UserOperations {
                         )
                         when (readLine()!!) {
                             "1" -> {
-                                balanceSheetOfUser(usersMap = usersMap)
+                                balanceSheetOfUser(
+
+                                    usersMap = usersMap,
+                                    isConsoleMode = isConsoleMode,
+                                    isDevelopmentMode = isDevelopmentMode
+                                )
                             }
 
                             "2" -> {

@@ -64,8 +64,8 @@ object ApiUtils {
     fun <T> getResultFromApiRequestWithOptionalRetries(
 
         apiCallFunction: () -> Result<T>,
-        isConsoleMode: Boolean = true,
-        isDevelopmentMode: Boolean = false
+        isConsoleMode: Boolean,
+        isDevelopmentMode: Boolean
 
     ): Result<T> {
 

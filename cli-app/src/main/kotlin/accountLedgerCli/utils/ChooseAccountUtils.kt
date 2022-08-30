@@ -25,7 +25,12 @@ internal object ChooseAccountUtils {
             itemSpecification = Constants.accountText,
             apiCallFunction = fun(): Result<AccountsResponse> {
 
-                return ApiUtils.getAccountsFull(userId = userId)
+                return ApiUtils.getAccountsFull(
+
+                    userId = userId,
+                    isConsoleMode = isConsoleMode,
+                    isDevelopmentMode = isDevelopmentMode
+                )
             },
             prefixForPrompt = "${EnumUtils.getEnumNameForPrint(localEnum = accountType)} ",
             isConsoleMode = isConsoleMode,

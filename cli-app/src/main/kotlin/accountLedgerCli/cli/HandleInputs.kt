@@ -38,12 +38,15 @@ internal fun processChildAccountScreenInput(
         toAccount = toAccount
     )
     when (choice) {
+
         "1" -> {
             accountHomeOutput = handleAccountSelection(
+
                 accountId = getValidIndexWithInputPrompt(
+
                     map = userAccountsMap,
                     itemSpecification = Constants.accountText,
-                    items = AccountUtils.userAccountsToStringFromLinkedHashMap(userAccountsMap = userAccountsMap),
+                    items = AccountUtils.userAccountsToStringFromList(accounts = userAccountsMap.values.toList()),
                     backValue = 0u
                 ),
                 userAccountsMap = userAccountsMap,
@@ -64,7 +67,11 @@ internal fun processChildAccountScreenInput(
 
             accountHomeOutput = handleAccountSelection(
 
-                accountId = searchAccount(userAccountsMap = userAccountsMap),
+                accountId = searchAccount(
+
+                    userAccountsMap = userAccountsMap,
+                    isDevelopmentMode = isDevelopmentMode
+                ),
                 userAccountsMap = userAccountsMap,
                 userId = userId,
                 username = username,
@@ -116,6 +123,7 @@ private fun handleAccountSelection(
     if (accountId != 0u) {
 
         return Screens.accountHome(
+            
             userId = userId,
             username = username,
             fromAccount = userAccountsMap[accountId]!!,
@@ -129,6 +137,7 @@ private fun handleAccountSelection(
         )
     }
     return InsertTransactionResult(
+
         isSuccess = false,
         dateTimeInText = dateTimeInText,
         transactionParticulars = transactionParticulars,

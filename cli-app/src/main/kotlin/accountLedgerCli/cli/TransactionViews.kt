@@ -46,7 +46,8 @@ object TransactionViews {
             apiResponse = getUserTransactionsForAnAccount(
 
                 userId = userId,
-                accountId = accountId
+                accountId = accountId,
+                isDevelopmentMode = isDevelopmentMode
             ),
             insertTransactionResult = insertTransactionResult,
             fromAccount = fromAccount,
@@ -258,9 +259,12 @@ object TransactionViews {
                             )
 
                             // TODO : Take Confirmation from the user
-                            if (InsertOperations.deleteTransaction(transactionId = transactionIndex,
+                            if (InsertOperations.deleteTransaction(
+                                    transactionId = transactionIndex,
                                     isConsoleMode = isConsoleMode,
-                                    isDevelopmentMode = isDevelopmentMode)) {
+                                    isDevelopmentMode = isDevelopmentMode
+                                )
+                            ) {
 
                                 userTransactionsMap.remove(key = transactionIndex)
                             }
@@ -309,9 +313,12 @@ object TransactionViews {
                                     }
                                         .forEach { transactionMapEntryForDelete: Map.Entry<UInt, TransactionResponse> ->
 
-                                            if (InsertOperations.deleteTransaction(transactionId = transactionMapEntryForDelete.key,
+                                            if (InsertOperations.deleteTransaction(
+                                                    transactionId = transactionMapEntryForDelete.key,
                                                     isConsoleMode = isConsoleMode,
-                                                    isDevelopmentMode = isDevelopmentMode)) {
+                                                    isDevelopmentMode = isDevelopmentMode
+                                                )
+                                            ) {
 
                                                 userTransactionsMap.remove(key = transactionMapEntryForDelete.key)
 
@@ -356,7 +363,12 @@ object TransactionViews {
                             val userAccountsMap: LinkedHashMap<UInt, AccountResponse> =
                                 AccountUtils.prepareUserAccountsMap(
 
-                                    accounts = ApiUtils.getAccountsFull(userId = userId).getOrNull()!!.accounts
+                                    accounts = ApiUtils.getAccountsFull(
+
+                                        userId = userId,
+                                        isConsoleMode = isConsoleMode,
+                                        isDevelopmentMode = isDevelopmentMode
+                                    ).getOrNull()!!.accounts
                                 )
 
                             val selectedTransaction: TransactionResponse = userTransactionsMap[transactionIndex]!!
@@ -423,7 +435,7 @@ object TransactionViews {
 
                                             val chooseAccountResult: ChooseAccountResult =
                                                 ChooseAccountUtils.chooseAccountById(
-                                                    
+
                                                     userId = userId,
                                                     accountType = AccountTypeEnum.TO,
                                                     isConsoleMode = isConsoleMode,
@@ -543,7 +555,12 @@ object TransactionViews {
                                     println("newDateTime = $newDateTime")
                                 }
                                 val getAccountsFullResult: Result<AccountsResponse> =
-                                    ApiUtils.getAccountsFull(userId = userId)
+                                    ApiUtils.getAccountsFull(
+
+                                        userId = userId,
+                                        isConsoleMode = isConsoleMode,
+                                        isDevelopmentMode = isDevelopmentMode
+                                    )
                                 if (getAccountsFullResult.isSuccess) {
 
                                     val userAccountsMap: LinkedHashMap<UInt, AccountResponse> =
@@ -606,7 +623,8 @@ object TransactionViews {
                                 val apiResponse: Result<TransactionsResponse> = getUserTransactionsForAnAccount(
 
                                     userId = userId,
-                                    accountId = accountId
+                                    accountId = accountId,
+                                    isDevelopmentMode = isDevelopmentMode
                                 )
                                 if (apiResponse.isSuccess) {
 
@@ -684,7 +702,12 @@ object TransactionViews {
                                     println("newDateTime = $newDateTime")
                                 }
                                 val getAccountsFullResult: Result<AccountsResponse> =
-                                    ApiUtils.getAccountsFull(userId = userId)
+                                    ApiUtils.getAccountsFull(
+
+                                        userId = userId,
+                                        isConsoleMode = isConsoleMode,
+                                        isDevelopmentMode = isDevelopmentMode
+                                    )
                                 if (getAccountsFullResult.isSuccess) {
 
                                     val userAccountsMap: LinkedHashMap<UInt, AccountResponse> =
@@ -749,7 +772,12 @@ object TransactionViews {
                                 println("newDateTime = $newDateTime")
                             }
                             val getAccountsFullResult: Result<AccountsResponse> =
-                                ApiUtils.getAccountsFull(userId = userId)
+                                ApiUtils.getAccountsFull(
+
+                                    userId = userId,
+                                    isConsoleMode = isConsoleMode,
+                                    isDevelopmentMode = isDevelopmentMode
+                                )
                             if (getAccountsFullResult.isSuccess) {
 
                                 val userAccountsMap: LinkedHashMap<UInt, AccountResponse> =
@@ -936,7 +964,14 @@ object TransactionViews {
         if (userInputForAccountIndex != "0") {
 
             val getUserAccountsMapResult: IsOkModel<LinkedHashMap<UInt, AccountResponse>> =
-                HandleResponses.getUserAccountsMap(apiResponse = ApiUtils.getAccountsFull(userId = userId))
+                HandleResponses.getUserAccountsMap(
+                    apiResponse = ApiUtils.getAccountsFull(
+
+                        userId = userId,
+                        isConsoleMode = isConsoleMode,
+                        isDevelopmentMode = isDevelopmentMode
+                    )
+                )
 
             CommonHandleResponses.isOkModelHandler(
 
@@ -949,7 +984,10 @@ object TransactionViews {
                         userInputForIndex = userInputForAccountIndex,
                         map = getUserAccountsMapResult.data!!,
                         itemSpecification = Constants.accountText,
-                        items = AccountUtils.userAccountsToStringFromLinkedHashMap(userAccountsMap = getUserAccountsMapResult.data),
+                        items = AccountUtils.userAccountsToStringFromList(
+
+                            accounts = getUserAccountsMapResult.data.values.toList()
+                        ),
                         backValue = 0u
                     )
                     if (accountIndex != 0u) {

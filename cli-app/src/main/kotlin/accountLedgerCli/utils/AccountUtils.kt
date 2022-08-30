@@ -41,35 +41,12 @@ internal object AccountUtils {
     @JvmStatic
     internal val blankChosenAccount = ChooseAccountResult(chosenAccountId = 0u)
 
-    internal fun userAccountsToStringFromListPair(
-
-        userAccountsList: List<Pair<UInt, AccountResponse>>
-
-    ): String {
-
-        var result = ""
-        userAccountsList.forEach { accountEntry -> result += "${Constants.accountText}${accountEntry.first} - ${accountEntry.second.fullName}\n" }
-        return result
-    }
-
-    internal fun userAccountsToStringFromLinkedHashMap(
-
-        userAccountsMap: LinkedHashMap<UInt, AccountResponse>
-
-    ): String {
-
-        var result = ""
-        userAccountsMap.toList().takeLast(n = 10)
-            .forEach { account: Pair<UInt, AccountResponse> -> result += "${Constants.accountText.first()}${account.first} - ${account.second.fullName}\n" }
-        return result
-    }
-
     //TODO : Write List to String, then rewrite userAccountsToStringFromList, usersToStringFromLinkedHashMap, userAccountsToStringFromLinkedHashMap & userAccountsToStringFromListPair
 
     internal fun userAccountsToStringFromList(accounts: List<AccountResponse>): String {
 
         var result = ""
-        accounts.forEach { account -> result += "${Constants.accountText}${account.id} - ${account.name}\n" }
+        accounts.forEach { account -> result += "${Constants.accountText.first()}${account.id} - ${account.fullName}\n" }
         return result
     }
 

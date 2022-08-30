@@ -39,6 +39,11 @@ object HandleResponses {
             data = localInsertTransactionResult,
             successActions = fun(): InsertTransactionResult {
 
+                if (isDevelopmentMode) {
+
+//                    println(AccountUtils.userAccountsToStringFromLinkedHashMap(userAccountsMap = getUserAccountsMapResult.data!!))
+                }
+
                 do {
                     commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
                         listOf(
@@ -46,8 +51,10 @@ object HandleResponses {
                             CommonConstants.dashedLineSeparator,
                             "Accounts",
                             CommonConstants.dashedLineSeparator,
-                            AccountUtils.userAccountsToStringFromListPair(
-                                userAccountsList = getUserAccountsMapResult.data!!.toList().takeLast(n = 10)
+                            AccountUtils.userAccountsToStringFromList(
+
+                                accounts = getUserAccountsMapResult.data!!.values.toList().takeLast(n = 10)
+//                                accounts = getUserAccountsMapResult.data!!.values.toList()
                             ),
                             "1 - Choose Account - By Index Number",
                             "2 - Choose Account - By Search",
@@ -108,7 +115,8 @@ object HandleResponses {
     internal fun handleAccountsApiResponse(
 
         apiResponse: Result<AccountsResponse>,
-        purpose: AccountTypeEnum
+        purpose: AccountTypeEnum,
+        isDevelopmentMode: Boolean
 
     ): HandleAccountsApiResponseResult {
 
@@ -133,8 +141,9 @@ object HandleResponses {
                     commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
                         listOf(
                             "\nAccounts",
-                            AccountUtils.userAccountsToStringFromLinkedHashMap(
-                                userAccountsMap = userAccountsMap
+                            AccountUtils.userAccountsToStringFromList(
+
+                                accounts = userAccountsMap.values.toList()
                             ),
                             "1 - Choose $purposeForPrint Account - By Index Number",
                             "2 - Search $purposeForPrint Account - By Part Of Name",
@@ -151,7 +160,10 @@ object HandleResponses {
 
                                     map = userAccountsMap,
                                     itemSpecification = Constants.accountText,
-                                    items = AccountUtils.userAccountsToStringFromLinkedHashMap(userAccountsMap = userAccountsMap),
+                                    items = AccountUtils.userAccountsToStringFromList(
+
+                                        accounts = userAccountsMap.values.toList()
+                                    ),
                                     backValue = 0u
                                 ),
                                 userAccountsMap = userAccountsMap
@@ -161,7 +173,11 @@ object HandleResponses {
                         "2" -> {
                             return getHandleAccountsResponseFromApiResult(
 
-                                selectedAccountId = searchAccount(userAccountsMap = userAccountsMap),
+                                selectedAccountId = searchAccount(
+
+                                    userAccountsMap = userAccountsMap,
+                                    isDevelopmentMode = isDevelopmentMode
+                                ),
                                 userAccountsMap = userAccountsMap
                             )
                         }

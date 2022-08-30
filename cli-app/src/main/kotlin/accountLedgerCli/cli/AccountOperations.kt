@@ -96,7 +96,12 @@ internal fun checkAffectedAccountsAfterSpecifiedDate(
                 // TODO : Pretty Print Map
                 println("Affected A/Cs : $accounts")
 
-                val getAccountsFullResult: Result<AccountsResponse> = ApiUtils.getAccountsFull(userId = userId)
+                val getAccountsFullResult: Result<AccountsResponse> = ApiUtils.getAccountsFull(
+
+                    userId = userId,
+                    isConsoleMode = isConsoleMode,
+                    isDevelopmentMode = isDevelopmentMode
+                )
                 if (getAccountsFullResult.isSuccess) {
 
                     val userAccountsMap: LinkedHashMap<UInt, AccountResponse> =
@@ -164,8 +169,11 @@ internal fun viewChildAccounts(
 ): InsertTransactionResult {
 
     val apiResponse: Result<AccountsResponse> = getAccounts(
+
         userId = userId,
-        parentAccountId = fromAccount.id
+        parentAccountId = fromAccount.id,
+        isConsoleMode = isConsoleMode,
+        isDevelopmentMode = isDevelopmentMode
     )
 
     var processChildAccountScreenInputInsertTransactionResult = InsertTransactionResult(
@@ -232,6 +240,7 @@ internal fun viewChildAccounts(
                         "\nUser : $username",
                         "${fromAccount.fullName} - Child Accounts",
                         AccountUtils.userAccountsToStringFromList(
+
                             accounts = accountsResponseResult.accounts
                         ),
                         "1 - Choose Account - By Index Number",

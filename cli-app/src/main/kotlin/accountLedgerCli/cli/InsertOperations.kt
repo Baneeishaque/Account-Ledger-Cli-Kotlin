@@ -80,7 +80,12 @@ object InsertOperations {
             )
         ) {
             val getUserAccountsMapResult: IsOkModel<LinkedHashMap<UInt, AccountResponse>> =
-                HandleResponses.getUserAccountsMap(apiResponse = ApiUtils.getAccountsFull(userId = userId))
+                HandleResponses.getUserAccountsMap(apiResponse = ApiUtils.getAccountsFull(
+
+                    userId = userId,
+                    isConsoleMode = isConsoleMode,
+                    isDevelopmentMode = isDevelopmentMode
+                ))
 
             return CommonHandleResponses.isOkModelHandler(
 
@@ -136,7 +141,12 @@ object InsertOperations {
         if (account.isAvailable) {
 
             val getUserAccountsMapResult: IsOkModel<LinkedHashMap<UInt, AccountResponse>> =
-                HandleResponses.getUserAccountsMap(apiResponse = ApiUtils.getAccountsFull(userId = userId))
+                HandleResponses.getUserAccountsMap(apiResponse = ApiUtils.getAccountsFull(
+
+                    userId = userId,
+                    isConsoleMode = isConsoleMode,
+                    isDevelopmentMode = isDevelopmentMode
+                ))
 
             return CommonHandleResponses.isOkModelHandler(
 
@@ -241,7 +251,12 @@ object InsertOperations {
 
                     localInsertTransactionResult = processChooseAccountResult(
 
-                        chooseAccountResult = chooseDepositTop(userId = userId),
+                        chooseAccountResult = chooseDepositTop(
+
+                            userId = userId,
+                            isConsoleMode = isConsoleMode,
+                            isDevelopmentMode = isDevelopmentMode
+                        ),
                         userId = userId,
                         username = username,
                         transactionType = transactionType,
@@ -263,7 +278,12 @@ object InsertOperations {
 
                     localInsertTransactionResult = processChooseAccountResult(
 
-                        chooseAccountResult = chooseDepositFull(userId = userId),
+                        chooseAccountResult = chooseDepositFull(
+
+                            userId = userId,
+                            isConsoleMode = isConsoleMode,
+                            isDevelopmentMode = isDevelopmentMode
+                        ),
                         userId = userId,
                         username = username,
                         transactionType = transactionType,
@@ -323,7 +343,12 @@ object InsertOperations {
 
                     localInsertTransactionResult = processChooseAccountResult(
 
-                        chooseAccountResult = chooseWithdrawTop(userId = userId),
+                        chooseAccountResult = chooseWithdrawTop(
+
+                            userId = userId,
+                            isConsoleMode = isConsoleMode,
+                            isDevelopmentMode = isDevelopmentMode
+                        ),
                         userId = userId,
                         username = username,
                         transactionType = transactionType,
@@ -345,7 +370,12 @@ object InsertOperations {
 
                     localInsertTransactionResult = processChooseAccountResult(
 
-                        chooseAccountResult = chooseWithdrawFull(userId = userId),
+                        chooseAccountResult = chooseWithdrawFull(
+
+                            userId = userId,
+                            isConsoleMode = isConsoleMode,
+                            isDevelopmentMode = isDevelopmentMode
+                        ),
                         userId = userId,
                         username = username,
                         transactionType = transactionType,
@@ -623,7 +653,12 @@ object InsertOperations {
 
                         localInsertTransactionResult = processChooseAccountResult(
 
-                            chooseAccountResult = chooseDepositTop(userId = userId),
+                            chooseAccountResult = chooseDepositTop(
+
+                                userId = userId,
+                                isConsoleMode = isConsoleMode,
+                                isDevelopmentMode = isDevelopmentMode
+                            ),
                             userId = userId,
                             username = username,
                             transactionType = transactionType,
@@ -664,7 +699,12 @@ object InsertOperations {
 
                         localInsertTransactionResult = processChooseAccountResult(
 
-                            chooseAccountResult = chooseDepositFull(userId = userId),
+                            chooseAccountResult = chooseDepositFull(
+
+                                userId = userId,
+                                isConsoleMode = isConsoleMode,
+                                isDevelopmentMode = isDevelopmentMode
+                            ),
                             userId = userId,
                             username = username,
                             transactionType = transactionType,
@@ -690,7 +730,12 @@ object InsertOperations {
 
                         localInsertTransactionResult = processChooseAccountResult(
 
-                            chooseAccountResult = chooseViaTop(userId = userId),
+                            chooseAccountResult = chooseViaTop(
+
+                                userId = userId,
+                                isConsoleMode = isConsoleMode,
+                                isDevelopmentMode = isDevelopmentMode
+                            ),
                             userId = userId,
                             username = username,
                             transactionType = transactionType,
@@ -710,7 +755,12 @@ object InsertOperations {
 
                         localInsertTransactionResult = processChooseAccountResult(
 
-                            chooseAccountResult = chooseWithdrawTop(userId = userId),
+                            chooseAccountResult = chooseWithdrawTop(
+
+                                userId = userId,
+                                isConsoleMode = isConsoleMode,
+                                isDevelopmentMode = isDevelopmentMode
+                            ),
                             userId = userId,
                             username = username,
                             transactionType = transactionType,
@@ -736,7 +786,12 @@ object InsertOperations {
 
                         localInsertTransactionResult = processChooseAccountResult(
 
-                            chooseAccountResult = chooseViaFull(userId = userId),
+                            chooseAccountResult = chooseViaFull(
+
+                                userId = userId,
+                                isConsoleMode = isConsoleMode,
+                                isDevelopmentMode = isDevelopmentMode
+                            ),
                             userId = userId,
                             username = username,
                             transactionType = transactionType,
@@ -756,7 +811,12 @@ object InsertOperations {
 
                         localInsertTransactionResult = processChooseAccountResult(
 
-                            chooseAccountResult = chooseWithdrawFull(userId = userId),
+                            chooseAccountResult = chooseWithdrawFull(
+
+                                userId = userId,
+                                isConsoleMode = isConsoleMode,
+                                isDevelopmentMode = isDevelopmentMode
+                            ),
                             userId = userId,
                             username = username,
                             transactionType = transactionType,

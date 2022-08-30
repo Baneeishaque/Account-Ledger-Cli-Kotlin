@@ -125,57 +125,122 @@ private fun <T> getValidIndex(
     }
 }
 
-internal fun chooseDepositTop(userId: UInt): HandleAccountsApiResponseResult {
+internal fun chooseDepositTop(
+
+    userId: UInt,
+    isConsoleMode: Boolean,
+    isDevelopmentMode: Boolean
+
+): HandleAccountsApiResponseResult {
 
     return HandleResponses.handleAccountsApiResponse(
 
-        apiResponse = getAccounts(userId = userId),
-        purpose = AccountTypeEnum.TO
+        apiResponse = getAccounts(
+
+            userId = userId,
+            isConsoleMode = isConsoleMode,
+            isDevelopmentMode = isDevelopmentMode
+        ),
+        purpose = AccountTypeEnum.TO,
+        isDevelopmentMode = isDevelopmentMode
     )
 }
 
-internal fun chooseDepositFull(userId: UInt): HandleAccountsApiResponseResult {
+internal fun chooseDepositFull(
+
+    userId: UInt,
+    isConsoleMode: Boolean,
+    isDevelopmentMode: Boolean
+
+): HandleAccountsApiResponseResult {
 
     return HandleResponses.handleAccountsApiResponse(
 
-        apiResponse = ApiUtils.getAccountsFull(userId = userId),
-        purpose = AccountTypeEnum.TO
+        apiResponse = ApiUtils.getAccountsFull(
+
+            userId = userId,
+            isConsoleMode = isConsoleMode,
+            isDevelopmentMode = isDevelopmentMode
+        ),
+        purpose = AccountTypeEnum.TO,
+        isDevelopmentMode = isDevelopmentMode
     )
 }
 
-internal fun chooseWithdrawTop(userId: UInt): HandleAccountsApiResponseResult {
+internal fun chooseWithdrawTop(
+
+    userId: UInt,
+    isConsoleMode: Boolean,
+    isDevelopmentMode: Boolean
+
+): HandleAccountsApiResponseResult {
 
     return HandleResponses.handleAccountsApiResponse(
 
-        apiResponse = getAccounts(userId = userId),
-        purpose = AccountTypeEnum.FROM
+        apiResponse = getAccounts(
+
+            userId = userId,
+            isConsoleMode = isConsoleMode,
+            isDevelopmentMode = isDevelopmentMode
+        ),
+        purpose = AccountTypeEnum.FROM,
+        isDevelopmentMode = isDevelopmentMode
     )
 }
 
-internal fun chooseWithdrawFull(userId: UInt): HandleAccountsApiResponseResult {
+internal fun chooseWithdrawFull(userId: UInt, isConsoleMode: Boolean, isDevelopmentMode: Boolean): HandleAccountsApiResponseResult {
 
     return HandleResponses.handleAccountsApiResponse(
 
-        apiResponse = ApiUtils.getAccountsFull(userId),
-        purpose = AccountTypeEnum.FROM
+        apiResponse = ApiUtils.getAccountsFull(
+
+            userId = userId,
+            isConsoleMode = isConsoleMode,
+            isDevelopmentMode = isDevelopmentMode
+        ),
+        purpose = AccountTypeEnum.FROM,
+        isDevelopmentMode = isDevelopmentMode
     )
 }
 
-internal fun chooseViaTop(userId: UInt): HandleAccountsApiResponseResult {
+internal fun chooseViaTop(
+
+    userId: UInt,
+    isConsoleMode: Boolean,
+    isDevelopmentMode: Boolean
+
+): HandleAccountsApiResponseResult {
 
     return HandleResponses.handleAccountsApiResponse(
 
-        apiResponse = getAccounts(userId = userId),
-        purpose = AccountTypeEnum.VIA
+        apiResponse = getAccounts(
+
+            userId = userId,
+            isConsoleMode = isConsoleMode,
+            isDevelopmentMode = isDevelopmentMode
+        ),
+        purpose = AccountTypeEnum.VIA,
+        isDevelopmentMode = isDevelopmentMode
     )
 }
 
-internal fun chooseViaFull(userId: UInt): HandleAccountsApiResponseResult {
+internal fun chooseViaFull(
+
+    userId: UInt,
+    isConsoleMode: Boolean,
+    isDevelopmentMode: Boolean
+
+): HandleAccountsApiResponseResult {
 
     return HandleResponses.handleAccountsApiResponse(
 
-        apiResponse = ApiUtils.getAccountsFull(userId),
-        purpose = AccountTypeEnum.VIA
+        apiResponse = ApiUtils.getAccountsFull(
+
+            userId = userId,
+            isConsoleMode = isConsoleMode,
+            isDevelopmentMode = isDevelopmentMode),
+        purpose = AccountTypeEnum.VIA,
+        isDevelopmentMode = isDevelopmentMode
     )
 }
 

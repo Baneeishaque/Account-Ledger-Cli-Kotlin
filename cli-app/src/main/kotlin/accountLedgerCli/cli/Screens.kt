@@ -104,7 +104,12 @@ object Screens {
 
                     insertTransactionResult = HandleResponses.handleAccountsResponseAndPrintMenu(
 
-                        apiResponse = getAccounts(userId = userId),
+                        apiResponse = getAccounts(
+
+                            userId = userId,
+                            isConsoleMode = isConsoleMode,
+                            isDevelopmentMode = isDevelopmentMode
+                        ),
                         username = username,
                         userId = userId,
                         insertTransactionResult = insertTransactionResult,
@@ -249,7 +254,12 @@ object Screens {
 
                     insertTransactionResult = HandleResponses.handleAccountsResponseAndPrintMenu(
 
-                        apiResponse = ApiUtils.getAccountsFull(userId = userId),
+                        apiResponse = ApiUtils.getAccountsFull(
+
+                            userId = userId,
+                            isConsoleMode = isConsoleMode,
+                            isDevelopmentMode = isDevelopmentMode
+                        ),
                         username = username,
                         userId = userId,
                         insertTransactionResult = insertTransactionResult,
@@ -294,7 +304,9 @@ object Screens {
 
                         currentUserName = username,
                         currentUserId = userId,
-                        refineLevel = BalanceSheetRefineLevelEnum.ALL
+                        refineLevel = BalanceSheetRefineLevelEnum.ALL,
+                        isConsoleMode = isConsoleMode,
+                        isDevelopmentMode = isDevelopmentMode
                     )
                 }
 
@@ -304,7 +316,9 @@ object Screens {
 
                         currentUserName = username,
                         currentUserId = userId,
-                        refineLevel = BalanceSheetRefineLevelEnum.WITHOUT_OPEN_BALANCES
+                        refineLevel = BalanceSheetRefineLevelEnum.WITHOUT_OPEN_BALANCES,
+                        isConsoleMode = isConsoleMode,
+                        isDevelopmentMode = isDevelopmentMode
                     )
                 }
 
@@ -314,7 +328,9 @@ object Screens {
 
                         currentUserName = username,
                         currentUserId = userId,
-                        refineLevel = BalanceSheetRefineLevelEnum.WITHOUT_MISC_INCOMES
+                        refineLevel = BalanceSheetRefineLevelEnum.WITHOUT_MISC_INCOMES,
+                        isConsoleMode = isConsoleMode,
+                        isDevelopmentMode = isDevelopmentMode
                     )
                 }
 
@@ -324,7 +340,9 @@ object Screens {
 
                         currentUserName = username,
                         currentUserId = userId,
-                        refineLevel = BalanceSheetRefineLevelEnum.WITHOUT_INVESTMENT_RETURNS
+                        refineLevel = BalanceSheetRefineLevelEnum.WITHOUT_INVESTMENT_RETURNS,
+                        isConsoleMode = isConsoleMode,
+                        isDevelopmentMode = isDevelopmentMode
                     )
                 }
 
@@ -334,7 +352,9 @@ object Screens {
 
                         currentUserName = username,
                         currentUserId = userId,
-                        refineLevel = BalanceSheetRefineLevelEnum.WITHOUT_FAMILY_ACCOUNTS
+                        refineLevel = BalanceSheetRefineLevelEnum.WITHOUT_FAMILY_ACCOUNTS,
+                        isConsoleMode = isConsoleMode,
+                        isDevelopmentMode = isDevelopmentMode
                     )
                 }
 
@@ -344,7 +364,9 @@ object Screens {
 
                         currentUserName = username,
                         currentUserId = userId,
-                        refineLevel = BalanceSheetRefineLevelEnum.WITHOUT_EXPENSE_ACCOUNTS
+                        refineLevel = BalanceSheetRefineLevelEnum.WITHOUT_EXPENSE_ACCOUNTS,
+                        isConsoleMode = isConsoleMode,
+                        isDevelopmentMode = isDevelopmentMode
                     )
                 }
 
@@ -838,7 +860,12 @@ object Screens {
         var localInsertTransactionResult: InsertTransactionResult = insertTransactionResult
 
         val getUserAccountsMapResult: IsOkModel<LinkedHashMap<UInt, AccountResponse>> =
-            HandleResponses.getUserAccountsMap(apiResponse = ApiUtils.getAccountsFull(userId = userId))
+            HandleResponses.getUserAccountsMap(apiResponse = ApiUtils.getAccountsFull(
+
+                userId = userId,
+                isConsoleMode = isConsoleMode,
+                isDevelopmentMode = isDevelopmentMode
+            ))
 
         if (getUserAccountsMapResult.isOK && getUserAccountsMapResult.data!!.containsKey(desiredAccountIndex)) {
 
