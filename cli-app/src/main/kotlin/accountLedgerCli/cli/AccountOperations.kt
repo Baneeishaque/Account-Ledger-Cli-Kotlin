@@ -97,31 +97,9 @@ internal fun checkAffectedAccountsAfterSpecifiedDate(
             ) {
 
                 val accounts: MutableMap<UInt, String> = mutableMapOf()
-                var userTransactionsAfterSpecifiedDate: List<TransactionResponse> =
-                    selectUserTransactionsAfterSpecifiedDateResult.transactions
 
-//                printUserTransactionAfterSpecifiedDate(
-//
-//                    userTransactionsAfterSpecifiedDate = userTransactionsAfterSpecifiedDate,
-//                    isDevelopmentMode = isDevelopmentMode
-//                )
-
-                if (isUpToTimeStamp) {
-
-                    val upToTimeStampInDateTime: LocalDateTime =
-                        DateTimeUtils.normalDateTimeTextToDateTime(normalDateTimeText = upToTimeStamp).data!!
-                    userTransactionsAfterSpecifiedDate =
-                        userTransactionsAfterSpecifiedDate.filter { transactionResponse: TransactionResponse ->
-
-                            MysqlUtils.mySqlDateTimeTextToDateTime(mySqlDateTimeText = transactionResponse.event_date_time).data!! <= upToTimeStampInDateTime
-                        }
-
-//                    printUserTransactionAfterSpecifiedDate(
-//
-//                        userTransactionsAfterSpecifiedDate = userTransactionsAfterSpecifiedDate,
-//                        isDevelopmentMode = isDevelopmentMode
-//                    )
-                }
+                var userTransactionsAfterSpecifiedDate: List<TransactionResponse> = TransactionUtils.filterTransactionsForUptoDateTime(isUpToTimeStamp = isUpToTimeStamp, upToTimeStamp = upToTimeStamp, transactions = selectUserTransactionsAfterSpecifiedDateResult.transactions)
+                    
                 userTransactionsAfterSpecifiedDate.forEach { transaction ->
 
                     accounts.putIfAbsent(transaction.from_account_id, transaction.from_account_full_name)

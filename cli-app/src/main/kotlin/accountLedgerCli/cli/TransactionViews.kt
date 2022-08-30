@@ -167,22 +167,7 @@ object TransactionViews {
             )
         } else {
 
-            var userTransactionsMap: LinkedHashMap<UInt, TransactionResponse>
-
-            if (isUpToTimeStamp) {
-
-                val upToTimeStampInDateTime: LocalDateTime =
-                    DateTimeUtils.normalDateTimeTextToDateTime(normalDateTimeText = upToTimeStamp).data!!
-                userTransactionsMap =
-                    TransactionUtils.prepareUserTransactionsMap(transactions = localUserTransactionsResponse.transactions.filter { transactionResponse: TransactionResponse ->
-
-                        MysqlUtils.mySqlDateTimeTextToDateTime(mySqlDateTimeText = transactionResponse.event_date_time).data!! <= upToTimeStampInDateTime
-                    })
-            }else{
-
-                userTransactionsMap =
-                    TransactionUtils.prepareUserTransactionsMap(transactions = localUserTransactionsResponse.transactions)
-            }
+            var userTransactionsMap: LinkedHashMap<UInt, TransactionResponse> = TransactionUtils.prepareUserTransactionsMap(transactions = TransactionUtils.filterTransactionsForUptoDateTime(isUpToTimeStamp = isUpToTimeStamp, upToTimeStamp = upToTimeStamp, transactions = localUserTransactionsResponse.transactions))
 
             var choice: String
             do {

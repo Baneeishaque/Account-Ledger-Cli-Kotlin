@@ -4,6 +4,9 @@ import accountLedgerCli.api.response.TransactionResponse
 import accountLedgerCli.models.TransactionLedgerInText
 import accountLedgerCli.to_models.IsOkModel
 import accountLedgerCli.to_utils.MysqlUtils
+import accountLedgerCli.to_utils.DateTimeUtils
+
+import java.time.LocalDateTime
 
 internal object TransactionUtils {
 
@@ -107,5 +110,27 @@ internal object TransactionUtils {
     ): String {
 
         return "${currentTextLedger}[${currentTransaction.id}] [${currentTransaction.event_date_time}]\t[(${currentTransaction.from_account_full_name}) -> (${currentTransaction.to_account_full_name})]\t[${currentTransaction.particulars}]\t[${currentTransaction.amount}]\n"
+    }
+
+    internal fun filterTransactionsForUptoDateTime(isUpToTimeStamp: Boolean, upToTimeStamp: String, transactions: List<TransactionResponse>): List<TransactionResponse>{
+
+        if(isUpToTimeStamp){
+
+            return getTransactionsUptoDateTime(upToTimeStamp = upToTimeStamp, transactions = transactions)
+
+        }else{
+
+            return transactions
+        }
+    }
+
+    internal fun getTransactionsUptoDateTime(upToTimeStamp: String, transactions: List<TransactionResponse>): List<TransactionResponse>{
+
+        val upToTimeStampInDateTime: LocalDateTime = DateTimeUtils.normalDateTimeTextToDateTime(normalDateTimeText = upToTimeStamp).data!!
+        return transactions.filter { transactionResponse: TransactionResponse ->
+
+            MysqlUtils.mySqlDateTimeTextToDateTime(mySqlDateTimeText = transactionResponse.event_date_time).data!! <= upToTimeStampInDateTime
+        }
+
     }
 }
