@@ -11,7 +11,14 @@ import accountLedgerCli.to_utils.EnumUtils
 internal object ChooseAccountUtils {
 
     @JvmStatic
-    internal fun chooseAccountById(userId: UInt, accountType: AccountTypeEnum): ChooseAccountResult {
+    internal fun chooseAccountById(
+
+        userId: UInt,
+        accountType: AccountTypeEnum,
+        isConsoleMode: Boolean,
+        isDevelopmentMode: Boolean
+
+    ): ChooseAccountResult {
 
         val chooseByIdResult: ChooseByIdResult<AccountsResponse> = ChooseUtils.chooseById(
 
@@ -20,7 +27,9 @@ internal object ChooseAccountUtils {
 
                 return ApiUtils.getAccountsFull(userId = userId)
             },
-            prefixForPrompt = "${EnumUtils.getEnumNameForPrint(localEnum = accountType)} "
+            prefixForPrompt = "${EnumUtils.getEnumNameForPrint(localEnum = accountType)} ",
+            isConsoleMode = isConsoleMode,
+            isDevelopmentMode = isDevelopmentMode
         )
         if (chooseByIdResult.isOkWithData.isOK) {
 

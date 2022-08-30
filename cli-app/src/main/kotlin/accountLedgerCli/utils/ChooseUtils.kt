@@ -12,7 +12,9 @@ internal object ChooseUtils {
 
         itemSpecification: String,
         apiCallFunction: () -> Result<T>,
-        prefixForPrompt: String = ""
+        prefixForPrompt: String = "",
+        isConsoleMode: Boolean,
+        isDevelopmentMode: Boolean
 
     ): ChooseByIdResult<T> {
 
@@ -29,7 +31,12 @@ internal object ChooseUtils {
                 if (idInput == 0u) return ChooseByIdResult(isOkWithData = IsOkModel(isOK = false))
 
                 return ChooseByIdResult(
-                    isOkWithData = CommonApiUtils.makeApiRequestWithOptionalRetries(apiCallFunction = apiCallFunction),
+                    isOkWithData = CommonApiUtils.makeApiRequestWithOptionalRetries(
+
+                        apiCallFunction = apiCallFunction,
+                        isConsoleMode = isConsoleMode,
+                        isDevelopmentMode = isDevelopmentMode
+                    ),
                     id = idInput
                 )
 

@@ -392,8 +392,11 @@ object TransactionViews {
 
                                             val chooseAccountResult: ChooseAccountResult =
                                                 ChooseAccountUtils.chooseAccountById(
+
                                                     userId = userId,
-                                                    accountType = AccountTypeEnum.FROM
+                                                    accountType = AccountTypeEnum.FROM,
+                                                    isConsoleMode = isConsoleMode,
+                                                    isDevelopmentMode = isDevelopmentMode
                                                 )
                                             if (chooseAccountResult.chosenAccountId != 0u) {
 
@@ -420,8 +423,11 @@ object TransactionViews {
 
                                             val chooseAccountResult: ChooseAccountResult =
                                                 ChooseAccountUtils.chooseAccountById(
+                                                    
                                                     userId = userId,
-                                                    accountType = AccountTypeEnum.TO
+                                                    accountType = AccountTypeEnum.TO,
+                                                    isConsoleMode = isConsoleMode,
+                                                    isDevelopmentMode = isDevelopmentMode
                                                 )
                                             if (chooseAccountResult.chosenAccountId != 0u) {
 

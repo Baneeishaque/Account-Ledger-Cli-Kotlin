@@ -283,7 +283,12 @@ object InsertOperations {
 
                 "3" -> {
 
-                    val chooseToAccountResult: ChooseAccountResult = chooseToAccount(userId = userId)
+                    val chooseToAccountResult: ChooseAccountResult = chooseToAccount(
+
+                        userId = userId,
+                        isConsoleMode = isConsoleMode,
+                        isDevelopmentMode = isDevelopmentMode
+                    )
                     if (chooseToAccountResult.chosenAccountId != 0u) {
 
                         val processSelectedAccountResult: InsertTransactionResult = processSelectedAccount(
@@ -359,7 +364,12 @@ object InsertOperations {
                 }
 
                 "6" -> {
-                    val chooseFromAccountResult: ChooseAccountResult = chooseFromAccount(userId = userId)
+                    val chooseFromAccountResult: ChooseAccountResult = chooseFromAccount(
+
+                        userId = userId,
+                        isConsoleMode = isConsoleMode,
+                        isDevelopmentMode = isDevelopmentMode
+                    )
                     if (chooseFromAccountResult.chosenAccountId != 0u) {
 
                         val processSelectedAccountResult: InsertTransactionResult = processSelectedAccount(
@@ -497,7 +507,12 @@ object InsertOperations {
                         )
                     } else {
 
-                        val chooseToAccountResult: ChooseAccountResult = chooseToAccount(userId = userId)
+                        val chooseToAccountResult: ChooseAccountResult = chooseToAccount(
+
+                            userId = userId,
+                            isConsoleMode = isConsoleMode,
+                            isDevelopmentMode = isDevelopmentMode
+                        )
                         if (chooseToAccountResult.chosenAccountId != 0u) {
 
                             val processSelectedAccountResult: InsertTransactionResult = processSelectedAccount(
@@ -546,10 +561,14 @@ object InsertOperations {
                             isConsoleMode = isConsoleMode,
                             isDevelopmentMode = isDevelopmentMode
                         )
-
                     } else {
 
-                        val chooseFromAccountResult: ChooseAccountResult = chooseFromAccount(userId = userId)
+                        val chooseFromAccountResult: ChooseAccountResult = chooseFromAccount(
+
+                            userId = userId,
+                            isConsoleMode = isConsoleMode,
+                            isDevelopmentMode = isDevelopmentMode
+                        )
                         if (chooseFromAccountResult.chosenAccountId != 0u) {
 
                             val processSelectedAccountResult: InsertTransactionResult = processSelectedAccount(
@@ -762,7 +781,13 @@ object InsertOperations {
                     if (transactionType == TransactionTypeEnum.VIA) {
 
                         val chooseAccountResult: ChooseAccountResult =
-                            ChooseAccountUtils.chooseAccountById(userId = userId, accountType = AccountTypeEnum.VIA)
+                            ChooseAccountUtils.chooseAccountById(
+
+                                userId = userId,
+                                accountType = AccountTypeEnum.VIA,
+                                isConsoleMode = isConsoleMode,
+                                isDevelopmentMode = isDevelopmentMode
+                            )
                         if (chooseAccountResult.chosenAccountId != 0u) {
 
                             val processSelectedAccountResult: InsertTransactionResult = processSelectedAccount(
@@ -939,19 +964,31 @@ object InsertOperations {
         } while (true)
     }
 
-    private fun chooseFromAccount(userId: UInt): ChooseAccountResult {
+    private fun chooseFromAccount(
+
+        userId: UInt,
+        isConsoleMode: Boolean,
+        isDevelopmentMode: Boolean
+
+    ): ChooseAccountResult {
 
         return ChooseAccountUtils.chooseAccountById(
 
-            userId = userId, accountType = AccountTypeEnum.FROM
+            userId = userId,
+            accountType = AccountTypeEnum.FROM,
+            isConsoleMode = isConsoleMode,
+            isDevelopmentMode = isDevelopmentMode
         )
     }
 
-    private fun chooseToAccount(userId: UInt): ChooseAccountResult {
+    private fun chooseToAccount(userId: UInt, isConsoleMode: Boolean, isDevelopmentMode: Boolean): ChooseAccountResult {
 
         return ChooseAccountUtils.chooseAccountById(
 
-            userId = userId, accountType = AccountTypeEnum.TO
+            userId = userId,
+            accountType = AccountTypeEnum.TO,
+            isConsoleMode = isConsoleMode,
+            isDevelopmentMode = isDevelopmentMode
         )
     }
 

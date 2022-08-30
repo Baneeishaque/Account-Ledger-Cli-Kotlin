@@ -93,6 +93,7 @@ class App {
                                     dateTimeInText = dateTimeInText,
                                     transactionParticulars = transactionParticulars,
                                     transactionAmount = transactionAmount,
+                                    isConsoleMode = true,
                                     isDevelopmentMode = isDevelopmentMode
                                 )
                             )
@@ -108,6 +109,7 @@ class App {
                                     dateTimeInText = dateTimeInText,
                                     transactionParticulars = transactionParticulars,
                                     transactionAmount = transactionAmount,
+                                    isConsoleMode = true,
                                     isDevelopmentMode = isDevelopmentMode
                                 )
                             )
@@ -244,6 +246,7 @@ class App {
                             dateTimeInText = dateTimeInText,
                             transactionParticulars = transactionParticulars,
                             transactionAmount = transactionAmount,
+                            isConsoleMode = true,
                             isDevelopmentMode = isDevelopmentMode
                         )
                     }
