@@ -123,7 +123,7 @@ private fun handleAccountSelection(
     if (accountId != 0u) {
 
         return Screens.accountHome(
-            
+
             userId = userId,
             username = username,
             fromAccount = userAccountsMap[accountId]!!,
