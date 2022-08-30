@@ -37,8 +37,9 @@ object Screens {
 
     ): InsertTransactionResult {
 
-        if (App.isDevelopmentMode) {
+        if (isDevelopmentMode) {
 
+            // TODO : dotenv into parameters
             println("Env. Variables : ${App.dotenv.entries()}")
         }
         var insertTransactionResult = InsertTransactionResult(

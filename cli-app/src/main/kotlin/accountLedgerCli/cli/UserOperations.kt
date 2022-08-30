@@ -22,7 +22,7 @@ import accountLedgerCli.to_constants.Constants as CommonConstants
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 
-//import java.nio.file.Paths
+import java.nio.file.Paths
 
 class UserOperations {
     companion object {
@@ -46,8 +46,12 @@ class UserOperations {
         ): InsertTransactionResult {
 
             if (isNotApiCall) {
-//                println("Directory : ${Paths.get("").toAbsolutePath()}")
-                println("\nAccount Ledger Authentication")
+
+                if (isDevelopmentMode) {
+
+                    println("Directory : ${Paths.get("").toAbsolutePath()}")
+                }
+                println ("\nAccount Ledger Authentication")
                 println(CommonConstants.dashedLineSeparator)
             }
 

@@ -1068,7 +1068,9 @@ object InsertOperations {
         transactionParticulars: String,
         transactionAmount: Float,
         isEditStep: Boolean = false,
-        splitIndex: UInt = 0u
+        splitIndex: UInt = 0u,
+        isConsoleMode: Boolean,
+        isDevelopmentMode: Boolean
 
     ): InsertTransactionResult {
 
@@ -1121,7 +1123,9 @@ object InsertOperations {
                     transactionParticulars = localTransactionParticulars,
                     transactionAmount = localTransactionAmount,
                     isEditStep = isEditStep,
-                    splitIndex = splitIndex
+                    splitIndex = splitIndex,
+                    isConsoleMode = isConsoleMode,
+                    isDevelopmentMode = isDevelopmentMode
                 )
             }
 
@@ -1142,7 +1146,9 @@ object InsertOperations {
                     transactionParticulars = localTransactionParticulars,
                     transactionAmount = localTransactionAmount,
                     isEditStep = isEditStep,
-                    splitIndex = splitIndex
+                    splitIndex = splitIndex,
+                    isConsoleMode = isConsoleMode,
+                    isDevelopmentMode = isDevelopmentMode
                 )
             }
 
@@ -1163,7 +1169,9 @@ object InsertOperations {
                     transactionParticulars = localTransactionParticulars,
                     transactionAmount = localTransactionAmount,
                     isEditStep = isEditStep,
-                    splitIndex = splitIndex
+                    splitIndex = splitIndex,
+                    isConsoleMode = isConsoleMode,
+                    isDevelopmentMode = isDevelopmentMode
                 )
             }
 
@@ -1187,7 +1195,9 @@ object InsertOperations {
                     transactionParticulars = localTransactionParticulars,
                     transactionAmount = localTransactionAmount,
                     isEditStep = isEditStep,
-                    splitIndex = splitIndex
+                    splitIndex = splitIndex,
+                    isConsoleMode = isConsoleMode,
+                    isDevelopmentMode = isDevelopmentMode
                 )
             }
 
@@ -1527,8 +1537,9 @@ object InsertOperations {
                                         particulars = localTransactionParticulars,
                                         amount = localTransactionAmount,
                                         fromAccount = toAccount,
-                                        toAccount = fromAccount
-                                    ),
+                                        toAccount = fromAccount,
+
+                                        ),
                                     dateTimeInText = localDateTimeInText,
                                     transactionParticulars = localTransactionParticulars,
                                     transactionAmount = localTransactionAmount,
@@ -1855,12 +1866,18 @@ object InsertOperations {
     private fun manipulateTransaction(
 
         transactionManipulationApiRequest: () -> Result<TransactionManipulationResponse>,
-        transactionManipulationSuccessActions: () -> Unit
+        transactionManipulationSuccessActions: () -> Unit,
+        isConsoleMode: Boolean,
+        isDevelopmentMode: Boolean
 
     ): Boolean {
 
         val transactionManipulationApiRequestResult: IsOkModel<TransactionManipulationResponse> =
-            CommonApiUtils.makeApiRequestWithOptionalRetries(apiCallFunction = transactionManipulationApiRequest)
+            CommonApiUtils.makeApiRequestWithOptionalRetries(
+                apiCallFunction = transactionManipulationApiRequest,
+                isConsoleMode = isConsoleMode,
+                isDevelopmentMode = isDevelopmentMode
+            )
 
         if (transactionManipulationApiRequestResult.isOK) {
 
@@ -1912,8 +1929,10 @@ object InsertOperations {
         amount: Float,
         fromAccount: AccountResponse,
         toAccount: AccountResponse,
+        isConsoleMode: Boolean,
+        isDevelopmentMode: Boolean
 
-        ): Boolean {
+    ): Boolean {
 
         val eventDateTimeConversionResult: IsOkModel<String> =
             MysqlUtils.dateTimeTextConversionWithMessage(dateTimeTextConversionFunction = fun(): IsOkModel<String> {

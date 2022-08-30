@@ -14,8 +14,8 @@ object ApiUtils {
     fun <T> makeApiRequestWithOptionalRetries(
 
         apiCallFunction: () -> Result<T>,
-        isConsoleMode: Boolean = true,
-        isDevelopmentMode: Boolean = false
+        isConsoleMode: Boolean,
+        isDevelopmentMode: Boolean
 
     ): IsOkModel<T> {
 
