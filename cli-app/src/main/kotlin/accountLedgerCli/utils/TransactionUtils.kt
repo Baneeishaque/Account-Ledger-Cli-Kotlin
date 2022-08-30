@@ -1,7 +1,6 @@
 package accountLedgerCli.utils
 
 import accountLedgerCli.api.response.TransactionResponse
-import accountLedgerCli.cli.App
 import accountLedgerCli.models.TransactionLedgerInText
 import accountLedgerCli.to_models.IsOkModel
 import accountLedgerCli.to_utils.MysqlUtils
@@ -22,7 +21,7 @@ internal object TransactionUtils {
 
         transactions: List<TransactionResponse>,
         currentAccountId: UInt,
-        isDevelopmentMode: Boolean = App.isDevelopmentMode
+        isDevelopmentMode: Boolean
 
     ): String {
 
@@ -30,39 +29,14 @@ internal object TransactionUtils {
 
             println("transactions = $transactions")
         }
-        var currentLedger = TransactionLedgerInText(text = "", balance = 0.0F)
-        transactions.forEach { currentTransaction: TransactionResponse ->
-
-            currentLedger = appendToLedger(
-
-                currentTransaction = currentTransaction,
-                currentAccountId = currentAccountId,
-                currentLedger = currentLedger
-            )
-        }
-        return currentLedger.text
-    }
-
-    internal fun userTransactionsToTextFromMap(
-
-        transactionsMap: Map<UInt, TransactionResponse>,
-        currentAccountId: UInt,
-        isDevelopmentMode: Boolean = App.isDevelopmentMode
-
-    ): String {
-
-        if (isDevelopmentMode) {
-
-            println("transactions = $transactionsMap")
-        }
         if (currentAccountId == 0u) {
 
             var currentTextLedger = ""
-            transactionsMap.forEach { currentTransactionEntry: Map.Entry<UInt, TransactionResponse> ->
+            transactions.forEach { currentTransaction: TransactionResponse ->
 
                 currentTextLedger = appendToTextLedger(
 
-                    currentTransaction = currentTransactionEntry.value,
+                    currentTransaction = currentTransaction,
                     currentTextLedger = currentTextLedger
                 )
             }
@@ -71,11 +45,11 @@ internal object TransactionUtils {
         } else {
 
             var currentLedger = TransactionLedgerInText(text = "", balance = 0.0F)
-            transactionsMap.forEach { currentTransactionEntry: Map.Entry<UInt, TransactionResponse> ->
+            transactions.forEach { currentTransaction: TransactionResponse ->
 
                 currentLedger = appendToLedger(
 
-                    currentTransaction = currentTransactionEntry.value,
+                    currentTransaction = currentTransaction,
                     currentAccountId = currentAccountId,
                     currentLedger = currentLedger
                 )
@@ -109,7 +83,7 @@ internal object TransactionUtils {
             secondAccountName = currentTransaction.from_account_full_name
         }
 
-        var toNormalDateTimeConversionResult:IsOkModel<String> = MysqlUtils.mySqlDateTimeTextToNormalDateTimeText(mySqlDateTimeText=currentTransaction.event_date_time)
+        val toNormalDateTimeConversionResult:IsOkModel<String> = MysqlUtils.mySqlDateTimeTextToNormalDateTimeText(mySqlDateTimeText=currentTransaction.event_date_time)
         if(toNormalDateTimeConversionResult.isOK){
 
             return TransactionLedgerInText(

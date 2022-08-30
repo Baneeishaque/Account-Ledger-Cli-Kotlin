@@ -93,6 +93,12 @@ object Screens {
                     "29 - Check Affected A/Cs : From First Entry",
                     "30 - Check Affected A/Cs : From Start Date",
                     "31 - View Last 10 Transactions",
+                    "32 - Check Affected A/Cs : From Start Date to A Specified Date",
+                    "33 - Check Affected A/Cs : From Start Date to A Specified Time Stamp",
+                    "34 - Check Affected A/Cs : After A Specified Date to A Specified Date",
+                    "35 - Check Affected A/Cs : After A Specified Date to A Specified Time Stamp",
+                    "36 - Check Affected A/Cs : After A Specified Time Stamp to A Specified Date",
+                    "37 - Check Affected A/Cs : After A Specified Time Stamp to A Specified Time Stamp",
                     "0 - Logout",
                     "",
                     "Enter Your Choice : "
@@ -268,7 +274,7 @@ object Screens {
                     )
                 }
 
-                "14", "15", "29" -> {
+                "14", "15", "29", "32", "34", "35", "36", "37" -> {
 
                     ToDoUtils.showTodo()
                 }
@@ -487,6 +493,23 @@ object Screens {
                                 isDevelopmentMode = isDevelopmentMode
                                 ).addTransactionResult
                         })
+                }
+
+                "33" -> {
+
+                    val toTimeStamp:String = InputUtils.getValidDateTimeInNormalPattern(promptPrefix = "Up to ")
+                    insertTransactionResult = checkAffectedAccountsAfterSpecifiedDate(
+
+                        desiredDate = getUserInitialTransactionDateFromUsername(username = username).minusDays(1)
+                            .format(DateTimeUtils.normalDatePattern),
+                        userId = userId,
+                        username = username,
+                        insertTransactionResult = insertTransactionResult,
+                        isUpToTimeStamp = true,
+                        upToTimeStamp = toTimeStamp,
+                        isConsoleMode = isConsoleMode,
+                        isDevelopmentMode = isDevelopmentMode
+                    )
                 }
 
                 "0" -> {

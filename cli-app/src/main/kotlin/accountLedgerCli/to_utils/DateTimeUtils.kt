@@ -1,8 +1,10 @@
 package accountLedgerCli.to_utils
 
+import accountLedgerCli.to_models.IsOkModel
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeFormatter.ofPattern
+import java.time.format.DateTimeParseException
 
 object DateTimeUtils {
 
@@ -257,5 +259,39 @@ object DateTimeUtils {
     fun getCurrentDateTimeText(): String {
 
         return LocalDateTime.now().format(normalDateTimePattern)
+    }
+
+    fun normalDateTimeTextToDateTime(
+
+        normalDateTimeText: String,
+        conversionSuccessActions: () -> Unit = fun() {},
+        conversionFailureActions: () -> Unit = fun() {}
+
+    ): IsOkModel<LocalDateTime> {
+
+        return dateTimeTextToDateTime(dateTimeText = normalDateTimeText, dateTimeTextPattern = normalDateTimePattern)
+    }
+
+    fun dateTimeTextToDateTime(
+
+        dateTimeText: String,
+        dateTimeTextPattern: DateTimeFormatter,
+        conversionSuccessActions: () -> Unit = fun() {},
+        conversionFailureActions: () -> Unit = fun() {}
+
+    ): IsOkModel<LocalDateTime> {
+
+        return try {
+
+            val result: LocalDateTime = LocalDateTime.parse(dateTimeText, dateTimeTextPattern)
+            conversionSuccessActions.invoke()
+            IsOkModel(isOK = true, data = result)
+
+        } catch (e: DateTimeParseException) {
+
+            println("Date Error : ${e.localizedMessage}")
+            conversionFailureActions.invoke()
+            IsOkModel(isOK = false)
+        }
     }
 }

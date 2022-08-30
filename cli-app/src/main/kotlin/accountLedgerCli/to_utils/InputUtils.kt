@@ -57,10 +57,10 @@ object InputUtils {
     }
 
     @JvmStatic
-    fun getValidDateTimeInNormalPattern(): String {
+    fun getValidDateTimeInNormalPattern(promptPrefix: String = ""): String {
 
         // TODO : Implement Back
-        print("Enter Time (DD/MM/YYYY HH:MM:SS) : ")
+        print("Enter ${promptPrefix}Time (DD/MM/YYYY HH:MM:SS) : ")
         return try {
 
             LocalDateTime.parse(readLine(), DateTimeUtils.normalDateTimePattern)

@@ -2,6 +2,7 @@ package accountLedgerCli.cli
 
 import accountLedgerCli.api.response.AccountResponse
 import accountLedgerCli.api.response.AccountsResponse
+import accountLedgerCli.api.response.TransactionResponse
 import accountLedgerCli.api.response.TransactionsResponse
 import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
 import accountLedgerCli.enums.FunctionCallSourceEnum
@@ -9,11 +10,15 @@ import accountLedgerCli.models.InsertTransactionResult
 import accountLedgerCli.models.ViewTransactionsOutput
 import accountLedgerCli.retrofit.data.TransactionsDataSource
 import accountLedgerCli.to_models.IsOkModel
+import accountLedgerCli.to_utils.DateTimeUtils
 import accountLedgerCli.to_utils.MysqlUtils
 import accountLedgerCli.to_utils.invalidOptionMessage
 import accountLedgerCli.utils.AccountUtils
 import accountLedgerCli.utils.ApiUtils
+import accountLedgerCli.utils.TransactionUtils
+import accountLedgerCli.to_constants.Constants as CommonConstants
 import kotlinx.coroutines.runBlocking
+import java.time.LocalDateTime
 
 internal fun checkAffectedAccountsAfterSpecifiedDate(
 
@@ -21,6 +26,8 @@ internal fun checkAffectedAccountsAfterSpecifiedDate(
     userId: UInt,
     username: String,
     insertTransactionResult: InsertTransactionResult,
+    isUpToTimeStamp: Boolean = false,
+    upToTimeStamp: String = "",
     isConsoleMode: Boolean,
     isDevelopmentMode: Boolean
 
@@ -64,6 +71,8 @@ internal fun checkAffectedAccountsAfterSpecifiedDate(
                             userId = userId,
                             username = username,
                             insertTransactionResult = localInsertTransactionResult,
+                            isUpToTimeStamp = isUpToTimeStamp,
+                            upToTimeStamp = upToTimeStamp,
                             isConsoleMode = isConsoleMode,
                             isDevelopmentMode = isDevelopmentMode
                         )
@@ -88,13 +97,37 @@ internal fun checkAffectedAccountsAfterSpecifiedDate(
             ) {
 
                 val accounts: MutableMap<UInt, String> = mutableMapOf()
-                selectUserTransactionsAfterSpecifiedDateResult.transactions.forEach { transaction ->
+                var userTransactionsAfterSpecifiedDate: List<TransactionResponse> =
+                    selectUserTransactionsAfterSpecifiedDateResult.transactions
+
+//                printUserTransactionAfterSpecifiedDate(
+//
+//                    userTransactionsAfterSpecifiedDate = userTransactionsAfterSpecifiedDate,
+//                    isDevelopmentMode = isDevelopmentMode
+//                )
+
+                if (isUpToTimeStamp) {
+
+                    val upToTimeStampInDateTime: LocalDateTime =
+                        DateTimeUtils.normalDateTimeTextToDateTime(normalDateTimeText = upToTimeStamp).data!!
+                    userTransactionsAfterSpecifiedDate =
+                        userTransactionsAfterSpecifiedDate.filter { transactionResponse: TransactionResponse ->
+
+                            MysqlUtils.mySqlDateTimeTextToDateTime(mySqlDateTimeText = transactionResponse.event_date_time).data!! <= upToTimeStampInDateTime
+                        }
+
+//                    printUserTransactionAfterSpecifiedDate(
+//
+//                        userTransactionsAfterSpecifiedDate = userTransactionsAfterSpecifiedDate,
+//                        isDevelopmentMode = isDevelopmentMode
+//                    )
+                }
+                userTransactionsAfterSpecifiedDate.forEach { transaction ->
 
                     accounts.putIfAbsent(transaction.from_account_id, transaction.from_account_full_name)
                     accounts.putIfAbsent(transaction.to_account_id, transaction.to_account_full_name)
                 }
-                // TODO : Pretty Print Map
-                println("Affected A/Cs : $accounts")
+                println("Affected A/Cs${CommonConstants.dashedLineSeparator}\n${accountsMapToText(accountsMap = accounts)}")
 
                 val getAccountsFullResult: Result<AccountsResponse> = ApiUtils.getAccountsFull(
 
@@ -119,6 +152,8 @@ internal fun checkAffectedAccountsAfterSpecifiedDate(
                             functionCallSource = FunctionCallSourceEnum.FROM_CHECK_ACCOUNTS,
                             insertTransactionResult = insertTransactionResult,
                             fromAccount = selectedAccount,
+                            isUpToTimeStamp = isUpToTimeStamp,
+                            upToTimeStamp = upToTimeStamp,
                             isConsoleMode = isConsoleMode,
                             isDevelopmentMode = isDevelopmentMode
 
@@ -139,6 +174,8 @@ internal fun checkAffectedAccountsAfterSpecifiedDate(
                                     accountFullName = account.value,
                                     insertTransactionResult = localInsertTransactionResult,
                                     fromAccount = selectedAccount,
+                                    isUpToTimeStamp = isUpToTimeStamp,
+                                    upToTimeStamp = upToTimeStamp,
                                     isConsoleMode = isConsoleMode,
                                     isDevelopmentMode = isDevelopmentMode
 
@@ -151,6 +188,33 @@ internal fun checkAffectedAccountsAfterSpecifiedDate(
         }
     }
     return localInsertTransactionResult
+}
+
+fun accountsMapToText(accountsMap: MutableMap<UInt, String>): String {
+
+    var result = ""
+    accountsMap.forEach { account: Map.Entry<UInt, String> -> result += "${account.key} - ${account.value}\n" }
+    return result
+}
+
+private fun printUserTransactionAfterSpecifiedDate(
+
+    userTransactionsAfterSpecifiedDate: List<TransactionResponse>,
+    isDevelopmentMode: Boolean
+) {
+    if (isDevelopmentMode) {
+
+        println(
+            "userTransactionsAfterSpecifiedDate = ${
+                TransactionUtils.userTransactionsToTextFromList(
+
+                    transactions = userTransactionsAfterSpecifiedDate,
+                    currentAccountId = 0u,
+                    isDevelopmentMode = isDevelopmentMode
+                )
+            }"
+        )
+    }
 }
 
 internal fun viewChildAccounts(
