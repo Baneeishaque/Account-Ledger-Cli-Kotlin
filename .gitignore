@@ -224,3 +224,5 @@ gradle-app.setting
 .env
 /api/http-client.env.json
 /frequencyOfAccounts.json
+
+cli-app/bin/
