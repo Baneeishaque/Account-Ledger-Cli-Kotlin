@@ -34,6 +34,8 @@ dependencies {
     implementation("io.github.cdimascio:dotenv-kotlin:6.3.1")
 
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0")
+
+    implementation(project(":kmp_lib"))
 }
 
 application {

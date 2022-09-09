@@ -1,2 +1,2 @@
 rootProject.name = "accountLedgerCli"
-include("cli-app")
+include("cli-app","kmp_lib")

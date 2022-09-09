@@ -1,5 +1,6 @@
 package accountLedgerCli.cli
 
+import account.ledger.kotlin_multi_platform_library.Greeting
 import accountLedgerCli.api.response.AccountResponse
 import accountLedgerCli.constants.Constants
 import accountLedgerCli.enums.*
@@ -57,6 +58,8 @@ class App {
         @JvmStatic
         @OptIn(ExperimentalCli::class)
         fun main(args: Array<String>) {
+
+            println(Greeting().greeting())
 
             if (args.isEmpty()) {
 

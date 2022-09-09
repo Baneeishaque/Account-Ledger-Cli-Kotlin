@@ -12,6 +12,7 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/cli-app" />
+            <option value="$PROJECT_DIR$/kmp_lib" />
           </set>
         </option>
       </GradleProjectSettings>
