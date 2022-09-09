@@ -1,6 +1,0 @@
-[submodule "kmp_lib"]
-	path = kmp_lib
-	url = https://github.com/baneeishaque/Account-Ledger-Library-Kotlin-Multiplatform.git
-[submodule "common_lib"]
-	path = common_lib
-	url = https://github.com/Baneeishaque/Common-Library-Kotlin-Multiplatform.git
