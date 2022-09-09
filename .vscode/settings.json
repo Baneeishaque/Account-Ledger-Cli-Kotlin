@@ -2,5 +2,6 @@
   "git-graph.dialog.addTag.pushToRemote": true,
   "git-graph.dialog.applyStash.reinstateIndex": true,
   "git-graph.dialog.cherryPick.noCommit": true,
-  "git-graph.dialog.cherryPick.recordOrigin": true
+  "git-graph.dialog.cherryPick.recordOrigin": true,
+  "java.configuration.updateBuildConfiguration": "automatic"
 }

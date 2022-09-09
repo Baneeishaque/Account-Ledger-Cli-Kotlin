@@ -1,7 +1,5 @@
 package accountLedgerCli.cli
 
-import account.ledger.kotlin_multi_platform_library.Greeting as KmpGreetings
-import ndk.banee.common_library.Greeting as CommonGreetings
 import accountLedgerCli.api.response.AccountResponse
 import accountLedgerCli.constants.Constants
 import accountLedgerCli.enums.*
@@ -60,10 +58,7 @@ class App {
         @OptIn(ExperimentalCli::class)
         fun main(args: Array<String>) {
 
-            println(KmpGreetings().greeting())
-            println(CommonGreetings().greeting())
-
-            if (args.isEmpty()) {git
+            if (args.isEmpty()) {
 
                 do {
                     val identifiedUser: String = dotenv[EnvironmentFileEntryEnum.USER_NAME.name]
