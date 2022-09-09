@@ -1,0 +1,3 @@
+[submodule "kmp_lib"]
+	path = kmp_lib
+	url = https://github.com/baneeishaque/Account-Ledger-Library-Kotlin-Multiplatform.git
