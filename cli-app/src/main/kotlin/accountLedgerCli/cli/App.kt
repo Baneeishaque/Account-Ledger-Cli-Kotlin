@@ -76,6 +76,8 @@ class App {
                             "5 : Balance Sheet for all Users",
                             "0 : Exit",
                             "",
+                            CommonConstants.dashedLineSeparator,
+                            "Gist : Merge A/C Ledger from Gist",
                             "Enter Your Choice : "
                         )
                     )
@@ -122,6 +124,12 @@ class App {
                         "0" -> {
                             println("Thanks...")
                             return
+                        }
+
+                        "Gist" -> {
+
+                            println("Enter A/C Ledger Gist ID : ")
+                            val accountLedgerGistId: String = readLine()!!
                         }
 
                         else -> {
