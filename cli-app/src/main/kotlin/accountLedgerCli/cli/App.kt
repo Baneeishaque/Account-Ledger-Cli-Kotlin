@@ -21,6 +21,10 @@ import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.client.plugins.*
 import kotlinx.coroutines.*
+import io.ktor.client.plugins.contentnegotiation.*
+import io.ktor.serialization.kotlinx.json.*
+import accountLedgerCli.models.Root
+import io.ktor.client.call.*
 
 class App {
     companion object {
@@ -139,42 +143,37 @@ class App {
 
                             runBlocking {
 
-                                HttpClient(){
+                                HttpClient() {
                                     expectSuccess = true
-                                    install(Logging){
-                                        
+                                    install(Logging) {
+
                                         logger = Logger.DEFAULT
                                         level = LogLevel.ALL
                                     }
                                     install(Auth) {
                                         bearer {
-                                                BearerTokens(accessToken = dotenv[EnvironmentFileEntryEnum.GITHUB_TOKEN.name]?: Constants.defaultValueForStringEnvironmentVariables, refreshToken = "")
+                                            BearerTokens(
+                                                accessToken = dotenv[EnvironmentFileEntryEnum.GITHUB_TOKEN.name]
+                                                    ?: Constants.defaultValueForStringEnvironmentVariables,
+                                                refreshToken = ""
+                                            )
                                         }
                                     }
-                                    install(ContentNegotiation){
+                                    install(ContentNegotiation) {
                                         json(Json {
                                             prettyPrint = true
                                             isLenient = true
                                         })
                                     }
                                 }.use { client ->
-    
-                                    val text = client.get("https://api.github.com/gists/${dotenv[EnvironmentFileEntryEnum.GIST_ID.name]?: Constants.defaultValueForStringEnvironmentVariables}"){
-                                        onDownload { bytesSentTotal, contentLength ->
-                                            println("Received $bytesSentTotal bytes from $contentLength")
-                                        }
-                                    }
-                                    .bodyAsText()
+
+                                    val gistResponse: Root =
+                                        client.get("https://api.github.com/gists/${dotenv[EnvironmentFileEntryEnum.GIST_ID.name] ?: Constants.defaultValueForStringEnvironmentVariables}") {
+                                            onDownload { bytesSentTotal, contentLength ->
+                                                println("Received $bytesSentTotal bytes from $contentLength")
+                                            }
+                                        }.body()
                                 }
-
-
-                                    // println(client.get("https://api.github.com/gists/${dotenv[EnvironmentFileEntryEnum.GIST_ID.name]?: Constants.defaultValueForStringEnvironmentVariables}").bodyAsText())
-    
-                                    // {
-                                    //     onDownload { bytesSentTotal, contentLength ->
-                                    //         println("Received $bytesSentTotal bytes from $contentLength")
-                                    //     }
-                                    // }
                             }
                         }
 
