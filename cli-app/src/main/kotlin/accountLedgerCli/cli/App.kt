@@ -78,6 +78,7 @@ class App {
                             "",
                             CommonConstants.dashedLineSeparator,
                             "Gist : Merge A/C Ledger from Gist",
+                            "",
                             "Enter Your Choice : "
                         )
                     )
