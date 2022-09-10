@@ -1,3 +1,5 @@
+val ktor_version:String = "2.1.1"
+
 plugins {
     kotlin("jvm") version "1.7.10"
     kotlin("plugin.serialization") version "1.7.10"
@@ -8,6 +10,12 @@ plugins {
 
 repositories {
     mavenCentral()
+    maven {
+        url = uri("https://maven.pkg.jetbrains.space/public/p/ktor/eap")
+    }
+    maven {
+        url = uri("https://maven.pkg.jetbrains.space/kotlin/p/kotlin/dev")
+    }
 }
 
 dependencies {
@@ -34,6 +42,9 @@ dependencies {
     implementation("io.github.cdimascio:dotenv-kotlin:6.3.1")
 
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0")
+
+    implementation("io.ktor:ktor-client-core:$ktor_version")
+    implementation("io.ktor:ktor-client-cio:$ktor_version")
 }
 
 application {
