@@ -53,6 +53,24 @@ internal object AccountUtils {
     @JvmStatic
     internal fun getFrequentlyUsedTop10Accounts(userId: UInt): String {
 
+        return getFrequentlyUsedTopXAccounts(userId = userId, x=10)
+    }
+
+    @JvmStatic
+    internal fun getFrequentlyUsedTop20Accounts(userId: UInt): String {
+
+        return getFrequentlyUsedTopXAccounts(userId = userId, x=20)
+    }
+
+    @JvmStatic
+    internal fun getFrequentlyUsedTop30Accounts(userId: UInt): String {
+
+        return getFrequentlyUsedTopXAccounts(userId = userId, x=30)
+    }
+
+    @JvmStatic
+    internal fun getFrequentlyUsedTopXAccounts(userId: UInt, x:Int): String {
+
         var result = ""
 
         val readFrequencyOfAccountsFileResult: IsOkModel<FrequencyOfAccountsModel> =
@@ -71,7 +89,7 @@ internal object AccountUtils {
 
                 accountFrequency.countOfRepetition
 
-            }?.take(n = 10)
+            }?.take(n = x)
 
                 ?.forEach { accountFrequency: AccountFrequencyModel ->
 

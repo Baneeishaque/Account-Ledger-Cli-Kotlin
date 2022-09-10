@@ -1228,7 +1228,7 @@ object Screens {
         if (transactionType == TransactionTypeEnum.VIA) {
             menuItems = menuItems + listOf("Via. Account - ${viaAccount.id} : ${viaAccount.fullName}")
         }
-        menuItems = menuItems + listOf("To Account - ${toAccount.id} : ${toAccount.fullName}", AccountUtils.getFrequentlyUsedTop10Accounts(userId=userId))
+        menuItems = menuItems + listOf("To Account - ${toAccount.id} : ${toAccount.fullName}", AccountUtils.getFrequentlyUsedTop30Accounts(userId=userId))
         return menuItems
     }
 }
