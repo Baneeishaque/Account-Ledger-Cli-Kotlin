@@ -48,11 +48,11 @@ dependencies {
 
     implementation("io.ktor:ktor-client-logging:$ktor_version")
     implementation("ch.qos.logback:logback-classic:1.4.0")
-    
+
     implementation("io.ktor:ktor-client-auth:$ktor_version")
 
     implementation("io.ktor:ktor-serialization-kotlinx-json:$ktor_version")
-    
+
 }
 
 application {
