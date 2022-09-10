@@ -18,7 +18,11 @@ import accountLedgerCli.utils.UserUtils
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 
-internal fun balanceSheetOfUser(usersMap: LinkedHashMap<UInt, UserResponse>, isConsoleMode: Boolean, isDevelopmentMode: Boolean) {
+internal fun balanceSheetOfUser(
+    usersMap: LinkedHashMap<UInt, UserResponse>,
+    isConsoleMode: Boolean,
+    isDevelopmentMode: Boolean
+) {
 
     val chooseUserResult: ChooseUserResult = handleUserSelection(
         chosenUserId = getValidIndexWithInputPrompt(
@@ -52,7 +56,7 @@ internal fun printBalanceSheetOfUser(
 
 ) {
 
-    if(isConsoleMode) {
+    if (isConsoleMode) {
 
         print("currentUser : $currentUserName")
     }

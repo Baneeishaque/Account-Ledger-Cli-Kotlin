@@ -96,9 +96,15 @@ private fun searchOnHashMapValues(
 
 ): LinkedHashMap<UInt, AccountResponse> {
 
-    if (isDevelopmentMode){
+    if (isDevelopmentMode) {
 
-        println("Map to Search\n${CommonConstants.dashedLineSeparator}\n${AccountUtils.userAccountsToStringFromList(accounts = hashMap.values.toList())}")
+        println(
+            "Map to Search\n${CommonConstants.dashedLineSeparator}\n${
+                AccountUtils.userAccountsToStringFromList(
+                    accounts = hashMap.values.toList()
+                )
+            }"
+        )
         println("searchKey = $searchKey")
     }
 

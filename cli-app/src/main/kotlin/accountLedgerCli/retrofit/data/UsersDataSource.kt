@@ -21,6 +21,7 @@ internal class UsersDataSource {
         }
     }
 }
+
 //    TODO : Rewrite as general function for all responses
 private fun processApiResponse(apiResponse: Response<UsersResponse>): ResponseHolder<UsersResponse> {
 

@@ -167,7 +167,14 @@ object TransactionViews {
             )
         } else {
 
-            var userTransactionsMap: LinkedHashMap<UInt, TransactionResponse> = TransactionUtils.prepareUserTransactionsMap(transactions = TransactionUtils.filterTransactionsForUptoDateTime(isUpToTimeStamp = isUpToTimeStamp, upToTimeStamp = upToTimeStamp, transactions = localUserTransactionsResponse.transactions))
+            var userTransactionsMap: LinkedHashMap<UInt, TransactionResponse> =
+                TransactionUtils.prepareUserTransactionsMap(
+                    transactions = TransactionUtils.filterTransactionsForUptoDateTime(
+                        isUpToTimeStamp = isUpToTimeStamp,
+                        upToTimeStamp = upToTimeStamp,
+                        transactions = localUserTransactionsResponse.transactions
+                    )
+                )
 
             var choice: String
             do {

@@ -188,7 +188,11 @@ internal fun chooseWithdrawTop(
     )
 }
 
-internal fun chooseWithdrawFull(userId: UInt, isConsoleMode: Boolean, isDevelopmentMode: Boolean): HandleAccountsApiResponseResult {
+internal fun chooseWithdrawFull(
+    userId: UInt,
+    isConsoleMode: Boolean,
+    isDevelopmentMode: Boolean
+): HandleAccountsApiResponseResult {
 
     return HandleResponses.handleAccountsApiResponse(
 
@@ -238,7 +242,8 @@ internal fun chooseViaFull(
 
             userId = userId,
             isConsoleMode = isConsoleMode,
-            isDevelopmentMode = isDevelopmentMode),
+            isDevelopmentMode = isDevelopmentMode
+        ),
         purpose = AccountTypeEnum.VIA,
         isDevelopmentMode = isDevelopmentMode
     )

@@ -86,8 +86,9 @@ internal object TransactionUtils {
             secondAccountName = currentTransaction.from_account_full_name
         }
 
-        val toNormalDateTimeConversionResult:IsOkModel<String> = MysqlUtils.mySqlDateTimeTextToNormalDateTimeText(mySqlDateTimeText=currentTransaction.event_date_time)
-        if(toNormalDateTimeConversionResult.isOK){
+        val toNormalDateTimeConversionResult: IsOkModel<String> =
+            MysqlUtils.mySqlDateTimeTextToNormalDateTimeText(mySqlDateTimeText = currentTransaction.event_date_time)
+        if (toNormalDateTimeConversionResult.isOK) {
 
             return TransactionLedgerInText(
 
@@ -112,21 +113,29 @@ internal object TransactionUtils {
         return "${currentTextLedger}[${currentTransaction.id}] [${currentTransaction.event_date_time}]\t[(${currentTransaction.from_account_full_name}) -> (${currentTransaction.to_account_full_name})]\t[${currentTransaction.particulars}]\t[${currentTransaction.amount}]\n"
     }
 
-    internal fun filterTransactionsForUptoDateTime(isUpToTimeStamp: Boolean, upToTimeStamp: String, transactions: List<TransactionResponse>): List<TransactionResponse>{
+    internal fun filterTransactionsForUptoDateTime(
+        isUpToTimeStamp: Boolean,
+        upToTimeStamp: String,
+        transactions: List<TransactionResponse>
+    ): List<TransactionResponse> {
 
-        if(isUpToTimeStamp){
+        if (isUpToTimeStamp) {
 
             return getTransactionsUptoDateTime(upToTimeStamp = upToTimeStamp, transactions = transactions)
 
-        }else{
+        } else {
 
             return transactions
         }
     }
 
-    internal fun getTransactionsUptoDateTime(upToTimeStamp: String, transactions: List<TransactionResponse>): List<TransactionResponse>{
+    internal fun getTransactionsUptoDateTime(
+        upToTimeStamp: String,
+        transactions: List<TransactionResponse>
+    ): List<TransactionResponse> {
 
-        val upToTimeStampInDateTime: LocalDateTime = DateTimeUtils.normalDateTimeTextToDateTime(normalDateTimeText = upToTimeStamp).data!!
+        val upToTimeStampInDateTime: LocalDateTime =
+            DateTimeUtils.normalDateTimeTextToDateTime(normalDateTimeText = upToTimeStamp).data!!
         return transactions.filter { transactionResponse: TransactionResponse ->
 
             MysqlUtils.mySqlDateTimeTextToDateTime(mySqlDateTimeText = transactionResponse.event_date_time).data!! <= upToTimeStampInDateTime

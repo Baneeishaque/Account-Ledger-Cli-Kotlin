@@ -53,23 +53,23 @@ internal object AccountUtils {
     @JvmStatic
     internal fun getFrequentlyUsedTop10Accounts(userId: UInt): String {
 
-        return getFrequentlyUsedTopXAccounts(userId = userId, x=10)
+        return getFrequentlyUsedTopXAccounts(userId = userId, x = 10)
     }
 
     @JvmStatic
     internal fun getFrequentlyUsedTop20Accounts(userId: UInt): String {
 
-        return getFrequentlyUsedTopXAccounts(userId = userId, x=20)
+        return getFrequentlyUsedTopXAccounts(userId = userId, x = 20)
     }
 
     @JvmStatic
     internal fun getFrequentlyUsedTop30Accounts(userId: UInt): String {
 
-        return getFrequentlyUsedTopXAccounts(userId = userId, x=30)
+        return getFrequentlyUsedTopXAccounts(userId = userId, x = 30)
     }
 
     @JvmStatic
-    internal fun getFrequentlyUsedTopXAccounts(userId: UInt, x:Int): String {
+    internal fun getFrequentlyUsedTopXAccounts(userId: UInt, x: Int): String {
 
         var result = ""
 

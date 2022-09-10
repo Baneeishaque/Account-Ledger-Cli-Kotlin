@@ -52,7 +52,7 @@ class UserOperations {
 
                     println("Directory : ${Paths.get("").toAbsolutePath()}")
                 }
-                println ("\nAccount Ledger Authentication")
+                println("\nAccount Ledger Authentication")
                 println(CommonConstants.dashedLineSeparator)
             }
 

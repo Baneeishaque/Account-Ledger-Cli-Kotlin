@@ -459,15 +459,17 @@ object Screens {
                 "31" -> {
 
                     val getTransactionsResult: IsOkModel<TransactionsResponse> =
-                        CommonApiUtils.makeApiRequestWithOptionalRetries(apiCallFunction = fun(): Result<TransactionsResponse> {
+                        CommonApiUtils.makeApiRequestWithOptionalRetries(
+                            apiCallFunction = fun(): Result<TransactionsResponse> {
 
-                            return runBlocking {
+                                return runBlocking {
 
-                                TransactionsDataSource().selectTransactions(userId = userId)
-                            }
-                        },
+                                    TransactionsDataSource().selectTransactions(userId = userId)
+                                }
+                            },
                             isConsoleMode = isConsoleMode,
-                            isDevelopmentMode = isDevelopmentMode)
+                            isDevelopmentMode = isDevelopmentMode
+                        )
 
                     CommonHandleResponses.isOkModelHandler(
 
@@ -491,13 +493,13 @@ object Screens {
                                 userId = userId,
                                 isConsoleMode = isConsoleMode,
                                 isDevelopmentMode = isDevelopmentMode
-                                ).addTransactionResult
+                            ).addTransactionResult
                         })
                 }
 
                 "33" -> {
 
-                    val toTimeStamp:String = InputUtils.getValidDateTimeInNormalPattern(promptPrefix = "Up to ")
+                    val toTimeStamp: String = InputUtils.getValidDateTimeInNormalPattern(promptPrefix = "Up to ")
                     insertTransactionResult = checkAffectedAccountsAfterSpecifiedDate(
 
                         desiredDate = getUserInitialTransactionDateFromUsername(username = username).minusDays(1)
@@ -883,12 +885,14 @@ object Screens {
         var localInsertTransactionResult: InsertTransactionResult = insertTransactionResult
 
         val getUserAccountsMapResult: IsOkModel<LinkedHashMap<UInt, AccountResponse>> =
-            HandleResponses.getUserAccountsMap(apiResponse = ApiUtils.getAccountsFull(
+            HandleResponses.getUserAccountsMap(
+                apiResponse = ApiUtils.getAccountsFull(
 
-                userId = userId,
-                isConsoleMode = isConsoleMode,
-                isDevelopmentMode = isDevelopmentMode
-            ))
+                    userId = userId,
+                    isConsoleMode = isConsoleMode,
+                    isDevelopmentMode = isDevelopmentMode
+                )
+            )
 
         if (getUserAccountsMapResult.isOK && getUserAccountsMapResult.data!!.containsKey(desiredAccountIndex)) {
 
@@ -1228,7 +1232,10 @@ object Screens {
         if (transactionType == TransactionTypeEnum.VIA) {
             menuItems = menuItems + listOf("Via. Account - ${viaAccount.id} : ${viaAccount.fullName}")
         }
-        menuItems = menuItems + listOf("To Account - ${toAccount.id} : ${toAccount.fullName}", AccountUtils.getFrequentlyUsedTop30Accounts(userId=userId))
+        menuItems = menuItems + listOf(
+            "To Account - ${toAccount.id} : ${toAccount.fullName}",
+            AccountUtils.getFrequentlyUsedTop30Accounts(userId = userId)
+        )
         return menuItems
     }
 }

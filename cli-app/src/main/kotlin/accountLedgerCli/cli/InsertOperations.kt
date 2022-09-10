@@ -80,12 +80,14 @@ object InsertOperations {
             )
         ) {
             val getUserAccountsMapResult: IsOkModel<LinkedHashMap<UInt, AccountResponse>> =
-                HandleResponses.getUserAccountsMap(apiResponse = ApiUtils.getAccountsFull(
+                HandleResponses.getUserAccountsMap(
+                    apiResponse = ApiUtils.getAccountsFull(
 
-                    userId = userId,
-                    isConsoleMode = isConsoleMode,
-                    isDevelopmentMode = isDevelopmentMode
-                ))
+                        userId = userId,
+                        isConsoleMode = isConsoleMode,
+                        isDevelopmentMode = isDevelopmentMode
+                    )
+                )
 
             return CommonHandleResponses.isOkModelHandler(
 
@@ -141,12 +143,14 @@ object InsertOperations {
         if (account.isAvailable) {
 
             val getUserAccountsMapResult: IsOkModel<LinkedHashMap<UInt, AccountResponse>> =
-                HandleResponses.getUserAccountsMap(apiResponse = ApiUtils.getAccountsFull(
+                HandleResponses.getUserAccountsMap(
+                    apiResponse = ApiUtils.getAccountsFull(
 
-                    userId = userId,
-                    isConsoleMode = isConsoleMode,
-                    isDevelopmentMode = isDevelopmentMode
-                ))
+                        userId = userId,
+                        isConsoleMode = isConsoleMode,
+                        isDevelopmentMode = isDevelopmentMode
+                    )
+                )
 
             return CommonHandleResponses.isOkModelHandler(
 
@@ -1735,7 +1739,7 @@ object InsertOperations {
                                         toAccount = fromAccount,
                                         isConsoleMode = isConsoleMode,
                                         isDevelopmentMode = isDevelopmentMode
-                                        ),
+                                    ),
                                     dateTimeInText = localDateTimeInText,
                                     transactionParticulars = localTransactionParticulars,
                                     transactionAmount = localTransactionAmount,
@@ -2200,7 +2204,10 @@ object InsertOperations {
                             userId = userId
                         )
                         frequencyOfAccounts = updateAccountFrequency(
-                            user = user, account = toAccount, frequencyOfAccounts = frequencyOfAccounts, userId = userId
+                            user = user,
+                            account = toAccount,
+                            frequencyOfAccounts = frequencyOfAccounts,
+                            userId = userId
                         )
 
                     } else {
@@ -2227,7 +2234,8 @@ object InsertOperations {
                 }
             },
                 isConsoleMode = isConsoleMode,
-                isDevelopmentMode = isDevelopmentMode)
+                isDevelopmentMode = isDevelopmentMode
+            )
         }
         return false
     }
@@ -2262,7 +2270,8 @@ object InsertOperations {
                 }
             }, transactionManipulationSuccessActions = fun() {},
                 isConsoleMode = isConsoleMode,
-                isDevelopmentMode = isDevelopmentMode)
+                isDevelopmentMode = isDevelopmentMode
+            )
 
         } else {
 
@@ -2289,7 +2298,8 @@ object InsertOperations {
                     }
                 }, transactionManipulationSuccessActions = fun() {},
                     isConsoleMode = isConsoleMode,
-                    isDevelopmentMode = isDevelopmentMode)
+                    isDevelopmentMode = isDevelopmentMode
+                )
             }
         }
         return false
@@ -2310,7 +2320,8 @@ object InsertOperations {
             }
         }, transactionManipulationSuccessActions = fun() {},
             isConsoleMode = isConsoleMode,
-            isDevelopmentMode = isDevelopmentMode)
+            isDevelopmentMode = isDevelopmentMode
+        )
     }
 
     private fun updateAccountFrequency(
