@@ -8,4 +8,8 @@ internal object Constants {
     internal const val userText: String = "User"
     internal const val frequencyOfAccountsFileName = "frequencyOfAccounts.json"
     internal const val transactionText: String = "Transaction"
+    internal const val accountHeaderIdentifier: String = "A/C Ledger "
+    internal const val walletAccountHeaderIdentifier: String = "Wallet"
+    internal const val bankAccountHeaderIdentifier: String = "Bank"
+    internal const val accountHeaderUnderlineCharacter: String = "+"
 }

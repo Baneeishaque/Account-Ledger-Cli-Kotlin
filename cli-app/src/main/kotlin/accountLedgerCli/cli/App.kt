@@ -150,7 +150,7 @@ class App {
                                     install(Logging) {
 
                                         logger = Logger.DEFAULT
-                                        level = LogLevel.ALL
+                                        level = if (isDevelopmentMode) LogLevel.ALL else LogLevel.NONE
                                     }
                                     install(Auth) {
                                         bearer {
@@ -174,14 +174,60 @@ class App {
                                     val gistResponse: Root =
                                         client.get("https://api.github.com/gists/${dotenv[EnvironmentFileEntryEnum.GIST_ID.name] ?: Constants.defaultValueForStringEnvironmentVariables}") {
                                             onDownload { bytesSentTotal, contentLength ->
-                                                println("Received $bytesSentTotal bytes from $contentLength")
+
+                                                if(isDevelopmentMode) {
+                                                    
+                                                    println("Received $bytesSentTotal bytes from $contentLength")
+                                                }
                                             }
                                         }.body()
                                     val gistContent = gistResponse.files.mainTxt.content
+                                    val gistContentlines: List<String> = gistContent.lines();
                                     if(isDevelopmentMode){
                                         // println("Gist : $gistResponse")
-                                        println("Gist Content : \n$gistContent")
+                                        println("Gist Contents")
+                                        // println(gistContent)
+                                        gistContentlines.forEach { println(it) }
+                                        println(CommonConstants.dashedLineSeparator)
                                     }
+
+                                    // var isWalletHeaderFound: Boolean = false
+                                    val accountHeaderIdentifier: String = Constants.accountHeaderIdentifier
+                                    var currentAccountId: UInt = 0u
+                                    var processedLedger: LinkedHashMap<UInt, List<String>> = LinkedHashMap<UInt, List<String>>()
+
+                                    gistContentlines.forEach { line:String -> 
+                                        
+                                            println(line)
+                                            
+                                            if(line.contains(other=accountHeaderIdentifier)){
+
+                                //                 // isWalletHeaderFound = true
+                                                // var accountName = line.replace(regex = accountHeaderIdentifier, replacement = "").trim()
+                                                // if( accountName == Constants.walletAccountHeaderIdentifier){
+
+                                                //     // TODO : set currentAccountId from environment variable
+                                                //     currentAccountId = 6u
+                                                // }
+                                                // TODO : check for custom bank name
+                                                // else if(accountName == Constants.bankAccountHeaderIdentifier){
+
+                                                //     // TODO : set currentAccountId from environment variable
+                                                //     currentAccountId = 11u
+                                                // }
+                                                // continue
+                                            }
+
+                                //             // if(isWalletHeaderFound){
+
+                                                if(line.contains(Constants.accountHeaderUnderlineCharacter) || line.isEmpty()){
+                                                    // continue
+                                                }
+                                                // processedLedger.putIfAbsent(currentAccountId, line)
+                                                
+                                //             // }
+                                    }
+                                    println(processedLedger)
                                     
                                 }
                             }
