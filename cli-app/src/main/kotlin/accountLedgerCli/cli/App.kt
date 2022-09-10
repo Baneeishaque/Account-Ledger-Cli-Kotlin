@@ -151,6 +151,12 @@ class App {
                                                 BearerTokens(accessToken = dotenv[EnvironmentFileEntryEnum.GITHUB_TOKEN.name]?: Constants.defaultValueForStringEnvironmentVariables, refreshToken = "")
                                         }
                                     }
+                                    install(ContentNegotiation){
+                                        json(Json {
+                                            prettyPrint = true
+                                            isLenient = true
+                                        })
+                                    }
                                 }.use { client ->
     
                                     val text = client.get("https://api.github.com/gists/${dotenv[EnvironmentFileEntryEnum.GIST_ID.name]?: Constants.defaultValueForStringEnvironmentVariables}"){
