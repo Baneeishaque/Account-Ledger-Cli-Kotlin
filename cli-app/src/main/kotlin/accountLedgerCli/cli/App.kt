@@ -14,6 +14,13 @@ import kotlinx.cli.*
 import kotlinx.serialization.json.Json
 import java.nio.file.Paths
 import io.ktor.client.*
+import io.ktor.client.plugins.logging.*
+import io.ktor.client.plugins.auth.*
+import io.ktor.client.plugins.auth.providers.*
+import io.ktor.client.request.*
+import io.ktor.client.statement.*
+import io.ktor.client.plugins.*
+import kotlinx.coroutines.*
 
 class App {
     companion object {
@@ -130,19 +137,39 @@ class App {
 
                         "Gist" -> {
 
-                            println("Enter A/C Ledger Gist ID : ")
-                            val accountLedgerGistId: String = readLine()!!
+                            runBlocking {
 
-                            // val status = HttpClient(){
-                            //     expectSuccess = true
-                            //     install(Logging){
-                                    
-                            //         logger = Logger.DEFAULT
-                            //         level = LogLevel.ALL
-                            //     }
-                            // }.use { client ->
+                                HttpClient(){
+                                    expectSuccess = true
+                                    install(Logging){
+                                        
+                                        logger = Logger.DEFAULT
+                                        level = LogLevel.ALL
+                                    }
+                                    install(Auth) {
+                                        bearer {
+                                                BearerTokens(accessToken = dotenv[EnvironmentFileEntryEnum.GITHUB_TOKEN.name]?: Constants.defaultValueForStringEnvironmentVariables, refreshToken = "")
+                                        }
+                                    }
+                                }.use { client ->
+    
+                                    val text = client.get("https://api.github.com/gists/${dotenv[EnvironmentFileEntryEnum.GIST_ID.name]?: Constants.defaultValueForStringEnvironmentVariables}"){
+                                        onDownload { bytesSentTotal, contentLength ->
+                                            println("Received $bytesSentTotal bytes from $contentLength")
+                                        }
+                                    }
+                                    .bodyAsText()
+                                }
 
-                            // }
+
+                                    // println(client.get("https://api.github.com/gists/${dotenv[EnvironmentFileEntryEnum.GIST_ID.name]?: Constants.defaultValueForStringEnvironmentVariables}").bodyAsText())
+    
+                                    // {
+                                    //     onDownload { bytesSentTotal, contentLength ->
+                                    //         println("Received $bytesSentTotal bytes from $contentLength")
+                                    //     }
+                                    // }
+                            }
                         }
 
                         else -> {
