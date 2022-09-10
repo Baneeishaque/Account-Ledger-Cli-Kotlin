@@ -15,3 +15,5 @@ https://codecov.io/gh/Baneeishaque/Account-Ledger-Cli-Kotlin-Gradle/branch/maste
 ## To Build Native Image Via. GraalVM Native Image Builder
 
 **`native-image --static --no-fallback --allow-incomplete-classpath -H:+AddAllCharsets -H:EnableURLProtocols=http,https -H:DynamicProxyConfigurationFiles="dynamic-proxies.json" -H:+ReportExceptionStackTraces -jar cli-app/build/libs/cli-app.jar AccountLedgerCli.bin`**
+
+The Gist must contain a text file named as main.txt.

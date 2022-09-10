@@ -95,7 +95,8 @@ class App {
                         )
                     )
                     when (readLine()!!) {
-                        "1", "" -> {
+                        // "1", "" -> {
+                        "1" -> {
 
                             processInsertTransactionResult(
                                 insertTransactionResult = UserOperations.login(
@@ -139,7 +140,8 @@ class App {
                             return
                         }
 
-                        "Gist" -> {
+                        // "Gist" -> {
+                        "Gist", "" -> {
 
                             runBlocking {
 
@@ -162,10 +164,12 @@ class App {
                                     install(ContentNegotiation) {
                                         json(Json {
                                             prettyPrint = true
-                                            isLenient = true
+                                            ignoreUnknownKeys = true
                                         })
                                     }
                                 }.use { client ->
+
+                                    // TODO: inline use of serialization
 
                                     val gistResponse: Root =
                                         client.get("https://api.github.com/gists/${dotenv[EnvironmentFileEntryEnum.GIST_ID.name] ?: Constants.defaultValueForStringEnvironmentVariables}") {
@@ -173,8 +177,15 @@ class App {
                                                 println("Received $bytesSentTotal bytes from $contentLength")
                                             }
                                         }.body()
+                                    val gistContent = gistResponse.files.mainTxt.content
+                                    if(isDevelopmentMode){
+                                        // println("Gist : $gistResponse")
+                                        println("Gist Content : \n$gistContent")
+                                    }
+                                    
                                 }
                             }
+                            return
                         }
 
                         else -> {
