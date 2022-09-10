@@ -142,7 +142,7 @@ class App {
                                 HttpClient(){
                                     expectSuccess = true
                                     install(Logging){
-                                        
+
                                         logger = Logger.DEFAULT
                                         level = LogLevel.ALL
                                     }
@@ -152,7 +152,7 @@ class App {
                                         }
                                     }
                                 }.use { client ->
-    
+
                                     val text = client.get("https://api.github.com/gists/${dotenv[EnvironmentFileEntryEnum.GIST_ID.name]?: Constants.defaultValueForStringEnvironmentVariables}"){
                                         onDownload { bytesSentTotal, contentLength ->
                                             println("Received $bytesSentTotal bytes from $contentLength")
@@ -163,7 +163,7 @@ class App {
 
 
                                     // println(client.get("https://api.github.com/gists/${dotenv[EnvironmentFileEntryEnum.GIST_ID.name]?: Constants.defaultValueForStringEnvironmentVariables}").bodyAsText())
-    
+
                                     // {
                                     //     onDownload { bytesSentTotal, contentLength ->
                                     //         println("Received $bytesSentTotal bytes from $contentLength")
