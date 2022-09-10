@@ -13,6 +13,7 @@ import io.github.cdimascio.dotenv.dotenv
 import kotlinx.cli.*
 import kotlinx.serialization.json.Json
 import java.nio.file.Paths
+import io.ktor.client.*
 
 class App {
     companion object {
@@ -131,6 +132,17 @@ class App {
 
                             println("Enter A/C Ledger Gist ID : ")
                             val accountLedgerGistId: String = readLine()!!
+
+                            // val status = HttpClient(){
+                            //     expectSuccess = true
+                            //     install(Logging){
+                                    
+                            //         logger = Logger.DEFAULT
+                            //         level = LogLevel.ALL
+                            //     }
+                            // }.use { client ->
+
+                            // }
                         }
 
                         else -> {
