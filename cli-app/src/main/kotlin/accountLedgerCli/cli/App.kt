@@ -182,7 +182,7 @@ class App {
                                         // println("Gist : $gistResponse")
                                         println("Gist Content : \n$gistContent")
                                     }
-                                    
+
                                 }
                             }
                             return
