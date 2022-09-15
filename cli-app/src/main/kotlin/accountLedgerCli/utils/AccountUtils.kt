@@ -69,6 +69,12 @@ internal object AccountUtils {
     }
 
     @JvmStatic
+    internal fun getFrequentlyUsedTop40Accounts(userId: UInt): String {
+
+        return getFrequentlyUsedTopXAccounts(userId = userId, x = 40)
+    }
+
+    @JvmStatic
     internal fun getFrequentlyUsedTopXAccounts(userId: UInt, x: Int): String {
 
         var result = ""

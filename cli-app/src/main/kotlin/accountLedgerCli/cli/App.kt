@@ -95,8 +95,8 @@ class App {
                         )
                     )
                     when (readLine()!!) {
-                        // "1", "" -> {
-                        "1" -> {
+                        "1", "" -> {
+                        // "1" -> {
 
                             processInsertTransactionResult(
                                 insertTransactionResult = UserOperations.login(
@@ -140,8 +140,8 @@ class App {
                             return
                         }
 
-                        // "Gist" -> {
-                        "Gist", "" -> {
+                        "Gist" -> {
+                        // "Gist", "" -> {
 
                             runBlocking {
 
@@ -176,7 +176,7 @@ class App {
                                             onDownload { bytesSentTotal, contentLength ->
 
                                                 if(isDevelopmentMode) {
-                                                    
+
                                                     println("Received $bytesSentTotal bytes from $contentLength")
                                                 }
                                             }
@@ -196,10 +196,10 @@ class App {
                                     var currentAccountId: UInt = 0u
                                     var processedLedger: LinkedHashMap<UInt, List<String>> = LinkedHashMap<UInt, List<String>>()
 
-                                    gistContentlines.forEach { line:String -> 
-                                        
+                                    gistContentlines.forEach { line:String ->
+
                                             println(line)
-                                            
+
                                             if(line.contains(other=accountHeaderIdentifier)){
 
                                 //                 // isWalletHeaderFound = true
@@ -224,11 +224,11 @@ class App {
                                                     // continue
                                                 }
                                                 // processedLedger.putIfAbsent(currentAccountId, line)
-                                                
+
                                 //             // }
                                     }
                                     println(processedLedger)
-                                    
+
                                 }
                             }
                             return
