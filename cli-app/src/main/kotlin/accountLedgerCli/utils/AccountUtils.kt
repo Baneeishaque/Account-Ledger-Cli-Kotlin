@@ -96,11 +96,14 @@ internal object AccountUtils {
                 accountFrequency.countOfRepetition
 
             }?.take(n = x)
+            ?.sortedBy { accountFrequency: AccountFrequencyModel ->
 
-                ?.forEach { accountFrequency: AccountFrequencyModel ->
+                accountFrequency.accountName
 
-                    result += "${accountFrequency.accountID} : ${accountFrequency.accountName} [${accountFrequency.countOfRepetition}]\n"
-                }
+            }?.forEach { accountFrequency: AccountFrequencyModel ->
+
+                result += "${accountFrequency.accountID} : ${accountFrequency.accountName} [${accountFrequency.countOfRepetition}]\n"
+            }
         }
         return if (result.isEmpty()) {
 
