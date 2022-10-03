@@ -47,7 +47,7 @@ dependencies {
     implementation("io.ktor:ktor-client-cio:$ktor_version")
 
     implementation("io.ktor:ktor-client-logging:$ktor_version")
-    implementation("ch.qos.logback:logback-classic:1.4.1")
+    implementation("ch.qos.logback:logback-classic:1.4.3")
     
     implementation("io.ktor:ktor-client-auth:$ktor_version")
 
