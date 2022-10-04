@@ -1,0 +1,1 @@
+cd $HOME && git clone https://github.com/Baneeishaque/configurations-private.git && cd Account-Ledger-Cli-Kotlin-Gradle && ln -s $HOME/configurations-private/AccountLedger/.env && ln -s $HOME/configurations-private/AccountLedger/frequencyOfAccounts.json && cd api && ln -s $HOME/configurations-private/AccountLedger/http-client.env.json
