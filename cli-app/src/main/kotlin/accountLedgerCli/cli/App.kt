@@ -5,26 +5,26 @@ import accountLedgerCli.constants.Constants
 import accountLedgerCli.enums.*
 import accountLedgerCli.models.BalanceSheetDataModel
 import accountLedgerCli.models.InsertTransactionResult
+import accountLedgerCli.models.Root
 import accountLedgerCli.to_utils.*
 import accountLedgerCli.utils.AccountUtils
-import accountLedgerCli.to_constants.Constants as CommonConstants
 import io.github.cdimascio.dotenv.Dotenv
 import io.github.cdimascio.dotenv.dotenv
-import kotlinx.cli.*
-import kotlinx.serialization.json.Json
-import java.nio.file.Paths
 import io.ktor.client.*
-import io.ktor.client.plugins.logging.*
+import io.ktor.client.call.*
+import io.ktor.client.plugins.*
 import io.ktor.client.plugins.auth.*
 import io.ktor.client.plugins.auth.providers.*
+import io.ktor.client.plugins.contentnegotiation.*
+import io.ktor.client.plugins.logging.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
-import io.ktor.client.plugins.*
-import kotlinx.coroutines.*
-import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.serialization.kotlinx.json.*
-import accountLedgerCli.models.Root
-import io.ktor.client.call.*
+import kotlinx.cli.*
+import kotlinx.coroutines.*
+import kotlinx.serialization.json.Json
+import java.nio.file.Paths
+import accountLedgerCli.to_constants.Constants as CommonConstants
 
 class App {
     companion object {
@@ -145,7 +145,7 @@ class App {
 
                             runBlocking {
 
-                                HttpClient() {
+                                HttpClient {
                                     expectSuccess = true
                                     install(Logging) {
 
@@ -182,31 +182,31 @@ class App {
                                             }
                                         }.body()
                                     val gistContent = gistResponse.files.mainTxt.content
-                                    val gistContentlines: List<String> = gistContent.lines();
+                                    val gistContentLines: List<String> = gistContent.lines()
                                     if(isDevelopmentMode){
                                         // println("Gist : $gistResponse")
                                         println("Gist Contents")
                                         // println(gistContent)
-                                        gistContentlines.forEach { println(it) }
+                                        gistContentLines.forEach { println(it) }
                                         println(CommonConstants.dashedLineSeparator)
                                     }
 
                                     // var isWalletHeaderFound: Boolean = false
                                     val accountHeaderIdentifier: String = Constants.accountHeaderIdentifier
                                     var currentAccountId: UInt = 0u
-                                    var processedLedger: LinkedHashMap<UInt, List<String>> = LinkedHashMap<UInt, List<String>>()
+                                    var processedLedger: LinkedHashMap<UInt, List<String>> = LinkedHashMap()
 
-                                    gistContentlines.forEach { line:String ->
+                                    gistContentLines.forEach { line: String ->
 
-                                            println(line)
+                                        println(line)
 
-                                            if(line.contains(other=accountHeaderIdentifier)){
+                                        if (line.contains(other = accountHeaderIdentifier)) {
 
-                                //                 // isWalletHeaderFound = true
-                                                // var accountName = line.replace(regex = accountHeaderIdentifier, replacement = "").trim()
-                                                // if( accountName == Constants.walletAccountHeaderIdentifier){
+                                            //                 // isWalletHeaderFound = true
+                                            // var accountName = line.replace(regex = accountHeaderIdentifier, replacement = "").trim()
+                                            // if( accountName == Constants.walletAccountHeaderIdentifier){
 
-                                                //     // TODO : set currentAccountId from environment variable
+                                            //     // TODO : set currentAccountId from environment variable
                                                 //     currentAccountId = 6u
                                                 // }
                                                 // TODO : check for custom bank name
