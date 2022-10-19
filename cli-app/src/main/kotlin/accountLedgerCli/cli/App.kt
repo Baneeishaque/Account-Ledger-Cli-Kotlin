@@ -95,8 +95,8 @@ class App {
                         )
                     )
                     when (readLine()!!) {
-                        "1", "" -> {
-                        // "1" -> {
+//                        "1", "" -> {
+                        "1" -> {
 
                             processInsertTransactionResult(
                                 insertTransactionResult = UserOperations.login(
@@ -140,8 +140,8 @@ class App {
                             return
                         }
 
-                        "Gist" -> {
-                        // "Gist", "" -> {
+//                        "Gist" -> {
+                        "Gist", "" -> {
 
                             runBlocking {
 
@@ -191,44 +191,52 @@ class App {
                                         println(CommonConstants.dashedLineSeparator)
                                     }
 
-                                    // var isWalletHeaderFound: Boolean = false
                                     val accountHeaderIdentifier: String = Constants.accountHeaderIdentifier
                                     var currentAccountId: UInt = 0u
-                                    var processedLedger: LinkedHashMap<UInt, List<String>> = LinkedHashMap()
+                                    val processedLedger: LinkedHashMap<UInt, MutableList<String>> = LinkedHashMap()
 
                                     gistContentLines.forEach { line: String ->
 
-                                        println(line)
+//                                        println(line)
 
                                         if (line.contains(other = accountHeaderIdentifier)) {
 
-                                            //                 // isWalletHeaderFound = true
-                                            // var accountName = line.replace(regex = accountHeaderIdentifier, replacement = "").trim()
-                                            // if( accountName == Constants.walletAccountHeaderIdentifier){
+//                                            println(line)
 
-                                            //     // TODO : set currentAccountId from environment variable
-                                                //     currentAccountId = 6u
-                                                // }
-                                                // TODO : check for custom bank name
-                                                // else if(accountName == Constants.bankAccountHeaderIdentifier){
+                                            val accountName = line.replace(
+                                                regex = accountHeaderIdentifier.toRegex(),
+                                                replacement = ""
+                                            ).trim()
+                                            if (accountName == Constants.walletAccountHeaderIdentifier) {
 
-                                                //     // TODO : set currentAccountId from environment variable
-                                                //     currentAccountId = 11u
-                                                // }
-                                                // continue
+                                                // TODO : set currentAccountId from environment variable
+                                                currentAccountId = 6u
                                             }
+                                            // TODO : check for custom bank name
+                                            else if (accountName == Constants.bankAccountHeaderIdentifier) {
 
-                                //             // if(isWalletHeaderFound){
+//                                                      TODO : set currentAccountId from environment variable
+                                                currentAccountId = 11u
+                                            }
+//                                            println(message = "currentAccountId = $currentAccountId")
+                                        } else {
 
-                                                if(line.contains(Constants.accountHeaderUnderlineCharacter) || line.isEmpty()){
-                                                    // continue
-                                                }
-                                                // processedLedger.putIfAbsent(currentAccountId, line)
+                                            if (line.isNotEmpty()) {
 
-                                //             // }
+                                                println(line)
+//                                                if(!line.contains(other = Constants.accountHeaderUnderlineCharacter)){
+//
+//                                                    val currentAccountLedgerLines:MutableList<String> = processedLedger.getOrDefault(key = currentAccountId, defaultValue = mutableListOf())
+//                                                    currentAccountLedgerLines.add(element = line)
+//                                                    processedLedger[currentAccountId] = currentAccountLedgerLines
+//                                                }
+                                            }
+                                        }
                                     }
-                                    println(processedLedger)
-
+//                                    processedLedger.forEach { (localCurrentAccountId: UInt, currentAccountLedgerLines: List<String>) ->
+////                                        println("currentAccountId = $localCurrentAccountId")
+////                                        currentAccountLedgerLines.forEach{ledgerLine:String -> println("ledgerLine = $ledgerLine") }
+//                                    }
                                 }
                             }
                             return
