@@ -255,8 +255,28 @@ class App {
                                         i++
                                     }
                                     processedLedger.forEach { (localCurrentAccountId: UInt, currentAccountLedgerLines: List<String>) ->
+
                                         println("currentAccountId = $localCurrentAccountId")
-                                        currentAccountLedgerLines.forEach { ledgerLine: String -> println(ledgerLine) }
+                                        currentAccountLedgerLines.forEach { ledgerLine: String ->
+
+//                                            println(ledgerLine)
+                                            val indexOfFirstSpace: Int = ledgerLine.indexOf(char = ' ')
+                                            var dateOrAmount = ""
+                                            if (indexOfFirstSpace != -1) {
+
+                                                dateOrAmount = ledgerLine.substring(
+                                                    startIndex = 0,
+                                                    endIndex = indexOfFirstSpace
+                                                )
+                                            } else if (!ledgerLine.contains(other = Constants.dateUnderlineCharacter)) {
+
+                                                dateOrAmount = ledgerLine.trim()
+                                            }
+                                            if (dateOrAmount.isNotEmpty()) {
+
+                                                println(dateOrAmount)
+                                            }
+                                        }
                                     }
                                 }
                             }

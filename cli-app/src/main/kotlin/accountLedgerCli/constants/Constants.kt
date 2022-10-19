@@ -14,4 +14,5 @@ internal object Constants {
     //    internal const val bankAccountHeaderIdentifier: String = "Bank"
     internal const val bankAccountHeaderIdentifier: String = "PNB"
     internal const val accountHeaderUnderlineCharacter: String = "~"
+    internal const val dateUnderlineCharacter: String = "-"
 }
