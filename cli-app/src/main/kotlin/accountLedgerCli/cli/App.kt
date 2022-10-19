@@ -175,7 +175,7 @@ class App {
                                         client.get("https://api.github.com/gists/${dotenv[EnvironmentFileEntryEnum.GIST_ID.name] ?: Constants.defaultValueForStringEnvironmentVariables}") {
                                             onDownload { bytesSentTotal, contentLength ->
 
-                                                if(isDevelopmentMode) {
+                                                if (isDevelopmentMode) {
 
                                                     println("Received $bytesSentTotal bytes from $contentLength")
                                                 }
@@ -183,7 +183,7 @@ class App {
                                         }.body()
                                     val gistContent = gistResponse.files.mainTxt.content
                                     val gistContentLines: List<String> = gistContent.lines()
-                                    if(isDevelopmentMode){
+                                    if (isDevelopmentMode) {
                                         // println("Gist : $gistResponse")
                                         println("Gist Contents")
                                         // println(gistContent)
@@ -194,14 +194,16 @@ class App {
                                     val accountHeaderIdentifier: String = Constants.accountHeaderIdentifier
                                     var currentAccountId: UInt = 0u
                                     val processedLedger: LinkedHashMap<UInt, MutableList<String>> = LinkedHashMap()
+                                    var isPreviousLineIsNotAccountHeader = false
 
+                                    var i: UInt = 1u
                                     gistContentLines.forEach { line: String ->
 
 //                                        println(line)
 
                                         if (line.contains(other = accountHeaderIdentifier)) {
 
-//                                            println(line)
+//                                            println("$i : $line")
 
                                             val accountName = line.replace(
                                                 regex = accountHeaderIdentifier.toRegex(),
@@ -219,24 +221,43 @@ class App {
                                                 currentAccountId = 11u
                                             }
 //                                            println(message = "currentAccountId = $currentAccountId")
+                                            isPreviousLineIsNotAccountHeader = false
+
                                         } else {
 
                                             if (line.isNotEmpty()) {
 
-                                                println(line)
-//                                                if(!line.contains(other = Constants.accountHeaderUnderlineCharacter)){
-//
-//                                                    val currentAccountLedgerLines:MutableList<String> = processedLedger.getOrDefault(key = currentAccountId, defaultValue = mutableListOf())
-//                                                    currentAccountLedgerLines.add(element = line)
-//                                                    processedLedger[currentAccountId] = currentAccountLedgerLines
-//                                                }
+//                                                println(line)
+                                                if (!line.contains(other = Constants.accountHeaderUnderlineCharacter)) {
+
+//                                                    println(line)
+                                                    addLineToCurrentAccountLedger(
+                                                        ledgerToProcess = processedLedger,
+                                                        desiredAccountId = currentAccountId,
+                                                        desiredLine = line
+                                                    )
+                                                } else {
+
+                                                    if (isPreviousLineIsNotAccountHeader) {
+
+//                                                        println("$i : $line")
+//                                                        println(line)
+                                                        addLineToCurrentAccountLedger(
+                                                            ledgerToProcess = processedLedger,
+                                                            desiredAccountId = currentAccountId,
+                                                            desiredLine = line
+                                                        )
+                                                    }
+                                                }
                                             }
+                                            isPreviousLineIsNotAccountHeader = true
                                         }
+                                        i++
                                     }
-//                                    processedLedger.forEach { (localCurrentAccountId: UInt, currentAccountLedgerLines: List<String>) ->
-////                                        println("currentAccountId = $localCurrentAccountId")
-////                                        currentAccountLedgerLines.forEach{ledgerLine:String -> println("ledgerLine = $ledgerLine") }
-//                                    }
+                                    processedLedger.forEach { (localCurrentAccountId: UInt, currentAccountLedgerLines: List<String>) ->
+                                        println("currentAccountId = $localCurrentAccountId")
+                                        currentAccountLedgerLines.forEach { ledgerLine: String -> println(ledgerLine) }
+                                    }
                                 }
                             }
                             return
@@ -375,6 +396,17 @@ class App {
 
                 parser.parse(args = args)
             }
+        }
+
+        private fun addLineToCurrentAccountLedger(
+            ledgerToProcess: LinkedHashMap<UInt, MutableList<String>>,
+            desiredAccountId: UInt,
+            desiredLine: String
+        ) {
+            val currentAccountLedgerLines: MutableList<String> =
+                ledgerToProcess.getOrDefault(key = desiredAccountId, defaultValue = mutableListOf())
+            currentAccountLedgerLines.add(element = desiredLine)
+            ledgerToProcess[desiredAccountId] = currentAccountLedgerLines
         }
 
         private fun processInsertTransactionResult(insertTransactionResult: InsertTransactionResult) {
