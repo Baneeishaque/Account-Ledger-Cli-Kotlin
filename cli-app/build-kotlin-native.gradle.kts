@@ -1,5 +1,5 @@
 plugins {
-    kotlin("multiplatform") version "1.8.20-mercury-606"
+    kotlin("multiplatform") version "1.8.20-mercury-607"
 }
 
 repositories {
