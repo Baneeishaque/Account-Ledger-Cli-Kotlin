@@ -1,0 +1,1 @@
+curl -OL https://bashhub.com/setup && bash setup && rm setup && source ~/.bashrc
