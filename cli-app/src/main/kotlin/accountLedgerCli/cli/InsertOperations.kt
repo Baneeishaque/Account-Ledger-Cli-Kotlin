@@ -213,7 +213,8 @@ object InsertOperations {
                     viaAccount = localInsertTransactionResult.viaAccount,
                     toAccount = localInsertTransactionResult.toAccount,
                     transactionType = transactionType,
-                    userId = userId
+                    userId = userId,
+                    isDevelopmentMode = isDevelopmentMode
 
                 ) + listOf(
 
@@ -249,7 +250,7 @@ object InsertOperations {
                     "Enter Your Choice : "
                 )
             )
-            when (readLine()!!) {
+            when (readln()) {
 
                 "1" -> {
 
@@ -1509,7 +1510,7 @@ object InsertOperations {
 
                     inputUInt = InputUtils.getValidUnsignedInt(
 
-                        inputText = readLine()!!, invalidMessage = "Please Enter Valid Unsigned Integer"
+                        inputText = readln(), invalidMessage = "Please Enter Valid Unsigned Integer"
 
                     ), thresholdValue = thresholdValue, constructInvalidMessage = fun(currentUInt: UInt): String {
 
@@ -1570,7 +1571,7 @@ object InsertOperations {
                     SentenceUtils.reverseOrderOfWords(sentence = localTransactionParticulars)
                 print("Enter Particulars (Current Value - $localTransactionParticulars), R to Reverse (Reversed Value - $reversedTransactionParticulars), AS to Add Suffix, AP to Add Prefix : ")
 
-                val transactionParticularsInput: String = readLine()!!
+                val transactionParticularsInput: String = readln()
                 if (transactionParticularsInput.isNotEmpty()) {
 
                     localTransactionParticulars = if (transactionParticularsInput == "R") {
@@ -1580,13 +1581,13 @@ object InsertOperations {
                     } else if (transactionParticularsInput == "AS") {
 
                         print("Enter Suffix : ")
-                        val transactionSuffixInput: String = readLine()!!
+                        val transactionSuffixInput: String = readln()
                         val suffixedTransactionParticulars = "$localTransactionParticulars$transactionSuffixInput"
 
                         do {
                             print("Particulars (Current Value - $localTransactionParticulars), (Suffixed Value - $suffixedTransactionParticulars), Do you want to Continue (Y/N) : ")
 
-                            when (readLine()!!) {
+                            when (readln()) {
 
                                 "Y", "" -> {
 
@@ -1611,13 +1612,13 @@ object InsertOperations {
                     } else if (transactionParticularsInput == "AP") {
 
                         print("Enter Prefix : ")
-                        val transactionPrefixInput: String = readLine()!!
+                        val transactionPrefixInput: String = readln()
                         val prefixedTransactionParticulars = "$transactionPrefixInput$localTransactionParticulars"
 
                         do {
                             print("Particulars (Current Value - $localTransactionParticulars), (Prefixed Value - $prefixedTransactionParticulars), Do you want to Continue (Y/N) : ")
 
-                            when (readLine()!!) {
+                            when (readln()) {
 
                                 "Y" -> {
 
@@ -1654,7 +1655,7 @@ object InsertOperations {
                 print("Enter Amount (Current Value - $localTransactionAmount) : ")
                 val transactionAmountInput
 
-                        : String = readLine()!!
+                        : String = readln()
                 if (transactionAmountInput.isNotEmpty()) {
 
                     localTransactionAmount = InputUtils.getValidFloat(
@@ -1682,7 +1683,7 @@ object InsertOperations {
                     commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
                         listOfCommands = menuItems
                     )
-                    when (readLine()!!) {
+                    when (readln()) {
 
                         "Y", "" -> {
 

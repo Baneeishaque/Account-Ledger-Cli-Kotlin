@@ -51,31 +51,31 @@ internal object AccountUtils {
     }
 
     @JvmStatic
-    internal fun getFrequentlyUsedTop10Accounts(userId: UInt): String {
+    internal fun getFrequentlyUsedTop10Accounts(userId: UInt, isDevelopmentMode: Boolean): String {
 
-        return getFrequentlyUsedTopXAccounts(userId = userId, x = 10)
+        return getFrequentlyUsedTopXAccounts(userId = userId, x = 10, isDevelopmentMode = isDevelopmentMode)
     }
 
     @JvmStatic
-    internal fun getFrequentlyUsedTop20Accounts(userId: UInt): String {
+    internal fun getFrequentlyUsedTop20Accounts(userId: UInt, isDevelopmentMode: Boolean): String {
 
-        return getFrequentlyUsedTopXAccounts(userId = userId, x = 20)
+        return getFrequentlyUsedTopXAccounts(userId = userId, x = 20, isDevelopmentMode = isDevelopmentMode)
     }
 
     @JvmStatic
-    internal fun getFrequentlyUsedTop30Accounts(userId: UInt): String {
+    internal fun getFrequentlyUsedTop30Accounts(userId: UInt, isDevelopmentMode: Boolean): String {
 
-        return getFrequentlyUsedTopXAccounts(userId = userId, x = 30)
+        return getFrequentlyUsedTopXAccounts(userId = userId, x = 30, isDevelopmentMode = isDevelopmentMode)
     }
 
     @JvmStatic
-    internal fun getFrequentlyUsedTop40Accounts(userId: UInt): String {
+    internal fun getFrequentlyUsedTop40Accounts(userId: UInt, isDevelopmentMode: Boolean): String {
 
-        return getFrequentlyUsedTopXAccounts(userId = userId, x = 40)
+        return getFrequentlyUsedTopXAccounts(userId = userId, x = 40, isDevelopmentMode = isDevelopmentMode)
     }
 
     @JvmStatic
-    internal fun getFrequentlyUsedTopXAccounts(userId: UInt, x: Int): String {
+    internal fun getFrequentlyUsedTopXAccounts(userId: UInt, x: Int, isDevelopmentMode:Boolean): String {
 
         var result = ""
 
@@ -104,6 +104,9 @@ internal object AccountUtils {
 
                 result += "${accountFrequency.accountID} : ${accountFrequency.accountName} [${accountFrequency.countOfRepetition}]\n"
             }
+        }
+        if(isDevelopmentMode){
+            println("result = $result")
         }
         return if (result.isEmpty()) {
 

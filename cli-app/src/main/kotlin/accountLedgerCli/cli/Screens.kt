@@ -57,7 +57,7 @@ object Screens {
             commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
                 listOf(
                     "\nUser : $username",
-                    AccountUtils.getFrequentlyUsedTop10Accounts(userId = userId),
+                    AccountUtils.getFrequentlyUsedTop10Accounts(userId = userId, isDevelopmentMode),
                     "1 - List Accounts : Top Levels",
                     "2 - ${getQuickTransactionOnWalletText()}",
                     "3 - ${getQuickTransactionOnWalletToFrequent1Text()}",
@@ -104,7 +104,7 @@ object Screens {
                     "Enter Your Choice : "
                 )
             )
-            when (readLine()!!) {
+            when (readln()) {
 
                 "1" -> {
 
@@ -984,7 +984,7 @@ object Screens {
                     "Enter Your Choice : "
                 )
             )
-            when (readLine()!!) {
+            when (readln()) {
 
                 "1" -> {
                     localInsertTransactionResult = TransactionViews.viewTransactionsForAnAccount(
@@ -1218,7 +1218,8 @@ object Screens {
         viaAccount: AccountResponse,
         toAccount: AccountResponse,
         transactionType: TransactionTypeEnum,
-        userId: UInt
+        userId: UInt,
+        isDevelopmentMode: Boolean
 
     ): List<String> {
 
@@ -1234,7 +1235,7 @@ object Screens {
         }
         menuItems = menuItems + listOf(
             "To Account - ${toAccount.id} : ${toAccount.fullName}",
-            AccountUtils.getFrequentlyUsedTop40Accounts(userId = userId)
+            AccountUtils.getFrequentlyUsedTop40Accounts(userId = userId, isDevelopmentMode)
         )
         return menuItems
     }

@@ -72,7 +72,7 @@ class UserOperations {
                     do {
                         displayCurrentUser(user)
                         print("Do you want to continue (Y/N) : ")
-                        when (readLine().toString()) {
+                        when (readln()) {
                             "Y", "" -> {
                                 break
                             }
@@ -103,7 +103,7 @@ class UserOperations {
                     println("Error : ${(apiResponse.getValue() as Exception).localizedMessage}")
                     do {
                         print("Retry (Y/N) ? : ")
-                        when (readLine()!!) {
+                        when (readln()) {
                             "Y", "" -> {
                                 return login(
                                     username = username,
@@ -347,7 +347,7 @@ class UserOperations {
                 println("Error : ${(apiResponse.getValue() as Exception).localizedMessage}")
                 do {
                     print("Retry (Y/N) ? : ")
-                    when (readLine()!!) {
+                    when (readln()) {
                         "Y", "" -> {
                             return listUsers(
                                 fromAccount = fromAccount,
@@ -418,7 +418,7 @@ class UserOperations {
                                 "Enter Your Choice : "
                             )
                         )
-                        when (readLine()!!) {
+                        when (readln()) {
                             "1" -> {
                                 balanceSheetOfUser(
 
