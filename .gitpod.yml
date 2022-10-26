@@ -1,71 +1,120 @@
 image:
   file: .gitpod.Dockerfile
 
-tasks:
-  - prebuild: ./gradlew build
-  # - init: /usr/bin/start-vnc-session.sh
-  # - command: zsh
-  # - command: git clone --depth 1 "https://github.com/Baneeishaque/gitpod-workspace-full-vnc-1366x768-tint2-pcmanfm-zsh-android-studio.git" android-studio-config && mkdir -p ~/.config/Google && ln -s `pwd`/android-studio-config/AndroidStudio4.1-config ~/.config/Google/AndroidStudio4.1 && mkdir -p ~/.local/share/Google && ln -s `pwd`/android-studio-config/AndroidStudio4.1-local ~/.local/share/Google/AndroidStudio4.1 && cd /usr/local/android-studio/bin/ && ./studio.sh
-  # - command: git clone --depth 1 "https://github.com/Baneeishaque/gitpod-workspace-full-vnc-1366x768-tint2-pcmanfm-zsh-android-studio-gh-chrome-intellij-idea.git" intellij-idea-config && mkdir -p ~/.config/JetBrains && ln -s `pwd`/intellij-idea-config/IntelliJIdea2021.1-config ~/.config/JetBrains/IntelliJIdea2021.1 && mkdir -p ~/.local/share/JetBrains && ln -s `pwd`/intellij-idea-config/IntelliJIdea2021.1-local ~/.local/share/JetBrains/IntelliJIdea2021.1 && cd /usr/local/idea-IU-211.6693.111/bin/ && ./idea.sh
-  # - command: git clone --depth 1 "https://github.com/Baneeishaque/gitpod-workspace-full-vnc-1366x768-tint2-pcmanfm-zsh-android-studio-gh-chrome-intellij-idea-pycharm.git" pycharm-config && mkdir -p ~/.config/JetBrains && ln -s `pwd`/pycharm-config/Pycharm2021.1-config ~/.config/JetBrains/PyCharm2021.1 && mkdir -p ~/.local/share/JetBrains && ln -s `pwd`/pycharm-config/Pycharm2021.1-local ~/.local/share/JetBrains/PyCharm2021.1 && cd /usr/local/pycharm-2021.1/bin/ && ./pycharm.sh
-  # - command: git clone --depth 1 "https://github.com/Baneeishaque/gitpod-full-1366x768-tint2-pcmanfm-zsh-as-gh-chrome-idea-pycharm-anaconda3-2020-11-as-canary.git" android-studio-canary-config && mkdir -p ~/.config/Google && ln -s `pwd`/android-studio-canary-config/AndroidStudioPreview2020.3-config ~/.config/Google/AndroidStudioPreview2020.3 && mkdir -p ~/.local/share/Google && ln -s `pwd`/android-studio-canary-config/AndroidStudioPreview2020.3-local ~/.local/share/Google/AndroidStudioPreview2020.3 && cd /usr/local/android-studio-canary/bin/ && ./studio.sh
-  # - command: gh auth login
-  # - command: git clone --depth 1 "https://gitlab.com/baneeishaque/gitpod-workspace-full-vnc-1366x768-tint2-pcmanfm-zsh-android-studio-gh-chrome-private.git" chrome-config && export CHROME_CONFIG_HOME="`pwd`/chrome-config" && google-chrome --disable-dev-shm-usage
-  # - command: ghb
-  # - command: anaconda-navigator
-  # - command: R
-  # - command: cd .. && jupyter-lab --ContentsManager.allow_hidden=True
-  # - command: git clone --depth 1 https://github.com/Baneeishaque/configuartions-private.git config && cd /usr/local/FileZilla3/bin/ && ./filezilla
-  # - command: cd /usr/local/Telegram/ && ./Telegram
-  # - command: cd /usr/local/MATLAB/R2021a/bin && ./matlab
-  # - command: mysql -uroot
-  # - command: mkdir -p ~/.config/JetBrains && ln -s `pwd`/PhpStorm2021.1-config ~/.config/JetBrains/PhpStorm2021.1 && mkdir -p ~/.local/share/JetBrains && ln -s `pwd`/PhpStorm2021.1-local ~/.local/share/JetBrains/PhpStorm2021.1 && cd /usr/local/PhpStorm-211.7142.44/bin/ && ./phpstorm.sh
-
-# Ports to expose on workspace startup
 ports:
   - port: 5900
     onOpen: ignore
-  - port: 6080
-    onOpen: open-preview
-  - port: 6942
-    onOpen: ignore
-  - port: 6943
-    onOpen: ignore
-  - port: 6944
-    onOpen: ignore
-  - port: 6945
-    onOpen: ignore
-  - port: 5037
-    onOpen: ignore
-  - port: 8599
-    onOpen: ignore
-  - port: 3306
-    onOpen: ignore
+  - name: VNC
+    description: full GUI Virtual Desktop
+    port: 6080
+    onOpen: open-browser
+  - name: phpMyAdmin
+    port: 80
+    onOpen: open-browser  
+
+tasks:
+  - name: Insatll & Configure BashHub
+    command: |
+      eval $(gp env -e)
+      echo $BASH_HUB_ACCESS_TOKEN \
+        && echo $BASH_HUB_SYSTEM_NAME \
+        && bashHubConfigurationFolder=$HOME/.bashhub \
+        && bashHubConfigurationFile=config \
+        && mkdir $bashHubConfigurationFolder \
+        && bashHubConfigurationPath=$bashHubConfigurationFolder/$bashHubConfigurationFile \
+        && printf "[bashhub]\naccess_token = $(echo $BASH_HUB_ACCESS_TOKEN)\nsystem_name = $(echo $BASH_HUB_SYSTEM_NAME)" > $bashHubConfigurationPath \
+        && cat $bashHubConfigurationPath \
+        && cd /workspace \
+        && curl -OL https://bashhub.com/setup \
+        && sed -z 's+\n        if ! ../env/bin/bashhub util update_system_info; then\n            # Run setup if we run into any issues updating our system info\n            ../env/bin/bashhub setup\n        fi++' -i setup \
+        && bash setup \
+        && rm setup \
+        && echo "export GH_TOKEN=$(echo $GH_TOKEN)" >> ~/.bashrc \
+        && echo "export GETGIST_TOKEN=$(echo $GH_TOKEN)" >> ~/.bashrc \
+        && echo "export GETGIST_USER=$(echo $GETGIST_USER)" >> ~/.bashrc \
+        && echo "export DOCKER_HUB_USERNAME=$(echo $DOCKER_HUB_USERNAME)" >> ~/.bashrc \
+        && echo "export DOCKER_HUB_PASSWORD=$(echo $DOCKER_HUB_PASSWORD)" >> ~/.bashrc \
+        && docker login --username $(echo $DOCKER_HUB_USERNAME) --password $(echo $DOCKER_HUB_PASSWORD) \
+        && exit
+
+  # - name: Setup JADX & dex2jar
+  #   command: |
+  #     echo "export PATH=$HOME/$(cat $HOME/dexToolsFolder):$HOME/$(cat $HOME/dexToolsFolder)/bin:$HOME/$(cat $HOME/jadxFolder)/bin:$PATH" >> ~/.bashrc \
+  #     && rm $HOME/dexToolsFolder $HOME/jadxFolder \
+  #     && source ~/.bashrc
+
+  # - name: Run phpMyAdmin
+  #   command: cd /opt/phpMyAdmin-5.2.0-all-languages && sudo php -S 0.0.0.0:80
+
+  # - name: Run IntelliJ IDEA
+  #   command: cd /workspace && git clone --depth 1 "https://gitlab.com/baneeishaque/gitpod-workspace-full-vnc-1366x768-tint2-pcmanfm-zsh-android-studio-gh-chrome-intellij-idea.git" intellij-idea-config && rm -rf ~/.config/JetBrains/IntelliJIdea2022.2 && mkdir -p ~/.config/JetBrains && ln -s `pwd`/intellij-idea-config/IntelliJIdea2022.2-config ~/.config/JetBrains/IntelliJIdea2022.2 && rm -rf ~/.local/share/JetBrains/IntelliJIdea2022.2 && mkdir -p ~/.local/share/JetBrains && ln -s `pwd`/intellij-idea-config/IntelliJIdea2022.2-local ~/.local/share/JetBrains/IntelliJIdea2022.2 && rm -rf ~/.local/share/JetBrains/consentOptions && ln -s `pwd`/intellij-idea-config/consentOptions ~/.local/share/JetBrains/consentOptions && rm -rf ~/.local/share/JetBrains/bl && ln -s `pwd`/intellij-idea-config/bl ~/.local/share/JetBrains/bl && rm -rf ~/.local/share/JetBrains/crl && ln -s `pwd`/intellij-idea-config/crl ~/.local/share/JetBrains/crl && cd /usr/local/idea-IU-222.4167.29/bin/ && ./idea.sh
+
+  # - name: Open Google Chrome
+  #   command: cd /workspace && git clone --depth 1 "https://gitlab.com/baneeishaque/gitpod-workspace-full-vnc-1366x768-tint2-pcmanfm-zsh-android-studio-gh-chrome-private.git" chrome-config && export CHROME_CONFIG_HOME=`pwd`/chrome-config && google-chrome
+
+  # - name: Open Eclipse
+  #   command: cd /usr/local/eclipse/ && ./eclipse
+
+  # - name: Open Key Explorer
+  #   command: kse
+
+  # - name: Open Android Studio Canary
+  #   command: cd /workspace && git clone --depth 1 "https://gitlab.com/baneeishaque/gitpod-workspace-full-vnc-1366x768-tint2-pcmanfm-zsh-android-studio.git" android-studio-config && rm -rf ~/.config/Google && mkdir -p ~/.config/Google && ln -s `pwd`/android-studio-config/AndroidStudioPreview2022.1-config ~/.config/Google/AndroidStudioPreview2022.1 && rm -rf ~/.local/share/Google && mkdir -p ~/.local/share/Google && ln -s `pwd`/android-studio-config/AndroidStudioPreview2022.1-local ~/.local/share/Google/AndroidStudioPreview2022.1 && rm -rf ~/.local/share/Google/consentOptions && ln -s `pwd`/android-studio-config/consentOptions ~/.local/share/Google/consentOptions && cd /usr/local/android-studio-canary/bin/ && ./studio.sh
+
+  # - name: Open Android Studio Beta
+  #   command: cd /workspace && git clone --depth 1 "https://gitlab.com/baneeishaque/gitpod-workspace-full-vnc-1366x768-tint2-pcmanfm-zsh-android-studio.git" android-studio-config && rm -rf ~/.config/Google && mkdir -p ~/.config/Google && ln -s `pwd`/android-studio-config/AndroidStudio2021.3-config ~/.config/Google/AndroidStudio2021.3 && rm -rf ~/.local/share/Google && mkdir -p ~/.local/share/Google && ln -s `pwd`/android-studio-config/AndroidStudio2021.3-local ~/.local/share/Google/AndroidStudio2021.3 && cd /usr/local/android-studio-beta/bin/ && ./studio.sh
+
+  # - name: Get Gist
+  #   command: getgist <username> <filename>
+
+  # - name: List Gists
+  #   command: lsgists <username>
+
+  # - name: Check Poetry
+  #   command: poetry --version
+
+  # - name: Check tree
+  #   command: tree --version
+
+  # - name: Check VS Code
+  #   command: code --version
+
+  # - name: Check VS Code Insiders
+  #   command: code-insiders --version
 
 github:
   prebuilds:
-    # enable for all branches in this repo (defaults to false)
+    master: true
     branches: true
-    # enable for pull requests coming from forks (defaults to false)
+    pullRequests: true
     pullRequestsFromForks: true
-    # add a "Review in Gitpod" button as a comment to pull requests (defaults to false)
-    addComment: true
-    # add a "Review in Gitpod" button to the pull request's description (defaults to false)
+    addCheck: false
+    addComment: false
     addBadge: true
-    # add a label once the prebuild is ready to pull requests (defaults to false)
-    addLabel: true
+
+jetbrains:
+  intellij:
+    prebuilds:
+      version: both
+  goland:
+    prebuilds:
+      version: both
+  pycharm:
+    prebuilds:
+      version: both
+  phpstorm:
+    prebuilds:
+      version: both
 
 vscode:
   extensions:
-    - ms-python.python@2020.10.332292344:5ctthQ25Qni5/aAuOIUTYQ==
-    - codezombiech.gitignore@0.6.0:oJP0UqwrXt2Qgt5QRm1BIQ==
-    - maddog986.autodocblocker@1.0.2:ey8TGFw83C4aegTkW13AGA==
-    - guillaumeisabelle.gixdeko-comments@1.0.115:9iBdt1vwBj1/tP0ccsdtvw==
-    - owenfarrell.vscode-microtask@1.0.3:HKM415Hmq45XFIL1HeIdbQ==
-    - naturalclar.workspace-settings-json@0.0.10:dO7CSbCBQvxSAZIgNH/jUQ==
-    - mathiasfrohlich.kotlin@1.7.1:2Uw0hH38NcpgInldjuwF3g==
-    - vikas.code-navigation@0.2.0:1hbbiHl71QiJoOjQyzbewQ==
-    - haugerbr.project-tasks@1.0.0:z8G8HNMDr3s2qYGsbM5MrQ==
-    - mhutchie.git-graph@1.28.0:8NH1WgOknx0p2byYkmBcrQ==
-    - reduckted.vscode-gitweblinks@2.3.0:3DLrLpucmTzBIefwl1BMuQ==
-    - adelphes.android-dev-ext@1.3.2:Corsm6bGBL7RCzNWjvZqZw==
+    - vscode.markdown
+    - vscode.markdown-language-features
+    - vscode.github
+    - GitHub.vscode-pull-request-github
+    - vscode.merge-conflict
+    - vscode.references-view
+    - vscode.search-result
+    - vscode.docker
+    - redhat.vscode-yaml
+    - vscode.json
