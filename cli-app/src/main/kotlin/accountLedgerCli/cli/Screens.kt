@@ -921,6 +921,8 @@ object Screens {
 
     ): List<AccountFrequencyModel>? {
 
+        //TODO : Allow a range of user ids
+        //TODO : Accumulate frequencies of same Accounts
         return frequencyOfAccounts.users.find { user: UserModel -> user.id == userId }?.accountFrequencies
     }
 
