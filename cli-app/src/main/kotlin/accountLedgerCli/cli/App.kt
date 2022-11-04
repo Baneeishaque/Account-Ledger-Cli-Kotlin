@@ -95,8 +95,8 @@ class App {
                         )
                     )
                     when (readLine()!!) {
-//                        "1", "" -> {
-                        "1" -> {
+                        "1", "" -> {
+                        // "1" -> {
 
                             processInsertTransactionResult(
                                 insertTransactionResult = UserOperations.login(
@@ -140,8 +140,8 @@ class App {
                             return
                         }
 
-//                        "Gist" -> {
-                        "Gist", "" -> {
+                        "Gist" -> {
+                        // "Gist", "" -> {
 
                             runBlocking {
 
