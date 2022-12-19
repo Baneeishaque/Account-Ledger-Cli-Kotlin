@@ -2,9 +2,8 @@ package accountLedgerCli.api
 
 internal object ApiConstants {
 
-    internal const val serverApiAddress = "https://account-ledger-server.herokuapp.com/http_API/"
+    internal const val serverApiAddress = "https://nomadllerindia.com/account_ledger_server/http_api/"
 
-    // internal const val serverApiAddress = "http://localhost/account_ledger_server/http_API/"
     internal const val serverFileExtension = "php"
 
     internal const val selectUserMethod = "select_User"
