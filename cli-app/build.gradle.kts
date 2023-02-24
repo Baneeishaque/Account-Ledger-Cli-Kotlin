@@ -41,7 +41,7 @@ dependencies {
     implementation("com.massisframework:j-text-utils:0.3.4")
     implementation("io.github.cdimascio:dotenv-kotlin:6.4.1")
 
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0")
 
     implementation("io.ktor:ktor-client-core:$ktorVersion")
     implementation("io.ktor:ktor-client-cio:$ktorVersion")
