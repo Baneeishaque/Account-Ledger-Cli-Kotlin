@@ -15,7 +15,7 @@ dependencies {
     implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
 
     // Use the Kotlin JDK 8 standard library.
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+//    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("com.google.guava:guava:31.1-jre")
 
     // Use the Kotlin test library.
