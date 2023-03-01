@@ -1,8 +1,8 @@
 rootProject.name = "accountLedgerCli"
 
-include("common-lib:lib")
-project(":common-lib:lib").projectDir = file("account-ledger-lib/common-lib/lib")
+include("common-lib:common-lib")
+project(":common-lib:common-lib").projectDir = file("account-ledger-lib/common-lib/common-lib")
 
-include(":account-ledger-lib:lib")
+include(":account-ledger-lib:account-ledger-lib")
 
 include(":cli-app")

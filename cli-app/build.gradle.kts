@@ -24,7 +24,7 @@ dependencies {
     // Use the Kotlin JUnit integration.
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
 
-    implementation(project(":account-ledger-lib:lib"))
+    implementation(project(":account-ledger-lib:account-ledger-lib"))
 }
 
 application {
@@ -33,6 +33,7 @@ application {
 
 val jar by tasks.getting(Jar::class) {
 
+//    TODO : Use Include pattern instead of blank exclude strategy
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 
     manifest {
@@ -55,6 +56,6 @@ tasks.check {
     dependsOn(tasks.jacocoTestReport)
 }
 
-val distTar by tasks.getting(Tar::class) {
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-}
+//val distTar by tasks.getting(Tar::class) {
+//    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+//}
