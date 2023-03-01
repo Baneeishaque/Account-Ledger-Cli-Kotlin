@@ -1,8 +1,5 @@
-val ktorVersion: String = "2.1.2"
-
 plugins {
     kotlin("jvm") version "1.7.10"
-    kotlin("plugin.serialization") version "1.7.10"
 
     application
     jacoco
@@ -10,15 +7,10 @@ plugins {
 
 repositories {
     mavenCentral()
-    maven {
-        url = uri("https://maven.pkg.jetbrains.space/public/p/ktor/eap")
-    }
-    maven {
-        url = uri("https://maven.pkg.jetbrains.space/kotlin/p/kotlin/dev")
-    }
 }
 
 dependencies {
+
     // Align versions of all Kotlin components
     implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
 
@@ -32,28 +24,7 @@ dependencies {
     // Use the Kotlin JUnit integration.
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
 
-    implementation("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
-
-    implementation("org.jetbrains.kotlinx:kotlinx-cli:0.3.5")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
-    implementation("com.github.doyaaaaaken:kotlin-csv-jvm:1.8.0")
-    implementation("com.massisframework:j-text-utils:0.3.4")
-    implementation("io.github.cdimascio:dotenv-kotlin:6.4.1")
-
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0")
-
-    implementation("io.ktor:ktor-client-core:$ktorVersion")
-    implementation("io.ktor:ktor-client-cio:$ktorVersion")
-
-    implementation("io.ktor:ktor-client-logging:$ktorVersion")
-    implementation("ch.qos.logback:logback-classic:1.4.5")
-
-    implementation("io.ktor:ktor-client-auth:$ktorVersion")
-
-    implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
-    implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
-
+    implementation(project(":account-ledger-lib:lib"))
 }
 
 application {
@@ -82,4 +53,8 @@ tasks.jacocoTestReport {
 
 tasks.check {
     dependsOn(tasks.jacocoTestReport)
+}
+
+val distTar by tasks.getting(Tar::class) {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
