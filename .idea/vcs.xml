@@ -7,5 +7,7 @@
   </component>
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/account-ledger-lib" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/account-ledger-lib/common-lib" vcs="Git" />
   </component>
 </project>
