@@ -43,7 +43,7 @@ abstract class SubCommandWithCommonArguments(
             val environmentUsername = App.dotenv[EnvironmentFileEntryEnum.USER_NAME.name]
             if (environmentUsername.isNullOrEmpty()) {
 
-                printMissingArgumentMessage(message ="username of the user" )
+                printMissingArgumentMessage(argumentSummary = "username of the user")
 
             } else {
 
@@ -64,7 +64,7 @@ abstract class SubCommandWithCommonArguments(
             val environmentPasscode = App.dotenv[EnvironmentFileEntryEnum.PASSWORD.name]
             if (environmentPasscode.isNullOrEmpty()) {
 
-                printMissingArgumentMessage(message ="password of the user" )
+                printMissingArgumentMessage(argumentSummary = "password of the user")
 
             } else {
 
@@ -98,16 +98,21 @@ abstract class SubCommandWithCommonArguments(
         return optionalTextArgument
     }
 
-    private fun printMissingArgumentMessage(
-        message: String
+    fun printMissingArgumentMessage(
+        argumentSummary: String
     ) {
+        printErrorMessage(errorMessage = "Missing $argumentSummary in command line arguments & environment file")
+    }
 
+    private fun printErrorMessage(
+        errorMessage: String
+    ) {
         print(
             Json.encodeToString(
                 serializer = CommonDataModel.serializer(Unit.serializer()),
                 value = CommonDataModel(
                     status = 1,
-                    error = "Missing $message in command line arguments & environment file"
+                    error = errorMessage
                 )
             )
         )
