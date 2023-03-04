@@ -8,10 +8,7 @@ import account.ledger.library.constants.Constants
 import account.ledger.library.enums.BalanceSheetOutputFormatsEnum
 import account.ledger.library.enums.BalanceSheetRefineLevelEnum
 import account.ledger.library.enums.CommandLineApiMethodBalanceSheetOptionsEnum
-import account.ledger.library.models.BalanceSheetDataModel
-import account.ledger.library.models.ChooseUserResult
-import account.ledger.library.models.InsertTransactionResult
-import account.ledger.library.models.UserCredentials
+import account.ledger.library.models.*
 import account.ledger.library.retrofit.ResponseHolder
 import account.ledger.library.retrofit.data.AuthenticationDataSource
 import account.ledger.library.retrofit.data.UsersDataSource
@@ -19,6 +16,7 @@ import account.ledger.library.utils.UserUtils
 import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
 import common.utils.library.utils.invalidOptionMessage
 import kotlinx.coroutines.runBlocking
+import kotlinx.serialization.builtins.serializer
 import kotlinx.serialization.json.Json
 import common.utils.library.constants.Constants as CommonConstants
 
@@ -139,8 +137,8 @@ class UserOperations {
 
                     print(
                         Json.encodeToString(
-                            serializer = BalanceSheetDataModel.serializer(),
-                            value = BalanceSheetDataModel(
+                            serializer = CommonDataModel.serializer(Unit.serializer()),
+                            value = CommonDataModel(
                                 status = 1,
                                 error = "Error : ${(apiResponse.getValue() as Exception).localizedMessage}"
                             )
@@ -172,8 +170,8 @@ class UserOperations {
 
                             print(
                                 Json.encodeToString(
-                                    serializer = BalanceSheetDataModel.serializer(),
-                                    value = BalanceSheetDataModel(
+                                    serializer = CommonDataModel.serializer(Unit.serializer()),
+                                    value = CommonDataModel(
                                         status = 1,
                                         error = "Invalid Credentials"
                                     )
@@ -220,8 +218,8 @@ class UserOperations {
                                                 } else {
                                                     print(
                                                         Json.encodeToString(
-                                                            serializer = BalanceSheetDataModel.serializer(),
-                                                            value = BalanceSheetDataModel(
+                                                            serializer = CommonDataModel.serializer(Unit.serializer()),
+                                                            value = CommonDataModel(
                                                                 status = 1,
                                                                 error = "Invalid Output Format"
                                                             )
@@ -232,8 +230,8 @@ class UserOperations {
 //                                                println("Output Format is Missing")
                                                 print(
                                                     Json.encodeToString(
-                                                        serializer = BalanceSheetDataModel.serializer(),
-                                                        value = BalanceSheetDataModel(
+                                                        serializer = CommonDataModel.serializer(Unit.serializer()),
+                                                        value = CommonDataModel(
                                                             status = 1,
                                                             error = "Missing Output Format of the Balance Sheet Ledger"
                                                         )
@@ -243,8 +241,8 @@ class UserOperations {
                                         } else {
                                             print(
                                                 Json.encodeToString(
-                                                    serializer = BalanceSheetDataModel.serializer(),
-                                                    value = BalanceSheetDataModel(
+                                                    serializer = CommonDataModel.serializer(Unit.serializer()),
+                                                    value = CommonDataModel(
                                                         status = 1,
                                                         error = "Invalid Refinery Level"
                                                     )
@@ -254,8 +252,8 @@ class UserOperations {
                                     } else {
                                         print(
                                             Json.encodeToString(
-                                                serializer = BalanceSheetDataModel.serializer(),
-                                                value = BalanceSheetDataModel(
+                                                serializer = CommonDataModel.serializer(Unit.serializer()),
+                                                value = CommonDataModel(
                                                     status = 1,
                                                     error = "Missing Refinery Level of the Balance Sheet Ledger"
                                                 )
@@ -267,8 +265,8 @@ class UserOperations {
                                 else -> {
                                     print(
                                         Json.encodeToString(
-                                            serializer = BalanceSheetDataModel.serializer(),
-                                            value = BalanceSheetDataModel(
+                                            serializer = CommonDataModel.serializer(Unit.serializer()),
+                                            value = CommonDataModel(
                                                 status = 1,
                                                 error = "Invalid API Method Reference"
                                             )
@@ -296,8 +294,8 @@ class UserOperations {
                         } else {
                             print(
                                 Json.encodeToString(
-                                    serializer = BalanceSheetDataModel.serializer(),
-                                    value = BalanceSheetDataModel(
+                                    serializer = CommonDataModel.serializer(Unit.serializer()),
+                                    value = CommonDataModel(
                                         status = 1,
                                         error = "Server Execution Error, User Count is ${authenticationResponseResult.userCount}"
                                     )

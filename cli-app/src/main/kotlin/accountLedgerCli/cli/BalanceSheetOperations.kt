@@ -7,9 +7,9 @@ import account.ledger.library.cli.getUserInitialTransactionDateFromUsername
 import account.ledger.library.cli.getUserTransactionsForAnAccount
 import account.ledger.library.constants.Constants
 import account.ledger.library.enums.BalanceSheetRefineLevelEnum
-import account.ledger.library.models.BalanceSheetDataModel
 import account.ledger.library.models.BalanceSheetDataRowModel
 import account.ledger.library.models.ChooseUserResult
+import account.ledger.library.models.CommonDataModel
 import account.ledger.library.retrofit.data.TransactionsDataSource
 import account.ledger.library.utils.UserUtils
 import accountLedgerCli.cli.App.Companion.dotenv
@@ -18,6 +18,7 @@ import common.utils.library.utils.DateTimeUtils
 import common.utils.library.utils.MysqlUtils
 import common.utils.library.utils.invalidOptionMessage
 import kotlinx.coroutines.runBlocking
+import kotlinx.serialization.builtins.serializer
 import kotlinx.serialization.json.Json
 
 internal fun balanceSheetOfUser(
@@ -117,8 +118,8 @@ internal fun printBalanceSheetOfUser(
 
                 print(
                     Json.encodeToString(
-                        serializer = BalanceSheetDataModel.serializer(),
-                        value = BalanceSheetDataModel(
+                        serializer = CommonDataModel.serializer(Unit.serializer()),
+                        value = CommonDataModel(
                             status = 1,
                             error = "Error : ${(apiResponse.exceptionOrNull() as Exception).localizedMessage}"
                         )
@@ -139,8 +140,8 @@ internal fun printBalanceSheetOfUser(
                     print(
                         Json.encodeToString(
 
-                            serializer = BalanceSheetDataModel.serializer(),
-                            value = BalanceSheetDataModel(
+                            serializer = CommonDataModel.serializer(Unit.serializer()),
+                            value = CommonDataModel(
 
                                 status = 2,
                                 error = "No Transactions"
@@ -243,8 +244,8 @@ internal fun printBalanceSheetOfUser(
 
                             print(
                                 Json.encodeToString(
-                                    serializer = BalanceSheetDataModel.serializer(),
-                                    value = BalanceSheetDataModel(
+                                    serializer = CommonDataModel.serializer(Unit.serializer()),
+                                    value = CommonDataModel(
                                         status = 1,
                                         error = "Error : ${(apiResponse2.exceptionOrNull() as Exception).localizedMessage}"
                                     )
@@ -288,8 +289,8 @@ internal fun printBalanceSheetOfUser(
                             } else {
                                 print(
                                     Json.encodeToString(
-                                        serializer = BalanceSheetDataModel.serializer(),
-                                        value = BalanceSheetDataModel(
+                                        serializer = CommonDataModel.serializer(Unit.serializer()),
+                                        value = CommonDataModel(
                                             status = 1,
                                             error = "Server Execution Error, Execution Status is ${userTransactionsResponseResult.status}"
                                         )
@@ -305,8 +306,8 @@ internal fun printBalanceSheetOfUser(
                 } else {
                     print(
                         Json.encodeToString(
-                            serializer = BalanceSheetDataModel.serializer(),
-                            value = BalanceSheetDataModel(
+                            serializer = CommonDataModel.serializer(BalanceSheetDataRowModel.serializer()),
+                            value = CommonDataModel(
                                 status = 0,
                                 data = balanceSheetDataRows
                             )
@@ -342,8 +343,8 @@ internal fun printBalanceSheetOfUser(
             print(
                 Json.encodeToString(
 
-                    serializer = BalanceSheetDataModel.serializer(),
-                    value = BalanceSheetDataModel(
+                    serializer = CommonDataModel.serializer(Unit.serializer()),
+                    value = CommonDataModel(
                         status = 1,
                         error = "Error : ${specifiedDate.data!!}"
                     )
