@@ -5,8 +5,6 @@ import account.ledger.library.cli.EnvironmentalFileEntries
 import account.ledger.library.constants.Constants
 import account.ledger.library.enums.EnvironmentFileEntryEnum
 import account.ledger.library.models.InsertTransactionResult
-import account.ledger.library.utils.TextAccountLedgerUtils
-import common.utils.library.models.Root
 import accountLedgerCli.cli.sub_commands.BalanceSheet
 import accountLedgerCli.cli.sub_commands.Gist
 import accountLedgerCli.utils.AccountUtils
@@ -14,19 +12,8 @@ import accountLedgerCli.utils.GistUtilsInteractive
 import common.utils.library.utils.*
 import io.github.cdimascio.dotenv.Dotenv
 import io.github.cdimascio.dotenv.dotenv
-import io.ktor.client.*
-import io.ktor.client.call.*
-import io.ktor.client.plugins.*
-import io.ktor.client.plugins.auth.*
-import io.ktor.client.plugins.auth.providers.*
-import io.ktor.client.plugins.contentnegotiation.*
-import io.ktor.client.plugins.logging.*
-import io.ktor.client.request.*
-import io.ktor.serialization.kotlinx.json.*
 import kotlinx.cli.ArgParser
 import kotlinx.cli.ExperimentalCli
-import kotlinx.coroutines.runBlocking
-import kotlinx.serialization.json.Json
 import java.nio.file.Paths
 import common.utils.library.constants.Constants as CommonConstants
 
@@ -146,8 +133,14 @@ class App {
 
                         "Gist" -> {
                             // "Gist", "" -> {
-
-                            GistUtilsInteractive.processGistId(isDevelopmentMode = isDevelopmentMode)
+                            GistUtilsInteractive.processGistIdInteractive(
+                                userName = identifiedUser,
+                                gitHubAccessToken = dotenv[EnvironmentFileEntryEnum.GITHUB_TOKEN.name]
+                                    ?: Constants.defaultValueForStringEnvironmentVariables,
+                                gistId = dotenv[EnvironmentFileEntryEnum.GIST_ID.name]
+                                    ?: Constants.defaultValueForStringEnvironmentVariables,
+                                isDevelopmentMode = isDevelopmentMode
+                            )
                             return
                         }
 

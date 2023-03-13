@@ -14,7 +14,8 @@ import kotlinx.serialization.json.Json
 @OptIn(ExperimentalCli::class)
 abstract class SubCommandWithCommonArguments(
     name: String,
-    actionDescription: String
+    actionDescription: String,
+    open val isDevelopmentMode: Boolean
 ) :
     Subcommand(
         name = name,
@@ -35,8 +36,11 @@ abstract class SubCommandWithCommonArguments(
 
         beforeExecuteActions()
 
-        println("userName = $username")
-        println("passWord = $password")
+        if (isDevelopmentMode) {
+
+            println("userName = $username")
+            println("passWord = $password")
+        }
 
         if (username.isNullOrEmpty()) {
 
