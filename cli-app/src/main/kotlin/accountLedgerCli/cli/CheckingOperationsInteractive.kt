@@ -1,38 +1,12 @@
 package accountLedgerCli.cli
 
 import account.ledger.library.api.response.AccountResponse
+import account.ledger.library.cli.isAccountsAreAvailable
 import account.ledger.library.enums.TransactionTypeEnum
 import account.ledger.library.models.InsertTransactionResult
 import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithContinuePrompt
 import common.utils.library.utils.DateTimeUtils
 import common.utils.library.utils.invalidOptionMessage
-
-internal fun isAccountsAreAvailable(
-
-    transactionType: TransactionTypeEnum,
-    fromAccount: AccountResponse,
-    viaAccount: AccountResponse,
-    toAccount: AccountResponse
-
-): Boolean {
-
-    if (toAccount.id == 0u) {
-
-        println("Please choose deposit account...")
-        return false
-
-    } else if (fromAccount.id == 0u) {
-
-        println("Please choose from account...")
-        return false
-
-    } else if ((transactionType == TransactionTypeEnum.VIA) && (viaAccount.id == 0u)) {
-
-        println("Please choose via. account...")
-        return false
-    }
-    return true
-}
 
 internal fun transactionContinueCheck(
 
@@ -122,8 +96,11 @@ internal fun addTransactionWithAccountAvailabilityCheck(
             transactionType = transactionType,
             fromAccount = fromAccount,
             viaAccount = viaAccount,
-            toAccount = toAccount
-        )
+            toAccount = toAccount,
+            fromAccountMissingActions = { println("Please choose from account...") },
+            toAccountMissingActions = { println("Please choose deposit account...") },
+            viaAccountMissingActions = { println("Please choose via. account...") }
+        ) == 0
     ) {
         when (transactionType) {
 
