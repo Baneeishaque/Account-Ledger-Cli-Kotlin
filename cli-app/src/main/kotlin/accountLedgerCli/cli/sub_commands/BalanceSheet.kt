@@ -9,7 +9,7 @@ import accountLedgerCli.cli.UserOperations
 import kotlinx.cli.ArgType
 import kotlinx.cli.default
 
-class BalanceSheet(override val isDevelopmentMode: Boolean) : SubCommandWithCommonArguments(
+class BalanceSheet(override val isDevelopmentMode: Boolean) : SubCommandWithUsernameAndPasswordAsArguments(
     name = CommandLineApiMethodsEnum.BalanceSheet.name,
     actionDescription = "Provides Balance Sheet Ledger of the Specified User, Currently in JSON format, Default Balance Sheet Refine Level is [Excluding Open Balances, Misc. Incomes, Investment Returns, Family & Expense Accounts], Environment file may exist & contains missing arguments",
     isDevelopmentMode = isDevelopmentMode

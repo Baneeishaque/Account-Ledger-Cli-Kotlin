@@ -6,8 +6,9 @@ import account.ledger.library.enums.CommandLineApiMethodsEnum
 import account.ledger.library.enums.EnvironmentFileEntryEnum
 import accountLedgerCli.cli.App
 import account.ledger.library.utils.GistUtils
+import common.utils.library.utils.ApiUtils.printMissingArgumentMessageForApi
 
-class Gist(override val isDevelopmentMode: Boolean) : SubCommandWithCommonArguments(
+class Gist(override val isDevelopmentMode: Boolean) : SubCommandWithUsernameAndPasswordAsArguments(
     name = CommandLineApiMethodsEnum.Gist.name,
     actionDescription = "Merge properly formatted Gist Account Ledger Entries to Account Ledger Entries of the Specified User, , Environment file may exist & contains missing arguments",
     isDevelopmentMode = isDevelopmentMode
@@ -17,7 +18,7 @@ class Gist(override val isDevelopmentMode: Boolean) : SubCommandWithCommonArgume
         description = "Id of the Gist which contains formatted Account Ledger Entries"
     )
 
-    override fun beforeExecuteActions() {
+    override fun localBeforeExecuteActions() {
 
         if (isDevelopmentMode) {
             println("gistId = $gistId")
@@ -31,7 +32,7 @@ class Gist(override val isDevelopmentMode: Boolean) : SubCommandWithCommonArgume
             val environmentGistId = App.dotenv[EnvironmentFileEntryEnum.GIST_ID.name]
             if (environmentGistId.isNullOrEmpty()) {
 
-                printMissingArgumentMessage(argumentSummary = "Gist ID")
+                printMissingArgumentMessageForApi(argumentSummary = "Gist ID")
 
             } else {
 

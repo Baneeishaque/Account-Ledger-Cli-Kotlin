@@ -9,7 +9,7 @@ import account.ledger.library.constants.Constants
 import account.ledger.library.enums.BalanceSheetRefineLevelEnum
 import account.ledger.library.models.BalanceSheetDataRowModel
 import account.ledger.library.models.ChooseUserResult
-import account.ledger.library.models.CommonDataModel
+import common.utils.library.models.CommonDataModel
 import account.ledger.library.retrofit.data.TransactionsDataSource
 import account.ledger.library.utils.UserUtils
 import accountLedgerCli.cli.App.Companion.dotenv
