@@ -1,7 +1,7 @@
 package accountLedgerCli.cli
 
 import account.ledger.library.api.response.AccountResponse
-import account.ledger.library.cli.EnvironmentalFileEntries
+import account.ledger.library.constants.EnvironmentalFileEntries
 import account.ledger.library.constants.Constants
 import account.ledger.library.enums.EnvironmentFileEntryEnum
 import account.ledger.library.models.InsertTransactionResult

@@ -1,6 +1,6 @@
 package accountLedgerCli.cli
 
-import account.ledger.library.cli.getAccounts
+import account.ledger.library.operations.getAccounts
 import account.ledger.library.enums.AccountTypeEnum
 import account.ledger.library.enums.HandleAccountsApiResponseResult
 import account.ledger.library.enums.TransactionTypeEnum

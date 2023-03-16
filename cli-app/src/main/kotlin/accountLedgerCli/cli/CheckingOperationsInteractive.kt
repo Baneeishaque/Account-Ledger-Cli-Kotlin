@@ -1,7 +1,7 @@
 package accountLedgerCli.cli
 
 import account.ledger.library.api.response.AccountResponse
-import account.ledger.library.cli.addTransactionWithAccountAvailabilityCheck
+import account.ledger.library.operations.addTransactionWithAccountAvailabilityCheck
 import account.ledger.library.enums.TransactionTypeEnum
 import account.ledger.library.models.InsertTransactionResult
 import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithContinuePrompt

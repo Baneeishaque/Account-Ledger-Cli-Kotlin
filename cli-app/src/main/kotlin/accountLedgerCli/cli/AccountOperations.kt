@@ -4,7 +4,7 @@ import account.ledger.library.api.response.AccountResponse
 import account.ledger.library.api.response.AccountsResponse
 import account.ledger.library.api.response.TransactionResponse
 import account.ledger.library.api.response.TransactionsResponse
-import account.ledger.library.cli.getAccounts
+import account.ledger.library.operations.getAccounts
 import account.ledger.library.enums.FunctionCallSourceEnum
 import account.ledger.library.models.InsertTransactionResult
 import account.ledger.library.models.ViewTransactionsOutput

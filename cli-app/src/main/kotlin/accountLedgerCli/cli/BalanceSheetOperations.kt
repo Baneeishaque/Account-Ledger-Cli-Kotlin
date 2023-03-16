@@ -3,8 +3,8 @@ package accountLedgerCli.cli
 import account.ledger.library.api.response.TransactionResponse
 import account.ledger.library.api.response.TransactionsResponse
 import account.ledger.library.api.response.UserResponse
-import account.ledger.library.cli.getUserInitialTransactionDateFromUsername
-import account.ledger.library.cli.getUserTransactionsForAnAccount
+import account.ledger.library.operations.getUserInitialTransactionDateFromUsername
+import account.ledger.library.operations.getUserTransactionsForAnAccount
 import account.ledger.library.constants.Constants
 import account.ledger.library.enums.BalanceSheetRefineLevelEnum
 import account.ledger.library.models.BalanceSheetDataRowModel

@@ -2,8 +2,8 @@ package accountLedgerCli.cli
 
 import account.ledger.library.api.response.AccountResponse
 import account.ledger.library.api.response.TransactionsResponse
-import account.ledger.library.cli.getAccounts
-import account.ledger.library.cli.getUserInitialTransactionDateFromUsername
+import account.ledger.library.operations.getAccounts
+import account.ledger.library.operations.getUserInitialTransactionDateFromUsername
 import account.ledger.library.constants.Constants
 import account.ledger.library.enums.BalanceSheetRefineLevelEnum
 import account.ledger.library.enums.EnvironmentFileEntryEnum
