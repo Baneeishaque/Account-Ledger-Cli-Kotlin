@@ -1659,9 +1659,7 @@ object InsertOperations {
                 }
 
                 print("Enter Amount (Current Value - $localTransactionAmount) : ")
-                val transactionAmountInput
-
-                        : String = readln()
+                val transactionAmountInput: String = readln()
                 if (transactionAmountInput.isNotEmpty()) {
 
                     localTransactionAmount = InputUtils.getValidFloat(
