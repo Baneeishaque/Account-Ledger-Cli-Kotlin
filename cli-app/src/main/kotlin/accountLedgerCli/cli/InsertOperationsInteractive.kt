@@ -13,6 +13,7 @@ import account.ledger.library.models.ChooseAccountResult
 import account.ledger.library.models.FrequencyOfAccountsModel
 import account.ledger.library.models.InsertTransactionResult
 import account.ledger.library.models.UserModel
+import account.ledger.library.operations.InsertOperations.manipulateTransaction
 import account.ledger.library.retrofit.data.TransactionDataSource
 import account.ledger.library.utils.ApiUtils
 import accountLedgerCli.utils.ChooseAccountUtils
@@ -20,6 +21,7 @@ import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
 import accountLedgerCli.cli.Screens.quickTransactionOnWallet
 import common.utils.library.models.IsOkModel
 import common.utils.library.utils.*
+import common.utils.library.utils.InteractiveUtils.printErrorMessage
 import kotlinx.coroutines.runBlocking
 import common.utils.library.utils.ApiUtils as CommonApiUtils
 import common.utils.library.utils.HandleResponses as CommonHandleResponses
@@ -2092,38 +2094,41 @@ object InsertOperationsInteractive {
         }
     }
 
-    private fun manipulateTransaction(
+    private fun manipulateTransactionInteractive(
 
         transactionManipulationApiRequest: () -> Result<TransactionManipulationResponse>,
-        transactionManipulationSuccessActions: () -> Unit,
+        transactionManipulationSuccessActions: () -> Unit = {},
+        transactionManipulationFailureActions: (String) -> Unit = {},
         isConsoleMode: Boolean,
         isDevelopmentMode: Boolean
 
     ): Boolean {
 
-        val transactionManipulationApiRequestResult: IsOkModel<TransactionManipulationResponse> =
-            CommonApiUtils.makeApiRequestWithOptionalRetries(
-                apiCallFunction = transactionManipulationApiRequest,
-                isConsoleMode = isConsoleMode,
-                isDevelopmentMode = isDevelopmentMode
-            )
+        return manipulateTransaction(
 
-        if (transactionManipulationApiRequestResult.isOK) {
-
-            val transactionManipulationResponseResult: TransactionManipulationResponse =
-                transactionManipulationApiRequestResult.data!!
-            if (transactionManipulationResponseResult.status == 0u) {
+            transactionManipulationApiRequest = transactionManipulationApiRequest,
+            transactionManipulationSuccessActions = {
 
                 println("OK...")
                 transactionManipulationSuccessActions.invoke()
-                return true
+            },
+            transactionManipulationFailureActions = { data: String ->
 
-            } else {
+                printServerExecutionErrorMessage(data)
+                transactionManipulationFailureActions.invoke(data)
+            },
+            isConsoleMode = isConsoleMode,
+            isDevelopmentMode = isDevelopmentMode
+        )
+    }
 
-                println("Server Execution Error : ${transactionManipulationResponseResult.error}")
-            }
-        }
-        return false
+    fun printServerExecutionErrorMessage(data: String) {
+
+        printErrorMessage(
+
+            data = data,
+            dateSpecification = "Server Execution Error"
+        )
     }
 
 //    private fun manipulateTransactionWithEventDateTimeCheck(
@@ -2176,7 +2181,7 @@ object InsertOperationsInteractive {
 
         if (eventDateTimeConversionResult.isOK) {
 
-            return manipulateTransaction(
+            return manipulateTransactionInteractive(
                 transactionManipulationApiRequest = fun(): Result<TransactionManipulationResponse> {
 
                     return runBlocking {
@@ -2271,7 +2276,7 @@ object InsertOperationsInteractive {
 
         if (isDateTimeUpdateOperation) {
 
-            return manipulateTransaction(
+            return manipulateTransactionInteractive(
                 transactionManipulationApiRequest = fun(): Result<TransactionManipulationResponse> {
                     return runBlocking {
 
@@ -2306,7 +2311,7 @@ object InsertOperationsInteractive {
 
             if (eventDateTimeConversionResult.isOK) {
 
-                return manipulateTransaction(
+                return manipulateTransactionInteractive(
                     transactionManipulationApiRequest = fun(): Result<TransactionManipulationResponse> {
                         return runBlocking {
 
@@ -2337,7 +2342,7 @@ object InsertOperationsInteractive {
 
     ): Boolean {
 
-        return manipulateTransaction(
+        return manipulateTransactionInteractive(
             transactionManipulationApiRequest = fun(): Result<TransactionManipulationResponse> {
                 return runBlocking {
 
