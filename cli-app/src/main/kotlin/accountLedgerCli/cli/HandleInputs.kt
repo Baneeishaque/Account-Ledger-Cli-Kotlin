@@ -6,7 +6,7 @@ import account.ledger.library.constants.Constants
 import account.ledger.library.models.ChooseUserResult
 import account.ledger.library.models.InsertTransactionResult
 import account.ledger.library.models.ViewTransactionsOutput
-import accountLedgerCli.utils.AccountUtils
+import account.ledger.library.utils.AccountUtils
 import common.utils.library.utils.ToDoUtils
 import common.utils.library.utils.invalidOptionMessage
 

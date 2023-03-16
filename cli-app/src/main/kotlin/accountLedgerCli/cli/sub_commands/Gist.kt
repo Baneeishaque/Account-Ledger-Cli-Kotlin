@@ -4,16 +4,25 @@ import account.ledger.library.constants.Constants
 import account.ledger.library.enums.CommandLineApiMethodGistArgumentsEnum
 import account.ledger.library.enums.CommandLineApiMethodsEnum
 import account.ledger.library.enums.EnvironmentFileEntryEnum
-import accountLedgerCli.cli.App
 import account.ledger.library.utils.GistUtils
+import common.utils.library.cli.sub_commands.SubCommandWithUsernameAndPasswordAsArguments
 import common.utils.library.utils.ApiUtils.printMissingArgumentMessageForApi
+import io.github.cdimascio.dotenv.Dotenv
 
-class Gist(override val isDevelopmentMode: Boolean) : SubCommandWithUsernameAndPasswordAsArguments(
-    name = CommandLineApiMethodsEnum.Gist.name,
-    actionDescription = "Merge properly formatted Gist Account Ledger Entries to Account Ledger Entries of the Specified User, , Environment file may exist & contains missing arguments",
-    isDevelopmentMode = isDevelopmentMode
-) {
+class Gist(
+    override val isDevelopmentMode: Boolean,
+    override val dotenv: Dotenv
+) :
+    SubCommandWithUsernameAndPasswordAsArguments(
+
+        name = CommandLineApiMethodsEnum.Gist.name,
+        actionDescription = "Merge properly formatted Gist Account Ledger Entries to Account Ledger Entries of the Specified User, , Environment file may exist & contains missing arguments",
+        isDevelopmentMode = isDevelopmentMode,
+        dotenv = dotenv
+    ) {
+
     private val gistId: String? = getOptionalTextArgument(
+
         fullName = CommandLineApiMethodGistArgumentsEnum.gistId.name,
         description = "Id of the Gist which contains formatted Account Ledger Entries"
     )
@@ -29,7 +38,7 @@ class Gist(override val isDevelopmentMode: Boolean) : SubCommandWithUsernameAndP
 
         if (gistId.isNullOrEmpty()) {
 
-            val environmentGistId = App.dotenv[EnvironmentFileEntryEnum.GIST_ID.name]
+            val environmentGistId = dotenv[EnvironmentFileEntryEnum.GIST_ID.name]
             if (environmentGistId.isNullOrEmpty()) {
 
                 printMissingArgumentMessageForApi(argumentSummary = "Gist ID")
@@ -38,7 +47,7 @@ class Gist(override val isDevelopmentMode: Boolean) : SubCommandWithUsernameAndP
 
                 GistUtils.processGistId(
                     userName = usernameLocal,
-                    gitHubAccessToken = App.dotenv[EnvironmentFileEntryEnum.GITHUB_TOKEN.name]
+                    gitHubAccessToken = dotenv[EnvironmentFileEntryEnum.GITHUB_TOKEN.name]
                         ?: Constants.defaultValueForStringEnvironmentVariables,
                     gistId = environmentGistId,
                     isDevelopmentMode = isDevelopmentMode

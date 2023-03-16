@@ -16,7 +16,7 @@ import account.ledger.library.utils.ApiUtils
 import account.ledger.library.utils.TransactionUtils
 import accountLedgerCli.utils.ChooseAccountUtils
 import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
-import accountLedgerCli.utils.AccountUtils
+import account.ledger.library.utils.AccountUtils
 import common.utils.library.models.IsOkModel
 import common.utils.library.utils.*
 import common.utils.library.utils.ApiUtils as CommonApiUtils

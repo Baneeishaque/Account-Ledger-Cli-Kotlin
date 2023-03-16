@@ -16,7 +16,7 @@ import account.ledger.library.models.UserModel
 import account.ledger.library.retrofit.data.TransactionsDataSource
 import account.ledger.library.utils.ApiUtils
 import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
-import accountLedgerCli.utils.AccountUtils
+import account.ledger.library.utils.AccountUtils
 import common.utils.library.models.IsOkModel
 import common.utils.library.utils.*
 import kotlinx.coroutines.runBlocking
@@ -913,19 +913,6 @@ object Screens {
             ).addTransactionResult
         }
         return localInsertTransactionResult
-    }
-
-
-    internal fun getAccountFrequenciesForUser(
-
-        frequencyOfAccounts: FrequencyOfAccountsModel,
-        userId: UInt
-
-    ): List<AccountFrequencyModel>? {
-
-        //TODO : Allow a range of user ids
-        //TODO : Accumulate frequencies of same Accounts
-        return frequencyOfAccounts.users.find { user: UserModel -> user.id == userId }?.accountFrequencies
     }
 
     private fun getEnvironmentVariableValueForUserScreen(environmentVariableName: String) =

@@ -6,30 +6,43 @@ import account.ledger.library.enums.CommandLineApiMethodBalanceSheetOptionsEnum
 import account.ledger.library.enums.CommandLineApiMethodsEnum
 import accountLedgerCli.cli.App
 import accountLedgerCli.cli.UserOperations
+import common.utils.library.cli.sub_commands.SubCommandWithUsernameAndPasswordAsArguments
+import io.github.cdimascio.dotenv.Dotenv
 import kotlinx.cli.ArgType
 import kotlinx.cli.default
 
-class BalanceSheet(override val isDevelopmentMode: Boolean) : SubCommandWithUsernameAndPasswordAsArguments(
+class BalanceSheet(
+
+    override val isDevelopmentMode: Boolean,
+    override val dotenv: Dotenv
+
+) : SubCommandWithUsernameAndPasswordAsArguments(
+
     name = CommandLineApiMethodsEnum.BalanceSheet.name,
     actionDescription = "Provides Balance Sheet Ledger of the Specified User, Currently in JSON format, Default Balance Sheet Refine Level is [Excluding Open Balances, Misc. Incomes, Investment Returns, Family & Expense Accounts], Environment file may exist & contains missing arguments",
-    isDevelopmentMode = isDevelopmentMode
+    isDevelopmentMode = isDevelopmentMode,
+    dotenv = dotenv
 ) {
 
     private val refineLevel: BalanceSheetRefineLevelEnum by option(
+
         type = ArgType.Choice<BalanceSheetRefineLevelEnum> { it.name.lowercase() },
         fullName = CommandLineApiMethodBalanceSheetOptionsEnum.refineLevel.name,
         shortName = "r",
         description = "Refine Level of the Balance Sheet Ledger"
+
     ).default(BalanceSheetRefineLevelEnum.WITHOUT_EXPENSE_ACCOUNTS)
 
     private val outputFormat: BalanceSheetOutputFormatsEnum by option(
+
         type = ArgType.Choice<BalanceSheetOutputFormatsEnum> { it.name.lowercase() },
         fullName = CommandLineApiMethodBalanceSheetOptionsEnum.outputFormat.name,
         shortName = "o",
         description = "Output Format of the Balance Sheet Ledger"
+
     ).default(BalanceSheetOutputFormatsEnum.JSON)
 
-    override fun beforeExecuteActions() {
+    override fun localBeforeExecuteActions() {
 
         println("userName = $username")
         println("passWord = $password")
@@ -40,6 +53,7 @@ class BalanceSheet(override val isDevelopmentMode: Boolean) : SubCommandWithUser
     override fun furtherActions(usernameLocal: String, passwordLocal: String) {
 
         invokeUserLoginByApi(
+
             usernameLocal = usernameLocal,
             passwordLocal = passwordLocal,
         )
@@ -48,11 +62,13 @@ class BalanceSheet(override val isDevelopmentMode: Boolean) : SubCommandWithUser
     private fun invokeUserLoginByApi(usernameLocal: String, passwordLocal: String) {
 
         UserOperations.login(
+
             username = usernameLocal,
             password = passwordLocal,
             isNotApiCall = false,
             apiMethod = CommandLineApiMethodsEnum.BalanceSheet.name,
             apiMethodOptions = linkedMapOf(
+
                 CommandLineApiMethodBalanceSheetOptionsEnum.refineLevel.name to refineLevel,
                 CommandLineApiMethodBalanceSheetOptionsEnum.outputFormat.name to outputFormat
             ),

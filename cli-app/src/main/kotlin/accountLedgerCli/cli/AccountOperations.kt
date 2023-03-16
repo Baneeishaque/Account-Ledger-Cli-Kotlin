@@ -12,7 +12,7 @@ import account.ledger.library.retrofit.data.TransactionsDataSource
 import account.ledger.library.utils.ApiUtils
 import account.ledger.library.utils.TransactionUtils
 import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
-import accountLedgerCli.utils.AccountUtils
+import account.ledger.library.utils.AccountUtils
 import common.utils.library.models.IsOkModel
 import common.utils.library.utils.MysqlUtils
 import common.utils.library.utils.invalidOptionMessage

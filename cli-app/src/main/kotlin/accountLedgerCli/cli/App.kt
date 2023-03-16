@@ -7,8 +7,9 @@ import account.ledger.library.enums.EnvironmentFileEntryEnum
 import account.ledger.library.models.InsertTransactionResult
 import accountLedgerCli.cli.sub_commands.BalanceSheet
 import accountLedgerCli.cli.sub_commands.Gist
-import accountLedgerCli.utils.AccountUtils
+import account.ledger.library.utils.AccountUtils
 import accountLedgerCli.utils.GistUtilsInteractive
+import common.utils.library.enums.EnvironmentFileEntryCommonEnum
 import common.utils.library.utils.*
 import io.github.cdimascio.dotenv.Dotenv
 import io.github.cdimascio.dotenv.dotenv
@@ -64,7 +65,7 @@ class App {
             if (args.isEmpty()) {
 
                 do {
-                    val identifiedUser: String = dotenv[EnvironmentFileEntryEnum.USER_NAME.name]
+                    val identifiedUser: String = dotenv[EnvironmentFileEntryCommonEnum.USER_NAME.name]
                         ?: Constants.defaultValueForStringEnvironmentVariables
                     commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
                         listOfCommands = listOf(
@@ -93,7 +94,7 @@ class App {
                                 insertTransactionResult = UserOperations.login(
 
                                     username = if (identifiedUser == Constants.defaultValueForStringEnvironmentVariables) "" else identifiedUser,
-                                    password = dotenv[EnvironmentFileEntryEnum.PASSWORD.name] ?: "",
+                                    password = dotenv[EnvironmentFileEntryCommonEnum.PASSWORD.name] ?: "",
                                     fromAccount = fromAccount,
                                     viaAccount = viaAccount,
                                     toAccount = toAccount,
@@ -154,8 +155,14 @@ class App {
 
                 val parser = ArgParser(programName = "Account-Ledger-Cli", strictSubcommandOptionsOrder = true)
                 parser.subcommands(
-                    BalanceSheet(isDevelopmentMode = isDevelopmentMode),
-                    Gist(isDevelopmentMode = isDevelopmentMode)
+                    BalanceSheet(
+                        isDevelopmentMode = isDevelopmentMode,
+                        dotenv = dotenv
+                    ),
+                    Gist(
+                        isDevelopmentMode = isDevelopmentMode,
+                        dotenv = dotenv
+                    )
                 )
                 parser.parse(args = args)
             }

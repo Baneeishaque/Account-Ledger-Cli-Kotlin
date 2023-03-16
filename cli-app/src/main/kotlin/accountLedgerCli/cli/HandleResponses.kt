@@ -8,7 +8,7 @@ import account.ledger.library.enums.HandleAccountsApiResponseResult
 import account.ledger.library.models.InsertTransactionResult
 import account.ledger.library.models.ViewTransactionsOutput
 import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
-import accountLedgerCli.utils.AccountUtils
+import account.ledger.library.utils.AccountUtils
 import common.utils.library.models.IsOkModel
 import common.utils.library.utils.EnumUtils
 import common.utils.library.utils.invalidOptionMessage
