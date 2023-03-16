@@ -83,7 +83,3 @@ tasks.jacocoTestReport {
 tasks.test {
     finalizedBy(tasks.jacocoTestReport)
 }
-
-//val distTar by tasks.getting(Tar::class) {
-//    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-//}
