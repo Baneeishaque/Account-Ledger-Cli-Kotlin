@@ -18,10 +18,7 @@ import accountLedgerCli.utils.ChooseAccountUtils
 import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
 import accountLedgerCli.utils.AccountUtils
 import common.utils.library.models.IsOkModel
-import common.utils.library.utils.DateTimeUtils
-import common.utils.library.utils.MysqlUtils
-import common.utils.library.utils.ToDoUtils
-import common.utils.library.utils.invalidOptionMessage
+import common.utils.library.utils.*
 import common.utils.library.utils.ApiUtils as CommonApiUtils
 import common.utils.library.utils.HandleResponses as CommonHandleResponses
 import common.utils.library.constants.Constants as CommonConstants
@@ -394,10 +391,14 @@ object TransactionViews {
                             val selectedTransaction: TransactionResponse = userTransactionsMap[transactionIndex]!!
                             val selectedTransactionDateTimeConversionResult: IsOkModel<String> =
 
-                                MysqlUtils.dateTimeTextConversionWithMessage(dateTimeTextConversionFunction = fun(): IsOkModel<String> {
+                                MysqlUtilsInteractive.dateTimeTextConversionWithMessage(
+                                    
+                                    inputDateTimeText = selectedTransaction.event_date_time,
+                                    dateTimeTextConversionFunction = fun(): IsOkModel<String> {
 
-                                    return MysqlUtils.mySqlDateTimeTextToNormalDateTimeText(mySqlDateTimeText = selectedTransaction.event_date_time)
-                                })
+                                        return MysqlUtils.mySqlDateTimeTextToNormalDateTimeText(mySqlDateTimeText = selectedTransaction.event_date_time)
+                                    },
+                                )
                             if (selectedTransactionDateTimeConversionResult.isOK) {
 
                                 //TODO : Present Transaction

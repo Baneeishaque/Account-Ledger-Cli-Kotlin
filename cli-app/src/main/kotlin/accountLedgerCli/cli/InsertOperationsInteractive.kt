@@ -2164,7 +2164,9 @@ object InsertOperationsInteractive {
     ): Boolean {
 
         val eventDateTimeConversionResult: IsOkModel<String> =
-            MysqlUtils.dateTimeTextConversionWithMessage(
+            MysqlUtilsInteractive.dateTimeTextConversionWithMessage(
+
+                inputDateTimeText = eventDateTime,
                 dateTimeTextConversionFunction = fun(): IsOkModel<String> {
                     return MysqlUtils.normalDateTimeTextToMySqlDateTimeText(
                         normalDateTimeText = eventDateTime,
@@ -2292,7 +2294,9 @@ object InsertOperationsInteractive {
         } else {
 
             val eventDateTimeConversionResult: IsOkModel<String> =
-                MysqlUtils.dateTimeTextConversionWithMessage(
+                MysqlUtilsInteractive.dateTimeTextConversionWithMessage(
+
+                    inputDateTimeText = eventDateTime,
                     dateTimeTextConversionFunction = fun(): IsOkModel<String> {
                         return MysqlUtils.normalDateTimeTextToMySqlDateTimeText(
                             normalDateTimeText = eventDateTime,
