@@ -67,13 +67,21 @@ val jar by tasks.getting(Jar::class) {
 
 tasks.jacocoTestReport {
     reports {
-        xml.isEnabled = true
-        html.isEnabled = true
+        xml.required.set(true)
+        html.required.set(true)
     }
 }
 
 tasks.check {
     dependsOn(tasks.jacocoTestReport)
+}
+
+tasks.jacocoTestReport {
+    dependsOn(tasks.test)
+}
+
+tasks.test {
+    finalizedBy(tasks.jacocoTestReport)
 }
 
 //val distTar by tasks.getting(Tar::class) {
