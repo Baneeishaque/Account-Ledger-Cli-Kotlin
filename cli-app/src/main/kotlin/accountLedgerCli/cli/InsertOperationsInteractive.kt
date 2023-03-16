@@ -24,7 +24,7 @@ import kotlinx.coroutines.runBlocking
 import common.utils.library.utils.ApiUtils as CommonApiUtils
 import common.utils.library.utils.HandleResponses as CommonHandleResponses
 
-object InsertOperations {
+object InsertOperationsInteractive {
 
     internal val walletAccount: EnvironmentVariableForWholeNumber = getEnvironmentVariableValueForInsertOperation(
         environmentVariableName = EnvironmentalFileEntries.walletAccountId.entryName.name,

@@ -106,7 +106,7 @@ internal fun addTransactionWithAccountAvailabilityCheck(
 
             TransactionTypeEnum.NORMAL -> {
 
-                val addTransactionStep2Result: InsertTransactionResult = InsertOperations.addTransactionStep2(
+                val addTransactionStep2Result: InsertTransactionResult = InsertOperationsInteractive.addTransactionStep2(
 
                     userId = userId,
                     username = username,
@@ -137,7 +137,7 @@ internal fun addTransactionWithAccountAvailabilityCheck(
 
             TransactionTypeEnum.VIA -> {
 
-                var addTransactionStep2Result: InsertTransactionResult = InsertOperations.addTransactionStep2(
+                var addTransactionStep2Result: InsertTransactionResult = InsertOperationsInteractive.addTransactionStep2(
                     userId = userId,
                     username = username,
                     transactionType = TransactionTypeEnum.VIA,
@@ -152,7 +152,7 @@ internal fun addTransactionWithAccountAvailabilityCheck(
                 )
                 if (addTransactionStep2Result.isSuccess) {
 
-                    addTransactionStep2Result = InsertOperations.addTransactionStep2(
+                    addTransactionStep2Result = InsertOperationsInteractive.addTransactionStep2(
 
                         userId = userId,
                         username = username,
@@ -184,7 +184,7 @@ internal fun addTransactionWithAccountAvailabilityCheck(
 
             TransactionTypeEnum.TWO_WAY -> {
 
-                var addTransactionStep2Result: InsertTransactionResult = InsertOperations.addTransactionStep2(
+                var addTransactionStep2Result: InsertTransactionResult = InsertOperationsInteractive.addTransactionStep2(
 
                     userId = userId,
                     username = username,
@@ -200,7 +200,7 @@ internal fun addTransactionWithAccountAvailabilityCheck(
                 )
                 if (addTransactionStep2Result.isSuccess) {
 
-                    addTransactionStep2Result = InsertOperations.addTransactionStep2(
+                    addTransactionStep2Result = InsertOperationsInteractive.addTransactionStep2(
 
                         userId = userId,
                         username = username,

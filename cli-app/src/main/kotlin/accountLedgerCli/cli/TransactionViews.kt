@@ -278,7 +278,7 @@ object TransactionViews {
                             )
 
                             // TODO : Take Confirmation from the user
-                            if (InsertOperations.deleteTransaction(
+                            if (InsertOperationsInteractive.deleteTransaction(
                                     transactionId = transactionIndex,
                                     isConsoleMode = isConsoleMode,
                                     isDevelopmentMode = isDevelopmentMode
@@ -333,7 +333,7 @@ object TransactionViews {
                                     }
                                         .forEach { transactionMapEntryForDelete: Map.Entry<UInt, TransactionResponse> ->
 
-                                            if (InsertOperations.deleteTransaction(
+                                            if (InsertOperationsInteractive.deleteTransaction(
                                                     transactionId = transactionMapEntryForDelete.key,
                                                     isConsoleMode = isConsoleMode,
                                                     isDevelopmentMode = isDevelopmentMode
@@ -478,7 +478,7 @@ object TransactionViews {
                                 } while (true)
 
                                 val updateTransactionResult: InsertTransactionResult =
-                                    InsertOperations.addTransactionStep2(
+                                    InsertOperationsInteractive.addTransactionStep2(
 
                                         userId = userId,
                                         username = username,
@@ -590,7 +590,7 @@ object TransactionViews {
                                             accounts = getAccountsFullResult.getOrNull()!!.accounts
                                         )
 
-                                    if (InsertOperations.updateTransaction(
+                                    if (InsertOperationsInteractive.updateTransaction(
 
                                             transactionId = upTransactionKey,
                                             eventDateTime = newDateTime,
@@ -738,7 +738,7 @@ object TransactionViews {
                                             accounts = getAccountsFullResult.getOrNull()!!.accounts
                                         )
 
-                                    if (InsertOperations.updateTransaction(
+                                    if (InsertOperationsInteractive.updateTransaction(
 
                                             transactionId = upTransactionKey,
                                             eventDateTime = newDateTime,
@@ -810,7 +810,7 @@ object TransactionViews {
                                         accounts = getAccountsFullResult.getOrNull()!!.accounts
                                     )
 
-                                if (InsertOperations.updateTransaction(
+                                if (InsertOperationsInteractive.updateTransaction(
 
                                         transactionId = upTransactionKey,
                                         eventDateTime = newDateTime,

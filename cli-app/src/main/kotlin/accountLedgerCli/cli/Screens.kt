@@ -386,7 +386,7 @@ object Screens {
                         userId = userId,
                         insertTransactionResult = insertTransactionResult,
                         username = username,
-                        desiredAccountIndex = InsertOperations.walletAccount.value!!,
+                        desiredAccountIndex = InsertOperationsInteractive.walletAccount.value!!,
                         isConsoleMode = isConsoleMode,
                         isDevelopmentMode = isDevelopmentMode
                     )
@@ -399,7 +399,7 @@ object Screens {
                         userId = userId,
                         insertTransactionResult = insertTransactionResult,
                         username = username,
-                        desiredAccountIndex = InsertOperations.bankAccount.value!!,
+                        desiredAccountIndex = InsertOperationsInteractive.bankAccount.value!!,
                         isConsoleMode = isConsoleMode,
                         isDevelopmentMode = isDevelopmentMode
                     )
@@ -412,7 +412,7 @@ object Screens {
                         userId = userId,
                         insertTransactionResult = insertTransactionResult,
                         username = username,
-                        desiredAccountIndex = InsertOperations.frequent1Account.value!!,
+                        desiredAccountIndex = InsertOperationsInteractive.frequent1Account.value!!,
                         isConsoleMode = isConsoleMode,
                         isDevelopmentMode = isDevelopmentMode
                     )
@@ -425,7 +425,7 @@ object Screens {
                         userId = userId,
                         insertTransactionResult = insertTransactionResult,
                         username = username,
-                        desiredAccountIndex = InsertOperations.frequent2Account.value!!,
+                        desiredAccountIndex = InsertOperationsInteractive.frequent2Account.value!!,
                         isConsoleMode = isConsoleMode,
                         isDevelopmentMode = isDevelopmentMode
                     )
@@ -438,7 +438,7 @@ object Screens {
                         userId = userId,
                         insertTransactionResult = insertTransactionResult,
                         username = username,
-                        desiredAccountIndex = InsertOperations.frequent3Account.value!!,
+                        desiredAccountIndex = InsertOperationsInteractive.frequent3Account.value!!,
                         isConsoleMode = isConsoleMode,
                         isDevelopmentMode = isDevelopmentMode
                     )
@@ -590,7 +590,7 @@ object Screens {
 
     ) = quickTransactionOnX(
 
-        account = InsertOperations.frequent3Account,
+        account = InsertOperationsInteractive.frequent3Account,
         insertTransactionResult = insertTransactionResult,
         userId = userId,
         username = username,
@@ -609,7 +609,7 @@ object Screens {
 
     ) = quickTransactionOnX(
 
-        account = InsertOperations.frequent2Account,
+        account = InsertOperationsInteractive.frequent2Account,
         insertTransactionResult = insertTransactionResult,
         userId = userId,
         username = username,
@@ -628,7 +628,7 @@ object Screens {
 
     ) = quickTransactionOnX(
 
-        account = InsertOperations.frequent1Account,
+        account = InsertOperationsInteractive.frequent1Account,
         insertTransactionResult = insertTransactionResult,
         userId = userId,
         username = username,
@@ -646,7 +646,7 @@ object Screens {
 
     ) = quickTransactionOnBankToX(
 
-        account2 = InsertOperations.frequent3Account,
+        account2 = InsertOperationsInteractive.frequent3Account,
         userId = userId,
         username = username,
         insertTransactionResult = insertTransactionResult,
@@ -664,7 +664,7 @@ object Screens {
 
     ) = quickTransactionOnBankToX(
 
-        account2 = InsertOperations.frequent2Account,
+        account2 = InsertOperationsInteractive.frequent2Account,
         userId = userId,
         username = username,
         insertTransactionResult = insertTransactionResult,
@@ -682,7 +682,7 @@ object Screens {
 
     ) = quickTransactionOnBankToX(
 
-        account2 = InsertOperations.frequent1Account,
+        account2 = InsertOperationsInteractive.frequent1Account,
         userId = userId,
         username = username,
         insertTransactionResult = insertTransactionResult,
@@ -700,7 +700,7 @@ object Screens {
 
     ) = quickTransactionOnX(
 
-        account = InsertOperations.bankAccount,
+        account = InsertOperationsInteractive.bankAccount,
         insertTransactionResult = insertTransactionResult,
         userId = userId,
         username = username,
@@ -718,7 +718,7 @@ object Screens {
 
     ) = quickTransactionOnWalletToX(
 
-        account2 = InsertOperations.frequent3Account,
+        account2 = InsertOperationsInteractive.frequent3Account,
         userId = userId,
         username = username,
         insertTransactionResult = insertTransactionResult,
@@ -736,7 +736,7 @@ object Screens {
 
     ) = quickTransactionOnWalletToX(
 
-        account2 = InsertOperations.frequent2Account,
+        account2 = InsertOperationsInteractive.frequent2Account,
         userId = userId,
         username = username,
         insertTransactionResult = insertTransactionResult,
@@ -754,7 +754,7 @@ object Screens {
 
     ) = quickTransactionOnWalletToX(
 
-        account2 = InsertOperations.frequent1Account,
+        account2 = InsertOperationsInteractive.frequent1Account,
         userId = userId,
         username = username,
         insertTransactionResult = insertTransactionResult,
@@ -773,7 +773,7 @@ object Screens {
 
     ) = quickTransactionOnXToY(
 
-        account1 = InsertOperations.walletAccount,
+        account1 = InsertOperationsInteractive.walletAccount,
         account2 = account2,
         userId = userId,
         username = username,
@@ -793,7 +793,7 @@ object Screens {
 
     ) = quickTransactionOnXToY(
 
-        account1 = InsertOperations.bankAccount,
+        account1 = InsertOperationsInteractive.bankAccount,
         account2 = account2,
         userId = userId,
         username = username,
@@ -812,7 +812,7 @@ object Screens {
         isConsoleMode: Boolean,
         isDevelopmentMode: Boolean
 
-    ) = InsertOperations.insertQuickTransactionFromAccount1toAccount2(
+    ) = InsertOperationsInteractive.insertQuickTransactionFromAccount1toAccount2(
 
         account1 = account1,
         account2 = account2,
@@ -838,7 +838,7 @@ object Screens {
 
     ) = quickTransactionOnX(
 
-        account = InsertOperations.walletAccount,
+        account = InsertOperationsInteractive.walletAccount,
         insertTransactionResult = insertTransactionResult,
         userId = userId,
         username = username,
@@ -857,7 +857,7 @@ object Screens {
 
     ): InsertTransactionResult {
 
-        return InsertOperations.openSpecifiedAccountHome(
+        return InsertOperationsInteractive.openSpecifiedAccountHome(
 
             account = account,
             userId = userId,
@@ -1006,7 +1006,7 @@ object Screens {
                 }
 
                 "2" -> {
-                    localInsertTransactionResult = InsertOperations.addTransaction(
+                    localInsertTransactionResult = InsertOperationsInteractive.addTransaction(
 
                         userId = userId,
                         username = username,
@@ -1038,7 +1038,7 @@ object Screens {
                 }
 
                 "4" -> {
-                    localInsertTransactionResult = InsertOperations.addTransaction(
+                    localInsertTransactionResult = InsertOperationsInteractive.addTransaction(
                         userId = userId,
                         username = username,
                         transactionType = TransactionTypeEnum.VIA,
@@ -1054,7 +1054,7 @@ object Screens {
                 }
 
                 "5" -> {
-                    localInsertTransactionResult = InsertOperations.addTransaction(
+                    localInsertTransactionResult = InsertOperationsInteractive.addTransaction(
 
                         userId = userId,
                         username = username,
