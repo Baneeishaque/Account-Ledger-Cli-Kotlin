@@ -2119,30 +2119,6 @@ object InsertOperationsInteractive {
         )
     }
 
-//    private fun manipulateTransactionWithEventDateTimeCheck(
-//
-//        eventDateTime: String,
-//        transactionManipulationApiRequest: () -> Result<TransactionManipulationResponse>,
-//        transactionManipulationSuccessActions: () -> Unit
-//
-//    ): Boolean {
-//
-//        val eventDateTimeConversionResult: IsOkModel<String> = MysqlUtils.dateTimeTextConversionWithMessage(
-//            dateTimeTextConversionFunction = fun(): IsOkModel<String> {
-//                return MysqlUtils.normalDateTextToMysqlDateText(
-//                    normalDateText = eventDateTime
-//                )
-//            })
-//
-//        if (eventDateTimeConversionResult.isOK) {
-//            return manipulateTransaction(
-//                transactionManipulationApiRequest = transactionManipulationApiRequest,
-//                transactionManipulationSuccessActions = transactionManipulationSuccessActions
-//            )
-//        }
-//        return false
-//    }
-
     private fun insertTransactionInteractive(
 
         userId: UInt,
@@ -2288,34 +2264,4 @@ object InsertOperationsInteractive {
         environmentVariableName = environmentVariableName,
         environmentVariableFormalName = environmentVariableFormalName
     )
-
-//    private fun automatedInsertTransaction(
-//
-//        userId: UInt,
-//        eventDateTime: String,
-//        particulars: String,
-//        amount: Float,
-//        fromAccount: AccountResponse,
-//        toAccount: AccountResponse
-//
-//    ): Boolean {
-//
-//        commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
-//            listOfCommands = listOf(
-//                "\nTime - $eventDateTime",
-//                "Withdraw Account - ${fromAccount.id} : ${fromAccount.fullName}",
-//                "Deposit Account - ${toAccount.id} : ${toAccount.fullName}",
-//                "Particulars - $particulars",
-//                "Amount - $amount"
-//            )
-//        )
-//        return insertTransaction(
-//            userId = userId,
-//            eventDateTime = eventDateTime,
-//            particulars = particulars,
-//            amount = amount,
-//            fromAccount = fromAccount,
-//            toAccount = toAccount
-//        )
-//    }
 }
