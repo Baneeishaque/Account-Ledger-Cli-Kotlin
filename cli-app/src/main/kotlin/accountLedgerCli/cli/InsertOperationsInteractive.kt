@@ -2,13 +2,17 @@ package accountLedgerCli.cli
 
 import account.ledger.library.api.response.AccountResponse
 import account.ledger.library.api.response.TransactionManipulationResponse
+import account.ledger.library.constants.Constants
 import account.ledger.library.constants.EnvironmentalFileEntries
 import account.ledger.library.enums.AccountExchangeTypeEnum
 import account.ledger.library.enums.AccountTypeEnum
 import account.ledger.library.enums.HandleAccountsApiResponseResult
 import account.ledger.library.enums.TransactionTypeEnum
 import account.ledger.library.models.ChooseAccountResult
+import account.ledger.library.models.FrequencyOfAccountsModel
 import account.ledger.library.models.InsertTransactionResult
+import account.ledger.library.models.UserModel
+import account.ledger.library.operations.InsertOperations
 import account.ledger.library.operations.InsertOperations.insertTransaction
 import account.ledger.library.operations.InsertOperations.manipulateTransaction
 import account.ledger.library.retrofit.data.TransactionDataSource
@@ -19,7 +23,6 @@ import accountLedgerCli.utils.ChooseAccountUtils
 import common.utils.library.models.IsOkModel
 import common.utils.library.utils.*
 import common.utils.library.utils.ApiUtils.printServerExecutionErrorMessage
-import common.utils.library.utils.InteractiveUtils.printErrorMessage
 import kotlinx.coroutines.runBlocking
 import common.utils.library.utils.HandleResponses as CommonHandleResponses
 
@@ -2138,8 +2141,8 @@ object InsertOperationsInteractive {
             eventDateTime = eventDateTime,
             particulars = particulars,
             amount = amount,
-            fromAccount = fromAccount,
-            toAccount = toAccount,
+            fromAccountId = fromAccount.id,
+            toAccountId = toAccount.id,
             isConsoleMode = isConsoleMode,
             isDevelopmentMode = isDevelopmentMode,
             eventDateTimeConversionFunction = {
@@ -2155,7 +2158,80 @@ object InsertOperationsInteractive {
                         )
                     },
                 )
-            })
+            },
+            transactionManipulationSuccessActions = fun() {
+
+                val readFrequencyOfAccountsFileResult: IsOkModel<FrequencyOfAccountsModel> =
+                    JsonFileUtils.readJsonFile(
+
+                        fileName = Constants.frequencyOfAccountsFileName,
+                        isDevelopmentMode = isDevelopmentMode
+                    )
+
+                if (isDevelopmentMode) {
+
+                    println("readFrequencyOfAccountsFileResult : $readFrequencyOfAccountsFileResult")
+                }
+
+                if (readFrequencyOfAccountsFileResult.isOK) {
+
+                    var frequencyOfAccounts: FrequencyOfAccountsModel = readFrequencyOfAccountsFileResult.data!!
+                    val user: UserModel? = frequencyOfAccounts.users.find { user: UserModel -> user.id == userId }
+                    if (user != null) {
+
+                        frequencyOfAccounts = InsertOperations.updateAccountFrequency(
+
+                            user = user,
+                            account = fromAccount,
+                            frequencyOfAccounts = frequencyOfAccounts,
+                            userId = userId,
+                            isDevelopmentMode = isDevelopmentMode
+                        )
+                        frequencyOfAccounts = InsertOperations.updateAccountFrequency(
+
+                            user = user,
+                            account = toAccount,
+                            frequencyOfAccounts = frequencyOfAccounts,
+                            userId = userId,
+                            isDevelopmentMode = isDevelopmentMode
+                        )
+
+                    } else {
+                        frequencyOfAccounts.users = frequencyOfAccounts.users.plusElement(
+
+                            element = InsertOperations.getInitialAccountFrequencyForUser(
+
+                                userId = userId,
+                                fromAccount = fromAccount,
+                                toAccount = toAccount
+                            )
+                        )
+                    }
+                    JsonFileUtils.writeJsonFile(
+
+                        fileName = Constants.frequencyOfAccountsFileName,
+                        data = frequencyOfAccounts
+                    )
+                } else {
+
+                    JsonFileUtils.writeJsonFile(
+
+                        fileName = Constants.frequencyOfAccountsFileName,
+                        data = FrequencyOfAccountsModel(
+
+                            users = listOf(
+                                InsertOperations.getInitialAccountFrequencyForUser(
+
+                                    userId = userId,
+                                    fromAccount = fromAccount,
+                                    toAccount = toAccount
+                                )
+                            )
+                        )
+                    )
+                }
+            }
+        )
     }
 
     internal fun updateTransaction(
