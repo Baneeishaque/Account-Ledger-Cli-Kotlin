@@ -2164,80 +2164,88 @@ object InsertOperationsInteractive {
     ): Boolean {
 
         val eventDateTimeConversionResult: IsOkModel<String> =
-            MysqlUtils.dateTimeTextConversionWithMessage(dateTimeTextConversionFunction = fun(): IsOkModel<String> {
-                return MysqlUtils.normalDateTimeTextToMySqlDateTimeText(
-                    normalDateTimeText = eventDateTime
-                )
-            })
+            MysqlUtils.dateTimeTextConversionWithMessage(
+                dateTimeTextConversionFunction = fun(): IsOkModel<String> {
+                    return MysqlUtils.normalDateTimeTextToMySqlDateTimeText(
+                        normalDateTimeText = eventDateTime,
+                    )
+                },
+            )
 
         if (eventDateTimeConversionResult.isOK) {
 
-            return manipulateTransaction(transactionManipulationApiRequest = fun(): Result<TransactionManipulationResponse> {
+            return manipulateTransaction(
+                transactionManipulationApiRequest = fun(): Result<TransactionManipulationResponse> {
 
-                return runBlocking {
+                    return runBlocking {
 
-                    TransactionDataSource().insertTransaction(
-                        userId = userId,
-                        fromAccountId = fromAccount.id,
-                        eventDateTimeString = eventDateTimeConversionResult.data!!,
-                        particulars = particulars,
-                        amount = amount,
-                        toAccountId = toAccount.id
-                    )
-                }
-            }, transactionManipulationSuccessActions = fun() {
-
-                val readFrequencyOfAccountsFileResult: IsOkModel<FrequencyOfAccountsModel> = JsonFileUtils.readJsonFile(
-                    fileName = Constants.frequencyOfAccountsFileName, isDevelopmentMode = App.isDevelopmentMode
-                )
-
-                if (App.isDevelopmentMode) {
-
-                    println("readFrequencyOfAccountsFileResult : $readFrequencyOfAccountsFileResult")
-                }
-
-                if (readFrequencyOfAccountsFileResult.isOK) {
-
-                    var frequencyOfAccounts: FrequencyOfAccountsModel = readFrequencyOfAccountsFileResult.data!!
-                    val user: UserModel? = frequencyOfAccounts.users.find { user: UserModel -> user.id == userId }
-                    if (user != null) {
-
-                        frequencyOfAccounts = updateAccountFrequency(
-                            user = user,
-                            account = fromAccount,
-                            frequencyOfAccounts = frequencyOfAccounts,
-                            userId = userId
-                        )
-                        frequencyOfAccounts = updateAccountFrequency(
-                            user = user,
-                            account = toAccount,
-                            frequencyOfAccounts = frequencyOfAccounts,
-                            userId = userId
-                        )
-
-                    } else {
-                        frequencyOfAccounts.users = frequencyOfAccounts.users.plusElement(
-                            element = getInitialAccountFrequencyForUser(
-                                userId = userId, fromAccount = fromAccount, toAccount = toAccount
-                            )
+                        TransactionDataSource().insertTransaction(
+                            userId = userId,
+                            fromAccountId = fromAccount.id,
+                            eventDateTimeString = eventDateTimeConversionResult.data!!,
+                            particulars = particulars,
+                            amount = amount,
+                            toAccountId = toAccount.id
                         )
                     }
-                    JsonFileUtils.writeJsonFile(
-                        fileName = Constants.frequencyOfAccountsFileName, data = frequencyOfAccounts
-                    )
-                } else {
+                },
+                transactionManipulationSuccessActions = fun() {
 
-                    JsonFileUtils.writeJsonFile(
-                        fileName = Constants.frequencyOfAccountsFileName, data = FrequencyOfAccountsModel(
-                            users = listOf(
-                                getInitialAccountFrequencyForUser(
+                    val readFrequencyOfAccountsFileResult: IsOkModel<FrequencyOfAccountsModel> =
+                        JsonFileUtils.readJsonFile(
+                            fileName = Constants.frequencyOfAccountsFileName,
+                            isDevelopmentMode = App.isDevelopmentMode
+                        )
+
+                    if (App.isDevelopmentMode) {
+
+                        println("readFrequencyOfAccountsFileResult : $readFrequencyOfAccountsFileResult")
+                    }
+
+                    if (readFrequencyOfAccountsFileResult.isOK) {
+
+                        var frequencyOfAccounts: FrequencyOfAccountsModel = readFrequencyOfAccountsFileResult.data!!
+                        val user: UserModel? = frequencyOfAccounts.users.find { user: UserModel -> user.id == userId }
+                        if (user != null) {
+
+                            frequencyOfAccounts = updateAccountFrequency(
+                                user = user,
+                                account = fromAccount,
+                                frequencyOfAccounts = frequencyOfAccounts,
+                                userId = userId
+                            )
+                            frequencyOfAccounts = updateAccountFrequency(
+                                user = user,
+                                account = toAccount,
+                                frequencyOfAccounts = frequencyOfAccounts,
+                                userId = userId
+                            )
+
+                        } else {
+                            frequencyOfAccounts.users = frequencyOfAccounts.users.plusElement(
+                                element = getInitialAccountFrequencyForUser(
                                     userId = userId, fromAccount = fromAccount, toAccount = toAccount
                                 )
                             )
+                        }
+                        JsonFileUtils.writeJsonFile(
+                            fileName = Constants.frequencyOfAccountsFileName,
+                            data = frequencyOfAccounts
                         )
-                    )
-                }
-            },
+                    } else {
+
+                        JsonFileUtils.writeJsonFile(
+                            fileName = Constants.frequencyOfAccountsFileName,
+                            data = FrequencyOfAccountsModel(
+                                users = listOf(
+                                    getInitialAccountFrequencyForUser(
+                                        userId = userId, fromAccount = fromAccount, toAccount = toAccount
+                                    )
+                                )
+                            )
+                        )
+                    }
+                },
                 isConsoleMode = isConsoleMode,
                 isDevelopmentMode = isDevelopmentMode
             )
@@ -2261,19 +2269,22 @@ object InsertOperationsInteractive {
 
         if (isDateTimeUpdateOperation) {
 
-            return manipulateTransaction(transactionManipulationApiRequest = fun(): Result<TransactionManipulationResponse> {
-                return runBlocking {
+            return manipulateTransaction(
+                transactionManipulationApiRequest = fun(): Result<TransactionManipulationResponse> {
+                    return runBlocking {
 
-                    TransactionDataSource().updateTransaction(
-                        transactionId = transactionId,
-                        fromAccountId = fromAccount.id,
-                        eventDateTimeString = eventDateTime,
-                        particulars = particulars,
-                        amount = amount,
-                        toAccountId = toAccount.id
-                    )
-                }
-            }, transactionManipulationSuccessActions = fun() {},
+                        TransactionDataSource().updateTransaction(
+
+                            transactionId = transactionId,
+                            fromAccountId = fromAccount.id,
+                            eventDateTimeString = eventDateTime,
+                            particulars = particulars,
+                            amount = amount,
+                            toAccountId = toAccount.id
+                        )
+                    }
+                },
+                transactionManipulationSuccessActions = fun() {},
                 isConsoleMode = isConsoleMode,
                 isDevelopmentMode = isDevelopmentMode
             )
@@ -2281,27 +2292,31 @@ object InsertOperationsInteractive {
         } else {
 
             val eventDateTimeConversionResult: IsOkModel<String> =
-                MysqlUtils.dateTimeTextConversionWithMessage(dateTimeTextConversionFunction = fun(): IsOkModel<String> {
-                    return MysqlUtils.normalDateTimeTextToMySqlDateTimeText(
-                        normalDateTimeText = eventDateTime
-                    )
-                })
+                MysqlUtils.dateTimeTextConversionWithMessage(
+                    dateTimeTextConversionFunction = fun(): IsOkModel<String> {
+                        return MysqlUtils.normalDateTimeTextToMySqlDateTimeText(
+                            normalDateTimeText = eventDateTime,
+                        )
+                    },
+                )
 
             if (eventDateTimeConversionResult.isOK) {
 
-                return manipulateTransaction(transactionManipulationApiRequest = fun(): Result<TransactionManipulationResponse> {
-                    return runBlocking {
+                return manipulateTransaction(
+                    transactionManipulationApiRequest = fun(): Result<TransactionManipulationResponse> {
+                        return runBlocking {
 
-                        TransactionDataSource().updateTransaction(
-                            transactionId = transactionId,
-                            fromAccountId = fromAccount.id,
-                            eventDateTimeString = eventDateTimeConversionResult.data!!,
-                            particulars = particulars,
-                            amount = amount,
-                            toAccountId = toAccount.id
-                        )
-                    }
-                }, transactionManipulationSuccessActions = fun() {},
+                            TransactionDataSource().updateTransaction(
+                                transactionId = transactionId,
+                                fromAccountId = fromAccount.id,
+                                eventDateTimeString = eventDateTimeConversionResult.data!!,
+                                particulars = particulars,
+                                amount = amount,
+                                toAccountId = toAccount.id
+                            )
+                        }
+                    },
+                    transactionManipulationSuccessActions = fun() {},
                     isConsoleMode = isConsoleMode,
                     isDevelopmentMode = isDevelopmentMode
                 )
@@ -2318,12 +2333,14 @@ object InsertOperationsInteractive {
 
     ): Boolean {
 
-        return manipulateTransaction(transactionManipulationApiRequest = fun(): Result<TransactionManipulationResponse> {
-            return runBlocking {
+        return manipulateTransaction(
+            transactionManipulationApiRequest = fun(): Result<TransactionManipulationResponse> {
+                return runBlocking {
 
-                TransactionDataSource().deleteTransaction(transactionId = transactionId)
-            }
-        }, transactionManipulationSuccessActions = fun() {},
+                    TransactionDataSource().deleteTransaction(transactionId = transactionId)
+                }
+            },
+            transactionManipulationSuccessActions = fun() {},
             isConsoleMode = isConsoleMode,
             isDevelopmentMode = isDevelopmentMode
         )
@@ -2331,7 +2348,10 @@ object InsertOperationsInteractive {
 
     private fun updateAccountFrequency(
 
-        user: UserModel, account: AccountResponse, frequencyOfAccounts: FrequencyOfAccountsModel, userId: UInt
+        user: UserModel,
+        account: AccountResponse,
+        frequencyOfAccounts: FrequencyOfAccountsModel,
+        userId: UInt
 
     ): FrequencyOfAccountsModel {
 
@@ -2363,22 +2383,34 @@ object InsertOperationsInteractive {
 
     private fun getInitialAccountFrequencyForUser(
 
-        userId: UInt, fromAccount: AccountResponse, toAccount: AccountResponse
+        userId: UInt,
+        fromAccount: AccountResponse,
+        toAccount: AccountResponse
 
     ) = UserModel(
 
-        id = userId, accountFrequencies = listOf(
+        id = userId,
+        accountFrequencies = listOf(
+
             AccountFrequencyModel(
-                accountID = fromAccount.id, accountName = fromAccount.fullName, countOfRepetition = 1u
+
+                accountID = fromAccount.id,
+                accountName = fromAccount.fullName,
+                countOfRepetition = 1u
+
             ), AccountFrequencyModel(
-                accountID = toAccount.id, accountName = toAccount.fullName, countOfRepetition = 1u
+
+                accountID = toAccount.id,
+                accountName = toAccount.fullName,
+                countOfRepetition = 1u
             )
         )
     )
 
     private fun getEnvironmentVariableValueForInsertOperation(
 
-        environmentVariableName: String, environmentVariableFormalName: String
+        environmentVariableName: String,
+        environmentVariableFormalName: String
 
     ): EnvironmentVariableForWholeNumber = EnvironmentFileOperations.getEnvironmentVariableValueForWholeNumber(
 
