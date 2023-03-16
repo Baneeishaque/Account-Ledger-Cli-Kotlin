@@ -392,7 +392,7 @@ object TransactionViews {
                             val selectedTransactionDateTimeConversionResult: IsOkModel<String> =
 
                                 MysqlUtilsInteractive.dateTimeTextConversionWithMessage(
-                                    
+
                                     inputDateTimeText = selectedTransaction.event_date_time,
                                     dateTimeTextConversionFunction = fun(): IsOkModel<String> {
 
