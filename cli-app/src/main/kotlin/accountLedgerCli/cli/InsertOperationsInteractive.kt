@@ -23,7 +23,6 @@ import common.utils.library.models.IsOkModel
 import common.utils.library.utils.*
 import common.utils.library.utils.InteractiveUtils.printErrorMessage
 import kotlinx.coroutines.runBlocking
-import common.utils.library.utils.ApiUtils as CommonApiUtils
 import common.utils.library.utils.HandleResponses as CommonHandleResponses
 
 object InsertOperationsInteractive {
@@ -1736,7 +1735,7 @@ object InsertOperationsInteractive {
 
                                 return InsertTransactionResult(
 
-                                    isSuccess = insertTransaction(
+                                    isSuccess = insertTransactionInteractive(
 
                                         userId = userId,
                                         eventDateTime = localDateTimeInText,
@@ -1758,7 +1757,7 @@ object InsertOperationsInteractive {
 
                                 return InsertTransactionResult(
 
-                                    isSuccess = insertTransaction(
+                                    isSuccess = insertTransactionInteractive(
 
                                         userId = userId,
                                         eventDateTime = localDateTimeInText,
@@ -1784,7 +1783,7 @@ object InsertOperationsInteractive {
 
                                         return InsertTransactionResult(
 
-                                            isSuccess = insertTransaction(
+                                            isSuccess = insertTransactionInteractive(
 
                                                 userId = userId,
                                                 eventDateTime = localDateTimeInText,
@@ -1812,7 +1811,7 @@ object InsertOperationsInteractive {
 
                                         return InsertTransactionResult(
 
-                                            isSuccess = insertTransaction(
+                                            isSuccess = insertTransactionInteractive(
 
                                                 userId = userId,
                                                 eventDateTime = localDateTimeInText,
@@ -2155,7 +2154,7 @@ object InsertOperationsInteractive {
 //        return false
 //    }
 
-    private fun insertTransaction(
+    private fun insertTransactionInteractive(
 
         userId: UInt,
         eventDateTime: String,
