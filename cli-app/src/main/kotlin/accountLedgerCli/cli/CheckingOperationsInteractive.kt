@@ -64,6 +64,7 @@ internal fun transactionContinueCheck(
 
             "N" -> {
                 return InsertTransactionResult(
+
                     isSuccess = false,
                     dateTimeInText = dateTimeInText,
                     transactionParticulars = transactionParticulars,

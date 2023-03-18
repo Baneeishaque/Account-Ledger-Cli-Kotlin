@@ -1236,10 +1236,12 @@ object Screens {
             }",
             "From Account - ${fromAccount.id} : ${fromAccount.fullName}"
         )
-        if (transactionType == TransactionTypeEnum.VIA) {
+        if ((transactionType == TransactionTypeEnum.VIA) || (transactionType == TransactionTypeEnum.CYCLIC_VIA)) {
+
             menuItems = menuItems + listOf("Via. Account - ${viaAccount.id} : ${viaAccount.fullName}")
         }
         menuItems = menuItems + listOf(
+
             "To Account - ${toAccount.id} : ${toAccount.fullName}",
             AccountUtils.getFrequentlyUsedTop40Accounts(userId = userId, isDevelopmentMode)
         )

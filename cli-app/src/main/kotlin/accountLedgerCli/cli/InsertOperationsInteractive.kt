@@ -444,6 +444,7 @@ object InsertOperationsInteractive {
                 "7" -> {
 
                     localInsertTransactionResult = transactionContinueCheck(
+
                         userId = userId,
                         username = username,
                         transactionType = transactionType,
