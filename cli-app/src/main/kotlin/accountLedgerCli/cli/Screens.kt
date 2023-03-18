@@ -2,21 +2,18 @@ package accountLedgerCli.cli
 
 import account.ledger.library.api.response.AccountResponse
 import account.ledger.library.api.response.TransactionsResponse
-import account.ledger.library.operations.getAccounts
-import account.ledger.library.operations.getUserInitialTransactionDateFromUsername
 import account.ledger.library.constants.Constants
 import account.ledger.library.enums.BalanceSheetRefineLevelEnum
 import account.ledger.library.enums.EnvironmentFileEntryEnum
 import account.ledger.library.enums.FunctionCallSourceEnum
 import account.ledger.library.enums.TransactionTypeEnum
-import account.ledger.library.models.AccountFrequencyModel
-import account.ledger.library.models.FrequencyOfAccountsModel
 import account.ledger.library.models.InsertTransactionResult
-import account.ledger.library.models.UserModel
+import account.ledger.library.operations.getAccounts
+import account.ledger.library.operations.getUserInitialTransactionDateFromUsername
 import account.ledger.library.retrofit.data.TransactionsDataSource
+import account.ledger.library.utils.AccountUtils
 import account.ledger.library.utils.ApiUtils
 import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
-import account.ledger.library.utils.AccountUtils
 import common.utils.library.models.IsOkModel
 import common.utils.library.utils.*
 import kotlinx.coroutines.runBlocking
@@ -523,7 +520,7 @@ object Screens {
 
                 else -> {
 
-                    invalidOptionMessage()
+                    InteractiveUtils.invalidOptionMessage()
                 }
             }
         } while (true)
@@ -959,6 +956,7 @@ object Screens {
                     "3 - View Child Accounts",
                     "4 - Add Via. Transaction",
                     "5 - Add Two Way Transaction",
+                    "6 - Add Cyclic Via. Transaction",
                     "17 - ${getQuickTransactionOnWalletText()}",
                     "18 - ${getQuickTransactionOnWalletToFrequent1Text()}",
                     "19 - ${getQuickTransactionOnWalletToFrequent2Text()}",
@@ -1046,6 +1044,23 @@ object Screens {
                         userId = userId,
                         username = username,
                         transactionType = TransactionTypeEnum.TWO_WAY,
+                        fromAccount = localInsertTransactionResult.fromAccount,
+                        viaAccount = localInsertTransactionResult.viaAccount,
+                        toAccount = localInsertTransactionResult.toAccount,
+                        dateTimeInText = localInsertTransactionResult.dateTimeInText,
+                        transactionParticulars = localInsertTransactionResult.transactionParticulars,
+                        transactionAmount = localInsertTransactionResult.transactionAmount,
+                        isConsoleMode = isConsoleMode,
+                        isDevelopmentMode = isDevelopmentMode
+                    )
+                }
+
+                "6" -> {
+                    localInsertTransactionResult = InsertOperationsInteractive.addTransaction(
+
+                        userId = userId,
+                        username = username,
+                        transactionType = TransactionTypeEnum.CYCLIC_VIA,
                         fromAccount = localInsertTransactionResult.fromAccount,
                         viaAccount = localInsertTransactionResult.viaAccount,
                         toAccount = localInsertTransactionResult.toAccount,
@@ -1195,7 +1210,7 @@ object Screens {
                 }
 
                 else -> {
-                    invalidOptionMessage()
+                    InteractiveUtils.invalidOptionMessage()
                 }
             }
         } while (true)

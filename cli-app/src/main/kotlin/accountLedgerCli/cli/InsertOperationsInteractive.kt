@@ -13,8 +13,6 @@ import account.ledger.library.models.FrequencyOfAccountsModel
 import account.ledger.library.models.InsertTransactionResult
 import account.ledger.library.models.UserModel
 import account.ledger.library.operations.InsertOperations
-import account.ledger.library.operations.InsertOperations.insertTransaction
-import account.ledger.library.operations.InsertOperations.manipulateTransaction
 import account.ledger.library.retrofit.data.TransactionDataSource
 import account.ledger.library.utils.ApiUtils
 import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
@@ -22,8 +20,8 @@ import accountLedgerCli.cli.Screens.quickTransactionOnWallet
 import accountLedgerCli.utils.ChooseAccountUtils
 import common.utils.library.models.IsOkModel
 import common.utils.library.utils.*
-import common.utils.library.utils.ApiUtils.printServerExecutionErrorMessage
 import kotlinx.coroutines.runBlocking
+import common.utils.library.utils.ApiUtils as CommonApiUtils
 import common.utils.library.utils.HandleResponses as CommonHandleResponses
 
 object InsertOperationsInteractive {
@@ -891,7 +889,7 @@ object InsertOperationsInteractive {
                         }
                     } else {
 
-                        invalidOptionMessage()
+                        InteractiveUtils.invalidOptionMessage()
                     }
                 }
 
@@ -1032,7 +1030,7 @@ object InsertOperationsInteractive {
                     return localInsertTransactionResult
                 }
 
-                else -> invalidOptionMessage()
+                else -> InteractiveUtils.invalidOptionMessage()
             }
         } while (true)
     }
@@ -1247,7 +1245,7 @@ object InsertOperationsInteractive {
         }
     }
 
-    fun addTransactionStep2(
+    fun insertTransactionVariantsInteractive(
 
         userId: UInt,
         username: String,
@@ -1264,7 +1262,8 @@ object InsertOperationsInteractive {
         isEditStep: Boolean = false,
         splitIndex: UInt = 0u,
         isConsoleMode: Boolean,
-        isDevelopmentMode: Boolean
+        isDevelopmentMode: Boolean,
+        isCyclicViaStep: Boolean = false
 
     ): InsertTransactionResult {
 
@@ -1302,7 +1301,7 @@ object InsertOperationsInteractive {
 
             "D+Tr" -> {
 
-                return addTransactionStep2(
+                return insertTransactionVariantsInteractive(
 
                     userId = userId,
                     username = username,
@@ -1319,13 +1318,14 @@ object InsertOperationsInteractive {
                     isEditStep = isEditStep,
                     splitIndex = splitIndex,
                     isConsoleMode = isConsoleMode,
-                    isDevelopmentMode = isDevelopmentMode
+                    isDevelopmentMode = isDevelopmentMode,
+                    isCyclicViaStep = isCyclicViaStep
                 )
             }
 
             "D+" -> {
 
-                return addTransactionStep2(
+                return insertTransactionVariantsInteractive(
 
                     userId = userId,
                     username = username,
@@ -1342,13 +1342,14 @@ object InsertOperationsInteractive {
                     isEditStep = isEditStep,
                     splitIndex = splitIndex,
                     isConsoleMode = isConsoleMode,
-                    isDevelopmentMode = isDevelopmentMode
+                    isDevelopmentMode = isDevelopmentMode,
+                    isCyclicViaStep = isCyclicViaStep
                 )
             }
 
             "D-" -> {
 
-                return addTransactionStep2(
+                return insertTransactionVariantsInteractive(
 
                     userId = userId,
                     username = username,
@@ -1365,13 +1366,14 @@ object InsertOperationsInteractive {
                     isEditStep = isEditStep,
                     splitIndex = splitIndex,
                     isConsoleMode = isConsoleMode,
-                    isDevelopmentMode = isDevelopmentMode
+                    isDevelopmentMode = isDevelopmentMode,
+                    isCyclicViaStep = isCyclicViaStep
                 )
             }
 
             "D2+Tr" -> {
 
-                return addTransactionStep2(
+                return insertTransactionVariantsInteractive(
 
                     userId = userId,
                     username = username,
@@ -1391,13 +1393,14 @@ object InsertOperationsInteractive {
                     isEditStep = isEditStep,
                     splitIndex = splitIndex,
                     isConsoleMode = isConsoleMode,
-                    isDevelopmentMode = isDevelopmentMode
+                    isDevelopmentMode = isDevelopmentMode,
+                    isCyclicViaStep = isCyclicViaStep
                 )
             }
 
             "D2+" -> {
 
-                return addTransactionStep2(
+                return insertTransactionVariantsInteractive(
 
                     userId = userId,
                     username = username,
@@ -1414,13 +1417,14 @@ object InsertOperationsInteractive {
                     isEditStep = isEditStep,
                     splitIndex = splitIndex,
                     isConsoleMode = isConsoleMode,
-                    isDevelopmentMode = isDevelopmentMode
+                    isDevelopmentMode = isDevelopmentMode,
+                    isCyclicViaStep = isCyclicViaStep
                 )
             }
 
             "D2-" -> {
 
-                return addTransactionStep2(
+                return insertTransactionVariantsInteractive(
 
                     userId = userId,
                     username = username,
@@ -1437,7 +1441,8 @@ object InsertOperationsInteractive {
                     isEditStep = isEditStep,
                     splitIndex = splitIndex,
                     isConsoleMode = isConsoleMode,
-                    isDevelopmentMode = isDevelopmentMode
+                    isDevelopmentMode = isDevelopmentMode,
+                    isCyclicViaStep = isCyclicViaStep
                 )
             }
 
@@ -1460,7 +1465,8 @@ object InsertOperationsInteractive {
                     isTwoWayStep = isTwoWayStep,
                     transactionId = transactionId,
                     isConsoleMode = isConsoleMode,
-                    isDevelopmentMode = isDevelopmentMode
+                    isDevelopmentMode = isDevelopmentMode,
+                    isCyclicViaStep = isCyclicViaStep
                 )
             }
 
@@ -1483,7 +1489,8 @@ object InsertOperationsInteractive {
                     isTwoWayStep = isTwoWayStep,
                     transactionId = transactionId,
                     isConsoleMode = isConsoleMode,
-                    isDevelopmentMode = isDevelopmentMode
+                    isDevelopmentMode = isDevelopmentMode,
+                    isCyclicViaStep = isCyclicViaStep
                 )
             }
 
@@ -1506,7 +1513,8 @@ object InsertOperationsInteractive {
                     isTwoWayStep = isTwoWayStep,
                     transactionId = transactionId,
                     isConsoleMode = isConsoleMode,
-                    isDevelopmentMode = isDevelopmentMode
+                    isDevelopmentMode = isDevelopmentMode,
+                    isCyclicViaStep = isCyclicViaStep,
                 )
             }
 
@@ -1537,7 +1545,7 @@ object InsertOperationsInteractive {
                 )
                 for (index: UInt in 1u..noOfSplits) {
 
-                    localInsertTransactionResult = addTransactionStep2(
+                    localInsertTransactionResult = insertTransactionVariantsInteractive(
 
                         userId = userId,
                         username = username,
@@ -1553,7 +1561,8 @@ object InsertOperationsInteractive {
                         transactionAmount = localInsertTransactionResult.transactionAmount,
                         splitIndex = index,
                         isConsoleMode = isConsoleMode,
-                        isDevelopmentMode = isDevelopmentMode
+                        isDevelopmentMode = isDevelopmentMode,
+                        isCyclicViaStep = isCyclicViaStep
                     )
                 }
                 return localInsertTransactionResult
@@ -1610,7 +1619,7 @@ object InsertOperationsInteractive {
 
                                 else -> {
 
-                                    invalidOptionMessage()
+                                    InteractiveUtils.invalidOptionMessage()
                                 }
                             }
                         } while (true)
@@ -1640,7 +1649,7 @@ object InsertOperationsInteractive {
 
                                 else -> {
 
-                                    invalidOptionMessage()
+                                    InteractiveUtils.invalidOptionMessage()
                                 }
                             }
                         } while (true)
@@ -1653,18 +1662,19 @@ object InsertOperationsInteractive {
                     }
                 }
 
-                if (isTwoWayStep || isViaStep) {
-
-                    // TODO : Prefix Particulars
-                    // TODO : Suffix Particulars
-                    // TODO : Other String Manipulations
-                }
+//                if (isTwoWayStep || isViaStep) {
+//
+//                    // TODO : Prefix Particulars
+//                    // TODO : Suffix Particulars
+//                    // TODO : Other String Manipulations
+//                }
 
                 print("Enter Amount (Current Value - $localTransactionAmount) : ")
                 val transactionAmountInput: String = readln()
                 if (transactionAmountInput.isNotEmpty()) {
 
                     localTransactionAmount = InputUtils.getValidFloat(
+
                         inputText = transactionAmountInput,
                         constructInvalidMessage = fun(inputText: String): String {
                             return "Invalid Amount, Enter Amount (Current Value - $inputText) : "
@@ -1701,14 +1711,14 @@ object InsertOperationsInteractive {
 
                                         return InsertTransactionResult(
 
-                                            isSuccess = updateTransaction(
+                                            isSuccess = updateTransactionInteractive(
 
                                                 transactionId = transactionId,
                                                 eventDateTime = localDateTimeInText,
                                                 particulars = localTransactionParticulars,
                                                 amount = localTransactionAmount,
-                                                fromAccount = fromAccount,
-                                                toAccount = toAccount,
+                                                fromAccountId = fromAccount.id,
+                                                toAccountId = toAccount.id,
                                                 isConsoleMode = isConsoleMode,
                                                 isDevelopmentMode = isDevelopmentMode
                                             ),
@@ -1721,15 +1731,9 @@ object InsertOperationsInteractive {
                                         )
                                     }
 
-                                    TransactionTypeEnum.VIA -> {
-
-                                        ToDoUtils.showTodo()
-                                    }
-
-                                    TransactionTypeEnum.TWO_WAY -> {
-
-                                        ToDoUtils.showTodo()
-                                    }
+                                    TransactionTypeEnum.VIA -> ToDoUtils.showTodo()
+                                    TransactionTypeEnum.TWO_WAY -> ToDoUtils.showTodo()
+                                    TransactionTypeEnum.CYCLIC_VIA -> ToDoUtils.showTodo()
                                 }
 
                             } else if (isTwoWayStep) {
@@ -1776,6 +1780,28 @@ object InsertOperationsInteractive {
                                     viaAccount = viaAccount,
                                     toAccount = toAccount
                                 )
+                            } else if (isCyclicViaStep) {
+
+                                return InsertTransactionResult(
+
+                                    isSuccess = insertTransactionInteractive(
+
+                                        userId = userId,
+                                        eventDateTime = localDateTimeInText,
+                                        particulars = localTransactionParticulars,
+                                        amount = localTransactionAmount,
+                                        fromAccount = toAccount,
+                                        toAccount = fromAccount,
+                                        isConsoleMode = isConsoleMode,
+                                        isDevelopmentMode = isDevelopmentMode
+                                    ),
+                                    dateTimeInText = localDateTimeInText,
+                                    transactionParticulars = localTransactionParticulars,
+                                    transactionAmount = localTransactionAmount,
+                                    fromAccount = fromAccount,
+                                    viaAccount = viaAccount,
+                                    toAccount = toAccount
+                                )
                             } else {
 
                                 when (transactionType) {
@@ -1808,7 +1834,7 @@ object InsertOperationsInteractive {
                                         )
                                     }
 
-                                    TransactionTypeEnum.VIA -> {
+                                    TransactionTypeEnum.VIA, TransactionTypeEnum.CYCLIC_VIA -> {
 
                                         return InsertTransactionResult(
 
@@ -1839,7 +1865,7 @@ object InsertOperationsInteractive {
                             }
                         }
                         // TODO : Back to fields
-                        "N" -> return addTransactionStep2(
+                        "N" -> return insertTransactionVariantsInteractive(
 
                             userId = userId,
                             username = username,
@@ -1856,7 +1882,8 @@ object InsertOperationsInteractive {
                             isEditStep = isEditStep,
                             splitIndex = splitIndex,
                             isConsoleMode = isConsoleMode,
-                            isDevelopmentMode = isDevelopmentMode
+                            isDevelopmentMode = isDevelopmentMode,
+                            isCyclicViaStep = isCyclicViaStep
                         )
 
                         "Ex" -> {
@@ -1879,12 +1906,13 @@ object InsertOperationsInteractive {
                                     isTwoWayStep = isTwoWayStep,
                                     transactionId = transactionId,
                                     isConsoleMode = isConsoleMode,
-                                    isDevelopmentMode = isDevelopmentMode
+                                    isDevelopmentMode = isDevelopmentMode,
+                                    isCyclicViaStep = isCyclicViaStep
                                 )
 
                             } else {
 
-                                invalidOptionMessage()
+                                InteractiveUtils.invalidOptionMessage()
                             }
                         }
 
@@ -1908,12 +1936,13 @@ object InsertOperationsInteractive {
                                     isTwoWayStep = isTwoWayStep,
                                     transactionId = transactionId,
                                     isConsoleMode = isConsoleMode,
-                                    isDevelopmentMode = isDevelopmentMode
+                                    isDevelopmentMode = isDevelopmentMode,
+                                    isCyclicViaStep = isCyclicViaStep
                                 )
 
                             } else {
 
-                                invalidOptionMessage()
+                                InteractiveUtils.invalidOptionMessage()
                             }
                         }
 
@@ -1937,11 +1966,12 @@ object InsertOperationsInteractive {
                                     isTwoWayStep = isTwoWayStep,
                                     transactionId = transactionId,
                                     isConsoleMode = isConsoleMode,
-                                    isDevelopmentMode = isDevelopmentMode
+                                    isDevelopmentMode = isDevelopmentMode,
+                                    isCyclicViaStep = isCyclicViaStep
                                 )
                             } else {
 
-                                invalidOptionMessage()
+                                InteractiveUtils.invalidOptionMessage()
                             }
                         }
 
@@ -1965,11 +1995,12 @@ object InsertOperationsInteractive {
                                     isTwoWayStep = isTwoWayStep,
                                     transactionId = transactionId,
                                     isConsoleMode = isConsoleMode,
-                                    isDevelopmentMode = isDevelopmentMode
+                                    isDevelopmentMode = isDevelopmentMode,
+                                    isCyclicViaStep = isCyclicViaStep
                                 )
                             } else {
 
-                                invalidOptionMessage()
+                                InteractiveUtils.invalidOptionMessage()
                             }
                         }
 
@@ -1987,7 +2018,7 @@ object InsertOperationsInteractive {
                             )
                         }
 
-                        else -> invalidOptionMessage()
+                        else -> InteractiveUtils.invalidOptionMessage()
                     }
                 } while (true)
             }
@@ -2020,7 +2051,8 @@ object InsertOperationsInteractive {
         isTwoWayStep: Boolean,
         transactionId: UInt,
         isConsoleMode: Boolean,
-        isDevelopmentMode: Boolean
+        isDevelopmentMode: Boolean,
+        isCyclicViaStep: Boolean
 
     ): InsertTransactionResult {
 
@@ -2028,7 +2060,7 @@ object InsertOperationsInteractive {
 
             AccountExchangeTypeEnum.FROM_AND_TO -> {
 
-                return addTransactionStep2(
+                return insertTransactionVariantsInteractive(
 
                     userId = userId,
                     username = username,
@@ -2044,13 +2076,14 @@ object InsertOperationsInteractive {
                     transactionAmount = transactionAmount,
                     isEditStep = isEditStep,
                     isConsoleMode = isConsoleMode,
-                    isDevelopmentMode = isDevelopmentMode
+                    isDevelopmentMode = isDevelopmentMode,
+                    isCyclicViaStep = isCyclicViaStep
                 )
             }
 
             AccountExchangeTypeEnum.FROM_AND_VIA -> {
 
-                return addTransactionStep2(
+                return insertTransactionVariantsInteractive(
 
                     userId = userId,
                     username = username,
@@ -2066,13 +2099,14 @@ object InsertOperationsInteractive {
                     transactionAmount = transactionAmount,
                     isEditStep = isEditStep,
                     isConsoleMode = isConsoleMode,
-                    isDevelopmentMode = isDevelopmentMode
+                    isDevelopmentMode = isDevelopmentMode,
+                    isCyclicViaStep = isCyclicViaStep
                 )
             }
 
             AccountExchangeTypeEnum.VIA_AND_TO -> {
 
-                return addTransactionStep2(
+                return insertTransactionVariantsInteractive(
 
                     userId = userId,
                     username = username,
@@ -2088,7 +2122,8 @@ object InsertOperationsInteractive {
                     transactionAmount = transactionAmount,
                     isEditStep = isEditStep,
                     isConsoleMode = isConsoleMode,
-                    isDevelopmentMode = isDevelopmentMode
+                    isDevelopmentMode = isDevelopmentMode,
+                    isCyclicViaStep = isCyclicViaStep
                 )
             }
         }
@@ -2104,7 +2139,7 @@ object InsertOperationsInteractive {
 
     ): Boolean {
 
-        return manipulateTransaction(
+        return InsertOperations.manipulateTransaction(
 
             transactionManipulationApiRequest = transactionManipulationApiRequest,
             transactionManipulationSuccessActions = {
@@ -2114,7 +2149,7 @@ object InsertOperationsInteractive {
             },
             transactionManipulationFailureActions = { data: String ->
 
-                printServerExecutionErrorMessage(data)
+                CommonApiUtils.printServerExecutionErrorMessage(data)
                 transactionManipulationFailureActions.invoke(data)
             },
             isConsoleMode = isConsoleMode,
@@ -2135,7 +2170,7 @@ object InsertOperationsInteractive {
 
     ): Boolean {
 
-        return insertTransaction(
+        return InsertOperations.insertTransaction(
 
             userId = userId,
             eventDateTime = eventDateTime,
@@ -2234,78 +2269,45 @@ object InsertOperationsInteractive {
         )
     }
 
-    internal fun updateTransaction(
+    internal fun updateTransactionInteractive(
 
         transactionId: UInt,
         eventDateTime: String,
         particulars: String,
         amount: Float,
-        fromAccount: AccountResponse,
-        toAccount: AccountResponse,
+        fromAccountId: UInt,
+        toAccountId: UInt,
         isDateTimeUpdateOperation: Boolean = false,
         isConsoleMode: Boolean,
         isDevelopmentMode: Boolean
 
     ): Boolean {
 
-        if (isDateTimeUpdateOperation) {
+        return InsertOperations.updateTransaction(
 
-            return manipulateTransactionInteractive(
-                transactionManipulationApiRequest = fun(): Result<TransactionManipulationResponse> {
-                    return runBlocking {
+            transactionId = transactionId,
+            eventDateTime = eventDateTime,
+            particulars = particulars,
+            amount = amount,
+            fromAccountId = fromAccountId,
+            toAccountId = toAccountId,
+            isDateTimeUpdateOperation = isDateTimeUpdateOperation,
+            isConsoleMode = isConsoleMode,
+            isDevelopmentMode = isDevelopmentMode,
+            manipulateTransactionOperation = ::manipulateTransactionInteractive,
+            eventDateTimeConversionOperation = fun(): IsOkModel<String> {
 
-                        TransactionDataSource().updateTransaction(
-
-                            transactionId = transactionId,
-                            fromAccountId = fromAccount.id,
-                            eventDateTimeString = eventDateTime,
-                            particulars = particulars,
-                            amount = amount,
-                            toAccountId = toAccount.id
-                        )
-                    }
-                },
-                transactionManipulationSuccessActions = fun() {},
-                isConsoleMode = isConsoleMode,
-                isDevelopmentMode = isDevelopmentMode
-            )
-
-        } else {
-
-            val eventDateTimeConversionResult: IsOkModel<String> =
-                MysqlUtilsInteractive.dateTimeTextConversionWithMessage(
+                return MysqlUtilsInteractive.dateTimeTextConversionWithMessage(
 
                     inputDateTimeText = eventDateTime,
                     dateTimeTextConversionFunction = fun(): IsOkModel<String> {
                         return MysqlUtils.normalDateTimeTextToMySqlDateTimeText(
                             normalDateTimeText = eventDateTime,
                         )
-                    },
+                    }
                 )
-
-            if (eventDateTimeConversionResult.isOK) {
-
-                return manipulateTransactionInteractive(
-                    transactionManipulationApiRequest = fun(): Result<TransactionManipulationResponse> {
-                        return runBlocking {
-
-                            TransactionDataSource().updateTransaction(
-                                transactionId = transactionId,
-                                fromAccountId = fromAccount.id,
-                                eventDateTimeString = eventDateTimeConversionResult.data!!,
-                                particulars = particulars,
-                                amount = amount,
-                                toAccountId = toAccount.id
-                            )
-                        }
-                    },
-                    transactionManipulationSuccessActions = fun() {},
-                    isConsoleMode = isConsoleMode,
-                    isDevelopmentMode = isDevelopmentMode
-                )
-            }
-        }
-        return false
+            },
+        )
     }
 
     internal fun deleteTransaction(

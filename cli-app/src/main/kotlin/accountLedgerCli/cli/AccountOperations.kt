@@ -14,8 +14,8 @@ import account.ledger.library.utils.TransactionUtils
 import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
 import account.ledger.library.utils.AccountUtils
 import common.utils.library.models.IsOkModel
+import common.utils.library.utils.InteractiveUtils
 import common.utils.library.utils.MysqlUtils
-import common.utils.library.utils.invalidOptionMessage
 import common.utils.library.constants.Constants as CommonConstants
 import kotlinx.coroutines.runBlocking
 
@@ -82,7 +82,7 @@ internal fun checkAffectedAccountsAfterSpecifiedDate(
                         break
                     }
 
-                    else -> invalidOptionMessage()
+                    else -> InteractiveUtils.invalidOptionMessage()
                 }
             } while (true)
 
@@ -184,19 +184,16 @@ private fun printUserTransactionAfterSpecifiedDate(
     userTransactionsAfterSpecifiedDate: List<TransactionResponse>,
     isDevelopmentMode: Boolean
 ) {
-    if (isDevelopmentMode) {
+    println(
+        "userTransactionsAfterSpecifiedDate = ${
+            TransactionUtils.userTransactionsToTextFromList(
 
-        println(
-            "userTransactionsAfterSpecifiedDate = ${
-                TransactionUtils.userTransactionsToTextFromList(
-
-                    transactions = userTransactionsAfterSpecifiedDate,
-                    currentAccountId = 0u,
-                    isDevelopmentMode = isDevelopmentMode
-                )
-            }"
-        )
-    }
+                transactions = userTransactionsAfterSpecifiedDate,
+                currentAccountId = 0u,
+                isDevelopmentMode = isDevelopmentMode
+            )
+        }"
+    )
 }
 
 internal fun viewChildAccounts(
@@ -264,7 +261,7 @@ internal fun viewChildAccounts(
                     )
                 }
 
-                else -> invalidOptionMessage()
+                else -> InteractiveUtils.invalidOptionMessage()
             }
         } while (true)
     } else {

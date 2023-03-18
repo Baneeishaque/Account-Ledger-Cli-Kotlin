@@ -15,8 +15,8 @@ import account.ledger.library.utils.UserUtils
 import accountLedgerCli.cli.App.Companion.dotenv
 import common.utils.library.models.IsOkModel
 import common.utils.library.utils.DateTimeUtils
+import common.utils.library.utils.InteractiveUtils
 import common.utils.library.utils.MysqlUtils
-import common.utils.library.utils.invalidOptionMessage
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.builtins.serializer
 import kotlinx.serialization.json.Json
@@ -110,7 +110,7 @@ internal fun printBalanceSheetOfUser(
                             return
                         }
 
-                        else -> invalidOptionMessage()
+                        else -> InteractiveUtils.invalidOptionMessage()
                     }
                 } while (true)
 

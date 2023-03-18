@@ -1,11 +1,11 @@
 package accountLedgerCli.cli
 
 import account.ledger.library.api.response.AccountResponse
-import account.ledger.library.operations.addTransactionWithAccountAvailabilityCheck
 import account.ledger.library.enums.TransactionTypeEnum
 import account.ledger.library.models.InsertTransactionResult
+import account.ledger.library.operations.CheckingOperations
 import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithContinuePrompt
-import common.utils.library.utils.invalidOptionMessage
+import common.utils.library.utils.InteractiveUtils
 
 internal fun transactionContinueCheck(
 
@@ -42,7 +42,7 @@ internal fun transactionContinueCheck(
         when (readln()) {
             "Y", "" -> {
 
-                return addTransactionWithAccountAvailabilityCheck(
+                return CheckingOperations.addTransactionWithAccountAvailabilityCheck(
 
                     userId = userId,
                     username = username,
@@ -58,7 +58,7 @@ internal fun transactionContinueCheck(
                     fromAccountMissingActions = { println("Please choose from account...") },
                     toAccountMissingActions = { println("Please choose deposit account...") },
                     viaAccountMissingActions = { println("Please choose via. account...") },
-                    addTransactionStep2Operation = InsertOperationsInteractive::addTransactionStep2
+                    addTransactionOperation = InsertOperationsInteractive::insertTransactionVariantsInteractive
                 )
             }
 
@@ -74,7 +74,7 @@ internal fun transactionContinueCheck(
                 )
             }
 
-            else -> invalidOptionMessage()
+            else -> InteractiveUtils.invalidOptionMessage()
         }
     } while (true)
 }

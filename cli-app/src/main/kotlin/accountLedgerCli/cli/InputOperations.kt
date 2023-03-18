@@ -8,7 +8,7 @@ import account.ledger.library.utils.ApiUtils
 import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
 import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithTryPrompt
 import common.utils.library.utils.InputUtils
-import common.utils.library.utils.invalidOptionMessage
+import common.utils.library.utils.InteractiveUtils
 
 fun <T> getValidIndexWithInputPrompt(
 
@@ -387,7 +387,7 @@ private fun retryEnterDateWithTimeOnInvalidEntry(
 
 ): String {
 
-    invalidOptionMessage()
+    InteractiveUtils.invalidOptionMessage()
     return enterDateWithTime(
 
         transactionType = transactionType,

@@ -7,8 +7,8 @@ import account.ledger.library.models.ChooseUserResult
 import account.ledger.library.models.InsertTransactionResult
 import account.ledger.library.models.ViewTransactionsOutput
 import account.ledger.library.utils.AccountUtils
+import common.utils.library.utils.InteractiveUtils
 import common.utils.library.utils.ToDoUtils
-import common.utils.library.utils.invalidOptionMessage
 
 fun processChildAccountScreenInput(
 
@@ -97,7 +97,7 @@ fun processChildAccountScreenInput(
         }
 
         else -> {
-            invalidOptionMessage()
+            InteractiveUtils.invalidOptionMessage()
         }
     }
     return ViewTransactionsOutput(output = choice, addTransactionResult = accountHomeOutput)

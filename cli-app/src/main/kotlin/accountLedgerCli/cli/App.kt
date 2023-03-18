@@ -147,7 +147,7 @@ class App {
                         }
 
                         else -> {
-                            invalidOptionMessage()
+                            InteractiveUtils.invalidOptionMessage()
                         }
                     }
                 } while (true)

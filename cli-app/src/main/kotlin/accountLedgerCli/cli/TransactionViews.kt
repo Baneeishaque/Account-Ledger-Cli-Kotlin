@@ -263,7 +263,7 @@ object TransactionViews {
                         if (isCallNotFromCheckAccounts(
 
                                 functionCallSource = functionCallSource,
-                                furtherActionsOnFalse = { invalidOptionMessage() })
+                                furtherActionsOnFalse = { InteractiveUtils.invalidOptionMessage() })
                         ) {
 
                             val transactionIndex: UInt = getValidIndexWithInputPrompt(
@@ -292,7 +292,7 @@ object TransactionViews {
                         if (isCallNotFromCheckAccounts(
 
                                 functionCallSource = functionCallSource,
-                                furtherActionsOnFalse = { invalidOptionMessage() })
+                                furtherActionsOnFalse = { InteractiveUtils.invalidOptionMessage() })
                         ) {
 
                             val transactionStartIndex: UInt = getValidIndexWithInputPrompt(
@@ -355,7 +355,7 @@ object TransactionViews {
                         if (isCallNotFromCheckAccounts(
 
                                 functionCallSource = functionCallSource,
-                                furtherActionsOnFalse = { invalidOptionMessage() })
+                                furtherActionsOnFalse = { InteractiveUtils.invalidOptionMessage() })
                         ) {
 
                             ToDoUtils.showTodo()
@@ -367,7 +367,7 @@ object TransactionViews {
                         if (isCallNotFromCheckAccounts(
 
                                 functionCallSource = functionCallSource,
-                                furtherActionsOnFalse = { invalidOptionMessage() })
+                                furtherActionsOnFalse = { InteractiveUtils.invalidOptionMessage() })
                         ) {
 
                             val transactionIndex: UInt = getValidIndexWithInputPrompt(
@@ -443,7 +443,7 @@ object TransactionViews {
                                             break
                                         }
 
-                                        else -> invalidOptionMessage()
+                                        else -> InteractiveUtils.invalidOptionMessage()
                                     }
                                 } while (true)
 
@@ -474,12 +474,12 @@ object TransactionViews {
                                             break
                                         }
 
-                                        else -> invalidOptionMessage()
+                                        else -> InteractiveUtils.invalidOptionMessage()
                                     }
                                 } while (true)
 
                                 val updateTransactionResult: InsertTransactionResult =
-                                    InsertOperationsInteractive.addTransactionStep2(
+                                    InsertOperationsInteractive.insertTransactionVariantsInteractive(
 
                                         userId = userId,
                                         username = username,
@@ -591,14 +591,14 @@ object TransactionViews {
                                             accounts = getAccountsFullResult.getOrNull()!!.accounts
                                         )
 
-                                    if (InsertOperationsInteractive.updateTransaction(
+                                    if (InsertOperationsInteractive.updateTransactionInteractive(
 
                                             transactionId = upTransactionKey,
                                             eventDateTime = newDateTime,
                                             particulars = upTransaction.particulars,
                                             amount = upTransaction.amount,
-                                            fromAccount = userAccountsMap[upTransaction.from_account_id]!!,
-                                            toAccount = userAccountsMap[upTransaction.to_account_id]!!,
+                                            fromAccountId = userAccountsMap[upTransaction.from_account_id]!!.id,
+                                            toAccountId = userAccountsMap[upTransaction.to_account_id]!!.id,
                                             isDateTimeUpdateOperation = true,
                                             isConsoleMode = isConsoleMode,
                                             isDevelopmentMode = isDevelopmentMode
@@ -624,7 +624,7 @@ object TransactionViews {
                         if (isCallNotFromCheckAccounts(
 
                                 functionCallSource = functionCallSource,
-                                furtherActionsOnFalse = { invalidOptionMessage() })
+                                furtherActionsOnFalse = { InteractiveUtils.invalidOptionMessage() })
                         ) {
 
                             addTransactionResult = Screens.accountHome(
@@ -739,14 +739,14 @@ object TransactionViews {
                                             accounts = getAccountsFullResult.getOrNull()!!.accounts
                                         )
 
-                                    if (InsertOperationsInteractive.updateTransaction(
+                                    if (InsertOperationsInteractive.updateTransactionInteractive(
 
                                             transactionId = upTransactionKey,
                                             eventDateTime = newDateTime,
                                             particulars = upTransaction.particulars,
                                             amount = upTransaction.amount,
-                                            fromAccount = userAccountsMap[upTransaction.from_account_id]!!,
-                                            toAccount = userAccountsMap[upTransaction.to_account_id]!!,
+                                            fromAccountId = userAccountsMap[upTransaction.from_account_id]!!.id,
+                                            toAccountId = userAccountsMap[upTransaction.to_account_id]!!.id,
                                             isDateTimeUpdateOperation = true,
                                             isConsoleMode = isConsoleMode,
                                             isDevelopmentMode = isDevelopmentMode
@@ -811,14 +811,14 @@ object TransactionViews {
                                         accounts = getAccountsFullResult.getOrNull()!!.accounts
                                     )
 
-                                if (InsertOperationsInteractive.updateTransaction(
+                                if (InsertOperationsInteractive.updateTransactionInteractive(
 
                                         transactionId = upTransactionKey,
                                         eventDateTime = newDateTime,
                                         particulars = upTransaction.particulars,
                                         amount = upTransaction.amount,
-                                        fromAccount = userAccountsMap[upTransaction.from_account_id]!!,
-                                        toAccount = userAccountsMap[upTransaction.to_account_id]!!,
+                                        fromAccountId = userAccountsMap[upTransaction.from_account_id]!!.id,
+                                        toAccountId = userAccountsMap[upTransaction.to_account_id]!!.id,
                                         isDateTimeUpdateOperation = true,
                                         isConsoleMode = isConsoleMode,
                                         isDevelopmentMode = isDevelopmentMode
@@ -853,7 +853,7 @@ object TransactionViews {
                         if (isCallFromCheckAccounts(
 
                                 functionCallSource = functionCallSource,
-                                furtherActionsOnFalse = { invalidOptionMessage() }
+                                furtherActionsOnFalse = { InteractiveUtils.invalidOptionMessage() }
                             )
                         ) {
 
@@ -870,7 +870,7 @@ object TransactionViews {
                         if (isCallFromCheckAccounts(
 
                                 functionCallSource = functionCallSource,
-                                furtherActionsOnFalse = { invalidOptionMessage() }
+                                furtherActionsOnFalse = { InteractiveUtils.invalidOptionMessage() }
                             )
                         ) {
 
@@ -882,7 +882,7 @@ object TransactionViews {
                         }
                     }
 
-                    else -> invalidOptionMessage()
+                    else -> InteractiveUtils.invalidOptionMessage()
                 }
             } while (true)
         }
@@ -942,7 +942,7 @@ object TransactionViews {
         return isCallNotFromCheckAccounts(
 
             functionCallSource = functionCallSource,
-            furtherActionsOnFalse = { invalidOptionMessage() })
+            furtherActionsOnFalse = { InteractiveUtils.invalidOptionMessage() })
     }
 
     private fun isCallNotFromCheckAccounts(

@@ -11,7 +11,7 @@ import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
 import account.ledger.library.utils.AccountUtils
 import common.utils.library.models.IsOkModel
 import common.utils.library.utils.EnumUtils
-import common.utils.library.utils.invalidOptionMessage
+import common.utils.library.utils.InteractiveUtils
 import common.utils.library.constants.Constants as CommonConstants
 import common.utils.library.utils.HandleResponses as CommonHandleResponses
 
@@ -39,10 +39,10 @@ object HandleResponses {
             data = localInsertTransactionResult,
             successActions = fun(): InsertTransactionResult {
 
-                if (isDevelopmentMode) {
-
-//                    println(AccountUtils.userAccountsToStringFromLinkedHashMap(userAccountsMap = getUserAccountsMapResult.data!!))
-                }
+//                if (isDevelopmentMode) {
+//
+////                    println(AccountUtils.userAccountsToStringFromLinkedHashMap(userAccountsMap = getUserAccountsMapResult.data!!))
+//                }
 
                 do {
                     commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
@@ -186,7 +186,7 @@ object HandleResponses {
                             return HandleAccountsApiResponseResult(isAccountIdSelected = false)
                         }
 
-                        else -> invalidOptionMessage()
+                        else -> InteractiveUtils.invalidOptionMessage()
                     }
                 } while (true)
             }

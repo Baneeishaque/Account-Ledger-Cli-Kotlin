@@ -15,7 +15,7 @@ import account.ledger.library.retrofit.data.UsersDataSource
 import account.ledger.library.utils.UserUtils
 import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
 import common.utils.library.models.CommonDataModel
-import common.utils.library.utils.invalidOptionMessage
+import common.utils.library.utils.InteractiveUtils
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.builtins.serializer
 import kotlinx.serialization.json.Json
@@ -80,7 +80,7 @@ class UserOperations {
                                 user = UserUtils.getUserCredentials()
                             }
 
-                            else -> invalidOptionMessage()
+                            else -> InteractiveUtils.invalidOptionMessage()
                         }
                     } while (true)
                 }
@@ -130,7 +130,7 @@ class UserOperations {
                                 )
                             }
 
-                            else -> invalidOptionMessage()
+                            else -> InteractiveUtils.invalidOptionMessage()
                         }
                     } while (true)
 
@@ -372,7 +372,7 @@ class UserOperations {
                             )
                         }
 
-                        else -> invalidOptionMessage()
+                        else -> InteractiveUtils.invalidOptionMessage()
                     }
                 } while (true)
             } else {
@@ -460,7 +460,7 @@ class UserOperations {
                                 return insertTransactionResult
                             }
 
-                            else -> invalidOptionMessage()
+                            else -> InteractiveUtils.invalidOptionMessage()
                         }
                     } while (true)
                 }

@@ -4,7 +4,7 @@ import account.ledger.library.api.response.AccountResponse
 import account.ledger.library.constants.Constants
 import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
 import account.ledger.library.utils.AccountUtils
-import common.utils.library.utils.invalidOptionMessage
+import common.utils.library.utils.InteractiveUtils
 import common.utils.library.constants.Constants as CommonConstants
 
 fun searchAccount(
@@ -45,7 +45,7 @@ fun searchAccount(
                 userAccountsMap = userAccountsMap,
                 isDevelopmentMode = isDevelopmentMode
             )
-            else if (input != "0") invalidOptionMessage()
+            else if (input != "0") InteractiveUtils.invalidOptionMessage()
 
         } while (input != "0")
 
@@ -80,7 +80,7 @@ fun searchAccount(
                 )
             } else if (input != "0") {
 
-                invalidOptionMessage()
+                InteractiveUtils.invalidOptionMessage()
             }
         } while (input != "0")
     }
