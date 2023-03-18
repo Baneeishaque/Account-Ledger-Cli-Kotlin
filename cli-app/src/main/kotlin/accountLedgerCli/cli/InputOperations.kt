@@ -259,7 +259,7 @@ internal fun enterDateWithTime(
 ): String {
 
     print(
-        "$dateTimeInText Correct? (Y/N), D+Tr to increase 1 Day with Time Reset, D+ to increase 1 Day, D- to decrease 1 Day, D2+Tr to increase 2 Days with Time Reset, D2+ to increase 2 Days, D2- to decrease 2 Days,${if (transactionType == TransactionTypeEnum.VIA) " Ex12 to exchange From & Via A/Cs, Ex23 to exchange Via & To A/Cs, Ex13 to exchange From & To A/Cs" else " Ex to exchange From & To A/Cs"}${if (isNotFromSplitTransaction) ", S to Split Transactions" else ""}, B to Back : "
+        "$dateTimeInText Correct? (Y/N), D+Tr to increase 1 Day with Time Reset, D+ to increase 1 Day, D- to decrease 1 Day, D2+Tr to increase 2 Days with Time Reset, D2+ to increase 2 Days, D2- to decrease 2 Days,${if ((transactionType == TransactionTypeEnum.VIA) ||(transactionType == TransactionTypeEnum.CYCLIC_VIA)) " Ex12 to exchange From & Via A/Cs, Ex23 to exchange Via & To A/Cs, Ex13 to exchange From & To A/Cs" else " Ex to exchange From & To A/Cs"}${if (isNotFromSplitTransaction) ", S to Split Transactions" else ""}, B to Back : "
     )
     when (readlnOrNull()) {
         "Y", "" -> {
@@ -304,7 +304,7 @@ internal fun enterDateWithTime(
 
         "Ex" -> {
 
-            if (transactionType == TransactionTypeEnum.VIA) {
+            if ((transactionType == TransactionTypeEnum.VIA) ||(transactionType == TransactionTypeEnum.CYCLIC_VIA)) {
 
                 return retryEnterDateWithTimeOnInvalidEntry(
 

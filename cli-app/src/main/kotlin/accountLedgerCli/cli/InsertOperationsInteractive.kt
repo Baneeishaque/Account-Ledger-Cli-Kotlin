@@ -232,7 +232,7 @@ object InsertOperationsInteractive {
                     "6 - Input From Account ID Directly",
                     "7 - Continue Transaction",
 
-                    if (transactionType == TransactionTypeEnum.VIA) {
+                    if ((transactionType == TransactionTypeEnum.VIA) ||(transactionType == TransactionTypeEnum.CYCLIC_VIA)) {
 
                         "8 - Exchange From & Via. A/Cs\n" + "9 - Exchange From & Via. A/Cs, Then Continue Transaction\n" + "10 - Exchange Via. & To A/Cs\n" + "11 - Exchange Via & To A/Cs, Then Continue Transaction\n" + "12 - Exchange From & To. A/Cs\n" + "13 - Exchange From & To A/Cs, Then Continue Transaction\n" + "14 - Choose Via. Account From List - Top Levels\n" + "15 - Choose Via. Account From List - Full Names\n" + "16 - Input Via. Account ID Directly"
 
@@ -461,7 +461,7 @@ object InsertOperationsInteractive {
 
                 "8" -> {
 
-                    if (transactionType == TransactionTypeEnum.VIA) {
+                    if ((transactionType == TransactionTypeEnum.VIA) ||(transactionType == TransactionTypeEnum.CYCLIC_VIA)) {
 
                         localInsertTransactionResult = addTransaction(
                             userId = userId,
@@ -497,7 +497,7 @@ object InsertOperationsInteractive {
 
                 "9" -> {
 
-                    if (transactionType == TransactionTypeEnum.VIA) {
+                    if ((transactionType == TransactionTypeEnum.VIA) ||(transactionType == TransactionTypeEnum.CYCLIC_VIA)) {
 
                         localInsertTransactionResult = transactionContinueCheck(
                             userId = userId,
@@ -532,7 +532,7 @@ object InsertOperationsInteractive {
                 }
 
                 "10" -> {
-                    if (transactionType == TransactionTypeEnum.VIA) {
+                    if ((transactionType == TransactionTypeEnum.VIA) ||(transactionType == TransactionTypeEnum.CYCLIC_VIA)) {
 
                         localInsertTransactionResult = addTransaction(
                             userId = userId,
@@ -588,7 +588,7 @@ object InsertOperationsInteractive {
                 }
 
                 "11" -> {
-                    if (transactionType == TransactionTypeEnum.VIA) {
+                    if ((transactionType == TransactionTypeEnum.VIA) ||(transactionType == TransactionTypeEnum.CYCLIC_VIA)) {
 
                         localInsertTransactionResult = transactionContinueCheck(
                             userId = userId,
@@ -644,7 +644,7 @@ object InsertOperationsInteractive {
                 }
 
                 "12" -> {
-                    if (transactionType == TransactionTypeEnum.VIA) {
+                    if ((transactionType == TransactionTypeEnum.VIA) ||(transactionType == TransactionTypeEnum.CYCLIC_VIA)) {
 
                         localInsertTransactionResult = addTransaction(
 
@@ -691,7 +691,7 @@ object InsertOperationsInteractive {
                 }
 
                 "13" -> {
-                    if (transactionType == TransactionTypeEnum.VIA) {
+                    if ((transactionType == TransactionTypeEnum.VIA) ||(transactionType == TransactionTypeEnum.CYCLIC_VIA)) {
 
                         localInsertTransactionResult = transactionContinueCheck(
 
@@ -738,7 +738,7 @@ object InsertOperationsInteractive {
 
                 "14" -> {
 
-                    if (transactionType == TransactionTypeEnum.VIA) {
+                    if ((transactionType == TransactionTypeEnum.VIA) ||(transactionType == TransactionTypeEnum.CYCLIC_VIA)) {
 
                         localInsertTransactionResult = processChooseAccountResult(
 
@@ -794,7 +794,7 @@ object InsertOperationsInteractive {
 
                 "15" -> {
 
-                    if (transactionType == TransactionTypeEnum.VIA) {
+                    if ((transactionType == TransactionTypeEnum.VIA) ||(transactionType == TransactionTypeEnum.CYCLIC_VIA)) {
 
                         localInsertTransactionResult = processChooseAccountResult(
 
@@ -850,7 +850,7 @@ object InsertOperationsInteractive {
 
                 "16" -> {
 
-                    if (transactionType == TransactionTypeEnum.VIA) {
+                    if ((transactionType == TransactionTypeEnum.VIA) ||(transactionType == TransactionTypeEnum.CYCLIC_VIA)) {
 
                         val chooseAccountResult: ChooseAccountResult =
                             ChooseAccountUtils.chooseAccountById(
@@ -1276,7 +1276,7 @@ object InsertOperationsInteractive {
             "\nUser : $username${getSplitIndicator(splitCount = splitIndex)}",
             "Withdraw Account - ${fromAccount.id} : ${fromAccount.fullName}",
         )
-        if (transactionType == TransactionTypeEnum.VIA) {
+        if ((transactionType == TransactionTypeEnum.VIA) ||(transactionType == TransactionTypeEnum.CYCLIC_VIA)) {
             menuItems = menuItems + listOf(
                 "Intermediate Account - ${viaAccount.id} : ${viaAccount.fullName}",
             )
@@ -1687,7 +1687,7 @@ object InsertOperationsInteractive {
                         "\nTime - $localDateTimeInText",
                         "Withdraw Account - ${fromAccount.id} : ${fromAccount.fullName}"
                     )
-                    if (transactionType == TransactionTypeEnum.VIA) {
+                    if ((transactionType == TransactionTypeEnum.VIA) ||(transactionType == TransactionTypeEnum.CYCLIC_VIA)) {
                         menuItems =
                             menuItems + listOf("Intermediate Account - ${viaAccount.id} : ${viaAccount.fullName}")
                     }
@@ -1695,7 +1695,7 @@ object InsertOperationsInteractive {
                         "Deposit Account - ${toAccount.id} : ${toAccount.fullName}",
                         "Particulars - $localTransactionParticulars",
                         "Amount - $localTransactionAmount",
-                        "\nCorrect ? (Y/N), Enter ${if (transactionType == TransactionTypeEnum.VIA) "Ex12 to exchange From & Via A/Cs, Ex23 to exchange Via & To A/Cs, Ex13 to exchange From & To A/Cs" else "Ex to exchange From & To A/Cs"} or B to back : "
+                        "\nCorrect ? (Y/N), Enter ${if ((transactionType == TransactionTypeEnum.VIA) ||(transactionType == TransactionTypeEnum.CYCLIC_VIA)) "Ex12 to exchange From & Via A/Cs, Ex23 to exchange Via & To A/Cs, Ex13 to exchange From & To A/Cs" else "Ex to exchange From & To A/Cs"} or B to back : "
                     )
                     commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
                         listOfCommands = menuItems
@@ -1919,7 +1919,7 @@ object InsertOperationsInteractive {
 
                         "Ex13" -> {
 
-                            if (transactionType == TransactionTypeEnum.VIA) {
+                            if ((transactionType == TransactionTypeEnum.VIA) ||(transactionType == TransactionTypeEnum.CYCLIC_VIA)) {
 
                                 return invokeAddTransactionStep2AfterExchangeOfAccounts(
                                     userId = userId,
@@ -1949,7 +1949,7 @@ object InsertOperationsInteractive {
 
                         "Ex12" -> {
 
-                            if (transactionType == TransactionTypeEnum.VIA) {
+                            if ((transactionType == TransactionTypeEnum.VIA) ||(transactionType == TransactionTypeEnum.CYCLIC_VIA)) {
 
                                 return invokeAddTransactionStep2AfterExchangeOfAccounts(
                                     userId = userId,
@@ -1978,7 +1978,7 @@ object InsertOperationsInteractive {
 
                         "Ex23" -> {
 
-                            if (transactionType == TransactionTypeEnum.VIA) {
+                            if ((transactionType == TransactionTypeEnum.VIA) ||(transactionType == TransactionTypeEnum.CYCLIC_VIA)) {
 
                                 return invokeAddTransactionStep2AfterExchangeOfAccounts(
                                     userId = userId,
