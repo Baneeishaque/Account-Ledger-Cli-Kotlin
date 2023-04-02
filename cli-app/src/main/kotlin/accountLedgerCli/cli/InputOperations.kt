@@ -267,13 +267,9 @@ internal fun enterDateWithTime(
 
                 "Event Time : $dateTimeInText Correct? (Y/N)" +
                 "\tD+Tr to increase 1 Day with Time Reset" +
-                "\tD+ to increase 1 Day" +
                 "\tD-Tr to decrease 1 Day with Time Reset" +
-                "\tD- to decrease 1 Day" +
                 "\tD2+Tr to increase 2 Days with Time Reset" +
-                "\tD2+ to increase 2 Days" +
                 "\tD2-Tr to decrease 2 Days with Time Reset" +
-                "\tD2- to decrease 2 Days" +
 
                 (if ((transactionType == TransactionTypeEnum.VIA) || (transactionType == TransactionTypeEnum.CYCLIC_VIA)) {
 
@@ -289,6 +285,7 @@ internal fun enterDateWithTime(
 
                 "\tTr{0-23}*:*{0-59}*:*{0-59}* to Reset Time to {0-23}*:*{0-59}*:*{0-59}*" +
 
+                "\tD{d}{+,-} to +/- d Days" +
                 "\tH{d}{+,-} to +/- d Hours" +
                 "\tM{d}{+,-} to +/- d Minutes" +
                 "\tS{d}{+,-} to +/- d Seconds" +
@@ -437,6 +434,14 @@ internal fun enterDateWithTime(
                 return userInput
             }
             if (Constants.secondIncrementOrDecrementPatternRegex.matchEntire(input = userInput) != null) {
+
+                return userInput
+            }
+            if (Constants.dayIncrementOrDecrementPatternRegex.matchEntire(input = userInput) != null) {
+
+                return userInput
+            }
+            if (Constants.dayIncrementOrDecrementWithTimeResetPatternRegex.matchEntire(input = userInput) != null) {
 
                 return userInput
             }

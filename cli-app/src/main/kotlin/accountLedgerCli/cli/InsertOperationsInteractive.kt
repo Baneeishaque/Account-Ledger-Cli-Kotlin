@@ -1318,30 +1318,6 @@ object InsertOperationsInteractive {
                 )
             }
 
-            "D+" -> {
-
-                return insertTransactionVariantsInteractive(
-
-                    userId = userId,
-                    username = username,
-                    transactionType = transactionType,
-                    fromAccount = fromAccount,
-                    viaAccount = viaAccount,
-                    toAccount = toAccount,
-                    isViaStep = isViaStep,
-                    isTwoWayStep = isTwoWayStep,
-                    transactionId = transactionId,
-                    dateTimeInText = DateTimeUtils.add1DayToNormalDateTimeInText(dateTimeInText = localDateTimeInTextBackup),
-                    transactionParticulars = transactionParticulars,
-                    transactionAmount = transactionAmount,
-                    isEditStep = isEditStep,
-                    splitIndex = splitIndex,
-                    isConsoleMode = isConsoleMode,
-                    isDevelopmentMode = isDevelopmentMode,
-                    isCyclicViaStep = isCyclicViaStep
-                )
-            }
-
             "D-Tr" -> {
 
                 return insertTransactionVariantsInteractive(
@@ -1356,30 +1332,6 @@ object InsertOperationsInteractive {
                     isTwoWayStep = isTwoWayStep,
                     transactionId = transactionId,
                     dateTimeInText = DateTimeUtils.subtract1DayWith9ClockTimeToNormalDateTimeInText(dateTimeInText = localDateTimeInTextBackup),
-                    transactionParticulars = transactionParticulars,
-                    transactionAmount = transactionAmount,
-                    isEditStep = isEditStep,
-                    splitIndex = splitIndex,
-                    isConsoleMode = isConsoleMode,
-                    isDevelopmentMode = isDevelopmentMode,
-                    isCyclicViaStep = isCyclicViaStep
-                )
-            }
-
-            "D-" -> {
-
-                return insertTransactionVariantsInteractive(
-
-                    userId = userId,
-                    username = username,
-                    transactionType = transactionType,
-                    fromAccount = fromAccount,
-                    viaAccount = viaAccount,
-                    toAccount = toAccount,
-                    isViaStep = isViaStep,
-                    isTwoWayStep = isTwoWayStep,
-                    transactionId = transactionId,
-                    dateTimeInText = DateTimeUtils.subtract1DayFromNormalDateTimeInText(dateTimeInText = localDateTimeInTextBackup),
                     transactionParticulars = transactionParticulars,
                     transactionAmount = transactionAmount,
                     isEditStep = isEditStep,
@@ -1417,30 +1369,6 @@ object InsertOperationsInteractive {
                 )
             }
 
-            "D2+" -> {
-
-                return insertTransactionVariantsInteractive(
-
-                    userId = userId,
-                    username = username,
-                    transactionType = transactionType,
-                    fromAccount = fromAccount,
-                    viaAccount = viaAccount,
-                    toAccount = toAccount,
-                    isViaStep = isViaStep,
-                    isTwoWayStep = isTwoWayStep,
-                    transactionId = transactionId,
-                    dateTimeInText = DateTimeUtils.add2DaysToNormalDateTimeInText(dateTimeInText = localDateTimeInTextBackup),
-                    transactionParticulars = transactionParticulars,
-                    transactionAmount = transactionAmount,
-                    isEditStep = isEditStep,
-                    splitIndex = splitIndex,
-                    isConsoleMode = isConsoleMode,
-                    isDevelopmentMode = isDevelopmentMode,
-                    isCyclicViaStep = isCyclicViaStep
-                )
-            }
-
             "D2-Tr" -> {
 
                 return insertTransactionVariantsInteractive(
@@ -1458,30 +1386,6 @@ object InsertOperationsInteractive {
 
                         dateTimeInText = localDateTimeInTextBackup
                     ),
-                    transactionParticulars = transactionParticulars,
-                    transactionAmount = transactionAmount,
-                    isEditStep = isEditStep,
-                    splitIndex = splitIndex,
-                    isConsoleMode = isConsoleMode,
-                    isDevelopmentMode = isDevelopmentMode,
-                    isCyclicViaStep = isCyclicViaStep
-                )
-            }
-
-            "D2-" -> {
-
-                return insertTransactionVariantsInteractive(
-
-                    userId = userId,
-                    username = username,
-                    transactionType = transactionType,
-                    fromAccount = fromAccount,
-                    viaAccount = viaAccount,
-                    toAccount = toAccount,
-                    isViaStep = isViaStep,
-                    isTwoWayStep = isTwoWayStep,
-                    transactionId = transactionId,
-                    dateTimeInText = DateTimeUtils.subtract2DaysFromNormalDateTimeInText(dateTimeInText = localDateTimeInTextBackup),
                     transactionParticulars = transactionParticulars,
                     transactionAmount = transactionAmount,
                     isEditStep = isEditStep,
@@ -1712,11 +1616,14 @@ object InsertOperationsInteractive {
                                     timePartIncrementOrDecrementCommandIndicator = Constants.secondIncrementOrDecrementCommandIndicator,
                                     timePartIncrementOrDecrementNoMatchAction = {
 
-                                        insertTransactionAfterEventDateTimeFix(
+                                        timePartIncrementOrDecrementActions(
 
+                                            timePartIncrementOrDecrementMatchResult = Constants.dayIncrementOrDecrementPatternRegex.matchEntire(
+                                                input = localDateTimeInText
+                                            ),
                                             transactionParticulars = transactionParticulars,
                                             transactionAmount = transactionAmount,
-                                            dateTimeInText = dateTimeInText,
+                                            dateTimeInText = localDateTimeInText,
                                             fromAccount = fromAccount,
                                             transactionType = transactionType,
                                             viaAccount = viaAccount,
@@ -1730,7 +1637,72 @@ object InsertOperationsInteractive {
                                             isViaStep = isViaStep,
                                             isCyclicViaStep = isCyclicViaStep,
                                             splitIndex = splitIndex,
-                                            username = username
+                                            username = username,
+                                            dateTimeInTextBackup = localDateTimeInTextBackup,
+                                            timePartIncrementOrDecrementCommandIndicator = Constants.dayIncrementOrDecrementCommandIndicator,
+                                            timePartIncrementOrDecrementNoMatchAction = {
+
+                                                val timePartIncrementOrDecrementMatchResult =
+                                                    Constants.dayIncrementOrDecrementWithTimeResetPatternRegex.matchEntire(
+                                                        input = localDateTimeInText
+                                                    )
+                                                if (timePartIncrementOrDecrementMatchResult == null) {
+
+                                                    insertTransactionAfterEventDateTimeFix(
+
+                                                        transactionParticulars = transactionParticulars,
+                                                        transactionAmount = transactionAmount,
+                                                        dateTimeInText = dateTimeInText,
+                                                        fromAccount = fromAccount,
+                                                        transactionType = transactionType,
+                                                        viaAccount = viaAccount,
+                                                        toAccount = toAccount,
+                                                        isEditStep = isEditStep,
+                                                        transactionId = transactionId,
+                                                        isConsoleMode = isConsoleMode,
+                                                        isDevelopmentMode = isDevelopmentMode,
+                                                        isTwoWayStep = isTwoWayStep,
+                                                        userId = userId,
+                                                        isViaStep = isViaStep,
+                                                        isCyclicViaStep = isCyclicViaStep,
+                                                        splitIndex = splitIndex,
+                                                        username = username
+                                                    )
+
+                                                } else {
+
+                                                    val timePart: MatchGroup? =
+                                                        timePartIncrementOrDecrementMatchResult.groups.first()
+
+                                                    var localDateTimeInText2 = handleDateIncrementOrDecrementPattern(
+
+                                                        timePart = timePart,
+                                                        dateTimeInText = dateTimeInText,
+                                                        timePartIncrementOrDecrementMatchResult = timePartIncrementOrDecrementMatchResult
+                                                    )
+
+                                                    insertTransactionAfterEventDateTimeFix(
+
+                                                        transactionParticulars = transactionParticulars,
+                                                        transactionAmount = transactionAmount,
+                                                        dateTimeInText = dateTimeInText,
+                                                        fromAccount = fromAccount,
+                                                        transactionType = transactionType,
+                                                        viaAccount = viaAccount,
+                                                        toAccount = toAccount,
+                                                        isEditStep = isEditStep,
+                                                        transactionId = transactionId,
+                                                        isConsoleMode = isConsoleMode,
+                                                        isDevelopmentMode = isDevelopmentMode,
+                                                        isTwoWayStep = isTwoWayStep,
+                                                        userId = userId,
+                                                        isViaStep = isViaStep,
+                                                        isCyclicViaStep = isCyclicViaStep,
+                                                        splitIndex = splitIndex,
+                                                        username = username
+                                                    )
+                                                }
+                                            }
                                         )
                                     }
                                 )
@@ -2021,6 +1993,15 @@ object InsertOperationsInteractive {
                     }
                 }
 
+                Constants.dayIncrementOrDecrementCommandIndicator -> {
+
+                    localDateTimeInText = handleDateIncrementOrDecrementPattern(
+
+                        timePart = timePart,
+                        dateTimeInText = localDateTimeInText,
+                        timePartIncrementOrDecrementMatchResult = timePartIncrementOrDecrementMatchResult
+                    )
+                }
             }
             return insertTransactionVariantsInteractive(
 
@@ -2043,6 +2024,50 @@ object InsertOperationsInteractive {
                 isCyclicViaStep = isCyclicViaStep
             )
         }
+    }
+
+    private fun handleDateIncrementOrDecrementPattern(
+
+        timePart: MatchGroup?,
+        dateTimeInText: String,
+        timePartIncrementOrDecrementMatchResult: MatchResult
+
+    ): String {
+
+        var localDateTimeInText = dateTimeInText
+        if (timePart!!.value == ("${Constants.dayIncrementOrDecrementCommandIndicator}+")) {
+
+            localDateTimeInText = DateTimeUtils.addDaysToNormalDateTimeInText(
+
+                dateTimeInText = dateTimeInText,
+                days = 1
+            )
+
+        } else if (timePart.value == ("${Constants.dayIncrementOrDecrementCommandIndicator}-")) {
+
+            localDateTimeInText = DateTimeUtils.subtractDaysFromNormalDateTimeInText(
+
+                dateTimeInText = dateTimeInText,
+                days = 1
+            )
+
+        } else if (timePartIncrementOrDecrementMatchResult.groups[2]!!.value == "+") {
+
+            localDateTimeInText = DateTimeUtils.addDaysToNormalDateTimeInText(
+
+                dateTimeInText = dateTimeInText,
+                days = timePartIncrementOrDecrementMatchResult.groups[1]!!.value.toInt()
+            )
+
+        } else if (timePartIncrementOrDecrementMatchResult.groups[2]!!.value == "-") {
+
+            localDateTimeInText = DateTimeUtils.subtractDaysFromNormalDateTimeInText(
+
+                dateTimeInText = dateTimeInText,
+                days = timePartIncrementOrDecrementMatchResult.groups[1]!!.value.toInt()
+            )
+        }
+        return localDateTimeInText
     }
 
     private fun insertTransactionAfterEventDateTimeFix(
@@ -2151,9 +2176,9 @@ object InsertOperationsInteractive {
 
         //                if (isTwoWayStep || isViaStep) {
         //
-        //                    // TODO : Prefix Particulars
-        //                    // TODO : Suffix Particulars
-        //                    // TODO : Other String Manipulations
+        //                    // TODO: Prefix Particulars
+        //                    // TODO: Suffix Particulars
+        //                    // TODO: Other String Manipulations
         //                }
 
         print("Enter Amount (Current Value - $localTransactionAmount) : ")
