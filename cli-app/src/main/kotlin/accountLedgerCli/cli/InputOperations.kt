@@ -1,10 +1,11 @@
 package accountLedgerCli.cli
 
-import account.ledger.library.operations.getAccounts
 import account.ledger.library.enums.AccountTypeEnum
 import account.ledger.library.enums.HandleAccountsApiResponseResult
 import account.ledger.library.enums.TransactionTypeEnum
+import account.ledger.library.operations.getAccounts
 import account.ledger.library.utils.ApiUtils
+import accountLedgerCli.cli.App.Companion.commandLinePrintMenu
 import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
 import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithTryPrompt
 import common.utils.library.utils.InputUtils
@@ -252,16 +253,44 @@ internal fun chooseViaFull(
 
 internal fun enterDateWithTime(
 
+    promptCommands: List<String>,
     dateTimeInText: String,
     transactionType: TransactionTypeEnum,
     isNotFromSplitTransaction: Boolean
 
 ): String {
 
-    print(
-        "$dateTimeInText Correct? (Y/N), D+Tr to increase 1 Day with Time Reset, D+ to increase 1 Day, D- to decrease 1 Day, D2+Tr to increase 2 Days with Time Reset, D2+ to increase 2 Days, D2- to decrease 2 Days,${if ((transactionType == TransactionTypeEnum.VIA) ||(transactionType == TransactionTypeEnum.CYCLIC_VIA)) " Ex12 to exchange From & Via A/Cs, Ex23 to exchange Via & To A/Cs, Ex13 to exchange From & To A/Cs" else " Ex to exchange From & To A/Cs"}${if (isNotFromSplitTransaction) ", S to Split Transactions" else ""}, B to Back : "
+    commandLinePrintMenu.printMenuFromListOfCommands(
+
+        listOfCommands = promptCommands +
+
+                "$dateTimeInText Correct? (Y/N)" +
+                "\tD+Tr to increase 1 Day with Time Reset" +
+                "\tD+ to increase 1 Day" +
+                "\tD-Tr to decrease 1 Day with Time Reset" +
+                "\tD- to decrease 1 Day" +
+                "\tD2+Tr to increase 2 Days with Time Reset" +
+                "\tD2+ to increase 2 Days" +
+                "\tD-Tr to decrease 2 Days with Time Reset" +
+                "\tD2- to decrease 2 Days" +
+
+                (if ((transactionType == TransactionTypeEnum.VIA) || (transactionType == TransactionTypeEnum.CYCLIC_VIA)) {
+
+                    "\tEx12 to exchange From & Via A/Cs" +
+                            "\tEx23 to exchange Via & To A/Cs" +
+                            "\tEx13 to exchange From & To A/Cs"
+                } else {
+
+                    "\tEx to exchange From & To A/Cs"
+                }) +
+
+                (if (isNotFromSplitTransaction) "\tS to Split Transactions" else "") +
+
+                "\t B to Back : "
     )
+
     when (readlnOrNull()) {
+
         "Y", "" -> {
 
             return dateTimeInText
@@ -282,6 +311,11 @@ internal fun enterDateWithTime(
             return "D+"
         }
 
+        "D-Tr" -> {
+
+            return "D-Tr"
+        }
+
         "D-" -> {
 
             return "D-"
@@ -297,6 +331,11 @@ internal fun enterDateWithTime(
             return "D2+"
         }
 
+        "D2-Tr" -> {
+
+            return "D2-Tr"
+        }
+
         "D2-" -> {
 
             return "D2-"
@@ -304,13 +343,14 @@ internal fun enterDateWithTime(
 
         "Ex" -> {
 
-            if ((transactionType == TransactionTypeEnum.VIA) ||(transactionType == TransactionTypeEnum.CYCLIC_VIA)) {
+            if ((transactionType == TransactionTypeEnum.VIA) || (transactionType == TransactionTypeEnum.CYCLIC_VIA)) {
 
                 return retryEnterDateWithTimeOnInvalidEntry(
 
                     transactionType = transactionType,
                     dateTimeInText = dateTimeInText,
-                    isFromSplitTransaction = isNotFromSplitTransaction
+                    isFromSplitTransaction = isNotFromSplitTransaction,
+                    promptCommands = promptCommands
                 )
             }
             return "Ex"
@@ -324,7 +364,8 @@ internal fun enterDateWithTime(
 
                     transactionType = transactionType,
                     dateTimeInText = dateTimeInText,
-                    isFromSplitTransaction = isNotFromSplitTransaction
+                    isFromSplitTransaction = isNotFromSplitTransaction,
+                    promptCommands = promptCommands
                 )
             }
             return "Ex12"
@@ -338,7 +379,8 @@ internal fun enterDateWithTime(
 
                     transactionType = transactionType,
                     dateTimeInText = dateTimeInText,
-                    isFromSplitTransaction = isNotFromSplitTransaction
+                    isFromSplitTransaction = isNotFromSplitTransaction,
+                    promptCommands = promptCommands
                 )
             }
             return "Ex23"
@@ -352,7 +394,8 @@ internal fun enterDateWithTime(
 
                     transactionType = transactionType,
                     dateTimeInText = dateTimeInText,
-                    isFromSplitTransaction = isNotFromSplitTransaction
+                    isFromSplitTransaction = isNotFromSplitTransaction,
+                    promptCommands = promptCommands
                 )
             }
             return "Ex13"
@@ -375,12 +418,14 @@ internal fun enterDateWithTime(
 
         transactionType = transactionType,
         dateTimeInText = dateTimeInText,
-        isFromSplitTransaction = isNotFromSplitTransaction
+        isFromSplitTransaction = isNotFromSplitTransaction,
+        promptCommands = promptCommands
     )
 }
 
 private fun retryEnterDateWithTimeOnInvalidEntry(
 
+    promptCommands: List<String>,
     transactionType: TransactionTypeEnum,
     dateTimeInText: String,
     isFromSplitTransaction: Boolean
@@ -390,8 +435,9 @@ private fun retryEnterDateWithTimeOnInvalidEntry(
     InteractiveUtils.invalidOptionMessage()
     return enterDateWithTime(
 
-        transactionType = transactionType,
+        promptCommands = promptCommands,
         dateTimeInText = dateTimeInText,
+        transactionType = transactionType,
         isNotFromSplitTransaction = isFromSplitTransaction
     )
 }

@@ -1285,15 +1285,13 @@ object InsertOperationsInteractive {
             "Deposit Account - ${toAccount.id} : ${toAccount.fullName}",
         )
 
-        commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
-            listOfCommands = menuItems + listOf(
-                // TODO : Option for Complete Back
-                "Enter Time : "
-            )
-        )
         val localDateTimeInTextBackup: String = localDateTimeInText
         localDateTimeInText = enterDateWithTime(
 
+            promptCommands = menuItems + listOf(
+                // TODO : Option for Complete Back
+                "Event Time : "
+            ),
             transactionType = transactionType,
             dateTimeInText = localDateTimeInText,
             isNotFromSplitTransaction = splitIndex == 0u
@@ -1338,6 +1336,30 @@ object InsertOperationsInteractive {
                     isTwoWayStep = isTwoWayStep,
                     transactionId = transactionId,
                     dateTimeInText = DateTimeUtils.add1DayToDateTimeInText(dateTimeInText = localDateTimeInTextBackup),
+                    transactionParticulars = localTransactionParticulars,
+                    transactionAmount = localTransactionAmount,
+                    isEditStep = isEditStep,
+                    splitIndex = splitIndex,
+                    isConsoleMode = isConsoleMode,
+                    isDevelopmentMode = isDevelopmentMode,
+                    isCyclicViaStep = isCyclicViaStep
+                )
+            }
+
+            "D-Tr" -> {
+
+                return insertTransactionVariantsInteractive(
+
+                    userId = userId,
+                    username = username,
+                    transactionType = transactionType,
+                    fromAccount = fromAccount,
+                    viaAccount = viaAccount,
+                    toAccount = toAccount,
+                    isViaStep = isViaStep,
+                    isTwoWayStep = isTwoWayStep,
+                    transactionId = transactionId,
+                    dateTimeInText = DateTimeUtils.subtract1DayToDateTimeInText(dateTimeInText = localDateTimeInTextBackup),
                     transactionParticulars = localTransactionParticulars,
                     transactionAmount = localTransactionAmount,
                     isEditStep = isEditStep,
@@ -1413,6 +1435,33 @@ object InsertOperationsInteractive {
                     isTwoWayStep = isTwoWayStep,
                     transactionId = transactionId,
                     dateTimeInText = DateTimeUtils.add2DaysToDateTimeInText(dateTimeInText = localDateTimeInTextBackup),
+                    transactionParticulars = localTransactionParticulars,
+                    transactionAmount = localTransactionAmount,
+                    isEditStep = isEditStep,
+                    splitIndex = splitIndex,
+                    isConsoleMode = isConsoleMode,
+                    isDevelopmentMode = isDevelopmentMode,
+                    isCyclicViaStep = isCyclicViaStep
+                )
+            }
+
+            "D2-Tr" -> {
+
+                return insertTransactionVariantsInteractive(
+
+                    userId = userId,
+                    username = username,
+                    transactionType = transactionType,
+                    fromAccount = fromAccount,
+                    viaAccount = viaAccount,
+                    toAccount = toAccount,
+                    isViaStep = isViaStep,
+                    isTwoWayStep = isTwoWayStep,
+                    transactionId = transactionId,
+                    dateTimeInText = DateTimeUtils.subtract2DaysToDateTimeInText(
+
+                        dateTimeInText = localDateTimeInTextBackup
+                    ),
                     transactionParticulars = localTransactionParticulars,
                     transactionAmount = localTransactionAmount,
                     isEditStep = isEditStep,

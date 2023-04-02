@@ -31,7 +31,7 @@ class App {
         var transactionParticulars: String = ""
         var transactionAmount: Float = 0F
 
-        private val commandLinePrintMenu = CommandLinePrintMenu()
+        internal val commandLinePrintMenu = CommandLinePrintMenu()
 
         @JvmStatic
         val commandLinePrintMenuWithEnterPrompt =
