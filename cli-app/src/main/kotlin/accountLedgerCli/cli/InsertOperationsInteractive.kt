@@ -1359,7 +1359,7 @@ object InsertOperationsInteractive {
                     isViaStep = isViaStep,
                     isTwoWayStep = isTwoWayStep,
                     transactionId = transactionId,
-                    dateTimeInText = DateTimeUtils.subtract1DayToDateTimeInText(dateTimeInText = localDateTimeInTextBackup),
+                    dateTimeInText = DateTimeUtils.subtract1DayWith9ClockTimeToDateTimeInText(dateTimeInText = localDateTimeInTextBackup),
                     transactionParticulars = localTransactionParticulars,
                     transactionAmount = localTransactionAmount,
                     isEditStep = isEditStep,
@@ -1458,7 +1458,7 @@ object InsertOperationsInteractive {
                     isViaStep = isViaStep,
                     isTwoWayStep = isTwoWayStep,
                     transactionId = transactionId,
-                    dateTimeInText = DateTimeUtils.subtract2DaysToDateTimeInText(
+                    dateTimeInText = DateTimeUtils.subtract2DaysWith9ClockTimeToDateTimeInText(
 
                         dateTimeInText = localDateTimeInTextBackup
                     ),
