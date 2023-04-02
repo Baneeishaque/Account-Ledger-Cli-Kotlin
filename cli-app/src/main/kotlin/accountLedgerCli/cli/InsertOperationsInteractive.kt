@@ -15,6 +15,7 @@ import account.ledger.library.models.UserModel
 import account.ledger.library.operations.InsertOperations
 import account.ledger.library.retrofit.data.TransactionDataSource
 import account.ledger.library.utils.ApiUtils
+import account.ledger.library.utils.TransactionUtils
 import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
 import accountLedgerCli.cli.Screens.quickTransactionOnWallet
 import accountLedgerCli.utils.ChooseAccountUtils
@@ -199,9 +200,8 @@ object InsertOperationsInteractive {
 
     ): InsertTransactionResult {
 
-        var localInsertTransactionResult = InsertTransactionResult(
+        var localInsertTransactionResult = TransactionUtils.getFailedInsertTransactionResult(
 
-            isSuccess = false,
             dateTimeInText = dateTimeInText,
             transactionParticulars = transactionParticulars,
             transactionAmount = transactionAmount,
