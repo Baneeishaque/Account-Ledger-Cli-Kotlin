@@ -48,6 +48,7 @@ class App {
         @JvmStatic
         val dotenv: Dotenv = reloadDotEnv()
 
+        @JvmStatic
         private fun reloadDotEnv() = dotenv {
             directory = Paths.get("").toAbsolutePath().toString()
             ignoreIfMissing = true

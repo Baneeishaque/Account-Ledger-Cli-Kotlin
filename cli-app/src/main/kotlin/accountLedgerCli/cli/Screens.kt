@@ -1212,6 +1212,7 @@ object Screens {
         } while (true)
     }
 
+    @JvmStatic
     private fun getFailedInsertTransactionResult(
         dateTimeInText: String,
         transactionParticulars: String,
