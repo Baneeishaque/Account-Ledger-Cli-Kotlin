@@ -1449,7 +1449,7 @@ object InsertOperationsInteractive {
 
             "Ex", "Ex13" -> {
 
-                return invokeAddTransactionStep2AfterExchangeOfAccounts(
+                return invokeInsertTransactionVariantsInteractiveAfterExchangeOfAccounts(
 
                     userId = userId,
                     username = username,
@@ -1473,7 +1473,7 @@ object InsertOperationsInteractive {
 
             "Ex12" -> {
 
-                return invokeAddTransactionStep2AfterExchangeOfAccounts(
+                return invokeInsertTransactionVariantsInteractiveAfterExchangeOfAccounts(
 
                     userId = userId,
                     username = username,
@@ -1497,7 +1497,7 @@ object InsertOperationsInteractive {
 
             "Ex23" -> {
 
-                return invokeAddTransactionStep2AfterExchangeOfAccounts(
+                return invokeInsertTransactionVariantsInteractiveAfterExchangeOfAccounts(
 
                     userId = userId,
                     username = username,
@@ -1891,7 +1891,7 @@ object InsertOperationsInteractive {
 
                             if (transactionType == TransactionTypeEnum.NORMAL) {
 
-                                return invokeAddTransactionStep2AfterExchangeOfAccounts(
+                                return invokeInsertTransactionVariantsInteractiveAfterExchangeOfAccounts(
                                     userId = userId,
                                     username = username,
                                     transactionType = transactionType,
@@ -1921,7 +1921,7 @@ object InsertOperationsInteractive {
 
                             if ((transactionType == TransactionTypeEnum.VIA) ||(transactionType == TransactionTypeEnum.CYCLIC_VIA)) {
 
-                                return invokeAddTransactionStep2AfterExchangeOfAccounts(
+                                return invokeInsertTransactionVariantsInteractiveAfterExchangeOfAccounts(
                                     userId = userId,
                                     username = username,
                                     transactionType = transactionType,
@@ -1951,7 +1951,7 @@ object InsertOperationsInteractive {
 
                             if ((transactionType == TransactionTypeEnum.VIA) ||(transactionType == TransactionTypeEnum.CYCLIC_VIA)) {
 
-                                return invokeAddTransactionStep2AfterExchangeOfAccounts(
+                                return invokeInsertTransactionVariantsInteractiveAfterExchangeOfAccounts(
                                     userId = userId,
                                     username = username,
                                     transactionType = transactionType,
@@ -1980,7 +1980,7 @@ object InsertOperationsInteractive {
 
                             if ((transactionType == TransactionTypeEnum.VIA) ||(transactionType == TransactionTypeEnum.CYCLIC_VIA)) {
 
-                                return invokeAddTransactionStep2AfterExchangeOfAccounts(
+                                return invokeInsertTransactionVariantsInteractiveAfterExchangeOfAccounts(
                                     userId = userId,
                                     username = username,
                                     transactionType = transactionType,
@@ -2007,9 +2007,8 @@ object InsertOperationsInteractive {
 
                         "B" -> {
 
-                            return InsertTransactionResult(
+                            return TransactionUtils.getFailedInsertTransactionResult(
 
-                                isSuccess = false,
                                 dateTimeInText = localDateTimeInText,
                                 transactionParticulars = localTransactionParticulars,
                                 transactionAmount = localTransactionAmount,
@@ -2035,7 +2034,7 @@ object InsertOperationsInteractive {
         return ""
     }
 
-    private fun invokeAddTransactionStep2AfterExchangeOfAccounts(
+    private fun invokeInsertTransactionVariantsInteractiveAfterExchangeOfAccounts(
 
         userId: UInt,
         username: String,

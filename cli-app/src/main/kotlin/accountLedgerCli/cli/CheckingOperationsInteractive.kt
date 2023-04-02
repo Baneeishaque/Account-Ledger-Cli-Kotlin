@@ -4,6 +4,7 @@ import account.ledger.library.api.response.AccountResponse
 import account.ledger.library.enums.TransactionTypeEnum
 import account.ledger.library.models.InsertTransactionResult
 import account.ledger.library.operations.CheckingOperations
+import account.ledger.library.utils.TransactionUtils
 import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithContinuePrompt
 import common.utils.library.utils.InteractiveUtils
 
@@ -63,9 +64,8 @@ internal fun transactionContinueCheck(
             }
 
             "N" -> {
-                return InsertTransactionResult(
+                return TransactionUtils.getFailedInsertTransactionResult(
 
-                    isSuccess = false,
                     dateTimeInText = dateTimeInText,
                     transactionParticulars = transactionParticulars,
                     transactionAmount = transactionAmount,
