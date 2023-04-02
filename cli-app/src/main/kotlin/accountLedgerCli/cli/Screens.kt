@@ -13,6 +13,7 @@ import account.ledger.library.operations.getUserInitialTransactionDateFromUserna
 import account.ledger.library.retrofit.data.TransactionsDataSource
 import account.ledger.library.utils.AccountUtils
 import account.ledger.library.utils.ApiUtils
+import account.ledger.library.utils.TransactionUtils
 import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
 import common.utils.library.models.IsOkModel
 import common.utils.library.utils.*
@@ -42,7 +43,7 @@ object Screens {
             // TODO : dotenv into parameters
             println("Env. Variables : ${App.dotenv.entries()}")
         }
-        var insertTransactionResult = getFailedInsertTransactionResult(
+        var insertTransactionResult = TransactionUtils.getFailedInsertTransactionResult(
             dateTimeInText,
             transactionParticulars,
             transactionAmount,
@@ -933,7 +934,7 @@ object Screens {
 
     ): InsertTransactionResult {
 
-        var localInsertTransactionResult = getFailedInsertTransactionResult(
+        var localInsertTransactionResult = TransactionUtils.getFailedInsertTransactionResult(
             dateTimeInText = dateTimeInText,
             transactionParticulars = transactionParticulars,
             transactionAmount = transactionAmount,
@@ -1211,25 +1212,6 @@ object Screens {
             }
         } while (true)
     }
-
-    @JvmStatic
-    private fun getFailedInsertTransactionResult(
-        dateTimeInText: String,
-        transactionParticulars: String,
-        transactionAmount: Float,
-        fromAccount: AccountResponse,
-        viaAccount: AccountResponse,
-        toAccount: AccountResponse
-    ) = InsertTransactionResult(
-
-        isSuccess = false,
-        dateTimeInText = dateTimeInText,
-        transactionParticulars = transactionParticulars,
-        transactionAmount = transactionAmount,
-        fromAccount = fromAccount,
-        viaAccount = viaAccount,
-        toAccount = toAccount
-    )
 
     @JvmStatic
     fun getUserWithCurrentAccountSelectionsAsText(
