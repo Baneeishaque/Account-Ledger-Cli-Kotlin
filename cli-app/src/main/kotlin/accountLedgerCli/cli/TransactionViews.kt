@@ -167,7 +167,7 @@ object TransactionViews {
 
             var userTransactionsMap: LinkedHashMap<UInt, TransactionResponse> =
                 TransactionUtils.prepareUserTransactionsMap(
-                    transactions = TransactionUtils.filterTransactionsForUptoDateTime(
+                    transactions = TransactionUtils.filterTransactionsForUpToDateTime(
                         isUpToTimeStamp = isUpToTimeStamp,
                         upToTimeStamp = upToTimeStamp,
                         transactions = localUserTransactionsResponse.transactions

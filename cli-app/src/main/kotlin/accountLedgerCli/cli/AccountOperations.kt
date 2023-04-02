@@ -98,7 +98,7 @@ internal fun checkAffectedAccountsAfterSpecifiedDate(
                 val accounts: MutableMap<UInt, String> = mutableMapOf()
 
                 val userTransactionsAfterSpecifiedDate: List<TransactionResponse> =
-                    TransactionUtils.filterTransactionsForUptoDateTime(
+                    TransactionUtils.filterTransactionsForUpToDateTime(
                         isUpToTimeStamp = isUpToTimeStamp,
                         upToTimeStamp = upToTimeStamp,
                         transactions = selectUserTransactionsAfterSpecifiedDateResult.transactions
