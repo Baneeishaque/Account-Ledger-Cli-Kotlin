@@ -226,3 +226,5 @@ gradle-app.setting
 /.frequencyOfAccounts.json
 
 cli-app/bin/
+
+.idea/kotlinc.xml
