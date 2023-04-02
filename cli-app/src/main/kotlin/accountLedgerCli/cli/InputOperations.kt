@@ -325,7 +325,7 @@ internal fun enterDateWithTime(
 
             return "D2-Tr"
         }
-        
+
         "Ex" -> {
 
             if ((transactionType == TransactionTypeEnum.VIA) || (transactionType == TransactionTypeEnum.CYCLIC_VIA)) {
