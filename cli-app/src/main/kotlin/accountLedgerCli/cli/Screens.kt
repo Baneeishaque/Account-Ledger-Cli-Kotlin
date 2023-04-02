@@ -457,7 +457,7 @@ object Screens {
 
                 "31" -> {
 
-                    val getTransactionsResult: IsOkModel<TransactionsResponse> =
+                    val getTransactionResult: IsOkModel<TransactionsResponse> =
                         CommonApiUtils.makeApiRequestWithOptionalRetries(
                             apiCallFunction = fun(): Result<TransactionsResponse> {
 
@@ -472,13 +472,13 @@ object Screens {
 
                     CommonHandleResponses.isOkModelHandler(
 
-                        isOkModel = getTransactionsResult,
+                        isOkModel = getTransactionResult,
                         data = Unit,
                         successActions = fun() {
 
                             insertTransactionResult = TransactionViews.viewTransactions(
 
-                                userTransactionsResponse = getTransactionsResult.data!!,
+                                userTransactionsResponse = getTransactionResult.data!!,
                                 accountFullName = "Last 10",
                                 dateTimeInText = insertTransactionResult.dateTimeInText,
                                 transactionParticulars = insertTransactionResult.transactionParticulars,
