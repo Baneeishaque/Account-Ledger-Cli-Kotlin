@@ -42,15 +42,13 @@ object Screens {
             // TODO : dotenv into parameters
             println("Env. Variables : ${App.dotenv.entries()}")
         }
-        var insertTransactionResult = InsertTransactionResult(
-
-            isSuccess = false,
-            dateTimeInText = dateTimeInText,
-            transactionParticulars = transactionParticulars,
-            transactionAmount = transactionAmount,
-            fromAccount = fromAccount,
-            viaAccount = viaAccount,
-            toAccount = toAccount
+        var insertTransactionResult = getFailedInsertTransactionResult(
+            dateTimeInText,
+            transactionParticulars,
+            transactionAmount,
+            fromAccount,
+            viaAccount,
+            toAccount
         )
         do {
             commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
@@ -935,9 +933,7 @@ object Screens {
 
     ): InsertTransactionResult {
 
-        var localInsertTransactionResult = InsertTransactionResult(
-
-            isSuccess = false,
+        var localInsertTransactionResult = getFailedInsertTransactionResult(
             dateTimeInText = dateTimeInText,
             transactionParticulars = transactionParticulars,
             transactionAmount = transactionAmount,
@@ -1215,6 +1211,24 @@ object Screens {
             }
         } while (true)
     }
+
+    private fun getFailedInsertTransactionResult(
+        dateTimeInText: String,
+        transactionParticulars: String,
+        transactionAmount: Float,
+        fromAccount: AccountResponse,
+        viaAccount: AccountResponse,
+        toAccount: AccountResponse
+    ) = InsertTransactionResult(
+
+        isSuccess = false,
+        dateTimeInText = dateTimeInText,
+        transactionParticulars = transactionParticulars,
+        transactionAmount = transactionAmount,
+        fromAccount = fromAccount,
+        viaAccount = viaAccount,
+        toAccount = toAccount
+    )
 
     @JvmStatic
     fun getUserWithCurrentAccountSelectionsAsText(
