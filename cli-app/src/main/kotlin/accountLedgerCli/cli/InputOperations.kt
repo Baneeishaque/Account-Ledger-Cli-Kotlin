@@ -428,6 +428,10 @@ internal fun enterDateWithTime(
 
                 return userInput
             }
+            if (Constants.hourIncrementOrDecrementPatternRegex.matchEntire(input = userInput) != null) {
+
+                return userInput
+            }
         }
     }
     return retryEnterDateWithTimeOnInvalidEntry(

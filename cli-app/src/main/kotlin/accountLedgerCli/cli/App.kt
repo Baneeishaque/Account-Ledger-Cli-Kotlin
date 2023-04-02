@@ -22,7 +22,7 @@ import common.utils.library.constants.Constants as CommonConstants
 class App {
     companion object {
 
-        var dateTimeInText: String = DateTimeUtils.getCurrentDateTimeInText()
+        var dateTimeInText: String = DateTimeUtils.getCurrentNormalDateTimeInText()
 
         var fromAccount: AccountResponse = AccountUtils.blankAccount
         var toAccount: AccountResponse = AccountUtils.blankAccount
