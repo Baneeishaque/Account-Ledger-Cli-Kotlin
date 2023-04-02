@@ -266,10 +266,6 @@ internal fun enterDateWithTime(
         listOfCommands = promptCommands +
 
                 "Event Time : $dateTimeInText Correct? (Y/N)" +
-                "\tD+Tr to increase 1 Day with Time Reset" +
-                "\tD-Tr to decrease 1 Day with Time Reset" +
-                "\tD2+Tr to increase 2 Days with Time Reset" +
-                "\tD2-Tr to decrease 2 Days with Time Reset" +
 
                 (if ((transactionType == TransactionTypeEnum.VIA) || (transactionType == TransactionTypeEnum.CYCLIC_VIA)) {
 
@@ -306,26 +302,6 @@ internal fun enterDateWithTime(
             return InputUtils.getValidDateTimeInNormalPattern()
         }
 
-        "D+Tr" -> {
-
-            return "D+Tr"
-        }
-
-        "D-Tr" -> {
-
-            return "D-Tr"
-        }
-
-        "D2+Tr" -> {
-
-            return "D2+Tr"
-        }
-
-        "D2-Tr" -> {
-
-            return "D2-Tr"
-        }
-        
         "Ex" -> {
 
             if ((transactionType == TransactionTypeEnum.VIA) || (transactionType == TransactionTypeEnum.CYCLIC_VIA)) {
