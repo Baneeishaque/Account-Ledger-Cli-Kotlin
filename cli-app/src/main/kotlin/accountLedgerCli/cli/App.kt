@@ -94,7 +94,7 @@ class App {
                             // "1" -> {
 
                             processInsertTransactionResult(
-                                insertTransactionResult = UserOperations.login(
+                                insertTransactionResult = UserOperationsInterActiveWithApiService.login(
 
                                     username = if (identifiedUser == Constants.defaultValueForStringEnvironmentVariables) "" else identifiedUser,
                                     password = dotenv[EnvironmentFileEntryCommonEnum.PASSWORD.name] ?: "",
@@ -113,7 +113,7 @@ class App {
                         "3" -> {
 
                             processInsertTransactionResult(
-                                insertTransactionResult = UserOperations.listUsers(
+                                insertTransactionResult = UserOperationsInterActiveWithApiService.listUsers(
                                     fromAccount = fromAccount,
                                     viaAccount = viaAccount,
                                     toAccount = toAccount,
