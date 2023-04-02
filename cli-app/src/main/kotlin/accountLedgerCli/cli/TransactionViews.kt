@@ -568,7 +568,7 @@ object TransactionViews {
                                 val upPreviousTransaction: TransactionResponse =
                                     userTransactionsMap[upPreviousTransactionKey]!!
                                 val newDateTime: String =
-                                    DateTimeUtils.subtract1SecondFromMySqlDateTimeText(upPreviousTransaction.event_date_time)
+                                    DateTimeUtils.subtract1SecondFromMySqlDateTimeInText(upPreviousTransaction.event_date_time)
 
                                 if (App.isDevelopmentMode) {
 
@@ -605,7 +605,7 @@ object TransactionViews {
                                         )
                                     ) {
                                         userTransactionsMap[upTransactionKey]!!.event_date_time =
-                                            DateTimeUtils.subtract1SecondFromMySqlDateTimeText(upPreviousTransaction.event_date_time)
+                                            DateTimeUtils.subtract1SecondFromMySqlDateTimeInText(upPreviousTransaction.event_date_time)
                                         userTransactionsMap = userTransactionsMap.toList()
                                             .sortedBy { (_: UInt, transaction: TransactionResponse) ->
                                                 MysqlUtils.mySqlDateTimeTextToDateTime(
@@ -716,7 +716,7 @@ object TransactionViews {
                                 val upPreviousTransaction: TransactionResponse =
                                     userTransactionsMap[upPreviousTransactionKey]!!
                                 val newDateTime: String =
-                                    DateTimeUtils.subtract1SecondFromMySqlDateTimeText(upPreviousTransaction.event_date_time)
+                                    DateTimeUtils.subtract1SecondFromMySqlDateTimeInText(upPreviousTransaction.event_date_time)
 
                                 if (isDevelopmentMode) {
 
@@ -753,7 +753,7 @@ object TransactionViews {
                                         )
                                     ) {
                                         userTransactionsMap[upTransactionKey]!!.event_date_time =
-                                            DateTimeUtils.subtract1SecondFromMySqlDateTimeText(upPreviousTransaction.event_date_time)
+                                            DateTimeUtils.subtract1SecondFromMySqlDateTimeInText(upPreviousTransaction.event_date_time)
                                         userTransactionsMap = userTransactionsMap.toList()
                                             .sortedBy { (_: UInt, transaction: TransactionResponse) ->
                                                 MysqlUtils.mySqlDateTimeTextToDateTime(
@@ -788,7 +788,7 @@ object TransactionViews {
                             val upPreviousTransaction: TransactionResponse =
                                 userTransactionsMap[upPreviousTransactionKey]!!
                             val newDateTime: String =
-                                DateTimeUtils.subtract1SecondFromMySqlDateTimeText(upPreviousTransaction.event_date_time)
+                                DateTimeUtils.subtract1SecondFromMySqlDateTimeInText(upPreviousTransaction.event_date_time)
 
                             if (isDevelopmentMode) {
 
@@ -825,7 +825,7 @@ object TransactionViews {
                                     )
                                 ) {
                                     userTransactionsMap[upTransactionKey]!!.event_date_time =
-                                        DateTimeUtils.subtract1SecondFromMySqlDateTimeText(upPreviousTransaction.event_date_time)
+                                        DateTimeUtils.subtract1SecondFromMySqlDateTimeInText(upPreviousTransaction.event_date_time)
                                     userTransactionsMap = userTransactionsMap.toList()
                                         .sortedBy { (_: UInt, transaction: TransactionResponse) ->
                                             MysqlUtils.mySqlDateTimeTextToDateTime(

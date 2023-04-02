@@ -84,7 +84,7 @@ class InsertTransaction(
 
         } else {
 
-            if (DateTimeUtils.normalDateTimeTextToDateTime(normalDateTimeText = eventDateTime).isOK) {
+            if (DateTimeUtils.normalDateTimeInTextToDateTime(normalDateTimeInText = eventDateTime).isOK) {
 
                 if (particulars.isEmpty()) {
 

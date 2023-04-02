@@ -1911,11 +1911,12 @@ object InsertOperationsInteractive {
                                             toAccount = toAccount
                                         )
                                     }
+                                    }
                                 }
                             }
-                        }
-                        // TODO : Back to fields
-                        "N" -> return insertTransactionVariantsInteractive(
+
+                            // TODO : Back to fields
+                            "N" -> return insertTransactionVariantsInteractive(
 
                             userId = userId,
                             username = username,
