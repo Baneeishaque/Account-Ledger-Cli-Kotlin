@@ -432,6 +432,14 @@ internal fun enterDateWithTime(
 
                 return userInput
             }
+            if (Constants.minuteIncrementOrDecrementPatternRegex.matchEntire(input = userInput) != null) {
+
+                return userInput
+            }
+            if (Constants.secondIncrementOrDecrementPatternRegex.matchEntire(input = userInput) != null) {
+
+                return userInput
+            }
         }
     }
     return retryEnterDateWithTimeOnInvalidEntry(
