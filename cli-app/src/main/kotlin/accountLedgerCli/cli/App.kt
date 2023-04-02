@@ -46,7 +46,9 @@ class App {
             CommandLinePrintMenuWithContinuePrompt(commandLinePrintMenu)
 
         @JvmStatic
-        val dotenv: Dotenv = dotenv {
+        val dotenv: Dotenv = reloadDotEnv()
+
+        private fun reloadDotEnv() = dotenv {
             directory = Paths.get("").toAbsolutePath().toString()
             ignoreIfMissing = true
         }
