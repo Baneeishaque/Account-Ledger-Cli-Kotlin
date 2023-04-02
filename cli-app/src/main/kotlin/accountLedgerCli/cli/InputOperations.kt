@@ -311,19 +311,9 @@ internal fun enterDateWithTime(
             return "D+Tr"
         }
 
-        "D+" -> {
-
-            return "D+"
-        }
-
         "D-Tr" -> {
 
             return "D-Tr"
-        }
-
-        "D-" -> {
-
-            return "D-"
         }
 
         "D2+Tr" -> {
@@ -331,21 +321,11 @@ internal fun enterDateWithTime(
             return "D2+Tr"
         }
 
-        "D2+" -> {
-
-            return "D2+"
-        }
-
         "D2-Tr" -> {
 
             return "D2-Tr"
         }
-
-        "D2-" -> {
-
-            return "D2-"
-        }
-
+        
         "Ex" -> {
 
             if ((transactionType == TransactionTypeEnum.VIA) || (transactionType == TransactionTypeEnum.CYCLIC_VIA)) {
