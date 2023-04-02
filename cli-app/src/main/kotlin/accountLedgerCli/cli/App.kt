@@ -1,13 +1,13 @@
 package accountLedgerCli.cli
 
 import account.ledger.library.api.response.AccountResponse
-import account.ledger.library.constants.EnvironmentalFileEntries
 import account.ledger.library.constants.Constants
+import account.ledger.library.constants.EnvironmentalFileEntries
 import account.ledger.library.enums.EnvironmentFileEntryEnum
 import account.ledger.library.models.InsertTransactionResult
+import account.ledger.library.utils.AccountUtils
 import accountLedgerCli.cli.sub_commands.BalanceSheet
 import accountLedgerCli.cli.sub_commands.Gist
-import account.ledger.library.utils.AccountUtils
 import accountLedgerCli.cli.sub_commands.InsertTransaction
 import accountLedgerCli.utils.GistUtilsInteractive
 import common.utils.library.enums.EnvironmentFileEntryCommonEnum
@@ -31,10 +31,11 @@ class App {
         var transactionParticulars: String = ""
         var transactionAmount: Float = 0F
 
+        @JvmStatic
         internal val commandLinePrintMenu = CommandLinePrintMenu()
 
         @JvmStatic
-        val commandLinePrintMenuWithEnterPrompt =
+        internal val commandLinePrintMenuWithEnterPrompt =
             CommandLinePrintMenuWithEnterPrompt(commandLinePrintMenu)
 
         @JvmStatic
@@ -44,6 +45,10 @@ class App {
         @JvmStatic
         internal val commandLinePrintMenuWithContinuePrompt =
             CommandLinePrintMenuWithContinuePrompt(commandLinePrintMenu)
+
+        @JvmStatic
+        internal val commandLinePrintMenuWithBackPrompt =
+            CommandLinePrintMenuWithBackPrompt(commandLinePrintMenu)
 
         @JvmStatic
         val dotenv: Dotenv = reloadDotEnv()

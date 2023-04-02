@@ -1,11 +1,12 @@
 package accountLedgerCli.cli
 
+import account.ledger.library.constants.Constants
 import account.ledger.library.enums.AccountTypeEnum
 import account.ledger.library.enums.HandleAccountsApiResponseResult
 import account.ledger.library.enums.TransactionTypeEnum
 import account.ledger.library.operations.getAccounts
 import account.ledger.library.utils.ApiUtils
-import accountLedgerCli.cli.App.Companion.commandLinePrintMenu
+import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithBackPrompt
 import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
 import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithTryPrompt
 import common.utils.library.utils.InputUtils
@@ -260,18 +261,18 @@ internal fun enterDateWithTime(
 
 ): String {
 
-    commandLinePrintMenu.printMenuFromListOfCommands(
+    commandLinePrintMenuWithBackPrompt.printMenuWithBackPromptFromListOfCommands(
 
         listOfCommands = promptCommands +
 
-                "$dateTimeInText Correct? (Y/N)" +
+                "Event Time : $dateTimeInText Correct? (Y/N)" +
                 "\tD+Tr to increase 1 Day with Time Reset" +
                 "\tD+ to increase 1 Day" +
                 "\tD-Tr to decrease 1 Day with Time Reset" +
                 "\tD- to decrease 1 Day" +
                 "\tD2+Tr to increase 2 Days with Time Reset" +
                 "\tD2+ to increase 2 Days" +
-                "\tD-Tr to decrease 2 Days with Time Reset" +
+                "\tD2-Tr to decrease 2 Days with Time Reset" +
                 "\tD2- to decrease 2 Days" +
 
                 (if ((transactionType == TransactionTypeEnum.VIA) || (transactionType == TransactionTypeEnum.CYCLIC_VIA)) {
@@ -286,10 +287,17 @@ internal fun enterDateWithTime(
 
                 (if (isNotFromSplitTransaction) "\tS to Split Transactions" else "") +
 
-                "\t B to Back : "
+                "\tTr{0-23}*:*{0-59}*:*{0-59}* to Reset Time to {0-23}*:*{0-59}*:*{0-59}*" +
+
+                "\tH{d}{+,-} to +/- d Hours" +
+                "\tM{d}{+,-} to +/- d Minutes" +
+                "\tS{d}{+,-} to +/- d Seconds" +
+
+                // TODO : Option for Complete Back
+                "\tB to Back : "
     )
 
-    when (readlnOrNull()) {
+    when (val userInput = readlnOrNull()) {
 
         "Y", "" -> {
 
@@ -412,6 +420,14 @@ internal fun enterDateWithTime(
         "B" -> {
 
             return "B"
+        }
+
+        else -> {
+
+            if (Constants.timeResetPatternRegex.matchEntire(input = userInput!!) != null) {
+
+                return userInput
+            }
         }
     }
     return retryEnterDateWithTimeOnInvalidEntry(
