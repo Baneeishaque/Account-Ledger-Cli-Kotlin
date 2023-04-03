@@ -12,7 +12,6 @@ import account.ledger.library.models.ChooseUserResult
 import common.utils.library.models.CommonDataModel
 import account.ledger.library.retrofit.data.TransactionsDataSource
 import account.ledger.library.utils.UserUtils
-import accountLedgerCli.cli.App.Companion.dotEnv
 import common.utils.library.models.IsOkModel
 import common.utils.library.utils.DateTimeUtils
 import common.utils.library.utils.InteractiveUtils
@@ -153,45 +152,46 @@ internal fun printBalanceSheetOfUser(
             } else {
 
                 var accountsToExclude: List<String> = emptyList()
+                App.dotEnv = App.reloadDotEnv()
                 if (refineLevel != BalanceSheetRefineLevelEnum.ALL) {
 
                     when (refineLevel) {
 
                         BalanceSheetRefineLevelEnum.WITHOUT_OPEN_BALANCES -> {
                             // TODO : Change to new api methods
-                            accountsToExclude = (dotEnv["OPEN_BALANCE_ACCOUNT_IDS"] ?: "0").split(',')
+                            accountsToExclude = (App.dotEnv["OPEN_BALANCE_ACCOUNT_IDS"] ?: "0").split(',')
                         }
 
                         BalanceSheetRefineLevelEnum.WITHOUT_MISC_INCOMES -> {
-                            accountsToExclude = (dotEnv["OPEN_BALANCE_ACCOUNT_IDS"]
-                                ?: "0").split(',') + (dotEnv["MISC_INCOME_ACCOUNT_IDS"]
+                            accountsToExclude = (App.dotEnv["OPEN_BALANCE_ACCOUNT_IDS"]
+                                ?: "0").split(',') + (App.dotEnv["MISC_INCOME_ACCOUNT_IDS"]
                                 ?: "0").split(',')
                         }
 
                         BalanceSheetRefineLevelEnum.WITHOUT_INVESTMENT_RETURNS -> {
                             accountsToExclude =
-                                (dotEnv["OPEN_BALANCE_ACCOUNT_IDS"]
-                                    ?: "0").split(',') + (dotEnv["MISC_INCOME_ACCOUNT_IDS"]
-                                    ?: "0").split(',') + (dotEnv["INVESTMENT_RETURNS_ACCOUNT_IDS"]
+                                (App.dotEnv["OPEN_BALANCE_ACCOUNT_IDS"]
+                                    ?: "0").split(',') + (App.dotEnv["MISC_INCOME_ACCOUNT_IDS"]
+                                    ?: "0").split(',') + (App.dotEnv["INVESTMENT_RETURNS_ACCOUNT_IDS"]
                                     ?: "0").split(',')
                         }
 
                         BalanceSheetRefineLevelEnum.WITHOUT_FAMILY_ACCOUNTS -> {
                             accountsToExclude =
-                                (dotEnv["OPEN_BALANCE_ACCOUNT_IDS"]
-                                    ?: "0").split(',') + (dotEnv["MISC_INCOME_ACCOUNT_IDS"]
-                                    ?: "0").split(',') + (dotEnv["INVESTMENT_RETURNS_ACCOUNT_IDS"]
-                                    ?: "0").split(',') + (dotEnv["FAMILY_ACCOUNT_IDS"]
+                                (App.dotEnv["OPEN_BALANCE_ACCOUNT_IDS"]
+                                    ?: "0").split(',') + (App.dotEnv["MISC_INCOME_ACCOUNT_IDS"]
+                                    ?: "0").split(',') + (App.dotEnv["INVESTMENT_RETURNS_ACCOUNT_IDS"]
+                                    ?: "0").split(',') + (App.dotEnv["FAMILY_ACCOUNT_IDS"]
                                     ?: "0").split(',')
                         }
 
                         BalanceSheetRefineLevelEnum.WITHOUT_EXPENSE_ACCOUNTS -> {
                             accountsToExclude =
-                                (dotEnv["OPEN_BALANCE_ACCOUNT_IDS"]
-                                    ?: "0").split(',') + (dotEnv["MISC_INCOME_ACCOUNT_IDS"]
-                                    ?: "0").split(',') + (dotEnv["INVESTMENT_RETURNS_ACCOUNT_IDS"]
-                                    ?: "0").split(',') + (dotEnv["FAMILY_ACCOUNT_IDS"]
-                                    ?: "0").split(',') + (dotEnv["EXPENSE_ACCOUNT_IDS"]
+                                (App.dotEnv["OPEN_BALANCE_ACCOUNT_IDS"]
+                                    ?: "0").split(',') + (App.dotEnv["MISC_INCOME_ACCOUNT_IDS"]
+                                    ?: "0").split(',') + (App.dotEnv["INVESTMENT_RETURNS_ACCOUNT_IDS"]
+                                    ?: "0").split(',') + (App.dotEnv["FAMILY_ACCOUNT_IDS"]
+                                    ?: "0").split(',') + (App.dotEnv["EXPENSE_ACCOUNT_IDS"]
                                     ?: "0").split(',')
                         }
                         //TODO : Report this

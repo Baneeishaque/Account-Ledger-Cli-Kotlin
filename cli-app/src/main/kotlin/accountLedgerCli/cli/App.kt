@@ -51,10 +51,10 @@ class App {
             CommandLinePrintMenuWithBackPrompt(commandLinePrintMenu)
 
         @JvmStatic
-        val dotEnv: Dotenv = reloadDotEnv()
+        var dotEnv: Dotenv = reloadDotEnv()
 
         @JvmStatic
-        private fun reloadDotEnv() = dotenv {
+        internal fun reloadDotEnv() = dotenv {
             directory = Paths.get("").toAbsolutePath().toString()
             ignoreIfMissing = true
         }
