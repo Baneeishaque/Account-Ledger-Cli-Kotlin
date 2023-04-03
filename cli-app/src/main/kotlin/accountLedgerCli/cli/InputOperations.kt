@@ -265,30 +265,26 @@ internal fun enterDateWithTime(
 
         listOfCommands = promptCommands +
 
-                "Event Time : $dateTimeInText Correct? (Y/N)" +
-                "\tD+Tr to increase 1 Day with Time Reset" +
-                "\tD-Tr to decrease 1 Day with Time Reset" +
-                "\tD2+Tr to increase 2 Days with Time Reset" +
-                "\tD2-Tr to decrease 2 Days with Time Reset" +
+                "Event Time : $dateTimeInText Correct? (Y/N)," +
 
                 (if ((transactionType == TransactionTypeEnum.VIA) || (transactionType == TransactionTypeEnum.CYCLIC_VIA)) {
 
-                    "\tEx12 to exchange From & Via A/Cs" +
-                            "\tEx23 to exchange Via & To A/Cs" +
-                            "\tEx13 to exchange From & To A/Cs"
+                    "\tEx12 to exchange From & Via A/Cs," +
+                            "\n\tEx23 to exchange Via & To A/Cs," +
+                            "\n\tEx13 to exchange From & To A/Cs,"
                 } else {
 
-                    "\tEx to exchange From & To A/Cs"
+                    "\tEx to exchange From & To A/Cs,"
                 }) +
 
-                (if (isNotFromSplitTransaction) "\tS to Split Transactions" else "") +
+                (if (isNotFromSplitTransaction) "\tS to Split Transactions," else "") +
 
-                "\tTr{0-23}*:*{0-59}*:*{0-59}* to Reset Time to {0-23}*:*{0-59}*:*{0-59}*" +
+                "\tTr{0-23}*:*{0-59}*:*{0-59}* to Reset Time to {0-23}*:*{0-59}*:*{0-59}* ," +
 
-                "\tD{d}{+,-} to +/- d Days" +
-                "\tH{d}{+,-} to +/- d Hours" +
-                "\tM{d}{+,-} to +/- d Minutes" +
-                "\tS{d}{+,-} to +/- d Seconds" +
+                "\tD{d}{+,-} to +/- d Days," +
+                "\tH{d}{+,-} to +/- d Hours," +
+                "\tM{d}{+,-} to +/- d Minutes," +
+                "\tS{d}{+,-} to +/- d Seconds," +
 
                 // TODO : Option for Complete Back
                 "\tB to Back : "
@@ -304,26 +300,6 @@ internal fun enterDateWithTime(
         "N" -> {
 
             return InputUtils.getValidDateTimeInNormalPattern()
-        }
-
-        "D+Tr" -> {
-
-            return "D+Tr"
-        }
-
-        "D-Tr" -> {
-
-            return "D-Tr"
-        }
-
-        "D2+Tr" -> {
-
-            return "D2+Tr"
-        }
-
-        "D2-Tr" -> {
-
-            return "D2-Tr"
         }
 
         "Ex" -> {
