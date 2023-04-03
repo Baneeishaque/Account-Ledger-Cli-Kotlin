@@ -1464,10 +1464,10 @@ object InsertOperationsInteractive {
                         isCyclicViaStep = isCyclicViaStep,
                         splitIndex = splitIndex,
                         username = username,
-                        timePartIncrementOrDecrementCommandIndicator = Constants.hourIncrementOrDecrementCommandIndicator
-                    ) {
+                        timePartIncrementOrDecrementCommandIndicator = Constants.hourIncrementOrDecrementCommandIndicator,
+                        timePartIncrementOrDecrementNoMatchAction = {
 
-                        timePartIncrementOrDecrementActions(
+                            timePartIncrementOrDecrementActions(
 
                             timePartIncrementOrDecrementMatchResult = Constants.minuteIncrementOrDecrementPatternRegex.matchEntire(
                                 input = localDateTimeInText
@@ -1486,13 +1486,13 @@ object InsertOperationsInteractive {
                             isTwoWayStep = isTwoWayStep,
                             userId = userId,
                             isViaStep = isViaStep,
-                            isCyclicViaStep = isCyclicViaStep,
-                            splitIndex = splitIndex,
-                            username = username,
-                            timePartIncrementOrDecrementCommandIndicator = Constants.minuteIncrementOrDecrementCommandIndicator
-                        ) {
+                                isCyclicViaStep = isCyclicViaStep,
+                                splitIndex = splitIndex,
+                                username = username,
+                                timePartIncrementOrDecrementCommandIndicator = Constants.minuteIncrementOrDecrementCommandIndicator,
+                                timePartIncrementOrDecrementNoMatchAction = {
 
-                            timePartIncrementOrDecrementActions(
+                                    timePartIncrementOrDecrementActions(
 
                                 timePartIncrementOrDecrementMatchResult = Constants.secondIncrementOrDecrementPatternRegex.matchEntire(
                                     input = localDateTimeInText
@@ -1577,13 +1577,15 @@ object InsertOperationsInteractive {
 
                                                         timePart = timePartIncrementOrDecrementMatchResult.groups[1],
                                                         dateTimeInText = dateTimeInText,
-                                                        timePartIncrementOrDecrementMatchResult = timePartIncrementOrDecrementMatchResult,
-                                                        manipulationOperatorPosition = 3
-                                                    ),
-                                                    timeResetCommand = Constants.timeResetPatternRegex.matchEntire(input = timePartIncrementOrDecrementMatchResult.groups[4]!!.value)!!,
-                                                    userId = userId,
-                                                    username = username,
-                                                    transactionType = transactionType,
+                                                                timePartIncrementOrDecrementMatchResult = timePartIncrementOrDecrementMatchResult,
+                                                                manipulationOperatorPosition = 3
+                                                            ),
+                                                            timeResetCommand = Constants.timeResetPatternRegex.matchEntire(
+                                                                input = timePartIncrementOrDecrementMatchResult.groups[4]!!.value
+                                                            )!!,
+                                                            userId = userId,
+                                                            username = username,
+                                                            transactionType = transactionType,
                                                     fromAccount = fromAccount,
                                                     viaAccount = viaAccount,
                                                     toAccount = toAccount,
@@ -1601,10 +1603,12 @@ object InsertOperationsInteractive {
                                             }
                                         }
                                     )
+                                        }
+                                    )
                                 }
                             )
                         }
-                    }
+                    )
                 } else {
 
                     return handleTimeResetPattern(
