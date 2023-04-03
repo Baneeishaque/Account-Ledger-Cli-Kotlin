@@ -8,7 +8,9 @@ import account.ledger.library.constants.Constants
 import account.ledger.library.enums.BalanceSheetOutputFormatsEnum
 import account.ledger.library.enums.BalanceSheetRefineLevelEnum
 import account.ledger.library.enums.CommandLineApiMethodBalanceSheetOptionsEnum
-import account.ledger.library.models.*
+import account.ledger.library.models.ChooseUserResult
+import account.ledger.library.models.InsertTransactionResult
+import account.ledger.library.models.UserCredentials
 import account.ledger.library.retrofit.ResponseHolder
 import account.ledger.library.retrofit.data.AuthenticationDataSource
 import account.ledger.library.retrofit.data.UsersDataSource
@@ -16,12 +18,12 @@ import account.ledger.library.utils.UserUtils
 import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
 import common.utils.library.models.CommonDataModel
 import common.utils.library.utils.InteractiveUtils
+import io.github.cdimascio.dotenv.Dotenv
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.builtins.serializer
 import kotlinx.serialization.json.Json
-import common.utils.library.constants.Constants as CommonConstants
-
 import java.nio.file.Paths
+import common.utils.library.constants.Constants as CommonConstants
 
 // TODO : Separate into UserOperations, UserOperationsInteractive & UserOperationsApiService
 class UserOperationsInterActiveWithApiService {
@@ -42,7 +44,8 @@ class UserOperationsInterActiveWithApiService {
             transactionParticulars: String,
             transactionAmount: Float,
             isConsoleMode: Boolean,
-            isDevelopmentMode: Boolean
+            isDevelopmentMode: Boolean,
+            dotEnv: Dotenv
 
         ): InsertTransactionResult {
 
@@ -115,7 +118,8 @@ class UserOperationsInterActiveWithApiService {
                                     transactionParticulars = transactionParticulars,
                                     transactionAmount = transactionAmount,
                                     isConsoleMode = isConsoleMode,
-                                    isDevelopmentMode = isDevelopmentMode
+                                    isDevelopmentMode = isDevelopmentMode,
+                                    dotEnv = dotEnv
                                 )
                             }
 
@@ -197,7 +201,8 @@ class UserOperationsInterActiveWithApiService {
                                 transactionParticulars = transactionParticulars,
                                 transactionAmount = transactionAmount,
                                 isConsoleMode = isConsoleMode,
-                                isDevelopmentMode = isDevelopmentMode
+                                isDevelopmentMode = isDevelopmentMode,
+                                dotEnv = dotEnv
                             )
 
                         } else {
@@ -332,7 +337,8 @@ class UserOperationsInterActiveWithApiService {
             transactionParticulars: String,
             transactionAmount: Float,
             isConsoleMode: Boolean,
-            isDevelopmentMode: Boolean
+            isDevelopmentMode: Boolean,
+            dotEnv: Dotenv
 
         ): InsertTransactionResult {
 
@@ -357,7 +363,8 @@ class UserOperationsInterActiveWithApiService {
                                 transactionParticulars = transactionParticulars,
                                 transactionAmount = transactionAmount,
                                 isConsoleMode = isConsoleMode,
-                                isDevelopmentMode = isDevelopmentMode
+                                isDevelopmentMode = isDevelopmentMode,
+                                dotEnv = dotEnv
                             )
                         }
 
@@ -452,7 +459,8 @@ class UserOperationsInterActiveWithApiService {
                                         transactionParticulars = transactionParticulars,
                                         transactionAmount = transactionAmount,
                                         isConsoleMode = isConsoleMode,
-                                        isDevelopmentMode = isDevelopmentMode
+                                        isDevelopmentMode = isDevelopmentMode,
+                                        dotEnv =dotEnv
                                     )
                                 }
                             }

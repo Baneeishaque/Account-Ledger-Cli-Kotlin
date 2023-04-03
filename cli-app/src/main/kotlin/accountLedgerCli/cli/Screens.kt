@@ -17,6 +17,7 @@ import account.ledger.library.utils.TransactionUtils
 import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
 import common.utils.library.models.IsOkModel
 import common.utils.library.utils.*
+import io.github.cdimascio.dotenv.Dotenv
 import kotlinx.coroutines.runBlocking
 import common.utils.library.utils.ApiUtils as CommonApiUtils
 import common.utils.library.utils.HandleResponses as CommonHandleResponses
@@ -34,22 +35,23 @@ object Screens {
         transactionParticulars: String,
         transactionAmount: Float,
         isConsoleMode: Boolean,
-        isDevelopmentMode: Boolean
+        isDevelopmentMode: Boolean,
+        dotEnv:Dotenv
 
     ): InsertTransactionResult {
 
         if (isDevelopmentMode) {
 
             // TODO : dotenv into parameters
-            println("Env. Variables : ${App.dotenv.entries()}")
+            println("Env. Variables : ${dotEnv.entries()}")
         }
         var insertTransactionResult = TransactionUtils.getFailedInsertTransactionResult(
-            dateTimeInText,
-            transactionParticulars,
-            transactionAmount,
-            fromAccount,
-            viaAccount,
-            toAccount
+            dateTimeInText = dateTimeInText,
+            transactionParticulars = transactionParticulars,
+            transactionAmount = transactionAmount,
+            fromAccount = fromAccount,
+            viaAccount = viaAccount,
+            toAccount = toAccount
         )
         do {
             commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
@@ -914,7 +916,7 @@ object Screens {
     private fun getEnvironmentVariableValueForUserScreen(environmentVariableName: String) =
         EnvironmentFileOperations.getEnvironmentVariableValueForTextWithDefaultValue(
 
-            dotenv = App.dotenv,
+            dotenv = App.dotEnv,
             environmentVariableName = environmentVariableName,
             defaultValue = Constants.defaultValueForStringEnvironmentVariables
         )

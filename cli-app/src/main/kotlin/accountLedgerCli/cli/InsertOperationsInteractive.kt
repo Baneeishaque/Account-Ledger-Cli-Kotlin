@@ -21,6 +21,7 @@ import accountLedgerCli.cli.Screens.quickTransactionOnWallet
 import accountLedgerCli.utils.ChooseAccountUtils
 import common.utils.library.models.IsOkModel
 import common.utils.library.utils.*
+import io.github.cdimascio.dotenv.Dotenv
 import kotlinx.coroutines.runBlocking
 import common.utils.library.utils.ApiUtils as CommonApiUtils
 import common.utils.library.utils.HandleResponses as CommonHandleResponses
@@ -28,28 +29,34 @@ import common.utils.library.utils.HandleResponses as CommonHandleResponses
 object InsertOperationsInteractive {
 
     internal val walletAccount: EnvironmentVariableForWholeNumber = getEnvironmentVariableValueForInsertOperation(
+
         environmentVariableName = EnvironmentalFileEntries.walletAccountId.entryName.name,
-        environmentVariableFormalName = EnvironmentalFileEntries.walletAccountId.entryFormalName!!
+        environmentVariableFormalName = EnvironmentalFileEntries.walletAccountId.entryFormalName!!,
+        dotenv = App.dotEnv
     )
 
     internal val frequent1Account: EnvironmentVariableForWholeNumber = getEnvironmentVariableValueForInsertOperation(
         environmentVariableName = EnvironmentalFileEntries.frequent1AccountId.entryName.name,
-        environmentVariableFormalName = EnvironmentalFileEntries.frequent1AccountId.entryFormalName!!
+        environmentVariableFormalName = EnvironmentalFileEntries.frequent1AccountId.entryFormalName!!,
+        dotenv = App.dotEnv
     )
 
     internal val frequent2Account: EnvironmentVariableForWholeNumber = getEnvironmentVariableValueForInsertOperation(
         environmentVariableName = EnvironmentalFileEntries.frequent2AccountId.entryName.name,
-        environmentVariableFormalName = EnvironmentalFileEntries.frequent2AccountId.entryFormalName!!
+        environmentVariableFormalName = EnvironmentalFileEntries.frequent2AccountId.entryFormalName!!,
+        dotenv = App.dotEnv
     )
 
     internal val frequent3Account: EnvironmentVariableForWholeNumber = getEnvironmentVariableValueForInsertOperation(
         environmentVariableName = EnvironmentalFileEntries.frequent3AccountId.entryName.name,
-        environmentVariableFormalName = EnvironmentalFileEntries.frequent3AccountId.entryFormalName!!
+        environmentVariableFormalName = EnvironmentalFileEntries.frequent3AccountId.entryFormalName!!,
+        dotenv = App.dotEnv
     )
 
     internal val bankAccount: EnvironmentVariableForWholeNumber = getEnvironmentVariableValueForInsertOperation(
         environmentVariableName = EnvironmentalFileEntries.bankAccountId.entryName.name,
-        environmentVariableFormalName = EnvironmentalFileEntries.bankAccountId.entryFormalName!!
+        environmentVariableFormalName = EnvironmentalFileEntries.bankAccountId.entryFormalName!!,
+        dotenv = App.dotEnv
     )
 
     internal fun insertQuickTransactionFromAccount1toAccount2(
@@ -2718,11 +2725,12 @@ object InsertOperationsInteractive {
     private fun getEnvironmentVariableValueForInsertOperation(
 
         environmentVariableName: String,
-        environmentVariableFormalName: String
+        environmentVariableFormalName: String,
+        dotenv: Dotenv
 
     ): EnvironmentVariableForWholeNumber = EnvironmentFileOperations.getEnvironmentVariableValueForWholeNumber(
 
-        dotenv = App.dotenv,
+        dotenv = dotenv,
         environmentVariableName = environmentVariableName,
         environmentVariableFormalName = environmentVariableFormalName
     )

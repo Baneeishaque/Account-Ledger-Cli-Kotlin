@@ -11,14 +11,14 @@ import io.github.cdimascio.dotenv.Dotenv
 
 class Gist(
     override val isDevelopmentMode: Boolean,
-    override val dotenv: Dotenv
+    override val dotEnv: Dotenv
 ) :
     SubCommandWithUsernameAndPasswordAsArguments(
 
         name = CommandLineApiMethodsEnum.Gist.name,
         actionDescription = "Merge properly formatted Gist Account Ledger Entries to Account Ledger Entries of the Specified User, , Environment file may exist & contains missing arguments",
         isDevelopmentMode = isDevelopmentMode,
-        dotenv = dotenv
+        dotEnv = dotEnv
     ) {
 
     private val gistId: String? = getOptionalTextArgument(
@@ -38,7 +38,7 @@ class Gist(
 
         if (gistId.isNullOrEmpty()) {
 
-            val environmentGistId = dotenv[EnvironmentFileEntryEnum.GIST_ID.name]
+            val environmentGistId = dotEnv[EnvironmentFileEntryEnum.GIST_ID.name]
             if (environmentGistId.isNullOrEmpty()) {
 
                 printMissingArgumentMessageForApi(argumentSummary = "Gist ID")
@@ -47,7 +47,7 @@ class Gist(
 
                 GistUtils.processGistId(
                     userName = usernameLocal,
-                    gitHubAccessToken = dotenv[EnvironmentFileEntryEnum.GITHUB_TOKEN.name]
+                    gitHubAccessToken = dotEnv[EnvironmentFileEntryEnum.GITHUB_TOKEN.name]
                         ?: Constants.defaultValueForStringEnvironmentVariables,
                     gistId = environmentGistId,
                     isDevelopmentMode = isDevelopmentMode

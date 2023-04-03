@@ -14,14 +14,14 @@ import kotlinx.cli.default
 class BalanceSheet(
 
     override val isDevelopmentMode: Boolean,
-    override val dotenv: Dotenv
+    override val dotEnv: Dotenv
 
 ) : SubCommandWithUsernameAndPasswordAsArguments(
 
     name = CommandLineApiMethodsEnum.BalanceSheet.name,
     actionDescription = "Provides Balance Sheet Ledger of the Specified User, Currently in JSON format, Default Balance Sheet Refine Level is [Excluding Open Balances, Misc. Incomes, Investment Returns, Family & Expense Accounts], Environment file may exist & contains missing arguments",
     isDevelopmentMode = isDevelopmentMode,
-    dotenv = dotenv
+    dotEnv = dotEnv
 ) {
 
     private val refineLevel: BalanceSheetRefineLevelEnum by option(
@@ -79,7 +79,8 @@ class BalanceSheet(
             transactionParticulars = App.transactionParticulars,
             transactionAmount = App.transactionAmount,
             isConsoleMode = true,
-            isDevelopmentMode = isDevelopmentMode
+            isDevelopmentMode = isDevelopmentMode,
+            dotEnv = dotEnv
         )
     }
 }

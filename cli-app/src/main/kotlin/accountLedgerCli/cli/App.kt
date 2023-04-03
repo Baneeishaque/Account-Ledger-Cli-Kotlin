@@ -51,7 +51,7 @@ class App {
             CommandLinePrintMenuWithBackPrompt(commandLinePrintMenu)
 
         @JvmStatic
-        val dotenv: Dotenv = reloadDotEnv()
+        val dotEnv: Dotenv = reloadDotEnv()
 
         @JvmStatic
         private fun reloadDotEnv() = dotenv {
@@ -62,7 +62,7 @@ class App {
         @JvmStatic
         val isDevelopmentMode: Boolean =
             EnvironmentFileOperations.getEnvironmentVariableValueForBooleanWithDefaultValue(
-                dotenv = dotenv,
+                dotEnv = dotEnv,
                 environmentVariableName = EnvironmentalFileEntries.isDevelopmentMode.entryName.name,
                 defaultValue = false
             ).value!!
@@ -74,7 +74,7 @@ class App {
             if (args.isEmpty()) {
 
                 do {
-                    val identifiedUser: String = dotenv[EnvironmentFileEntryCommonEnum.USER_NAME.name]
+                    val identifiedUser: String = dotEnv[EnvironmentFileEntryCommonEnum.USER_NAME.name]
                         ?: Constants.defaultValueForStringEnvironmentVariables
                     commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
                         listOfCommands = listOf(
@@ -103,7 +103,7 @@ class App {
                                 insertTransactionResult = UserOperationsInterActiveWithApiService.login(
 
                                     username = if (identifiedUser == Constants.defaultValueForStringEnvironmentVariables) "" else identifiedUser,
-                                    password = dotenv[EnvironmentFileEntryCommonEnum.PASSWORD.name] ?: "",
+                                    password = dotEnv[EnvironmentFileEntryCommonEnum.PASSWORD.name] ?: "",
                                     fromAccount = fromAccount,
                                     viaAccount = viaAccount,
                                     toAccount = toAccount,
@@ -111,7 +111,8 @@ class App {
                                     transactionParticulars = transactionParticulars,
                                     transactionAmount = transactionAmount,
                                     isConsoleMode = true,
-                                    isDevelopmentMode = isDevelopmentMode
+                                    isDevelopmentMode = isDevelopmentMode,
+                                    dotEnv = dotEnv
                                 )
                             )
                         }
@@ -127,7 +128,8 @@ class App {
                                     transactionParticulars = transactionParticulars,
                                     transactionAmount = transactionAmount,
                                     isConsoleMode = true,
-                                    isDevelopmentMode = isDevelopmentMode
+                                    isDevelopmentMode = isDevelopmentMode,
+                                    dotEnv = dotEnv
                                 )
                             )
                         }
@@ -145,9 +147,9 @@ class App {
                             // "Gist", "" -> {
                             GistUtilsInteractive.processGistIdInteractive(
                                 userName = identifiedUser,
-                                gitHubAccessToken = dotenv[EnvironmentFileEntryEnum.GITHUB_TOKEN.name]
+                                gitHubAccessToken = dotEnv[EnvironmentFileEntryEnum.GITHUB_TOKEN.name]
                                     ?: Constants.defaultValueForStringEnvironmentVariables,
-                                gistId = dotenv[EnvironmentFileEntryEnum.GIST_ID.name]
+                                gistId = dotEnv[EnvironmentFileEntryEnum.GIST_ID.name]
                                     ?: Constants.defaultValueForStringEnvironmentVariables,
                                 isDevelopmentMode = isDevelopmentMode
                             )
@@ -166,11 +168,11 @@ class App {
                 parser.subcommands(
                     BalanceSheet(
                         isDevelopmentMode = isDevelopmentMode,
-                        dotenv = dotenv
+                        dotEnv = dotEnv
                     ),
                     Gist(
                         isDevelopmentMode = isDevelopmentMode,
-                        dotenv = dotenv
+                        dotEnv = dotEnv
                     ),
                     InsertTransaction(isDevelopmentMode = isDevelopmentMode)
                 )
