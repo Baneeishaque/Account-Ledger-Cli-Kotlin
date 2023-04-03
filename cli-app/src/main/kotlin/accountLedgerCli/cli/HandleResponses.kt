@@ -22,13 +22,13 @@ object HandleResponses {
         apiResponse: Result<AccountsResponse>,
         username: String,
         userId: UInt,
-        insertTransactionResult: InsertTransactionResult,
+        previousTransactionData: InsertTransactionResult,
         isConsoleMode: Boolean,
         isDevelopmentMode: Boolean
 
     ): InsertTransactionResult {
 
-        var localInsertTransactionResult: InsertTransactionResult = insertTransactionResult
+        var localInsertTransactionResult: InsertTransactionResult = previousTransactionData
 
         val getUserAccountsMapResult: IsOkModel<LinkedHashMap<UInt, AccountResponse>> =
             getUserAccountsMap(apiResponse = apiResponse)

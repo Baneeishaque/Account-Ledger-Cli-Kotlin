@@ -24,7 +24,7 @@ internal fun checkAffectedAccountsAfterSpecifiedDate(
     desiredDate: String,
     userId: UInt,
     username: String,
-    insertTransactionResult: InsertTransactionResult,
+    previousTransactionData: InsertTransactionResult,
     isUpToTimeStamp: Boolean = false,
     upToTimeStamp: String = "",
     isConsoleMode: Boolean,
@@ -32,7 +32,7 @@ internal fun checkAffectedAccountsAfterSpecifiedDate(
 
 ): InsertTransactionResult {
 
-    var localInsertTransactionResult: InsertTransactionResult = insertTransactionResult
+    var localInsertTransactionResult: InsertTransactionResult = previousTransactionData
     localInsertTransactionResult.isSuccess = false
 
     println("Contacting Server...")
@@ -69,7 +69,7 @@ internal fun checkAffectedAccountsAfterSpecifiedDate(
                             desiredDate = desiredDate,
                             userId = userId,
                             username = username,
-                            insertTransactionResult = localInsertTransactionResult,
+                            previousTransactionData = localInsertTransactionResult,
                             isUpToTimeStamp = isUpToTimeStamp,
                             upToTimeStamp = upToTimeStamp,
                             isConsoleMode = isConsoleMode,
@@ -132,7 +132,7 @@ internal fun checkAffectedAccountsAfterSpecifiedDate(
                             accountId = account.key,
                             accountFullName = account.value,
                             functionCallSource = FunctionCallSourceEnum.FROM_CHECK_ACCOUNTS,
-                            insertTransactionResult = insertTransactionResult,
+                            previousTransactionData = previousTransactionData,
                             fromAccount = selectedAccount,
                             isUpToTimeStamp = isUpToTimeStamp,
                             upToTimeStamp = upToTimeStamp,
@@ -154,7 +154,7 @@ internal fun checkAffectedAccountsAfterSpecifiedDate(
                                     username = username,
                                     accountId = account.key,
                                     accountFullName = account.value,
-                                    insertTransactionResult = localInsertTransactionResult,
+                                    previousTransactionData = localInsertTransactionResult,
                                     fromAccount = selectedAccount,
                                     isUpToTimeStamp = isUpToTimeStamp,
                                     upToTimeStamp = upToTimeStamp,

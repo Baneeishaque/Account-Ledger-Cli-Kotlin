@@ -905,7 +905,7 @@ object InsertOperationsInteractive {
 
                     localInsertTransactionResult = quickTransactionOnWallet(
 
-                        insertTransactionResult = localInsertTransactionResult,
+                        previousTransactionData = localInsertTransactionResult,
                         userId = userId,
                         username = username,
                         isConsoleMode = isConsoleMode,
@@ -919,7 +919,7 @@ object InsertOperationsInteractive {
 
                         userId = userId,
                         username = username,
-                        insertTransactionResult = localInsertTransactionResult,
+                        previousTransactionData = localInsertTransactionResult,
                         isConsoleMode = isConsoleMode,
                         isDevelopmentMode = isDevelopmentMode
                     )
@@ -931,7 +931,7 @@ object InsertOperationsInteractive {
 
                         userId = userId,
                         username = username,
-                        insertTransactionResult = localInsertTransactionResult,
+                        previousTransactionData = localInsertTransactionResult,
                         isConsoleMode = isConsoleMode,
                         isDevelopmentMode = isDevelopmentMode
                     )
@@ -943,7 +943,7 @@ object InsertOperationsInteractive {
 
                         userId = userId,
                         username = username,
-                        insertTransactionResult = localInsertTransactionResult,
+                        previousTransactionData = localInsertTransactionResult,
                         isConsoleMode = isConsoleMode,
                         isDevelopmentMode = isDevelopmentMode
                     )
@@ -955,7 +955,7 @@ object InsertOperationsInteractive {
 
                         userId = userId,
                         username = username,
-                        insertTransactionResult = localInsertTransactionResult,
+                        previousTransactionData = localInsertTransactionResult,
                         isConsoleMode = isConsoleMode,
                         isDevelopmentMode = isDevelopmentMode
                     )
@@ -967,7 +967,7 @@ object InsertOperationsInteractive {
 
                         userId = userId,
                         username = username,
-                        insertTransactionResult = localInsertTransactionResult,
+                        previousTransactionData = localInsertTransactionResult,
                         isConsoleMode = isConsoleMode,
                         isDevelopmentMode = isDevelopmentMode
                     )
@@ -979,7 +979,7 @@ object InsertOperationsInteractive {
 
                         userId = userId,
                         username = username,
-                        insertTransactionResult = localInsertTransactionResult,
+                        previousTransactionData = localInsertTransactionResult,
                         isConsoleMode = isConsoleMode,
                         isDevelopmentMode = isDevelopmentMode
                     )
@@ -991,7 +991,7 @@ object InsertOperationsInteractive {
 
                         userId = userId,
                         username = username,
-                        insertTransactionResult = localInsertTransactionResult,
+                        previousTransactionData = localInsertTransactionResult,
                         isConsoleMode = isConsoleMode,
                         isDevelopmentMode = isDevelopmentMode
                     )
@@ -1003,7 +1003,7 @@ object InsertOperationsInteractive {
 
                         userId = userId,
                         username = username,
-                        insertTransactionResult = localInsertTransactionResult,
+                        previousTransactionData = localInsertTransactionResult,
                         isConsoleMode = isConsoleMode,
                         isDevelopmentMode = isDevelopmentMode
                     )
@@ -1015,7 +1015,7 @@ object InsertOperationsInteractive {
 
                         userId = userId,
                         username = username,
-                        insertTransactionResult = localInsertTransactionResult,
+                        previousTransactionData = localInsertTransactionResult,
                         isConsoleMode = isConsoleMode,
                         isDevelopmentMode = isDevelopmentMode
                     )
@@ -1027,7 +1027,7 @@ object InsertOperationsInteractive {
 
                         userId = userId,
                         username = username,
-                        insertTransactionResult = localInsertTransactionResult,
+                        previousTransactionData = localInsertTransactionResult,
                         isConsoleMode = isConsoleMode,
                         isDevelopmentMode = isDevelopmentMode
                     )

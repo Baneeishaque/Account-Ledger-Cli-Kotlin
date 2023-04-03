@@ -33,7 +33,7 @@ object TransactionViews {
         accountId: UInt,
         accountFullName: String,
         functionCallSource: FunctionCallSourceEnum = FunctionCallSourceEnum.FROM_OTHERS,
-        insertTransactionResult: InsertTransactionResult,
+        previousTransactionData: InsertTransactionResult,
         fromAccount: AccountResponse,
         isUpToTimeStamp: Boolean = false,
         upToTimeStamp: String = "",
@@ -50,7 +50,7 @@ object TransactionViews {
                 accountId = accountId,
                 isDevelopmentMode = isDevelopmentMode
             ),
-            insertTransactionResult = insertTransactionResult,
+            insertTransactionResult = previousTransactionData,
             fromAccount = fromAccount,
             accountFullName = accountFullName,
             username = username,
@@ -981,7 +981,7 @@ object TransactionViews {
 
         userId: UInt,
         username: String,
-        insertTransactionResult: InsertTransactionResult,
+        previousTransactionData: InsertTransactionResult,
         isConsoleMode: Boolean,
         isDevelopmentMode: Boolean
 
@@ -1027,7 +1027,7 @@ object TransactionViews {
                             accountId = accountIndex,
                             accountFullName = selectedAccount.fullName,
                             functionCallSource = FunctionCallSourceEnum.FROM_VIEW_TRANSACTIONS_OF_AN_ACCOUNT,
-                            insertTransactionResult = insertTransactionResult,
+                            previousTransactionData = previousTransactionData,
                             fromAccount = selectedAccount,
                             isConsoleMode = isConsoleMode,
                             isDevelopmentMode = isDevelopmentMode
