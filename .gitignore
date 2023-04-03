@@ -223,7 +223,7 @@ gradle-app.setting
 /AccountLedgerCli.bin
 .env
 /api/http-client.env.json
-/.frequencyOfAccounts.json
+/frequencyOfAccounts.json
 
 cli-app/bin/
 
