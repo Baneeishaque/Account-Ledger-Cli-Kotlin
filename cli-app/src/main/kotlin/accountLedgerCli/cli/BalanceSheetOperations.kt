@@ -199,19 +199,19 @@ internal fun printBalanceSheetOfUser(
                     }
                 }
                 val accounts: MutableMap<UInt, String> = mutableMapOf()
-                selectUserTransactionsAfterSpecifiedDateResult.transactions.filterNot { transactionResponse: TransactionResponse ->
-                    (accountsToExclude.contains(transactionResponse.from_account_id.toString())) || (accountsToExclude.contains(
-                        transactionResponse.to_account_id.toString()
-                    ))
-                }.forEach { transaction: TransactionResponse ->
+                selectUserTransactionsAfterSpecifiedDateResult.transactions.forEach { transaction: TransactionResponse ->
 
-                    accounts.putIfAbsent(
-                        transaction.from_account_id, transaction.from_account_full_name
-                    )
-                    accounts.putIfAbsent(
-                        transaction.to_account_id, transaction.to_account_full_name
-                    )
+                    if (!accountsToExclude.contains(transaction.from_account_id.toString())) {
+
+                        accounts.putIfAbsent(transaction.from_account_id, transaction.from_account_full_name)
+                    }
+
+                    if (!accountsToExclude.contains(transaction.to_account_id.toString())) {
+
+                        accounts.putIfAbsent(transaction.to_account_id, transaction.to_account_full_name)
+                    }
                 }
+
 //                println("Affected A/Cs : $accounts")
                 val menuItems: MutableList<String> = mutableListOf("\nUser : $currentUserName Balance Sheet Ledger")
                 val balanceSheetDataRows: MutableList<BalanceSheetDataRowModel> = mutableListOf()
