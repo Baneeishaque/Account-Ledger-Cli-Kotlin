@@ -21,7 +21,7 @@ dependencies {
     implementation("com.google.guava:guava:31.1-jre")
 
     implementation("org.jetbrains.kotlinx:kotlinx-cli:0.3.5")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1")
 
     implementation("io.ktor:ktor-client-core:$ktorVersion")
