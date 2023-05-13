@@ -60,6 +60,9 @@ val jar by tasks.getting(Jar::class) {
     from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) }) {
         exclude("META-INF/*.RSA", "META-INF/*.SF", "META-INF/*.DSA")
     }
+
+    dependsOn(":account-ledger-lib:account-ledger-lib:jar")
+    dependsOn(":common-lib:common-lib:jar")
 }
 
 tasks.jacocoTestReport {
