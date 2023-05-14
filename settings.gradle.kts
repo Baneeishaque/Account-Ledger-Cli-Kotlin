@@ -1,4 +1,4 @@
-rootProject.name = "accountLedgerCli"
+rootProject.name = "Account-Ledger-Cli-Kotlin"
 
 include(":cli-app")
 include(":account-ledger-lib:account-ledger-lib")
