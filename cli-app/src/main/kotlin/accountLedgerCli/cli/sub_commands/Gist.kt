@@ -52,6 +52,14 @@ class Gist(
                     gistId = environmentGistId,
                     isDevelopmentMode = isDevelopmentMode
                 )
+
+//                GistUtils().processGistIdForTextData(
+//                    userName = usernameLocal,
+//                    gitHubAccessToken = dotEnv[EnvironmentFileEntryEnum.GITHUB_TOKEN.name]
+//                        ?: Constants.defaultValueForStringEnvironmentVariables,
+//                    gistId = environmentGistId,
+//                    isDevelopmentMode = isDevelopmentMode
+//                )
             }
         }
     }
