@@ -11,6 +11,7 @@ object GistUtilsInteractive {
     internal fun processGistIdInteractive(
 
         userName: String,
+        userId: UInt,
         gitHubAccessToken: String,
         gistId: String,
         isDevelopmentMode: Boolean
@@ -24,6 +25,7 @@ object GistUtilsInteractive {
 
             val accountLedgerGist = GistUtils().processGistIdForData(
                 userName = userName,
+                userId = userId,
                 gitHubAccessToken = gitHubAccessToken,
                 gistId = gistId,
                 isDevelopmentMode = isDevelopmentMode,

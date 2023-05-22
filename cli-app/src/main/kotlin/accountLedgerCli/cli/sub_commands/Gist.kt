@@ -27,10 +27,17 @@ class Gist(
         description = "Id of the Gist which contains formatted Account Ledger Entries"
     )
 
+    private val userId: String? = getOptionalTextArgument(
+
+        fullName = CommandLineApiMethodGistArgumentsEnum.userId.name,
+        description = "Id of the User"
+    )
+
     override fun localBeforeExecuteActions() {
 
         if (isDevelopmentMode) {
             println("gistId = $gistId")
+            println("userId = $userId")
         }
     }
 
@@ -45,21 +52,34 @@ class Gist(
 
             } else {
 
-                GistUtils().processGistIdForData(
-                    userName = usernameLocal,
-                    gitHubAccessToken = dotEnv[EnvironmentFileEntryEnum.GITHUB_TOKEN.name]
-                        ?: Constants.defaultValueForStringEnvironmentVariables,
-                    gistId = environmentGistId,
-                    isDevelopmentMode = isDevelopmentMode
-                )
+                if(userId.isNullOrEmpty()){
 
-//                GistUtils().processGistIdForTextData(
-//                    userName = usernameLocal,
-//                    gitHubAccessToken = dotEnv[EnvironmentFileEntryEnum.GITHUB_TOKEN.name]
-//                        ?: Constants.defaultValueForStringEnvironmentVariables,
-//                    gistId = environmentGistId,
-//                    isDevelopmentMode = isDevelopmentMode
-//                )
+                    val environmentUserId = dotEnv[EnvironmentFileEntryEnum.USER_ID.name]
+                    if (environmentUserId.isNullOrEmpty()) {
+
+                        printMissingArgumentMessageForApi(argumentSummary = "User ID")
+
+                    }else{
+
+                        GistUtils().processGistIdForData(
+                            userName = usernameLocal,
+                            userId = environmentUserId.toUInt(),
+                            gitHubAccessToken = dotEnv[EnvironmentFileEntryEnum.GITHUB_TOKEN.name]
+                                ?: Constants.defaultValueForStringEnvironmentVariables,
+                            gistId = environmentGistId,
+                            isDevelopmentMode = isDevelopmentMode
+                        )
+
+//                        GistUtils().processGistIdForTextData(
+//                            userName = usernameLocal,
+//                            userId = environmentUserId.toUInt(),
+//                            gitHubAccessToken = dotEnv[EnvironmentFileEntryEnum.GITHUB_TOKEN.name]
+//                                ?: Constants.defaultValueForStringEnvironmentVariables,
+//                            gistId = environmentGistId,
+//                            isDevelopmentMode = isDevelopmentMode
+//                        )
+                    }
+                }
             }
         }
     }

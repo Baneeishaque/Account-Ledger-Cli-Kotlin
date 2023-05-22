@@ -147,6 +147,7 @@ class App {
                             // "Gist", "" -> {
                             GistUtilsInteractive.processGistIdInteractive(
                                 userName = identifiedUser,
+                                userId = if (dotEnv[EnvironmentFileEntryEnum.USER_ID.name] == null) Constants.defaultValueForIntegerEnvironmentVariables.toUInt() else dotEnv[EnvironmentFileEntryEnum.USER_ID.name].toUInt(),
                                 gitHubAccessToken = dotEnv[EnvironmentFileEntryEnum.GITHUB_TOKEN.name]
                                     ?: Constants.defaultValueForStringEnvironmentVariables,
                                 gistId = dotEnv[EnvironmentFileEntryEnum.GIST_ID.name]
