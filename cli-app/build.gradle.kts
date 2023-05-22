@@ -1,3 +1,4 @@
+//TODO : Use Ktor BoM
 val ktorVersion: String = "2.1.2"
 
 plugins {

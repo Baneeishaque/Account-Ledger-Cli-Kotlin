@@ -89,7 +89,7 @@ internal fun checkAffectedAccountsAfterSpecifiedDate(
         } else {
 
             val selectUserTransactionsAfterSpecifiedDateResult: TransactionsResponse = apiResponse.getOrNull()!!
-            if (ApiUtils.isNotNoTransactionsResponseWithMessage(
+            if (ApiUtils.isNotNoTransactionResponseWithMessage(
 
                     responseStatus = selectUserTransactionsAfterSpecifiedDateResult.status
                 )

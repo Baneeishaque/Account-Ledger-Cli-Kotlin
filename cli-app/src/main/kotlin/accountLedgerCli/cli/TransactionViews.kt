@@ -141,7 +141,7 @@ object TransactionViews {
     ): ViewTransactionsOutput {
 
         var localUserTransactionsResponse: TransactionsResponse = userTransactionsResponse
-        if (ApiUtils.isNoTransactionsResponseWithMessage(
+        if (ApiUtils.isNoTransactionResponseWithMessage(
 
                 responseStatus = localUserTransactionsResponse.status,
                 noDataBeforeMessageActions = fun() {
