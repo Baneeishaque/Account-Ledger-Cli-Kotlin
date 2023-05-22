@@ -4,7 +4,7 @@ import account.ledger.library.api.response.AccountResponse
 import account.ledger.library.api.response.AuthenticationResponse
 import account.ledger.library.api.response.UserResponse
 import account.ledger.library.api.response.UsersResponse
-import account.ledger.library.constants.Constants
+import account_ledger_library.constants.Constants
 import account.ledger.library.enums.BalanceSheetOutputFormatsEnum
 import account.ledger.library.enums.BalanceSheetRefineLevelEnum
 import account.ledger.library.enums.CommandLineApiMethodBalanceSheetOptionsEnum

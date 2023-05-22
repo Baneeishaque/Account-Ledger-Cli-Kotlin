@@ -1,7 +1,7 @@
 package accountLedgerCli.cli
 
 import account.ledger.library.api.response.AccountResponse
-import account.ledger.library.constants.Constants
+import account_ledger_library.constants.Constants
 import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
 import account.ledger.library.utils.AccountUtils
 import common.utils.library.utils.InteractiveUtils

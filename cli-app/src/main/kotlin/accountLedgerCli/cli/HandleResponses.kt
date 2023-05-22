@@ -2,7 +2,7 @@ package accountLedgerCli.cli
 
 import account.ledger.library.api.response.AccountResponse
 import account.ledger.library.api.response.AccountsResponse
-import account.ledger.library.constants.Constants
+import account_ledger_library.constants.Constants
 import account.ledger.library.enums.AccountTypeEnum
 import account.ledger.library.enums.HandleAccountsApiResponseResult
 import account.ledger.library.models.InsertTransactionResult

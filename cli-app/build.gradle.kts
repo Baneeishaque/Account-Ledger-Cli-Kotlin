@@ -8,10 +8,6 @@ plugins {
     jacoco
 }
 
-repositories {
-    mavenCentral()
-}
-
 dependencies {
 
     // Align versions of all Kotlin components
@@ -40,6 +36,7 @@ dependencies {
     // Use the Kotlin JUnit integration.
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
 
+    implementation(project(":account-ledger-lib-multi-platform:lib"))
     implementation(project(":account-ledger-lib:account-ledger-lib"))
     implementation(project(":common-lib:common-lib"))
 }

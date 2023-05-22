@@ -5,7 +5,7 @@ import account.ledger.library.api.response.AccountsResponse
 import account.ledger.library.api.response.TransactionResponse
 import account.ledger.library.api.response.TransactionsResponse
 import account.ledger.library.operations.getUserTransactionsForAnAccount
-import account.ledger.library.constants.Constants
+import account_ledger_library.constants.Constants
 import account.ledger.library.enums.FunctionCallSourceEnum
 import account.ledger.library.enums.TransactionTypeEnum
 import account.ledger.library.enums.AccountTypeEnum

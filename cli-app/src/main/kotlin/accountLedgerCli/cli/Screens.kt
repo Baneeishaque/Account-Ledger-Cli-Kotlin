@@ -2,7 +2,7 @@ package accountLedgerCli.cli
 
 import account.ledger.library.api.response.AccountResponse
 import account.ledger.library.api.response.TransactionsResponse
-import account.ledger.library.constants.Constants
+import account_ledger_library.constants.Constants
 import account.ledger.library.enums.BalanceSheetRefineLevelEnum
 import account.ledger.library.enums.EnvironmentFileEntryEnum
 import account.ledger.library.enums.FunctionCallSourceEnum

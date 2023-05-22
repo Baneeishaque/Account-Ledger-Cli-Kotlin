@@ -1,9 +1,9 @@
 package accountLedgerCli.utils
 
-import account.ledger.library.constants.Constants
-import account.ledger.library.models.AccountLedgerGistDateLedgerModel
-import account.ledger.library.models.AccountLedgerGistTransactionModel
-import account.ledger.library.utils.GistUtils
+import account_ledger_library.constants.Constants
+import account_ledger_library.models.AccountLedgerGistDateLedgerModel
+import account_ledger_library.models.AccountLedgerGistTransactionModel
+import account_ledger_library.utils.GistUtils
 
 object GistUtilsInteractive {
 
@@ -22,7 +22,7 @@ object GistUtilsInteractive {
 
         } else {
 
-            val accountLedgerGist = GistUtils.processGistId(
+            val accountLedgerGist = GistUtils().processGistIdForData(
                 userName = userName,
                 gitHubAccessToken = gitHubAccessToken,
                 gistId = gistId,

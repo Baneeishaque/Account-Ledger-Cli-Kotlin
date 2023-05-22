@@ -1,7 +1,7 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="App -h" type="JetRunConfigurationType" singleton="false">
     <option name="MAIN_CLASS_NAME" value="accountLedgerCli.cli.App" />
-    <module name="accountLedgerCli.cli-app.main" />
+    <module name="Account-Ledger-Cli-Kotlin.cli-app.main" />
     <option name="PROGRAM_PARAMETERS" value="-h" />
     <shortenClasspath name="NONE" />
     <method v="2">
