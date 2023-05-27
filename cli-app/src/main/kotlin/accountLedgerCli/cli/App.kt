@@ -6,6 +6,7 @@ import account.ledger.library.enums.EnvironmentFileEntryEnum
 import account.ledger.library.models.InsertTransactionResult
 import account.ledger.library.utils.AccountUtils
 import accountLedgerCli.cli.sub_commands.BalanceSheet
+import accountLedgerCli.cli.sub_commands.GetAccounts
 import accountLedgerCli.cli.sub_commands.Gist
 import accountLedgerCli.cli.sub_commands.InsertTransaction
 import accountLedgerCli.utils.GistUtilsInteractive
@@ -175,7 +176,11 @@ class App {
                         isDevelopmentMode = isDevelopmentMode,
                         dotEnv = dotEnv
                     ),
-                    InsertTransaction(isDevelopmentMode = isDevelopmentMode)
+                    InsertTransaction(isDevelopmentMode = isDevelopmentMode),
+                    GetAccounts(
+                        isDevelopmentMode = isDevelopmentMode,
+                        dotEnv = dotEnv
+                    )
                 )
                 parser.parse(args = args)
             }
