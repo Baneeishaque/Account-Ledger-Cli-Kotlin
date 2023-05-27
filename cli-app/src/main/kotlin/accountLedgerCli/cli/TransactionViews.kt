@@ -4,24 +4,23 @@ import account.ledger.library.api.response.AccountResponse
 import account.ledger.library.api.response.AccountsResponse
 import account.ledger.library.api.response.TransactionResponse
 import account.ledger.library.api.response.TransactionsResponse
-import account.ledger.library.operations.getUserTransactionsForAnAccount
-import account_ledger_library.constants.Constants
+import account.ledger.library.enums.AccountTypeEnum
 import account.ledger.library.enums.FunctionCallSourceEnum
 import account.ledger.library.enums.TransactionTypeEnum
-import account.ledger.library.enums.AccountTypeEnum
+import account.ledger.library.models.ChooseAccountResult
 import account.ledger.library.models.InsertTransactionResult
 import account.ledger.library.models.ViewTransactionsOutput
-import account.ledger.library.models.ChooseAccountResult
-import account.ledger.library.utils.ApiUtils
-import account.ledger.library.utils.TransactionUtils
-import accountLedgerCli.utils.ChooseAccountUtils
-import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
+import account.ledger.library.operations.getUserTransactionsForAnAccount
 import account.ledger.library.utils.AccountUtils
+import account.ledger.library.utils.ApiUtils
+import account.ledger.library.utils.HandleResponses
+import account.ledger.library.utils.TransactionUtils
+import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
+import accountLedgerCli.utils.ChooseAccountUtils
+import account_ledger_library.constants.ConstantsNative
+import common.utils.library.constants.CommonConstants
 import common.utils.library.models.IsOkModel
 import common.utils.library.utils.*
-import common.utils.library.utils.ApiUtils as CommonApiUtils
-import common.utils.library.utils.HandleResponses as CommonHandleResponses
-import common.utils.library.constants.Constants as CommonConstants
 
 
 object TransactionViews {
@@ -90,7 +89,7 @@ object TransactionViews {
             addTransactionResult = insertTransactionResult
         )
 
-        CommonApiUtils.apiResponseHandler(
+        ApiUtilsCommon.apiResponseHandler(
 
             apiResponse = apiResponse,
             apiSuccessActions = fun() {
@@ -269,7 +268,7 @@ object TransactionViews {
                             val transactionIndex: UInt = getValidIndexWithInputPrompt(
 
                                 map = userTransactionsMap,
-                                itemSpecification = Constants.transactionText,
+                                itemSpecification = ConstantsNative.transactionText,
                                 items = userTransactionsText,
                                 backValue = 0u
                             )
@@ -297,7 +296,7 @@ object TransactionViews {
                             val transactionStartIndex: UInt = getValidIndexWithInputPrompt(
 
                                 map = userTransactionsMap,
-                                itemSpecification = Constants.transactionText,
+                                itemSpecification = ConstantsNative.transactionText,
                                 items = userTransactionsText,
                                 itemSpecificationPrefix = "Start ",
                                 backValue = 0u
@@ -311,7 +310,7 @@ object TransactionViews {
                                 val transactionEndIndex: UInt = getValidIndexWithInputPrompt(
 
                                     map = reducedUserTransactionsMap,
-                                    itemSpecification = Constants.transactionText,
+                                    itemSpecification = ConstantsNative.transactionText,
                                     items = TransactionUtils.userTransactionsToTextFromList(
 
                                         transactions = reducedUserTransactionsMap.values.toList(),
@@ -371,7 +370,7 @@ object TransactionViews {
                             val transactionIndex: UInt = getValidIndexWithInputPrompt(
 
                                 map = userTransactionsMap,
-                                itemSpecification = Constants.transactionText,
+                                itemSpecification = ConstantsNative.transactionText,
                                 items = userTransactionsText,
                                 backValue = 0u
                             )
@@ -917,7 +916,7 @@ object TransactionViews {
     ) = getValidIndexWithInputPrompt(
 
         map = userTransactionsMap,
-        itemSpecification = Constants.transactionText,
+        itemSpecification = ConstantsNative.transactionText,
         items = TransactionUtils.userTransactionsToTextFromList(
 
             transactions = userTransactionsMap.values.toList(),
@@ -991,7 +990,7 @@ object TransactionViews {
                     )
                 )
 
-            CommonHandleResponses.isOkModelHandler(
+            HandleResponsesCommon.isOkModelHandler(
 
                 isOkModel = getUserAccountsMapResult,
                 data = Unit,
@@ -1001,7 +1000,7 @@ object TransactionViews {
 
                         userInputForIndex = userInputForAccountIndex,
                         map = getUserAccountsMapResult.data!!,
-                        itemSpecification = Constants.accountText,
+                        itemSpecification = ConstantsNative.accountText,
                         items = AccountUtils.userAccountsToStringFromList(
 
                             accounts = getUserAccountsMapResult.data!!.values.toList()

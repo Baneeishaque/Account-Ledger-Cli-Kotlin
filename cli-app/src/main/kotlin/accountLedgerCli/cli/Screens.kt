@@ -2,7 +2,6 @@ package accountLedgerCli.cli
 
 import account.ledger.library.api.response.AccountResponse
 import account.ledger.library.api.response.TransactionsResponse
-import account_ledger_library.constants.Constants
 import account.ledger.library.enums.BalanceSheetRefineLevelEnum
 import account.ledger.library.enums.EnvironmentFileEntryEnum
 import account.ledger.library.enums.FunctionCallSourceEnum
@@ -13,14 +12,13 @@ import account.ledger.library.operations.getUserInitialTransactionDateFromUserna
 import account.ledger.library.retrofit.data.TransactionsDataSource
 import account.ledger.library.utils.AccountUtils
 import account.ledger.library.utils.ApiUtils
+import account.ledger.library.utils.HandleResponses
 import account.ledger.library.utils.TransactionUtils
-import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
+import account_ledger_library.constants.ConstantsNative
 import common.utils.library.models.IsOkModel
 import common.utils.library.utils.*
 import io.github.cdimascio.dotenv.Dotenv
 import kotlinx.coroutines.runBlocking
-import common.utils.library.utils.ApiUtils as CommonApiUtils
-import common.utils.library.utils.HandleResponses as CommonHandleResponses
 
 object Screens {
 
@@ -35,7 +33,7 @@ object Screens {
         transactionParticulars: String,
         transactionAmount: Float,
         isDevelopmentMode: Boolean,
-        dotEnv:Dotenv
+        dotEnv: Dotenv
 
     ): InsertTransactionResult {
 
@@ -53,7 +51,7 @@ object Screens {
             toAccount = toAccount
         )
         do {
-            commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
+            App.commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
                 listOf(
                     "\nUser : $username",
                     AccountUtils.getFrequentlyUsedTop10Accounts(userId = userId, isDevelopmentMode),
@@ -107,7 +105,7 @@ object Screens {
 
                 "1" -> {
 
-                    insertTransactionResult = HandleResponses.handleAccountsResponseAndPrintMenu(
+                    insertTransactionResult = HandleResponsesInteractive.handleAccountsResponseAndPrintMenu(
 
                         apiResponse = getAccounts(
 
@@ -245,7 +243,7 @@ object Screens {
 
                 "13" -> {
 
-                    insertTransactionResult = HandleResponses.handleAccountsResponseAndPrintMenu(
+                    insertTransactionResult = HandleResponsesInteractive.handleAccountsResponseAndPrintMenu(
 
                         apiResponse = ApiUtils.getAccountsFull(
 
@@ -440,7 +438,7 @@ object Screens {
                 "31" -> {
 
                     val getTransactionResult: IsOkModel<TransactionsResponse> =
-                        CommonApiUtils.makeApiRequestWithOptionalRetries(
+                        ApiUtilsCommon.makeApiRequestWithOptionalRetries(
                             apiCallFunction = fun(): Result<TransactionsResponse> {
 
                                 return runBlocking {
@@ -452,7 +450,7 @@ object Screens {
                             isDevelopmentMode = isDevelopmentMode
                         )
 
-                    CommonHandleResponses.isOkModelHandler(
+                    HandleResponsesCommon.isOkModelHandler(
 
                         isOkModel = getTransactionResult,
                         data = Unit,
@@ -869,7 +867,7 @@ object Screens {
 
             dotenv = App.dotEnv,
             environmentVariableName = environmentVariableName,
-            defaultValue = Constants.defaultValueForStringEnvironmentVariables
+            defaultValue = ConstantsNative.defaultValueForStringEnvironmentVariables
         )
 
     fun accountHome(
@@ -896,7 +894,7 @@ object Screens {
             toAccount = toAccount
         )
         do {
-            commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
+            App.commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
 
                 listOfCommands = listOf(
                     "\nUser : $username",

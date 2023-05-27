@@ -2,7 +2,6 @@ package accountLedgerCli.cli
 
 import account.ledger.library.api.response.AccountResponse
 import account.ledger.library.api.response.TransactionManipulationResponse
-import account_ledger_library.constants.Constants
 import account.ledger.library.constants.EnvironmentalFileEntries
 import account.ledger.library.enums.AccountExchangeTypeEnum
 import account.ledger.library.enums.AccountTypeEnum
@@ -15,16 +14,16 @@ import account.ledger.library.models.UserModel
 import account.ledger.library.operations.InsertOperations
 import account.ledger.library.retrofit.data.TransactionDataSource
 import account.ledger.library.utils.ApiUtils
+import account.ledger.library.utils.HandleResponses
 import account.ledger.library.utils.TransactionUtils
 import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
 import accountLedgerCli.cli.Screens.quickTransactionOnWallet
 import accountLedgerCli.utils.ChooseAccountUtils
+import account_ledger_library.constants.ConstantsNative
 import common.utils.library.models.IsOkModel
 import common.utils.library.utils.*
 import io.github.cdimascio.dotenv.Dotenv
 import kotlinx.coroutines.runBlocking
-import common.utils.library.utils.ApiUtils as CommonApiUtils
-import common.utils.library.utils.HandleResponses as CommonHandleResponses
 
 object InsertOperationsInteractive {
 
@@ -102,7 +101,7 @@ object InsertOperationsInteractive {
                     )
                 )
 
-            return CommonHandleResponses.isOkModelHandler(
+            return HandleResponsesCommon.isOkModelHandler(
 
                 isOkModel = getUserAccountsMapResult,
                 data = insertTransactionResult,
@@ -164,7 +163,7 @@ object InsertOperationsInteractive {
                     )
                 )
 
-            return CommonHandleResponses.isOkModelHandler(
+            return HandleResponsesCommon.isOkModelHandler(
 
                 isOkModel = getUserAccountsMapResult,
                 data = insertTransactionResult,
@@ -1390,12 +1389,12 @@ object InsertOperationsInteractive {
 
 
                 val timeResetCommand: MatchResult? =
-                    Constants.timeResetPatternRegex.matchEntire(input = localDateTimeInText)
+                    ConstantsNative.timeResetPatternRegex.matchEntire(input = localDateTimeInText)
                 if (timeResetCommand == null) {
 
                     return timePartIncrementOrDecrementActions(
 
-                        timePartIncrementOrDecrementMatchResult = Constants.hourIncrementOrDecrementPatternRegex.matchEntire(
+                        timePartIncrementOrDecrementMatchResult = ConstantsNative.hourIncrementOrDecrementPatternRegex.matchEntire(
                             input = localDateTimeInText
                         ),
                         transactionParticulars = transactionParticulars,
@@ -1414,12 +1413,12 @@ object InsertOperationsInteractive {
                         isCyclicViaStep = isCyclicViaStep,
                         splitIndex = splitIndex,
                         username = username,
-                        timePartIncrementOrDecrementCommandIndicator = Constants.hourIncrementOrDecrementCommandIndicator
+                        timePartIncrementOrDecrementCommandIndicator = ConstantsNative.hourIncrementOrDecrementCommandIndicator
                     ) {
 
                         timePartIncrementOrDecrementActions(
 
-                            timePartIncrementOrDecrementMatchResult = Constants.minuteIncrementOrDecrementPatternRegex.matchEntire(
+                            timePartIncrementOrDecrementMatchResult = ConstantsNative.minuteIncrementOrDecrementPatternRegex.matchEntire(
                                 input = localDateTimeInText
                             ),
                             transactionParticulars = transactionParticulars,
@@ -1438,12 +1437,12 @@ object InsertOperationsInteractive {
                             isCyclicViaStep = isCyclicViaStep,
                             splitIndex = splitIndex,
                             username = username,
-                            timePartIncrementOrDecrementCommandIndicator = Constants.minuteIncrementOrDecrementCommandIndicator,
+                            timePartIncrementOrDecrementCommandIndicator = ConstantsNative.minuteIncrementOrDecrementCommandIndicator,
                             timePartIncrementOrDecrementNoMatchAction = {
 
                                 timePartIncrementOrDecrementActions(
 
-                                    timePartIncrementOrDecrementMatchResult = Constants.secondIncrementOrDecrementPatternRegex.matchEntire(
+                                    timePartIncrementOrDecrementMatchResult = ConstantsNative.secondIncrementOrDecrementPatternRegex.matchEntire(
                                         input = localDateTimeInText
                                     ),
                                     transactionParticulars = transactionParticulars,
@@ -1462,12 +1461,12 @@ object InsertOperationsInteractive {
                                     isCyclicViaStep = isCyclicViaStep,
                                     splitIndex = splitIndex,
                                     username = username,
-                                    timePartIncrementOrDecrementCommandIndicator = Constants.secondIncrementOrDecrementCommandIndicator,
+                                    timePartIncrementOrDecrementCommandIndicator = ConstantsNative.secondIncrementOrDecrementCommandIndicator,
                                     timePartIncrementOrDecrementNoMatchAction = {
 
                                         timePartIncrementOrDecrementActions(
 
-                                            timePartIncrementOrDecrementMatchResult = Constants.dayIncrementOrDecrementPatternRegex.matchEntire(
+                                            timePartIncrementOrDecrementMatchResult = ConstantsNative.dayIncrementOrDecrementPatternRegex.matchEntire(
                                                 input = localDateTimeInText
                                             ),
                                             transactionParticulars = transactionParticulars,
@@ -1486,11 +1485,11 @@ object InsertOperationsInteractive {
                                             isCyclicViaStep = isCyclicViaStep,
                                             splitIndex = splitIndex,
                                             username = username,
-                                            timePartIncrementOrDecrementCommandIndicator = Constants.dayIncrementOrDecrementCommandIndicator,
+                                            timePartIncrementOrDecrementCommandIndicator = ConstantsNative.dayIncrementOrDecrementCommandIndicator,
                                             timePartIncrementOrDecrementNoMatchAction = {
 
                                                 val timePartIncrementOrDecrementMatchResult =
-                                                    Constants.dayIncrementOrDecrementWithTimeResetPatternRegex.matchEntire(
+                                                    ConstantsNative.dayIncrementOrDecrementWithTimeResetPatternRegex.matchEntire(
                                                         input = localDateTimeInText
                                                     )
                                                 if (timePartIncrementOrDecrementMatchResult == null) {
@@ -1526,7 +1525,7 @@ object InsertOperationsInteractive {
                                                             timePartIncrementOrDecrementMatchResult = timePartIncrementOrDecrementMatchResult,
                                                             manipulationOperatorPosition = 3
                                                         ),
-                                                        timeResetCommand = Constants.timeResetPatternRegex.matchEntire(
+                                                        timeResetCommand = ConstantsNative.timeResetPatternRegex.matchEntire(
                                                             input = timePartIncrementOrDecrementMatchResult.groups[4]!!.value
                                                         )!!,
                                                         userId = userId,
@@ -1604,7 +1603,7 @@ object InsertOperationsInteractive {
 
         var localDateTimeInText = dateTimeInText
         val timePart: MatchGroup? = timeResetCommand.groups.first()
-        if (timePart!!.value == Constants.timeResetCommandIndicator) {
+        if (timePart!!.value == ConstantsNative.timeResetCommandIndicator) {
 
             localDateTimeInText = DateTimeUtils.resetTimeOnNormalDateTimeInTextToX(
                 dateTimeInText = dateTimeInText
@@ -1701,7 +1700,7 @@ object InsertOperationsInteractive {
             var localDateTimeInText = dateTimeInText
             when (timePartIncrementOrDecrementCommandIndicator) {
 
-                Constants.hourIncrementOrDecrementCommandIndicator -> {
+                ConstantsNative.hourIncrementOrDecrementCommandIndicator -> {
 
                     if (timePart!!.value == ("$timePartIncrementOrDecrementCommandIndicator+")) {
 
@@ -1737,7 +1736,7 @@ object InsertOperationsInteractive {
                     }
                 }
 
-                Constants.minuteIncrementOrDecrementCommandIndicator -> {
+                ConstantsNative.minuteIncrementOrDecrementCommandIndicator -> {
 
                     if (timePart!!.value == ("$timePartIncrementOrDecrementCommandIndicator+")) {
 
@@ -1773,7 +1772,7 @@ object InsertOperationsInteractive {
                     }
                 }
 
-                Constants.secondIncrementOrDecrementCommandIndicator -> {
+                ConstantsNative.secondIncrementOrDecrementCommandIndicator -> {
 
                     if (timePart!!.value == ("$timePartIncrementOrDecrementCommandIndicator+")) {
 
@@ -1809,7 +1808,7 @@ object InsertOperationsInteractive {
                     }
                 }
 
-                Constants.dayIncrementOrDecrementCommandIndicator -> {
+                ConstantsNative.dayIncrementOrDecrementCommandIndicator -> {
 
                     localDateTimeInText = handleDateIncrementOrDecrementPattern(
 
@@ -1851,7 +1850,7 @@ object InsertOperationsInteractive {
     ): String {
 
         var localDateTimeInText = dateTimeInText
-        if (timePart!!.value == ("${Constants.dayIncrementOrDecrementCommandIndicator}+")) {
+        if (timePart!!.value == ("${ConstantsNative.dayIncrementOrDecrementCommandIndicator}+")) {
 
             localDateTimeInText = DateTimeUtils.addDaysToNormalDateTimeInText(
 
@@ -1859,7 +1858,7 @@ object InsertOperationsInteractive {
                 days = 1
             )
 
-        } else if (timePart.value == ("${Constants.dayIncrementOrDecrementCommandIndicator}-")) {
+        } else if (timePart.value == ("${ConstantsNative.dayIncrementOrDecrementCommandIndicator}-")) {
 
             localDateTimeInText = DateTimeUtils.subtractDaysFromNormalDateTimeInText(
 
@@ -2458,7 +2457,7 @@ object InsertOperationsInteractive {
             },
             transactionManipulationFailureActions = { data: String ->
 
-                CommonApiUtils.printServerExecutionErrorMessage(data)
+                ApiUtilsCommon.printServerExecutionErrorMessage(data)
                 transactionManipulationFailureActions.invoke(data)
             },
             isConsoleMode = true,
@@ -2507,7 +2506,7 @@ object InsertOperationsInteractive {
                 val readFrequencyOfAccountsFileResult: IsOkModel<FrequencyOfAccountsModel> =
                     JsonFileUtils.readJsonFile(
 
-                        fileName = Constants.frequencyOfAccountsFileName,
+                        fileName = ConstantsNative.frequencyOfAccountsFileName,
                         isDevelopmentMode = isDevelopmentMode
                     )
 
@@ -2552,14 +2551,14 @@ object InsertOperationsInteractive {
                     }
                     JsonFileUtils.writeJsonFile(
 
-                        fileName = Constants.frequencyOfAccountsFileName,
+                        fileName = ConstantsNative.frequencyOfAccountsFileName,
                         data = frequencyOfAccounts
                     )
                 } else {
 
                     JsonFileUtils.writeJsonFile(
 
-                        fileName = Constants.frequencyOfAccountsFileName,
+                        fileName = ConstantsNative.frequencyOfAccountsFileName,
                         data = FrequencyOfAccountsModel(
 
                             users = listOf(

@@ -2,20 +2,21 @@ package accountLedgerCli.cli
 
 import account.ledger.library.api.response.AccountResponse
 import account.ledger.library.api.response.AccountsResponse
-import account_ledger_library.constants.Constants
 import account.ledger.library.enums.AccountTypeEnum
 import account.ledger.library.enums.HandleAccountsApiResponseResult
 import account.ledger.library.models.InsertTransactionResult
 import account.ledger.library.models.ViewTransactionsOutput
-import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
 import account.ledger.library.utils.AccountUtils
+import account.ledger.library.utils.HandleResponses
+import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
+import account_ledger_library.constants.ConstantsNative
+import common.utils.library.constants.CommonConstants
 import common.utils.library.models.IsOkModel
 import common.utils.library.utils.EnumUtils
+import common.utils.library.utils.HandleResponsesCommon
 import common.utils.library.utils.InteractiveUtils
-import common.utils.library.constants.Constants as CommonConstants
-import common.utils.library.utils.HandleResponses as CommonHandleResponses
 
-object HandleResponses {
+object HandleResponsesInteractive {
 
     internal fun handleAccountsResponseAndPrintMenu(
 
@@ -30,9 +31,9 @@ object HandleResponses {
         var localInsertTransactionResult: InsertTransactionResult = previousTransactionData
 
         val getUserAccountsMapResult: IsOkModel<LinkedHashMap<UInt, AccountResponse>> =
-            getUserAccountsMap(apiResponse = apiResponse)
+            HandleResponses.getUserAccountsMap(apiResponse = apiResponse)
 
-        return CommonHandleResponses.isOkModelHandler(
+        return HandleResponsesCommon.isOkModelHandler(
 
             isOkModel = getUserAccountsMapResult,
             data = localInsertTransactionResult,
@@ -85,31 +86,6 @@ object HandleResponses {
             })
     }
 
-    internal fun getUserAccountsMap(apiResponse: Result<AccountsResponse>): IsOkModel<LinkedHashMap<UInt, AccountResponse>> {
-
-        if (apiResponse.isFailure) {
-
-            println("Error : ${(apiResponse.exceptionOrNull() as Exception).localizedMessage}")
-            return IsOkModel(isOK = false)
-
-        } else {
-
-            val localAccountsResponseWithStatus: AccountsResponse = apiResponse.getOrNull() as AccountsResponse
-            return if (localAccountsResponseWithStatus.status == 1u) {
-
-                println("No Accounts...")
-                IsOkModel(isOK = false)
-
-            } else {
-
-                IsOkModel(
-                    isOK = true,
-                    data = AccountUtils.prepareUserAccountsMap(localAccountsResponseWithStatus.accounts)
-                )
-            }
-        }
-    }
-
     internal fun handleAccountsApiResponse(
 
         apiResponse: Result<AccountsResponse>,
@@ -157,7 +133,7 @@ object HandleResponses {
                                 selectedAccountId = getValidIndexWithInputPrompt(
 
                                     map = userAccountsMap,
-                                    itemSpecification = Constants.accountText,
+                                    itemSpecification = ConstantsNative.accountText,
                                     items = AccountUtils.userAccountsToStringFromList(
 
                                         accounts = userAccountsMap.values.toList()

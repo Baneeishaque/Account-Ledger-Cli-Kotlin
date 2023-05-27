@@ -2,7 +2,7 @@ package accountLedgerCli.cli
 
 import account.ledger.library.api.response.AccountResponse
 import account.ledger.library.api.response.UserResponse
-import account_ledger_library.constants.Constants
+import account_ledger_library.constants.ConstantsNative
 import account.ledger.library.models.ChooseUserResult
 import account.ledger.library.models.InsertTransactionResult
 import account.ledger.library.models.ViewTransactionsOutput
@@ -44,7 +44,7 @@ fun processChildAccountScreenInput(
                 accountId = getValidIndexWithInputPrompt(
 
                     map = userAccountsMap,
-                    itemSpecification = Constants.accountText,
+                    itemSpecification = ConstantsNative.accountText,
                     items = AccountUtils.userAccountsToStringFromList(accounts = userAccountsMap.values.toList()),
                     backValue = 0u
                 ),

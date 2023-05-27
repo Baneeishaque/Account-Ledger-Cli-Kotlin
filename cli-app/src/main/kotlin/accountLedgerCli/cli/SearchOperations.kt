@@ -1,11 +1,10 @@
 package accountLedgerCli.cli
 
 import account.ledger.library.api.response.AccountResponse
-import account_ledger_library.constants.Constants
-import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
 import account.ledger.library.utils.AccountUtils
+import account_ledger_library.constants.ConstantsNative
+import common.utils.library.constants.CommonConstants
 import common.utils.library.utils.InteractiveUtils
-import common.utils.library.constants.Constants as CommonConstants
 
 fun searchAccount(
 
@@ -14,7 +13,7 @@ fun searchAccount(
 
 ): UInt {
 
-    commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
+    App.commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
         listOf("\nEnter Search Key : ")
     )
     val searchKeyInput: String = readln()
@@ -29,7 +28,7 @@ fun searchAccount(
     if (searchResult.isEmpty()) {
 
         do {
-            commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
+            App.commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
                 listOf(
                     "No Matches....",
                     "1 - Try Again",
@@ -52,7 +51,7 @@ fun searchAccount(
     } else {
 
         do {
-            commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
+            App.commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
                 listOf(
                     "\nSearch Results",
                     AccountUtils.userAccountsToStringFromList(
@@ -71,7 +70,7 @@ fun searchAccount(
                 return getValidIndexWithInputPrompt(
 
                     map = searchResult,
-                    itemSpecification = Constants.accountText,
+                    itemSpecification = ConstantsNative.accountText,
                     items = AccountUtils.userAccountsToStringFromList(
 
                         accounts = searchResult.values.toList()

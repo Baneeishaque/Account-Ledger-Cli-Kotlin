@@ -10,7 +10,7 @@ import account.ledger.library.operations.getUserInitialTransactionDateFromUserna
 import account.ledger.library.operations.getUserTransactionsForAnAccount
 import account.ledger.library.retrofit.data.TransactionsDataSource
 import account.ledger.library.utils.UserUtils
-import account_ledger_library.constants.Constants
+import account_ledger_library.constants.ConstantsNative
 import common.utils.library.models.CommonDataModel
 import common.utils.library.models.IsOkModel
 import common.utils.library.utils.DateTimeUtils
@@ -30,7 +30,7 @@ internal fun balanceSheetOfUser(
         chosenUserId = getValidIndexWithInputPrompt(
 
             map = usersMap,
-            itemSpecification = Constants.userText,
+            itemSpecification = ConstantsNative.userText,
             items = UserUtils.usersToStringFromLinkedHashMap(usersMap = usersMap),
             backValue = 0u
         ), usersMap = usersMap

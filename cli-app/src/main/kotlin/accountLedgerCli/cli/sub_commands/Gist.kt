@@ -3,10 +3,11 @@ package accountLedgerCli.cli.sub_commands
 import account.ledger.library.enums.CommandLineApiMethodGistArgumentsEnum
 import account.ledger.library.enums.CommandLineApiMethodsEnum
 import account.ledger.library.enums.EnvironmentFileEntryEnum
-import account_ledger_library.constants.Constants
+import account_ledger_library.constants.ConstantsNative
 import account_ledger_library.utils.GistUtils
 import common.utils.library.cli.sub_commands.SubCommandWithUsernameAndPasswordAsArguments
-import common.utils.library.utils.ApiUtils.printMissingArgumentMessageForApi
+import common.utils.library.enums.EnvironmentFileEntryCommonEnum
+import common.utils.library.utils.ApiUtilsCommon
 import io.github.cdimascio.dotenv.Dotenv
 
 class Gist(
@@ -48,24 +49,24 @@ class Gist(
             val environmentGistId = dotEnv[EnvironmentFileEntryEnum.GIST_ID.name]
             if (environmentGistId.isNullOrEmpty()) {
 
-                printMissingArgumentMessageForApi(argumentSummary = "Gist ID")
+                ApiUtilsCommon.printMissingArgumentMessageForApi(argumentSummary = "Gist ID")
 
             } else {
 
-                if(userId.isNullOrEmpty()){
+                if (userId.isNullOrEmpty()) {
 
-                    val environmentUserId = dotEnv[EnvironmentFileEntryEnum.USER_ID.name]
+                    val environmentUserId = dotEnv[EnvironmentFileEntryCommonEnum.USER_ID.name]
                     if (environmentUserId.isNullOrEmpty()) {
 
-                        printMissingArgumentMessageForApi(argumentSummary = "User ID")
+                        ApiUtilsCommon.printMissingArgumentMessageForApi(argumentSummary = "User ID")
 
-                    }else{
+                    } else {
 
                         GistUtils().processGistIdForData(
                             userName = usernameLocal,
                             userId = environmentUserId.toUInt(),
                             gitHubAccessToken = dotEnv[EnvironmentFileEntryEnum.GITHUB_TOKEN.name]
-                                ?: Constants.defaultValueForStringEnvironmentVariables,
+                                ?: ConstantsNative.defaultValueForStringEnvironmentVariables,
                             gistId = environmentGistId,
                             isDevelopmentMode = isDevelopmentMode
                         )

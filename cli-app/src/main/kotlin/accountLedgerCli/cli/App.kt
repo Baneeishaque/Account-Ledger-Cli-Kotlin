@@ -9,7 +9,8 @@ import accountLedgerCli.cli.sub_commands.BalanceSheet
 import accountLedgerCli.cli.sub_commands.Gist
 import accountLedgerCli.cli.sub_commands.InsertTransaction
 import accountLedgerCli.utils.GistUtilsInteractive
-import account_ledger_library.constants.Constants
+import account_ledger_library.constants.ConstantsNative
+import common.utils.library.constants.CommonConstants
 import common.utils.library.enums.EnvironmentFileEntryCommonEnum
 import common.utils.library.utils.*
 import io.github.cdimascio.dotenv.Dotenv
@@ -17,7 +18,6 @@ import io.github.cdimascio.dotenv.dotenv
 import kotlinx.cli.ArgParser
 import kotlinx.cli.ExperimentalCli
 import java.nio.file.Paths
-import common.utils.library.constants.Constants as CommonConstants
 
 class App {
     companion object {
@@ -75,7 +75,7 @@ class App {
 
                 do {
                     val identifiedUser: String = dotEnv[EnvironmentFileEntryCommonEnum.USER_NAME.name]
-                        ?: Constants.defaultValueForStringEnvironmentVariables
+                        ?: ConstantsNative.defaultValueForStringEnvironmentVariables
                     commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
                         listOfCommands = listOf(
                             "Account Ledger",
@@ -102,7 +102,7 @@ class App {
                             processInsertTransactionResult(
                                 insertTransactionResult = UserOperationsInterActiveWithApiService.login(
 
-                                    username = if (identifiedUser == Constants.defaultValueForStringEnvironmentVariables) "" else identifiedUser,
+                                    username = if (identifiedUser == ConstantsNative.defaultValueForStringEnvironmentVariables) "" else identifiedUser,
                                     password = dotEnv[EnvironmentFileEntryCommonEnum.PASSWORD.name] ?: "",
                                     fromAccount = fromAccount,
                                     viaAccount = viaAccount,
@@ -147,11 +147,11 @@ class App {
                             // "Gist", "" -> {
                             GistUtilsInteractive.processGistIdInteractive(
                                 userName = identifiedUser,
-                                userId = if (dotEnv[EnvironmentFileEntryEnum.USER_ID.name] == null) Constants.defaultValueForIntegerEnvironmentVariables.toUInt() else dotEnv[EnvironmentFileEntryEnum.USER_ID.name].toUInt(),
+                                userId = if (dotEnv[EnvironmentFileEntryCommonEnum.USER_ID.name] == null) ConstantsNative.defaultValueForIntegerEnvironmentVariables.toUInt() else dotEnv[EnvironmentFileEntryCommonEnum.USER_ID.name].toUInt(),
                                 gitHubAccessToken = dotEnv[EnvironmentFileEntryEnum.GITHUB_TOKEN.name]
-                                    ?: Constants.defaultValueForStringEnvironmentVariables,
+                                    ?: ConstantsNative.defaultValueForStringEnvironmentVariables,
                                 gistId = dotEnv[EnvironmentFileEntryEnum.GIST_ID.name]
-                                    ?: Constants.defaultValueForStringEnvironmentVariables,
+                                    ?: ConstantsNative.defaultValueForStringEnvironmentVariables,
                                 isDevelopmentMode = isDevelopmentMode
                             )
                             return

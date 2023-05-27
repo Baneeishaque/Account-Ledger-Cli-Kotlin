@@ -4,19 +4,18 @@ import account.ledger.library.api.response.AccountResponse
 import account.ledger.library.api.response.AccountsResponse
 import account.ledger.library.api.response.TransactionResponse
 import account.ledger.library.api.response.TransactionsResponse
-import account.ledger.library.operations.getAccounts
 import account.ledger.library.enums.FunctionCallSourceEnum
 import account.ledger.library.models.InsertTransactionResult
 import account.ledger.library.models.ViewTransactionsOutput
+import account.ledger.library.operations.getAccounts
 import account.ledger.library.retrofit.data.TransactionsDataSource
+import account.ledger.library.utils.AccountUtils
 import account.ledger.library.utils.ApiUtils
 import account.ledger.library.utils.TransactionUtils
-import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
-import account.ledger.library.utils.AccountUtils
+import common.utils.library.constants.CommonConstants
 import common.utils.library.models.IsOkModel
 import common.utils.library.utils.InteractiveUtils
 import common.utils.library.utils.MysqlUtils
-import common.utils.library.constants.Constants as CommonConstants
 import kotlinx.coroutines.runBlocking
 
 internal fun checkAffectedAccountsAfterSpecifiedDate(
@@ -278,7 +277,7 @@ internal fun viewChildAccounts(
                 userAccountsMap[currentAccount.id] = currentAccount
             }
             do {
-                commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
+                App.commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
                     listOf(
                         "\nUser : $username",
                         "${fromAccount.fullName} - Child Accounts",

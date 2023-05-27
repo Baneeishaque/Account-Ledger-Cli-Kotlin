@@ -1,6 +1,6 @@
 package accountLedgerCli.utils
 
-import account_ledger_library.constants.Constants
+import account_ledger_library.constants.ConstantsNative
 import account_ledger_library.models.AccountLedgerGistDateLedgerModel
 import account_ledger_library.models.AccountLedgerGistTransactionModel
 import account_ledger_library.utils.GistUtils
@@ -17,7 +17,7 @@ object GistUtilsInteractive {
         isDevelopmentMode: Boolean
     ) {
 
-        if (gistId == Constants.defaultValueForStringEnvironmentVariables) {
+        if (gistId == ConstantsNative.defaultValueForStringEnvironmentVariables) {
 
             println("Missing Gist ID in environment file")
 

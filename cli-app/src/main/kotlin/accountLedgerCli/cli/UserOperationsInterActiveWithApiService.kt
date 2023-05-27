@@ -4,7 +4,7 @@ import account.ledger.library.api.response.AccountResponse
 import account.ledger.library.api.response.AuthenticationResponse
 import account.ledger.library.api.response.UserResponse
 import account.ledger.library.api.response.UsersResponse
-import account_ledger_library.constants.Constants
+import account_ledger_library.constants.ConstantsNative
 import account.ledger.library.enums.BalanceSheetOutputFormatsEnum
 import account.ledger.library.enums.BalanceSheetRefineLevelEnum
 import account.ledger.library.enums.CommandLineApiMethodBalanceSheetOptionsEnum
@@ -23,7 +23,7 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.builtins.serializer
 import kotlinx.serialization.json.Json
 import java.nio.file.Paths
-import common.utils.library.constants.Constants as CommonConstants
+import common.utils.library.constants.CommonConstants
 
 // TODO : Separate into UserOperations, UserOperationsInteractive & UserOperationsApiService
 class UserOperationsInterActiveWithApiService {
@@ -439,7 +439,7 @@ class UserOperationsInterActiveWithApiService {
                                     chosenUserId = getValidIndexWithInputPrompt(
 
                                         map = usersMap,
-                                        itemSpecification = Constants.userText,
+                                        itemSpecification = ConstantsNative.userText,
                                         items = UserUtils.usersToStringFromLinkedHashMap(usersMap = usersMap),
                                         backValue = 0u
 

@@ -1,6 +1,6 @@
 package accountLedgerCli.cli
 
-import account_ledger_library.constants.Constants
+import account_ledger_library.constants.ConstantsNative
 import account.ledger.library.enums.AccountTypeEnum
 import account.ledger.library.enums.HandleAccountsApiResponseResult
 import account.ledger.library.enums.TransactionTypeEnum
@@ -136,7 +136,7 @@ internal fun chooseDepositTop(
 
 ): HandleAccountsApiResponseResult {
 
-    return HandleResponses.handleAccountsApiResponse(
+    return HandleResponsesInteractive.handleAccountsApiResponse(
 
         apiResponse = getAccounts(
 
@@ -157,7 +157,7 @@ internal fun chooseDepositFull(
 
 ): HandleAccountsApiResponseResult {
 
-    return HandleResponses.handleAccountsApiResponse(
+    return HandleResponsesInteractive.handleAccountsApiResponse(
 
         apiResponse = ApiUtils.getAccountsFull(
 
@@ -178,7 +178,7 @@ internal fun chooseWithdrawTop(
 
 ): HandleAccountsApiResponseResult {
 
-    return HandleResponses.handleAccountsApiResponse(
+    return HandleResponsesInteractive.handleAccountsApiResponse(
 
         apiResponse = getAccounts(
 
@@ -197,7 +197,7 @@ internal fun chooseWithdrawFull(
     isDevelopmentMode: Boolean
 ): HandleAccountsApiResponseResult {
 
-    return HandleResponses.handleAccountsApiResponse(
+    return HandleResponsesInteractive.handleAccountsApiResponse(
 
         apiResponse = ApiUtils.getAccountsFull(
 
@@ -218,7 +218,7 @@ internal fun chooseViaTop(
 
 ): HandleAccountsApiResponseResult {
 
-    return HandleResponses.handleAccountsApiResponse(
+    return HandleResponsesInteractive.handleAccountsApiResponse(
 
         apiResponse = getAccounts(
 
@@ -239,7 +239,7 @@ internal fun chooseViaFull(
 
 ): HandleAccountsApiResponseResult {
 
-    return HandleResponses.handleAccountsApiResponse(
+    return HandleResponsesInteractive.handleAccountsApiResponse(
 
         apiResponse = ApiUtils.getAccountsFull(
 
@@ -377,27 +377,27 @@ internal fun enterDateWithTime(
 
         else -> {
 
-            if (Constants.timeResetPatternRegex.matchEntire(input = userInput!!) != null) {
+            if (ConstantsNative.timeResetPatternRegex.matchEntire(input = userInput!!) != null) {
 
                 return userInput
             }
-            if (Constants.hourIncrementOrDecrementPatternRegex.matchEntire(input = userInput) != null) {
+            if (ConstantsNative.hourIncrementOrDecrementPatternRegex.matchEntire(input = userInput) != null) {
 
                 return userInput
             }
-            if (Constants.minuteIncrementOrDecrementPatternRegex.matchEntire(input = userInput) != null) {
+            if (ConstantsNative.minuteIncrementOrDecrementPatternRegex.matchEntire(input = userInput) != null) {
 
                 return userInput
             }
-            if (Constants.secondIncrementOrDecrementPatternRegex.matchEntire(input = userInput) != null) {
+            if (ConstantsNative.secondIncrementOrDecrementPatternRegex.matchEntire(input = userInput) != null) {
 
                 return userInput
             }
-            if (Constants.dayIncrementOrDecrementPatternRegex.matchEntire(input = userInput) != null) {
+            if (ConstantsNative.dayIncrementOrDecrementPatternRegex.matchEntire(input = userInput) != null) {
 
                 return userInput
             }
-            if (Constants.dayIncrementOrDecrementWithTimeResetPatternRegex.matchEntire(input = userInput) != null) {
+            if (ConstantsNative.dayIncrementOrDecrementWithTimeResetPatternRegex.matchEntire(input = userInput) != null) {
 
                 return userInput
             }
