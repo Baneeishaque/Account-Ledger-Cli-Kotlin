@@ -1,7 +1,7 @@
 package accountLedgerCli.cli.sub_commands
 
-import account.ledger.library.enums.CommandLineApiMethodGistArgumentsEnum
-import account.ledger.library.enums.CommandLineApiMethodsEnum
+import accountLedgerCli.enums.CommandLineApiMethodGistArgumentsEnum
+import accountLedgerCli.enums.CommandLineApiMethodsEnum
 import account.ledger.library.enums.EnvironmentFileEntryEnum
 import account_ledger_library.constants.ConstantsNative
 import account_ledger_library.utils.GistUtils

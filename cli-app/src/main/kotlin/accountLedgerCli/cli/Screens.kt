@@ -1,7 +1,7 @@
 package accountLedgerCli.cli
 
 import account.ledger.library.api.response.AccountResponse
-import account.ledger.library.api.response.TransactionsResponse
+import account.ledger.library.api.response.MultipleTransactionResponse
 import account.ledger.library.enums.BalanceSheetRefineLevelEnum
 import account.ledger.library.enums.EnvironmentFileEntryEnum
 import account.ledger.library.enums.FunctionCallSourceEnum
@@ -9,7 +9,7 @@ import account.ledger.library.enums.TransactionTypeEnum
 import account.ledger.library.models.InsertTransactionResult
 import account.ledger.library.operations.getAccounts
 import account.ledger.library.operations.getUserInitialTransactionDateFromUsername
-import account.ledger.library.retrofit.data.TransactionsDataSource
+import account.ledger.library.retrofit.data.MultipleTransactionDataSource
 import account.ledger.library.utils.AccountUtils
 import account.ledger.library.utils.ApiUtils
 import account.ledger.library.utils.HandleResponses
@@ -437,13 +437,13 @@ object Screens {
 
                 "31" -> {
 
-                    val getTransactionResult: IsOkModel<TransactionsResponse> =
+                    val getTransactionResult: IsOkModel<MultipleTransactionResponse> =
                         ApiUtilsCommon.makeApiRequestWithOptionalRetries(
-                            apiCallFunction = fun(): Result<TransactionsResponse> {
+                            apiCallFunction = fun(): Result<MultipleTransactionResponse> {
 
                                 return runBlocking {
 
-                                    TransactionsDataSource().selectTransactions(userId = userId)
+                                    MultipleTransactionDataSource().selectTransactions(userId = userId)
                                 }
                             },
                             isConsoleMode = true,
@@ -458,7 +458,7 @@ object Screens {
 
                             insertTransactionResult = TransactionViews.viewTransactions(
 
-                                userTransactionsResponse = getTransactionResult.data!!,
+                                userMultipleTransactionResponse = getTransactionResult.data!!,
                                 accountFullName = "Last 10",
                                 dateTimeInText = insertTransactionResult.dateTimeInText,
                                 transactionParticulars = insertTransactionResult.transactionParticulars,

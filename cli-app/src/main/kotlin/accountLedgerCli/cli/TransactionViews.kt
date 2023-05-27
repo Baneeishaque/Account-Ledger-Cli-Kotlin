@@ -3,7 +3,7 @@ package accountLedgerCli.cli
 import account.ledger.library.api.response.AccountResponse
 import account.ledger.library.api.response.AccountsResponse
 import account.ledger.library.api.response.TransactionResponse
-import account.ledger.library.api.response.TransactionsResponse
+import account.ledger.library.api.response.MultipleTransactionResponse
 import account.ledger.library.enums.AccountTypeEnum
 import account.ledger.library.enums.FunctionCallSourceEnum
 import account.ledger.library.enums.TransactionTypeEnum
@@ -66,7 +66,7 @@ object TransactionViews {
     @JvmStatic
     internal fun viewTransactions(
 
-        apiResponse: Result<TransactionsResponse>,
+        apiResponse: Result<MultipleTransactionResponse>,
         insertTransactionResult: InsertTransactionResult,
         accountFullName: String,
         username: String,
@@ -96,7 +96,7 @@ object TransactionViews {
 
                 viewTransactionsOutput = viewTransactions(
 
-                    userTransactionsResponse = apiResponse.getOrNull()!!,
+                    userMultipleTransactionResponse = apiResponse.getOrNull()!!,
                     accountFullName = accountFullName,
                     dateTimeInText = insertTransactionResult.dateTimeInText,
                     transactionParticulars = insertTransactionResult.transactionParticulars,
@@ -120,7 +120,7 @@ object TransactionViews {
 
     fun viewTransactions(
 
-        userTransactionsResponse: TransactionsResponse,
+        userMultipleTransactionResponse: MultipleTransactionResponse,
         accountFullName: String,
         dateTimeInText: String,
         transactionParticulars: String,
@@ -139,10 +139,10 @@ object TransactionViews {
 
     ): ViewTransactionsOutput {
 
-        var localUserTransactionsResponse: TransactionsResponse = userTransactionsResponse
+        var localUserMultipleTransactionResponse: MultipleTransactionResponse = userMultipleTransactionResponse
         if (ApiUtils.isNoTransactionResponseWithMessage(
 
-                responseStatus = localUserTransactionsResponse.status,
+                responseStatus = localUserMultipleTransactionResponse.status,
                 noDataBeforeMessageActions = fun() {
 
                     println("Account - $accountFullName")
@@ -169,7 +169,7 @@ object TransactionViews {
                     transactions = TransactionUtils.filterTransactionsForUpToDateTime(
                         isUpToTimeStamp = isUpToTimeStamp,
                         upToTimeStamp = upToTimeStamp,
-                        transactions = localUserTransactionsResponse.transactions
+                        transactions = localUserMultipleTransactionResponse.transactions
                     )
                 )
 
@@ -390,21 +390,21 @@ object TransactionViews {
 
                                 MysqlUtilsInteractive.dateTimeTextConversionWithMessage(
 
-                                    inputDateTimeText = selectedTransaction.event_date_time,
+                                    inputDateTimeText = selectedTransaction.eventDateTime,
                                     dateTimeTextConversionFunction = fun(): IsOkModel<String> {
 
-                                        return MysqlUtils.mySqlDateTimeTextToNormalDateTimeText(mySqlDateTimeText = selectedTransaction.event_date_time)
+                                        return MysqlUtils.mySqlDateTimeTextToNormalDateTimeText(mySqlDateTimeText = selectedTransaction.eventDateTime)
                                     },
                                 )
                             if (selectedTransactionDateTimeConversionResult.isOK) {
 
                                 //TODO : Present Transaction
-                                if (selectedTransaction.from_account_id == fromAccount.id) {
+                                if (selectedTransaction.fromAccountId == fromAccount.id) {
 
-                                    print("[${selectedTransaction.id}] [${selectedTransactionDateTimeConversionResult.data!!}]\t[${selectedTransaction.particulars}]\t[-${selectedTransaction.amount}]\t[${selectedTransaction.to_account_full_name}]")
-                                } else if (selectedTransaction.to_account_id == fromAccount.id) {
+                                    print("[${selectedTransaction.id}] [${selectedTransactionDateTimeConversionResult.data!!}]\t[${selectedTransaction.particulars}]\t[-${selectedTransaction.amount}]\t[${selectedTransaction.toAccountFullName}]")
+                                } else if (selectedTransaction.toAccountId == fromAccount.id) {
 
-                                    print("[${selectedTransaction.id}] [${selectedTransactionDateTimeConversionResult.data!!}]\t[${selectedTransaction.particulars}]\t[+${selectedTransaction.amount}]\t[${selectedTransaction.from_account_full_name}]")
+                                    print("[${selectedTransaction.id}] [${selectedTransactionDateTimeConversionResult.data!!}]\t[${selectedTransaction.particulars}]\t[+${selectedTransaction.amount}]\t[${selectedTransaction.fromAccountFullName}]")
 
                                 } else {
 
@@ -414,7 +414,7 @@ object TransactionViews {
                                 //TODO : Get User Confirmation
 
                                 var localFromAccount: AccountResponse =
-                                    userAccountsMap[selectedTransaction.from_account_id]!!
+                                    userAccountsMap[selectedTransaction.fromAccountId]!!
                                 do {
                                     println("Do you want to change Withdraw A/C (Y/N) (Default : N) : ")
                                     when (readln()) {
@@ -444,7 +444,7 @@ object TransactionViews {
                                 } while (true)
 
                                 var localToAccount: AccountResponse =
-                                    userAccountsMap[selectedTransaction.to_account_id]!!
+                                    userAccountsMap[selectedTransaction.toAccountId]!!
                                 do {
                                     print("Do you want to change Deposit A/C (Y/N) (Default : N) : ")
                                     when (readln()) {
@@ -495,18 +495,18 @@ object TransactionViews {
 
                                     if (localFromAccount != fromAccount) {
 
-                                        userTransactionsMap[transactionIndex]!!.from_account_id = localFromAccount.id
-                                        userTransactionsMap[transactionIndex]!!.from_account_name =
+                                        userTransactionsMap[transactionIndex]!!.fromAccountId = localFromAccount.id
+                                        userTransactionsMap[transactionIndex]!!.fromAccountName =
                                             localFromAccount.name
-                                        userTransactionsMap[transactionIndex]!!.from_account_full_name =
+                                        userTransactionsMap[transactionIndex]!!.fromAccountFullName =
                                             localFromAccount.fullName
                                     }
 
                                     if (localToAccount != toAccount) {
 
-                                        userTransactionsMap[transactionIndex]!!.to_account_id = localToAccount.id
-                                        userTransactionsMap[transactionIndex]!!.to_account_name = localToAccount.name
-                                        userTransactionsMap[transactionIndex]!!.to_account_full_name =
+                                        userTransactionsMap[transactionIndex]!!.toAccountId = localToAccount.id
+                                        userTransactionsMap[transactionIndex]!!.toAccountName = localToAccount.name
+                                        userTransactionsMap[transactionIndex]!!.toAccountFullName =
                                             localToAccount.fullName
                                     }
 
@@ -515,7 +515,7 @@ object TransactionViews {
                                         MysqlUtils.normalDateTimeTextToMySqlDateTimeText(normalDateTimeText = updateTransactionResult.dateTimeInText)
                                     if (toMySqlDateTimeConversionResult.isOK) {
 
-                                        userTransactionsMap[transactionIndex]!!.event_date_time =
+                                        userTransactionsMap[transactionIndex]!!.eventDateTime =
                                             toMySqlDateTimeConversionResult.data!!
                                     } else {
 
@@ -562,7 +562,7 @@ object TransactionViews {
                                 val upPreviousTransaction: TransactionResponse =
                                     userTransactionsMap[upPreviousTransactionKey]!!
                                 val newDateTime: String =
-                                    DateTimeUtils.subtract1SecondFromMySqlDateTimeInText(upPreviousTransaction.event_date_time)
+                                    DateTimeUtils.subtract1SecondFromMySqlDateTimeInText(upPreviousTransaction.eventDateTime)
 
                                 if (App.isDevelopmentMode) {
 
@@ -591,18 +591,18 @@ object TransactionViews {
                                             eventDateTime = newDateTime,
                                             particulars = upTransaction.particulars,
                                             amount = upTransaction.amount,
-                                            fromAccountId = userAccountsMap[upTransaction.from_account_id]!!.id,
-                                            toAccountId = userAccountsMap[upTransaction.to_account_id]!!.id,
+                                            fromAccountId = userAccountsMap[upTransaction.fromAccountId]!!.id,
+                                            toAccountId = userAccountsMap[upTransaction.toAccountId]!!.id,
                                             isDateTimeUpdateOperation = true,
                                             isDevelopmentMode = isDevelopmentMode
                                         )
                                     ) {
-                                        userTransactionsMap[upTransactionKey]!!.event_date_time =
-                                            DateTimeUtils.subtract1SecondFromMySqlDateTimeInText(upPreviousTransaction.event_date_time)
+                                        userTransactionsMap[upTransactionKey]!!.eventDateTime =
+                                            DateTimeUtils.subtract1SecondFromMySqlDateTimeInText(upPreviousTransaction.eventDateTime)
                                         userTransactionsMap = userTransactionsMap.toList()
                                             .sortedBy { (_: UInt, transaction: TransactionResponse) ->
                                                 MysqlUtils.mySqlDateTimeTextToDateTime(
-                                                    mySqlDateTimeText = transaction.event_date_time
+                                                    mySqlDateTimeText = transaction.eventDateTime
                                                 ).data!!
                                             }
                                             .toMap() as LinkedHashMap<UInt, TransactionResponse>
@@ -634,7 +634,7 @@ object TransactionViews {
                             )
                             if (addTransactionResult.isSuccess) {
 
-                                val apiResponse: Result<TransactionsResponse> = getUserTransactionsForAnAccount(
+                                val apiResponse: Result<MultipleTransactionResponse> = getUserTransactionsForAnAccount(
 
                                     userId = userId,
                                     accountId = accountId,
@@ -642,11 +642,11 @@ object TransactionViews {
                                 )
                                 if (apiResponse.isSuccess) {
 
-                                    localUserTransactionsResponse = apiResponse.getOrNull()!!
-                                    if (localUserTransactionsResponse.status != 1u) {
+                                    localUserMultipleTransactionResponse = apiResponse.getOrNull()!!
+                                    if (localUserMultipleTransactionResponse.status != 1u) {
 
                                         userTransactionsMap =
-                                            TransactionUtils.prepareUserTransactionsMap(transactions = localUserTransactionsResponse.transactions)
+                                            TransactionUtils.prepareUserTransactionsMap(transactions = localUserMultipleTransactionResponse.transactions)
                                     }
                                 }
                             }
@@ -668,7 +668,7 @@ object TransactionViews {
                             val userTransactionsMapSortedByTime: Map<UInt, TransactionResponse> =
                                 userTransactionsMap.toList()
                                     .sortedBy { (_: UInt, transaction: TransactionResponse): Pair<UInt, TransactionResponse> ->
-                                        MysqlUtils.mySqlDateTimeTextToDateTime(mySqlDateTimeText = transaction.event_date_time).data!!
+                                        MysqlUtils.mySqlDateTimeTextToDateTime(mySqlDateTimeText = transaction.eventDateTime).data!!
                                     }.toMap()
                             if (isDevelopmentMode) {
 
@@ -678,7 +678,7 @@ object TransactionViews {
                                 println(CommonConstants.dashedLineSeparator)
                                 userTransactionsMapSortedByTime.forEach { transaction: Map.Entry<UInt, TransactionResponse> ->
 
-                                    println("${transaction.value.id} - ${transaction.value.event_date_time}")
+                                    println("${transaction.value.id} - ${transaction.value.eventDateTime}")
                                 }
                             }
 
@@ -686,10 +686,10 @@ object TransactionViews {
                             var isUpPreviousTransactionKeyNotFound = true
                             userTransactionsMapSortedByTime.values.forEach { currentTransaction ->
 
-                                println("Current transaction = ${currentTransaction.id} - ${currentTransaction.event_date_time}")
-                                println("upTransaction = ${upTransaction.id} - ${upTransaction.event_date_time}")
+                                println("Current transaction = ${currentTransaction.id} - ${currentTransaction.eventDateTime}")
+                                println("upTransaction = ${upTransaction.id} - ${upTransaction.eventDateTime}")
 
-                                if (currentTransaction.event_date_time == upTransaction.event_date_time) {
+                                if (currentTransaction.eventDateTime == upTransaction.eventDateTime) {
 
                                     isUpPreviousTransactionKeyNotFound = false
                                 }
@@ -708,7 +708,7 @@ object TransactionViews {
                                 val upPreviousTransaction: TransactionResponse =
                                     userTransactionsMap[upPreviousTransactionKey]!!
                                 val newDateTime: String =
-                                    DateTimeUtils.subtract1SecondFromMySqlDateTimeInText(upPreviousTransaction.event_date_time)
+                                    DateTimeUtils.subtract1SecondFromMySqlDateTimeInText(upPreviousTransaction.eventDateTime)
 
                                 if (isDevelopmentMode) {
 
@@ -737,18 +737,18 @@ object TransactionViews {
                                             eventDateTime = newDateTime,
                                             particulars = upTransaction.particulars,
                                             amount = upTransaction.amount,
-                                            fromAccountId = userAccountsMap[upTransaction.from_account_id]!!.id,
-                                            toAccountId = userAccountsMap[upTransaction.to_account_id]!!.id,
+                                            fromAccountId = userAccountsMap[upTransaction.fromAccountId]!!.id,
+                                            toAccountId = userAccountsMap[upTransaction.toAccountId]!!.id,
                                             isDateTimeUpdateOperation = true,
                                             isDevelopmentMode = isDevelopmentMode
                                         )
                                     ) {
-                                        userTransactionsMap[upTransactionKey]!!.event_date_time =
-                                            DateTimeUtils.subtract1SecondFromMySqlDateTimeInText(upPreviousTransaction.event_date_time)
+                                        userTransactionsMap[upTransactionKey]!!.eventDateTime =
+                                            DateTimeUtils.subtract1SecondFromMySqlDateTimeInText(upPreviousTransaction.eventDateTime)
                                         userTransactionsMap = userTransactionsMap.toList()
                                             .sortedBy { (_: UInt, transaction: TransactionResponse) ->
                                                 MysqlUtils.mySqlDateTimeTextToDateTime(
-                                                    mySqlDateTimeText = transaction.event_date_time
+                                                    mySqlDateTimeText = transaction.eventDateTime
                                                 ).data!!
                                             }
                                             .toMap() as LinkedHashMap<UInt, TransactionResponse>
@@ -779,7 +779,7 @@ object TransactionViews {
                             val upPreviousTransaction: TransactionResponse =
                                 userTransactionsMap[upPreviousTransactionKey]!!
                             val newDateTime: String =
-                                DateTimeUtils.subtract1SecondFromMySqlDateTimeInText(upPreviousTransaction.event_date_time)
+                                DateTimeUtils.subtract1SecondFromMySqlDateTimeInText(upPreviousTransaction.eventDateTime)
 
                             if (isDevelopmentMode) {
 
@@ -808,18 +808,18 @@ object TransactionViews {
                                         eventDateTime = newDateTime,
                                         particulars = upTransaction.particulars,
                                         amount = upTransaction.amount,
-                                        fromAccountId = userAccountsMap[upTransaction.from_account_id]!!.id,
-                                        toAccountId = userAccountsMap[upTransaction.to_account_id]!!.id,
+                                        fromAccountId = userAccountsMap[upTransaction.fromAccountId]!!.id,
+                                        toAccountId = userAccountsMap[upTransaction.toAccountId]!!.id,
                                         isDateTimeUpdateOperation = true,
                                         isDevelopmentMode = isDevelopmentMode
                                     )
                                 ) {
-                                    userTransactionsMap[upTransactionKey]!!.event_date_time =
-                                        DateTimeUtils.subtract1SecondFromMySqlDateTimeInText(upPreviousTransaction.event_date_time)
+                                    userTransactionsMap[upTransactionKey]!!.eventDateTime =
+                                        DateTimeUtils.subtract1SecondFromMySqlDateTimeInText(upPreviousTransaction.eventDateTime)
                                     userTransactionsMap = userTransactionsMap.toList()
                                         .sortedBy { (_: UInt, transaction: TransactionResponse) ->
                                             MysqlUtils.mySqlDateTimeTextToDateTime(
-                                                mySqlDateTimeText = transaction.event_date_time
+                                                mySqlDateTimeText = transaction.eventDateTime
                                             ).data!!
                                         }
                                         .toMap() as LinkedHashMap<UInt, TransactionResponse>

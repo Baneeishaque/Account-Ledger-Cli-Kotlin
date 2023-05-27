@@ -3,12 +3,12 @@ package accountLedgerCli.cli
 import account.ledger.library.api.response.AccountResponse
 import account.ledger.library.api.response.AccountsResponse
 import account.ledger.library.api.response.TransactionResponse
-import account.ledger.library.api.response.TransactionsResponse
+import account.ledger.library.api.response.MultipleTransactionResponse
 import account.ledger.library.enums.FunctionCallSourceEnum
 import account.ledger.library.models.InsertTransactionResult
 import account.ledger.library.models.ViewTransactionsOutput
 import account.ledger.library.operations.getAccounts
-import account.ledger.library.retrofit.data.TransactionsDataSource
+import account.ledger.library.retrofit.data.MultipleTransactionDataSource
 import account.ledger.library.utils.AccountUtils
 import account.ledger.library.utils.ApiUtils
 import account.ledger.library.utils.TransactionUtils
@@ -35,14 +35,14 @@ internal fun checkAffectedAccountsAfterSpecifiedDate(
     localInsertTransactionResult.isSuccess = false
 
     println("Contacting Server...")
-    val apiResponse: Result<TransactionsResponse>
+    val apiResponse: Result<MultipleTransactionResponse>
 
     val specifiedDate: IsOkModel<String> = MysqlUtils.normalDateTextToMySqlDateText(normalDateText = desiredDate)
     if (specifiedDate.isOK) {
 
         runBlocking {
 
-            apiResponse = TransactionsDataSource().selectUserTransactionsAfterSpecifiedDate(
+            apiResponse = MultipleTransactionDataSource().selectUserTransactionsAfterSpecifiedDate(
 
                 userId = userId,
                 specifiedDate = specifiedDate.data!!
@@ -87,7 +87,7 @@ internal fun checkAffectedAccountsAfterSpecifiedDate(
 
         } else {
 
-            val selectUserTransactionsAfterSpecifiedDateResult: TransactionsResponse = apiResponse.getOrNull()!!
+            val selectUserTransactionsAfterSpecifiedDateResult: MultipleTransactionResponse = apiResponse.getOrNull()!!
             if (ApiUtils.isNotNoTransactionResponseWithMessage(
 
                     responseStatus = selectUserTransactionsAfterSpecifiedDateResult.status
@@ -105,8 +105,8 @@ internal fun checkAffectedAccountsAfterSpecifiedDate(
 
                 userTransactionsAfterSpecifiedDate.forEach { transaction ->
 
-                    accounts.putIfAbsent(transaction.from_account_id, transaction.from_account_full_name)
-                    accounts.putIfAbsent(transaction.to_account_id, transaction.to_account_full_name)
+                    accounts.putIfAbsent(transaction.fromAccountId, transaction.fromAccountFullName)
+                    accounts.putIfAbsent(transaction.toAccountId, transaction.toAccountFullName)
                 }
                 println("Affected A/Cs${CommonConstants.dashedLineSeparator}\n${accountsMapToText(accountsMap = accounts)}")
 

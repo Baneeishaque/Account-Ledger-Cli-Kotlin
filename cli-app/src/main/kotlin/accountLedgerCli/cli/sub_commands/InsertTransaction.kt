@@ -1,7 +1,7 @@
 package accountLedgerCli.cli.sub_commands
 
-import account.ledger.library.enums.CommandLineApiMethodInsertTransactionArgumentsEnum
-import account.ledger.library.enums.CommandLineApiMethodsEnum
+import accountLedgerCli.enums.CommandLineApiMethodInsertTransactionArgumentsEnum
+import accountLedgerCli.enums.CommandLineApiMethodsEnum
 import account.ledger.library.operations.InsertOperations
 import common.utils.library.utils.ApiUtilsCommon
 import common.utils.library.utils.DateTimeUtils

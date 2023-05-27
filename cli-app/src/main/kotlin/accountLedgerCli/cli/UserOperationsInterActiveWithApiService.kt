@@ -3,17 +3,17 @@ package accountLedgerCli.cli
 import account.ledger.library.api.response.AccountResponse
 import account.ledger.library.api.response.AuthenticationResponse
 import account.ledger.library.api.response.UserResponse
-import account.ledger.library.api.response.UsersResponse
+import account.ledger.library.api.response.MultipleUserResponse
 import account_ledger_library.constants.ConstantsNative
 import account.ledger.library.enums.BalanceSheetOutputFormatsEnum
 import account.ledger.library.enums.BalanceSheetRefineLevelEnum
-import account.ledger.library.enums.CommandLineApiMethodBalanceSheetOptionsEnum
+import accountLedgerCli.enums.CommandLineApiMethodBalanceSheetOptionsEnum
 import account.ledger.library.models.ChooseUserResult
 import account.ledger.library.models.InsertTransactionResult
 import account.ledger.library.models.UserCredentials
 import account.ledger.library.retrofit.ResponseHolder
 import account.ledger.library.retrofit.data.AuthenticationDataSource
-import account.ledger.library.retrofit.data.UsersDataSource
+import account.ledger.library.retrofit.data.MultipleUserDataSource
 import account.ledger.library.utils.UserUtils
 import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
 import common.utils.library.models.CommonDataModel
@@ -341,10 +341,10 @@ class UserOperationsInterActiveWithApiService {
 
         ): InsertTransactionResult {
 
-            val usersDataSource = UsersDataSource()
+            val multipleUserDataSource = MultipleUserDataSource()
             println("Contacting Server...")
-            val apiResponse: ResponseHolder<UsersResponse>
-            runBlocking { apiResponse = usersDataSource.selectUsers() }
+            val apiResponse: ResponseHolder<MultipleUserResponse>
+            runBlocking { apiResponse = multipleUserDataSource.selectUsers() }
 //            println("Response : $apiResponse")
 
             if (apiResponse.isError()) {
@@ -384,8 +384,8 @@ class UserOperationsInterActiveWithApiService {
                 } while (true)
             } else {
 
-                val usersResponse: UsersResponse = apiResponse.getValue() as UsersResponse
-                if (usersResponse.status == 1u) {
+                val multipleUserResponse: MultipleUserResponse = apiResponse.getValue() as MultipleUserResponse
+                if (multipleUserResponse.status == 1u) {
 
                     println("No Users...")
                     return InsertTransactionResult(
@@ -400,7 +400,7 @@ class UserOperationsInterActiveWithApiService {
 
                 } else {
 
-                    val usersMap: LinkedHashMap<UInt, UserResponse> = UserUtils.prepareUsersMap(usersResponse.users)
+                    val usersMap: LinkedHashMap<UInt, UserResponse> = UserUtils.prepareUsersMap(multipleUserResponse.users)
                     var insertTransactionResult = InsertTransactionResult(
                         isSuccess = false,
                         dateTimeInText = dateTimeInText,

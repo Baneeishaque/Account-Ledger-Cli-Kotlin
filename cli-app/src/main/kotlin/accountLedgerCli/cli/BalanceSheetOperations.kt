@@ -1,14 +1,14 @@
 package accountLedgerCli.cli
 
+import account.ledger.library.api.response.MultipleTransactionResponse
 import account.ledger.library.api.response.TransactionResponse
-import account.ledger.library.api.response.TransactionsResponse
 import account.ledger.library.api.response.UserResponse
 import account.ledger.library.enums.BalanceSheetRefineLevelEnum
 import account.ledger.library.models.BalanceSheetDataRowModel
 import account.ledger.library.models.ChooseUserResult
 import account.ledger.library.operations.getUserInitialTransactionDateFromUsername
 import account.ledger.library.operations.getUserTransactionsForAnAccount
-import account.ledger.library.retrofit.data.TransactionsDataSource
+import account.ledger.library.retrofit.data.MultipleTransactionDataSource
 import account.ledger.library.utils.UserUtils
 import account_ledger_library.constants.ConstantsNative
 import common.utils.library.models.CommonDataModel
@@ -62,12 +62,12 @@ internal fun printBalanceSheetOfUser(
 
         print("currentUser : $currentUserName")
     }
-    val transactionsDataSource = TransactionsDataSource()
+    val multipleTransactionDataSource = MultipleTransactionDataSource()
     if (isNotApiCall) {
 
         println("Contacting Server...")
     }
-    val apiResponse: Result<TransactionsResponse>
+    val apiResponse: Result<MultipleTransactionResponse>
     val specifiedDate: IsOkModel<String> = MysqlUtils.normalDateTextToMySqlDateText(
         normalDateText = getUserInitialTransactionDateFromUsername(username = currentUserName).minusDays(
             1
@@ -77,7 +77,7 @@ internal fun printBalanceSheetOfUser(
 
         runBlocking {
 
-            apiResponse = transactionsDataSource.selectUserTransactionsAfterSpecifiedDate(
+            apiResponse = multipleTransactionDataSource.selectUserTransactionsAfterSpecifiedDate(
 
                 userId = currentUserId,
                 specifiedDate = specifiedDate.data!!
@@ -98,7 +98,6 @@ internal fun printBalanceSheetOfUser(
                                 currentUserName = currentUserName,
                                 currentUserId = currentUserId,
                                 refineLevel = refineLevel,
-                                isNotApiCall = isNotApiCall,
                                 isConsoleMode = isConsoleMode,
                                 isDevelopmentMode = isDevelopmentMode
                             )
@@ -127,7 +126,7 @@ internal fun printBalanceSheetOfUser(
             }
         } else {
 
-            val selectUserTransactionsAfterSpecifiedDateResult: TransactionsResponse = apiResponse.getOrNull()!!
+            val selectUserTransactionsAfterSpecifiedDateResult: MultipleTransactionResponse = apiResponse.getOrNull()!!
             if (selectUserTransactionsAfterSpecifiedDateResult.status == 1u) {
 
                 if (isNotApiCall) {
@@ -201,14 +200,14 @@ internal fun printBalanceSheetOfUser(
                 val accounts: MutableMap<UInt, String> = mutableMapOf()
                 selectUserTransactionsAfterSpecifiedDateResult.transactions.forEach { transaction: TransactionResponse ->
 
-                    if (!accountsToExclude.contains(transaction.from_account_id.toString())) {
+                    if (!accountsToExclude.contains(transaction.fromAccountId.toString())) {
 
-                        accounts.putIfAbsent(transaction.from_account_id, transaction.from_account_full_name)
+                        accounts.putIfAbsent(transaction.fromAccountId, transaction.fromAccountFullName)
                     }
 
-                    if (!accountsToExclude.contains(transaction.to_account_id.toString())) {
+                    if (!accountsToExclude.contains(transaction.toAccountId.toString())) {
 
-                        accounts.putIfAbsent(transaction.to_account_id, transaction.to_account_full_name)
+                        accounts.putIfAbsent(transaction.toAccountId, transaction.toAccountFullName)
                     }
                 }
 
@@ -217,7 +216,7 @@ internal fun printBalanceSheetOfUser(
                 val balanceSheetDataRows: MutableList<BalanceSheetDataRowModel> = mutableListOf()
                 for (account: MutableMap.MutableEntry<UInt, String> in accounts) {
 
-                    val apiResponse2: Result<TransactionsResponse> =
+                    val apiResponse2: Result<MultipleTransactionResponse> =
                         getUserTransactionsForAnAccount(
 
                             userId = currentUserId,
@@ -254,12 +253,13 @@ internal fun printBalanceSheetOfUser(
                         }
                     } else {
 
-                        val userTransactionsResponseResult: TransactionsResponse = apiResponse2.getOrNull()!!
-                        if (userTransactionsResponseResult.status == 0u) {
+                        val userMultipleTransactionResponseResult: MultipleTransactionResponse =
+                            apiResponse2.getOrNull()!!
+                        if (userMultipleTransactionResponseResult.status == 0u) {
 
                             var currentBalance = 0.0F
-                            userTransactionsResponseResult.transactions.forEach { currentTransaction: TransactionResponse ->
-                                if (currentTransaction.from_account_id == account.key) {
+                            userMultipleTransactionResponseResult.transactions.forEach { currentTransaction: TransactionResponse ->
+                                if (currentTransaction.fromAccountId == account.key) {
 
                                     currentBalance -= currentTransaction.amount
 
@@ -292,7 +292,7 @@ internal fun printBalanceSheetOfUser(
                                         serializer = CommonDataModel.serializer(Unit.serializer()),
                                         value = CommonDataModel(
                                             status = 1,
-                                            error = "Server Execution Error, Execution Status is ${userTransactionsResponseResult.status}"
+                                            error = "Server Execution Error, Execution Status is ${userMultipleTransactionResponseResult.status}"
                                         )
                                     )
                                 )
@@ -314,7 +314,7 @@ internal fun printBalanceSheetOfUser(
                         )
                     )
                 }
-//                menuItems = menuItems + listOf("0 to Back Enter to Continue : ")
+//                menuItems = menuItems + listOf("0 to Back Enter to Continue: ")
 //                var choice2: String
 //                do {
 //                    commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(

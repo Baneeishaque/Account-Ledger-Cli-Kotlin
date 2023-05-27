@@ -2,8 +2,8 @@ package accountLedgerCli.cli.sub_commands
 
 import account.ledger.library.enums.BalanceSheetOutputFormatsEnum
 import account.ledger.library.enums.BalanceSheetRefineLevelEnum
-import account.ledger.library.enums.CommandLineApiMethodBalanceSheetOptionsEnum
-import account.ledger.library.enums.CommandLineApiMethodsEnum
+import accountLedgerCli.enums.CommandLineApiMethodBalanceSheetOptionsEnum
+import accountLedgerCli.enums.CommandLineApiMethodsEnum
 import accountLedgerCli.cli.App
 import accountLedgerCli.cli.UserOperationsInterActiveWithApiService
 import common.utils.library.cli.sub_commands.SubCommandWithUsernameAndPasswordAsArguments
