@@ -23,7 +23,6 @@ object HandleResponses {
         username: String,
         userId: UInt,
         previousTransactionData: InsertTransactionResult,
-        isConsoleMode: Boolean,
         isDevelopmentMode: Boolean
 
     ): InsertTransactionResult {
@@ -76,7 +75,6 @@ object HandleResponses {
                         dateTimeInText = localInsertTransactionResult.dateTimeInText,
                         transactionParticulars = localInsertTransactionResult.transactionParticulars,
                         transactionAmount = localInsertTransactionResult.transactionAmount,
-                        isConsoleMode = isConsoleMode,
                         isDevelopmentMode = isDevelopmentMode
                     )
                     localInsertTransactionResult = processChildAccountScreenInputResult.addTransactionResult

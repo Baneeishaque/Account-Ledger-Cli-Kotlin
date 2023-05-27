@@ -71,7 +71,6 @@ object InsertOperationsInteractive {
         dateTimeInText: String,
         transactionParticulars: String,
         transactionAmount: Float,
-        isConsoleMode: Boolean,
         isDevelopmentMode: Boolean
 
     ): InsertTransactionResult {
@@ -98,7 +97,7 @@ object InsertOperationsInteractive {
                     apiResponse = ApiUtils.getAccountsFull(
 
                         userId = userId,
-                        isConsoleMode = isConsoleMode,
+                        isConsoleMode = true,
                         isDevelopmentMode = isDevelopmentMode
                     )
                 )
@@ -119,7 +118,7 @@ object InsertOperationsInteractive {
                         dateTimeInText = dateTimeInText,
                         transactionParticulars = transactionParticulars,
                         transactionAmount = transactionAmount,
-                        isConsoleMode = isConsoleMode,
+                        isConsoleMode = true,
                         isDevelopmentMode = isDevelopmentMode
                     )
                 })
@@ -138,7 +137,6 @@ object InsertOperationsInteractive {
         dateTimeInText: String,
         transactionParticulars: String,
         transactionAmount: Float,
-        isConsoleMode: Boolean,
         isDevelopmentMode: Boolean
 
     ): InsertTransactionResult {
@@ -161,7 +159,7 @@ object InsertOperationsInteractive {
                     apiResponse = ApiUtils.getAccountsFull(
 
                         userId = userId,
-                        isConsoleMode = isConsoleMode,
+                        isConsoleMode = true,
                         isDevelopmentMode = isDevelopmentMode
                     )
                 )
@@ -182,7 +180,6 @@ object InsertOperationsInteractive {
                         dateTimeInText = dateTimeInText,
                         transactionParticulars = transactionParticulars,
                         transactionAmount = transactionAmount,
-                        isConsoleMode = isConsoleMode,
                         isDevelopmentMode = isDevelopmentMode
                     )
                 })
@@ -202,7 +199,6 @@ object InsertOperationsInteractive {
         dateTimeInText: String,
         transactionParticulars: String,
         transactionAmount: Float,
-        isConsoleMode: Boolean,
         isDevelopmentMode: Boolean
 
     ): InsertTransactionResult {
@@ -272,7 +268,7 @@ object InsertOperationsInteractive {
                         chooseAccountResult = chooseDepositTop(
 
                             userId = userId,
-                            isConsoleMode = isConsoleMode,
+                            isConsoleMode = true,
                             isDevelopmentMode = isDevelopmentMode
                         ),
                         userId = userId,
@@ -287,7 +283,6 @@ object InsertOperationsInteractive {
                         fromAccount = localInsertTransactionResult.fromAccount,
                         viaAccount = localInsertTransactionResult.viaAccount,
                         toAccount = localInsertTransactionResult.toAccount,
-                        isConsoleMode = isConsoleMode,
                         isDevelopmentMode = isDevelopmentMode
                     )
                 }
@@ -299,7 +294,7 @@ object InsertOperationsInteractive {
                         chooseAccountResult = chooseDepositFull(
 
                             userId = userId,
-                            isConsoleMode = isConsoleMode,
+                            isConsoleMode = true,
                             isDevelopmentMode = isDevelopmentMode
                         ),
                         userId = userId,
@@ -314,7 +309,6 @@ object InsertOperationsInteractive {
                         fromAccount = localInsertTransactionResult.fromAccount,
                         viaAccount = localInsertTransactionResult.viaAccount,
                         toAccount = localInsertTransactionResult.toAccount,
-                        isConsoleMode = isConsoleMode,
                         isDevelopmentMode = isDevelopmentMode
                     )
                 }
@@ -324,7 +318,6 @@ object InsertOperationsInteractive {
                     val chooseToAccountResult: ChooseAccountResult = chooseToAccount(
 
                         userId = userId,
-                        isConsoleMode = isConsoleMode,
                         isDevelopmentMode = isDevelopmentMode
                     )
                     if (chooseToAccountResult.chosenAccountId != 0u) {
@@ -341,7 +334,6 @@ object InsertOperationsInteractive {
                             dateTimeInText = localInsertTransactionResult.dateTimeInText,
                             transactionParticulars = localInsertTransactionResult.transactionParticulars,
                             transactionAmount = localInsertTransactionResult.transactionAmount,
-                            isConsoleMode = isConsoleMode,
                             isDevelopmentMode = isDevelopmentMode
                         )
                         if (processSelectedAccountResult.isSuccess) {
@@ -364,7 +356,7 @@ object InsertOperationsInteractive {
                         chooseAccountResult = chooseWithdrawTop(
 
                             userId = userId,
-                            isConsoleMode = isConsoleMode,
+                            isConsoleMode = true,
                             isDevelopmentMode = isDevelopmentMode
                         ),
                         userId = userId,
@@ -379,7 +371,6 @@ object InsertOperationsInteractive {
                         fromAccount = localInsertTransactionResult.fromAccount,
                         viaAccount = localInsertTransactionResult.viaAccount,
                         toAccount = localInsertTransactionResult.toAccount,
-                        isConsoleMode = isConsoleMode,
                         isDevelopmentMode = isDevelopmentMode
                     )
                 }
@@ -391,7 +382,7 @@ object InsertOperationsInteractive {
                         chooseAccountResult = chooseWithdrawFull(
 
                             userId = userId,
-                            isConsoleMode = isConsoleMode,
+                            isConsoleMode = true,
                             isDevelopmentMode = isDevelopmentMode
                         ),
                         userId = userId,
@@ -406,7 +397,6 @@ object InsertOperationsInteractive {
                         fromAccount = localInsertTransactionResult.fromAccount,
                         viaAccount = localInsertTransactionResult.viaAccount,
                         toAccount = localInsertTransactionResult.toAccount,
-                        isConsoleMode = isConsoleMode,
                         isDevelopmentMode = isDevelopmentMode
                     )
                 }
@@ -415,7 +405,6 @@ object InsertOperationsInteractive {
                     val chooseFromAccountResult: ChooseAccountResult = chooseFromAccount(
 
                         userId = userId,
-                        isConsoleMode = isConsoleMode,
                         isDevelopmentMode = isDevelopmentMode
                     )
                     if (chooseFromAccountResult.chosenAccountId != 0u) {
@@ -432,7 +421,6 @@ object InsertOperationsInteractive {
                             dateTimeInText = localInsertTransactionResult.dateTimeInText,
                             transactionParticulars = localInsertTransactionResult.transactionParticulars,
                             transactionAmount = localInsertTransactionResult.transactionAmount,
-                            isConsoleMode = isConsoleMode,
                             isDevelopmentMode = isDevelopmentMode
                         )
                         if (processSelectedAccountResult.isSuccess) {
@@ -461,7 +449,7 @@ object InsertOperationsInteractive {
                         dateTimeInText = localInsertTransactionResult.dateTimeInText,
                         transactionParticulars = localInsertTransactionResult.transactionParticulars,
                         transactionAmount = localInsertTransactionResult.transactionAmount,
-                        isConsoleMode = isConsoleMode,
+                        isConsoleMode = true,
                         isDevelopmentMode = isDevelopmentMode
                     )
                 }
@@ -480,7 +468,6 @@ object InsertOperationsInteractive {
                             dateTimeInText = localInsertTransactionResult.dateTimeInText,
                             transactionParticulars = localInsertTransactionResult.transactionParticulars,
                             transactionAmount = localInsertTransactionResult.transactionAmount,
-                            isConsoleMode = isConsoleMode,
                             isDevelopmentMode = isDevelopmentMode
                         )
 
@@ -496,7 +483,6 @@ object InsertOperationsInteractive {
                             dateTimeInText = localInsertTransactionResult.dateTimeInText,
                             transactionParticulars = localInsertTransactionResult.transactionParticulars,
                             transactionAmount = localInsertTransactionResult.transactionAmount,
-                            isConsoleMode = isConsoleMode,
                             isDevelopmentMode = isDevelopmentMode
                         )
                     }
@@ -516,7 +502,7 @@ object InsertOperationsInteractive {
                             dateTimeInText = localInsertTransactionResult.dateTimeInText,
                             transactionParticulars = localInsertTransactionResult.transactionParticulars,
                             transactionAmount = localInsertTransactionResult.transactionAmount,
-                            isConsoleMode = isConsoleMode,
+                            isConsoleMode = true,
                             isDevelopmentMode = isDevelopmentMode
                         )
                     } else {
@@ -532,7 +518,7 @@ object InsertOperationsInteractive {
                             dateTimeInText = localInsertTransactionResult.dateTimeInText,
                             transactionParticulars = localInsertTransactionResult.transactionParticulars,
                             transactionAmount = localInsertTransactionResult.transactionAmount,
-                            isConsoleMode = isConsoleMode,
+                            isConsoleMode = true,
                             isDevelopmentMode = isDevelopmentMode
                         )
                     }
@@ -551,7 +537,6 @@ object InsertOperationsInteractive {
                             dateTimeInText = localInsertTransactionResult.dateTimeInText,
                             transactionParticulars = localInsertTransactionResult.transactionParticulars,
                             transactionAmount = localInsertTransactionResult.transactionAmount,
-                            isConsoleMode = isConsoleMode,
                             isDevelopmentMode = isDevelopmentMode
                         )
                     } else {
@@ -559,7 +544,6 @@ object InsertOperationsInteractive {
                         val chooseToAccountResult: ChooseAccountResult = chooseToAccount(
 
                             userId = userId,
-                            isConsoleMode = isConsoleMode,
                             isDevelopmentMode = isDevelopmentMode
                         )
                         if (chooseToAccountResult.chosenAccountId != 0u) {
@@ -577,7 +561,6 @@ object InsertOperationsInteractive {
                                 transactionParticulars = localInsertTransactionResult.transactionParticulars,
                                 transactionAmount = localInsertTransactionResult.transactionAmount,
                                 wantToExchange = true,
-                                isConsoleMode = isConsoleMode,
                                 isDevelopmentMode = isDevelopmentMode
                             )
                             if (processSelectedAccountResult.isSuccess) {
@@ -607,7 +590,7 @@ object InsertOperationsInteractive {
                             dateTimeInText = localInsertTransactionResult.dateTimeInText,
                             transactionParticulars = localInsertTransactionResult.transactionParticulars,
                             transactionAmount = localInsertTransactionResult.transactionAmount,
-                            isConsoleMode = isConsoleMode,
+                            isConsoleMode = true,
                             isDevelopmentMode = isDevelopmentMode
                         )
                     } else {
@@ -615,7 +598,6 @@ object InsertOperationsInteractive {
                         val chooseFromAccountResult: ChooseAccountResult = chooseFromAccount(
 
                             userId = userId,
-                            isConsoleMode = isConsoleMode,
                             isDevelopmentMode = isDevelopmentMode
                         )
                         if (chooseFromAccountResult.chosenAccountId != 0u) {
@@ -633,7 +615,6 @@ object InsertOperationsInteractive {
                                 transactionParticulars = localInsertTransactionResult.transactionParticulars,
                                 transactionAmount = localInsertTransactionResult.transactionAmount,
                                 wantToExchange = true,
-                                isConsoleMode = isConsoleMode,
                                 isDevelopmentMode = isDevelopmentMode
                             )
                             if (processSelectedAccountResult.isSuccess) {
@@ -664,7 +645,6 @@ object InsertOperationsInteractive {
                             dateTimeInText = localInsertTransactionResult.dateTimeInText,
                             transactionParticulars = localInsertTransactionResult.transactionParticulars,
                             transactionAmount = localInsertTransactionResult.transactionAmount,
-                            isConsoleMode = isConsoleMode,
                             isDevelopmentMode = isDevelopmentMode
                         )
 
@@ -675,7 +655,7 @@ object InsertOperationsInteractive {
                             chooseAccountResult = chooseDepositTop(
 
                                 userId = userId,
-                                isConsoleMode = isConsoleMode,
+                                isConsoleMode = true,
                                 isDevelopmentMode = isDevelopmentMode
                             ),
                             userId = userId,
@@ -691,7 +671,6 @@ object InsertOperationsInteractive {
                             fromAccount = localInsertTransactionResult.fromAccount,
                             viaAccount = localInsertTransactionResult.viaAccount,
                             toAccount = localInsertTransactionResult.toAccount,
-                            isConsoleMode = isConsoleMode,
                             isDevelopmentMode = isDevelopmentMode
                         )
                     }
@@ -711,7 +690,7 @@ object InsertOperationsInteractive {
                             dateTimeInText = localInsertTransactionResult.dateTimeInText,
                             transactionParticulars = localInsertTransactionResult.transactionParticulars,
                             transactionAmount = localInsertTransactionResult.transactionAmount,
-                            isConsoleMode = isConsoleMode,
+                            isConsoleMode = true,
                             isDevelopmentMode = isDevelopmentMode
                         )
                     } else {
@@ -721,7 +700,7 @@ object InsertOperationsInteractive {
                             chooseAccountResult = chooseDepositFull(
 
                                 userId = userId,
-                                isConsoleMode = isConsoleMode,
+                                isConsoleMode = true,
                                 isDevelopmentMode = isDevelopmentMode
                             ),
                             userId = userId,
@@ -737,7 +716,6 @@ object InsertOperationsInteractive {
                             fromAccount = localInsertTransactionResult.fromAccount,
                             viaAccount = localInsertTransactionResult.viaAccount,
                             toAccount = localInsertTransactionResult.toAccount,
-                            isConsoleMode = isConsoleMode,
                             isDevelopmentMode = isDevelopmentMode
                         )
                     }
@@ -752,7 +730,7 @@ object InsertOperationsInteractive {
                             chooseAccountResult = chooseViaTop(
 
                                 userId = userId,
-                                isConsoleMode = isConsoleMode,
+                                isConsoleMode = true,
                                 isDevelopmentMode = isDevelopmentMode
                             ),
                             userId = userId,
@@ -767,7 +745,6 @@ object InsertOperationsInteractive {
                             fromAccount = localInsertTransactionResult.fromAccount,
                             viaAccount = localInsertTransactionResult.viaAccount,
                             toAccount = localInsertTransactionResult.toAccount,
-                            isConsoleMode = isConsoleMode,
                             isDevelopmentMode = isDevelopmentMode
                         )
                     } else {
@@ -777,7 +754,7 @@ object InsertOperationsInteractive {
                             chooseAccountResult = chooseWithdrawTop(
 
                                 userId = userId,
-                                isConsoleMode = isConsoleMode,
+                                isConsoleMode = true,
                                 isDevelopmentMode = isDevelopmentMode
                             ),
                             userId = userId,
@@ -793,7 +770,6 @@ object InsertOperationsInteractive {
                             fromAccount = localInsertTransactionResult.fromAccount,
                             viaAccount = localInsertTransactionResult.viaAccount,
                             toAccount = localInsertTransactionResult.toAccount,
-                            isConsoleMode = isConsoleMode,
                             isDevelopmentMode = isDevelopmentMode
                         )
                     }
@@ -808,7 +784,7 @@ object InsertOperationsInteractive {
                             chooseAccountResult = chooseViaFull(
 
                                 userId = userId,
-                                isConsoleMode = isConsoleMode,
+                                isConsoleMode = true,
                                 isDevelopmentMode = isDevelopmentMode
                             ),
                             userId = userId,
@@ -823,7 +799,6 @@ object InsertOperationsInteractive {
                             fromAccount = localInsertTransactionResult.fromAccount,
                             viaAccount = localInsertTransactionResult.viaAccount,
                             toAccount = localInsertTransactionResult.toAccount,
-                            isConsoleMode = isConsoleMode,
                             isDevelopmentMode = isDevelopmentMode
                         )
                     } else {
@@ -833,7 +808,7 @@ object InsertOperationsInteractive {
                             chooseAccountResult = chooseWithdrawFull(
 
                                 userId = userId,
-                                isConsoleMode = isConsoleMode,
+                                isConsoleMode = true,
                                 isDevelopmentMode = isDevelopmentMode
                             ),
                             userId = userId,
@@ -849,7 +824,6 @@ object InsertOperationsInteractive {
                             fromAccount = localInsertTransactionResult.fromAccount,
                             viaAccount = localInsertTransactionResult.viaAccount,
                             toAccount = localInsertTransactionResult.toAccount,
-                            isConsoleMode = isConsoleMode,
                             isDevelopmentMode = isDevelopmentMode
                         )
                     }
@@ -864,7 +838,6 @@ object InsertOperationsInteractive {
 
                                 userId = userId,
                                 accountType = AccountTypeEnum.VIA,
-                                isConsoleMode = isConsoleMode,
                                 isDevelopmentMode = isDevelopmentMode
                             )
                         if (chooseAccountResult.chosenAccountId != 0u) {
@@ -881,7 +854,6 @@ object InsertOperationsInteractive {
                                 dateTimeInText = localInsertTransactionResult.dateTimeInText,
                                 transactionParticulars = localInsertTransactionResult.transactionParticulars,
                                 transactionAmount = localInsertTransactionResult.transactionAmount,
-                                isConsoleMode = isConsoleMode,
                                 isDevelopmentMode = isDevelopmentMode
                             )
                             if (processSelectedAccountResult.isSuccess) {
@@ -908,7 +880,6 @@ object InsertOperationsInteractive {
                         previousTransactionData = localInsertTransactionResult,
                         userId = userId,
                         username = username,
-                        isConsoleMode = isConsoleMode,
                         isDevelopmentMode = isDevelopmentMode
                     )
                 }
@@ -920,7 +891,6 @@ object InsertOperationsInteractive {
                         userId = userId,
                         username = username,
                         previousTransactionData = localInsertTransactionResult,
-                        isConsoleMode = isConsoleMode,
                         isDevelopmentMode = isDevelopmentMode
                     )
                 }
@@ -932,7 +902,6 @@ object InsertOperationsInteractive {
                         userId = userId,
                         username = username,
                         previousTransactionData = localInsertTransactionResult,
-                        isConsoleMode = isConsoleMode,
                         isDevelopmentMode = isDevelopmentMode
                     )
                 }
@@ -944,7 +913,6 @@ object InsertOperationsInteractive {
                         userId = userId,
                         username = username,
                         previousTransactionData = localInsertTransactionResult,
-                        isConsoleMode = isConsoleMode,
                         isDevelopmentMode = isDevelopmentMode
                     )
                 }
@@ -956,7 +924,6 @@ object InsertOperationsInteractive {
                         userId = userId,
                         username = username,
                         previousTransactionData = localInsertTransactionResult,
-                        isConsoleMode = isConsoleMode,
                         isDevelopmentMode = isDevelopmentMode
                     )
                 }
@@ -968,7 +935,6 @@ object InsertOperationsInteractive {
                         userId = userId,
                         username = username,
                         previousTransactionData = localInsertTransactionResult,
-                        isConsoleMode = isConsoleMode,
                         isDevelopmentMode = isDevelopmentMode
                     )
                 }
@@ -980,7 +946,6 @@ object InsertOperationsInteractive {
                         userId = userId,
                         username = username,
                         previousTransactionData = localInsertTransactionResult,
-                        isConsoleMode = isConsoleMode,
                         isDevelopmentMode = isDevelopmentMode
                     )
                 }
@@ -992,7 +957,6 @@ object InsertOperationsInteractive {
                         userId = userId,
                         username = username,
                         previousTransactionData = localInsertTransactionResult,
-                        isConsoleMode = isConsoleMode,
                         isDevelopmentMode = isDevelopmentMode
                     )
                 }
@@ -1004,7 +968,6 @@ object InsertOperationsInteractive {
                         userId = userId,
                         username = username,
                         previousTransactionData = localInsertTransactionResult,
-                        isConsoleMode = isConsoleMode,
                         isDevelopmentMode = isDevelopmentMode
                     )
                 }
@@ -1016,7 +979,6 @@ object InsertOperationsInteractive {
                         userId = userId,
                         username = username,
                         previousTransactionData = localInsertTransactionResult,
-                        isConsoleMode = isConsoleMode,
                         isDevelopmentMode = isDevelopmentMode
                     )
                 }
@@ -1028,7 +990,6 @@ object InsertOperationsInteractive {
                         userId = userId,
                         username = username,
                         previousTransactionData = localInsertTransactionResult,
-                        isConsoleMode = isConsoleMode,
                         isDevelopmentMode = isDevelopmentMode
                     )
                 }
@@ -1046,7 +1007,6 @@ object InsertOperationsInteractive {
     private fun chooseFromAccount(
 
         userId: UInt,
-        isConsoleMode: Boolean,
         isDevelopmentMode: Boolean
 
     ): ChooseAccountResult {
@@ -1055,18 +1015,16 @@ object InsertOperationsInteractive {
 
             userId = userId,
             accountType = AccountTypeEnum.FROM,
-            isConsoleMode = isConsoleMode,
             isDevelopmentMode = isDevelopmentMode
         )
     }
 
-    private fun chooseToAccount(userId: UInt, isConsoleMode: Boolean, isDevelopmentMode: Boolean): ChooseAccountResult {
+    private fun chooseToAccount(userId: UInt, isDevelopmentMode: Boolean): ChooseAccountResult {
 
         return ChooseAccountUtils.chooseAccountById(
 
             userId = userId,
             accountType = AccountTypeEnum.TO,
-            isConsoleMode = isConsoleMode,
             isDevelopmentMode = isDevelopmentMode
         )
     }
@@ -1087,7 +1045,6 @@ object InsertOperationsInteractive {
         fromAccount: AccountResponse,
         viaAccount: AccountResponse,
         toAccount: AccountResponse,
-        isConsoleMode: Boolean,
         isDevelopmentMode: Boolean
 
     ): InsertTransactionResult {
@@ -1111,7 +1068,6 @@ object InsertOperationsInteractive {
                 transactionParticulars = transactionParticulars,
                 transactionAmount = transactionAmount,
                 wantToExchange = wantToExchange,
-                isConsoleMode = isConsoleMode,
                 isDevelopmentMode = isDevelopmentMode
             )
             if (processSelectedAccountResult.isSuccess) {
@@ -1150,7 +1106,6 @@ object InsertOperationsInteractive {
         transactionParticulars: String,
         transactionAmount: Float,
         wantToExchange: Boolean = false,
-        isConsoleMode: Boolean,
         isDevelopmentMode: Boolean
 
     ): InsertTransactionResult {
@@ -1172,7 +1127,7 @@ object InsertOperationsInteractive {
                         dateTimeInText = dateTimeInText,
                         transactionParticulars = transactionParticulars,
                         transactionAmount = transactionAmount,
-                        isConsoleMode = isConsoleMode,
+                        isConsoleMode = true,
                         isDevelopmentMode = isDevelopmentMode
                     )
 
@@ -1189,7 +1144,7 @@ object InsertOperationsInteractive {
                         dateTimeInText = dateTimeInText,
                         transactionParticulars = transactionParticulars,
                         transactionAmount = transactionAmount,
-                        isConsoleMode = isConsoleMode,
+                        isConsoleMode = true,
                         isDevelopmentMode = isDevelopmentMode
                     )
                 }
@@ -1210,7 +1165,7 @@ object InsertOperationsInteractive {
                         dateTimeInText = dateTimeInText,
                         transactionParticulars = transactionParticulars,
                         transactionAmount = transactionAmount,
-                        isConsoleMode = isConsoleMode,
+                        isConsoleMode = true,
                         isDevelopmentMode = isDevelopmentMode
                     )
 
@@ -1227,7 +1182,7 @@ object InsertOperationsInteractive {
                         dateTimeInText = dateTimeInText,
                         transactionParticulars = transactionParticulars,
                         transactionAmount = transactionAmount,
-                        isConsoleMode = isConsoleMode,
+                        isConsoleMode = true,
                         isDevelopmentMode = isDevelopmentMode
                     )
                 }
@@ -1246,7 +1201,7 @@ object InsertOperationsInteractive {
                     dateTimeInText = dateTimeInText,
                     transactionParticulars = transactionParticulars,
                     transactionAmount = transactionAmount,
-                    isConsoleMode = isConsoleMode,
+                    isConsoleMode = true,
                     isDevelopmentMode = isDevelopmentMode
                 )
             }
@@ -1269,7 +1224,7 @@ object InsertOperationsInteractive {
         transactionAmount: Float,
         isEditStep: Boolean = false,
         splitIndex: UInt = 0u,
-        isConsoleMode: Boolean,
+        isConsoleMode: Boolean = true,
         isDevelopmentMode: Boolean,
         isCyclicViaStep: Boolean = false
 
@@ -1317,7 +1272,6 @@ object InsertOperationsInteractive {
                     isViaStep = isViaStep,
                     isTwoWayStep = isTwoWayStep,
                     transactionId = transactionId,
-                    isConsoleMode = isConsoleMode,
                     isDevelopmentMode = isDevelopmentMode,
                     isCyclicViaStep = isCyclicViaStep
                 )
@@ -1341,7 +1295,6 @@ object InsertOperationsInteractive {
                     isViaStep = isViaStep,
                     isTwoWayStep = isTwoWayStep,
                     transactionId = transactionId,
-                    isConsoleMode = isConsoleMode,
                     isDevelopmentMode = isDevelopmentMode,
                     isCyclicViaStep = isCyclicViaStep
                 )
@@ -1365,7 +1318,6 @@ object InsertOperationsInteractive {
                     isViaStep = isViaStep,
                     isTwoWayStep = isTwoWayStep,
                     transactionId = transactionId,
-                    isConsoleMode = isConsoleMode,
                     isDevelopmentMode = isDevelopmentMode,
                     isCyclicViaStep = isCyclicViaStep,
                 )
@@ -1413,7 +1365,6 @@ object InsertOperationsInteractive {
                         transactionParticulars = localInsertTransactionResult.transactionParticulars,
                         transactionAmount = localInsertTransactionResult.transactionAmount,
                         splitIndex = index,
-                        isConsoleMode = isConsoleMode,
                         isDevelopmentMode = isDevelopmentMode,
                         isCyclicViaStep = isCyclicViaStep
                     )
@@ -1456,7 +1407,6 @@ object InsertOperationsInteractive {
                         toAccount = toAccount,
                         isEditStep = isEditStep,
                         transactionId = transactionId,
-                        isConsoleMode = isConsoleMode,
                         isDevelopmentMode = isDevelopmentMode,
                         isTwoWayStep = isTwoWayStep,
                         userId = userId,
@@ -1464,151 +1414,145 @@ object InsertOperationsInteractive {
                         isCyclicViaStep = isCyclicViaStep,
                         splitIndex = splitIndex,
                         username = username,
-                        timePartIncrementOrDecrementCommandIndicator = Constants.hourIncrementOrDecrementCommandIndicator,
-                        timePartIncrementOrDecrementNoMatchAction = {
+                        timePartIncrementOrDecrementCommandIndicator = Constants.hourIncrementOrDecrementCommandIndicator
+                    ) {
 
-                            timePartIncrementOrDecrementActions(
+                        timePartIncrementOrDecrementActions(
 
-                                timePartIncrementOrDecrementMatchResult = Constants.minuteIncrementOrDecrementPatternRegex.matchEntire(
-                                    input = localDateTimeInText
-                                ),
-                                transactionParticulars = transactionParticulars,
-                                transactionAmount = transactionAmount,
-                                dateTimeInText = dateTimeInText,
-                                fromAccount = fromAccount,
-                                transactionType = transactionType,
-                                viaAccount = viaAccount,
-                                toAccount = toAccount,
-                                isEditStep = isEditStep,
-                                transactionId = transactionId,
-                                isConsoleMode = isConsoleMode,
-                                isDevelopmentMode = isDevelopmentMode,
-                                isTwoWayStep = isTwoWayStep,
-                                userId = userId,
-                                isViaStep = isViaStep,
-                                isCyclicViaStep = isCyclicViaStep,
-                                splitIndex = splitIndex,
-                                username = username,
-                                timePartIncrementOrDecrementCommandIndicator = Constants.minuteIncrementOrDecrementCommandIndicator,
-                                timePartIncrementOrDecrementNoMatchAction = {
+                            timePartIncrementOrDecrementMatchResult = Constants.minuteIncrementOrDecrementPatternRegex.matchEntire(
+                                input = localDateTimeInText
+                            ),
+                            transactionParticulars = transactionParticulars,
+                            transactionAmount = transactionAmount,
+                            dateTimeInText = dateTimeInText,
+                            fromAccount = fromAccount,
+                            transactionType = transactionType,
+                            viaAccount = viaAccount,
+                            toAccount = toAccount,
+                            isEditStep = isEditStep,
+                            transactionId = transactionId,
+                            isDevelopmentMode = isDevelopmentMode,
+                            isTwoWayStep = isTwoWayStep,
+                            userId = userId,
+                            isViaStep = isViaStep,
+                            isCyclicViaStep = isCyclicViaStep,
+                            splitIndex = splitIndex,
+                            username = username,
+                            timePartIncrementOrDecrementCommandIndicator = Constants.minuteIncrementOrDecrementCommandIndicator,
+                            timePartIncrementOrDecrementNoMatchAction = {
 
-                                    timePartIncrementOrDecrementActions(
+                                timePartIncrementOrDecrementActions(
 
-                                        timePartIncrementOrDecrementMatchResult = Constants.secondIncrementOrDecrementPatternRegex.matchEntire(
-                                            input = localDateTimeInText
-                                        ),
-                                        transactionParticulars = transactionParticulars,
-                                        transactionAmount = transactionAmount,
-                                        dateTimeInText = dateTimeInText,
-                                        fromAccount = fromAccount,
-                                        transactionType = transactionType,
-                                        viaAccount = viaAccount,
-                                        toAccount = toAccount,
-                                        isEditStep = isEditStep,
-                                        transactionId = transactionId,
-                                        isConsoleMode = isConsoleMode,
-                                        isDevelopmentMode = isDevelopmentMode,
-                                        isTwoWayStep = isTwoWayStep,
-                                        userId = userId,
-                                        isViaStep = isViaStep,
-                                        isCyclicViaStep = isCyclicViaStep,
-                                        splitIndex = splitIndex,
-                                        username = username,
-                                        timePartIncrementOrDecrementCommandIndicator = Constants.secondIncrementOrDecrementCommandIndicator,
-                                        timePartIncrementOrDecrementNoMatchAction = {
+                                    timePartIncrementOrDecrementMatchResult = Constants.secondIncrementOrDecrementPatternRegex.matchEntire(
+                                        input = localDateTimeInText
+                                    ),
+                                    transactionParticulars = transactionParticulars,
+                                    transactionAmount = transactionAmount,
+                                    dateTimeInText = dateTimeInText,
+                                    fromAccount = fromAccount,
+                                    transactionType = transactionType,
+                                    viaAccount = viaAccount,
+                                    toAccount = toAccount,
+                                    isEditStep = isEditStep,
+                                    transactionId = transactionId,
+                                    isDevelopmentMode = isDevelopmentMode,
+                                    isTwoWayStep = isTwoWayStep,
+                                    userId = userId,
+                                    isViaStep = isViaStep,
+                                    isCyclicViaStep = isCyclicViaStep,
+                                    splitIndex = splitIndex,
+                                    username = username,
+                                    timePartIncrementOrDecrementCommandIndicator = Constants.secondIncrementOrDecrementCommandIndicator,
+                                    timePartIncrementOrDecrementNoMatchAction = {
 
-                                            timePartIncrementOrDecrementActions(
+                                        timePartIncrementOrDecrementActions(
 
-                                                timePartIncrementOrDecrementMatchResult = Constants.dayIncrementOrDecrementPatternRegex.matchEntire(
-                                                    input = localDateTimeInText
-                                                ),
-                                                transactionParticulars = transactionParticulars,
-                                                transactionAmount = transactionAmount,
-                                                dateTimeInText = dateTimeInText,
-                                                fromAccount = fromAccount,
-                                                transactionType = transactionType,
-                                                viaAccount = viaAccount,
-                                                toAccount = toAccount,
-                                                isEditStep = isEditStep,
-                                                transactionId = transactionId,
-                                                isConsoleMode = isConsoleMode,
-                                                isDevelopmentMode = isDevelopmentMode,
-                                                isTwoWayStep = isTwoWayStep,
-                                                userId = userId,
-                                                isViaStep = isViaStep,
-                                                isCyclicViaStep = isCyclicViaStep,
-                                                splitIndex = splitIndex,
-                                                username = username,
-                                                timePartIncrementOrDecrementCommandIndicator = Constants.dayIncrementOrDecrementCommandIndicator,
-                                                timePartIncrementOrDecrementNoMatchAction = {
+                                            timePartIncrementOrDecrementMatchResult = Constants.dayIncrementOrDecrementPatternRegex.matchEntire(
+                                                input = localDateTimeInText
+                                            ),
+                                            transactionParticulars = transactionParticulars,
+                                            transactionAmount = transactionAmount,
+                                            dateTimeInText = dateTimeInText,
+                                            fromAccount = fromAccount,
+                                            transactionType = transactionType,
+                                            viaAccount = viaAccount,
+                                            toAccount = toAccount,
+                                            isEditStep = isEditStep,
+                                            transactionId = transactionId,
+                                            isDevelopmentMode = isDevelopmentMode,
+                                            isTwoWayStep = isTwoWayStep,
+                                            userId = userId,
+                                            isViaStep = isViaStep,
+                                            isCyclicViaStep = isCyclicViaStep,
+                                            splitIndex = splitIndex,
+                                            username = username,
+                                            timePartIncrementOrDecrementCommandIndicator = Constants.dayIncrementOrDecrementCommandIndicator,
+                                            timePartIncrementOrDecrementNoMatchAction = {
 
-                                                    val timePartIncrementOrDecrementMatchResult =
-                                                        Constants.dayIncrementOrDecrementWithTimeResetPatternRegex.matchEntire(
-                                                            input = localDateTimeInText
-                                                        )
-                                                    if (timePartIncrementOrDecrementMatchResult == null) {
+                                                val timePartIncrementOrDecrementMatchResult =
+                                                    Constants.dayIncrementOrDecrementWithTimeResetPatternRegex.matchEntire(
+                                                        input = localDateTimeInText
+                                                    )
+                                                if (timePartIncrementOrDecrementMatchResult == null) {
 
-                                                        insertTransactionAfterEventDateTimeFix(
+                                                    insertTransactionAfterEventDateTimeFix(
 
-                                                            transactionParticulars = transactionParticulars,
-                                                            transactionAmount = transactionAmount,
+                                                        transactionParticulars = transactionParticulars,
+                                                        transactionAmount = transactionAmount,
+                                                        dateTimeInText = dateTimeInText,
+                                                        fromAccount = fromAccount,
+                                                        transactionType = transactionType,
+                                                        viaAccount = viaAccount,
+                                                        toAccount = toAccount,
+                                                        isEditStep = isEditStep,
+                                                        transactionId = transactionId,
+                                                        isDevelopmentMode = isDevelopmentMode,
+                                                        isTwoWayStep = isTwoWayStep,
+                                                        userId = userId,
+                                                        isViaStep = isViaStep,
+                                                        isCyclicViaStep = isCyclicViaStep,
+                                                        splitIndex = splitIndex,
+                                                        username = username
+                                                    )
+
+                                                } else {
+
+                                                    handleTimeResetPattern(
+
+                                                        dateTimeInText = handleDateIncrementOrDecrementPattern(
+
+                                                            timePart = timePartIncrementOrDecrementMatchResult.groups[1],
                                                             dateTimeInText = dateTimeInText,
-                                                            fromAccount = fromAccount,
-                                                            transactionType = transactionType,
-                                                            viaAccount = viaAccount,
-                                                            toAccount = toAccount,
-                                                            isEditStep = isEditStep,
-                                                            transactionId = transactionId,
-                                                            isConsoleMode = isConsoleMode,
-                                                            isDevelopmentMode = isDevelopmentMode,
-                                                            isTwoWayStep = isTwoWayStep,
-                                                            userId = userId,
-                                                            isViaStep = isViaStep,
-                                                            isCyclicViaStep = isCyclicViaStep,
-                                                            splitIndex = splitIndex,
-                                                            username = username
-                                                        )
-
-                                                    } else {
-
-                                                        handleTimeResetPattern(
-
-                                                            dateTimeInText = handleDateIncrementOrDecrementPattern(
-
-                                                                timePart = timePartIncrementOrDecrementMatchResult.groups[1],
-                                                                dateTimeInText = dateTimeInText,
-                                                                timePartIncrementOrDecrementMatchResult = timePartIncrementOrDecrementMatchResult,
-                                                                manipulationOperatorPosition = 3
-                                                            ),
-                                                            timeResetCommand = Constants.timeResetPatternRegex.matchEntire(
-                                                                input = timePartIncrementOrDecrementMatchResult.groups[4]!!.value
-                                                            )!!,
-                                                            userId = userId,
-                                                            username = username,
-                                                            transactionType = transactionType,
-                                                            fromAccount = fromAccount,
-                                                            viaAccount = viaAccount,
-                                                            toAccount = toAccount,
-                                                            isViaStep = isViaStep,
-                                                            isTwoWayStep = isTwoWayStep,
-                                                            transactionId = transactionId,
-                                                            transactionParticulars = transactionParticulars,
-                                                            transactionAmount = transactionAmount,
-                                                            isEditStep = isEditStep,
-                                                            splitIndex = splitIndex,
-                                                            isConsoleMode = isConsoleMode,
-                                                            isDevelopmentMode = isDevelopmentMode,
-                                                            isCyclicViaStep = isCyclicViaStep
-                                                        )
-                                                    }
+                                                            timePartIncrementOrDecrementMatchResult = timePartIncrementOrDecrementMatchResult,
+                                                            manipulationOperatorPosition = 3
+                                                        ),
+                                                        timeResetCommand = Constants.timeResetPatternRegex.matchEntire(
+                                                            input = timePartIncrementOrDecrementMatchResult.groups[4]!!.value
+                                                        )!!,
+                                                        userId = userId,
+                                                        username = username,
+                                                        transactionType = transactionType,
+                                                        fromAccount = fromAccount,
+                                                        viaAccount = viaAccount,
+                                                        toAccount = toAccount,
+                                                        isViaStep = isViaStep,
+                                                        isTwoWayStep = isTwoWayStep,
+                                                        transactionId = transactionId,
+                                                        transactionParticulars = transactionParticulars,
+                                                        transactionAmount = transactionAmount,
+                                                        isEditStep = isEditStep,
+                                                        splitIndex = splitIndex,
+                                                        isDevelopmentMode = isDevelopmentMode,
+                                                        isCyclicViaStep = isCyclicViaStep
+                                                    )
                                                 }
-                                            )
-                                        }
-                                    )
-                                }
-                            )
-                        }
-                    )
+                                            }
+                                        )
+                                    }
+                                )
+                            }
+                        )
+                    }
                 } else {
 
                     return handleTimeResetPattern(
@@ -1628,7 +1572,6 @@ object InsertOperationsInteractive {
                         transactionAmount = transactionAmount,
                         isEditStep = isEditStep,
                         splitIndex = splitIndex,
-                        isConsoleMode = isConsoleMode,
                         isDevelopmentMode = isDevelopmentMode,
                         isCyclicViaStep = isCyclicViaStep
                     )
@@ -1654,7 +1597,6 @@ object InsertOperationsInteractive {
         transactionAmount: Float,
         isEditStep: Boolean,
         splitIndex: UInt,
-        isConsoleMode: Boolean,
         isDevelopmentMode: Boolean,
         isCyclicViaStep: Boolean
 
@@ -1719,7 +1661,6 @@ object InsertOperationsInteractive {
             transactionAmount = transactionAmount,
             isEditStep = isEditStep,
             splitIndex = splitIndex,
-            isConsoleMode = isConsoleMode,
             isDevelopmentMode = isDevelopmentMode,
             isCyclicViaStep = isCyclicViaStep
         )
@@ -1737,7 +1678,6 @@ object InsertOperationsInteractive {
         toAccount: AccountResponse,
         isEditStep: Boolean,
         transactionId: UInt,
-        isConsoleMode: Boolean,
         isDevelopmentMode: Boolean,
         isTwoWayStep: Boolean,
         userId: UInt,
@@ -1895,7 +1835,6 @@ object InsertOperationsInteractive {
                 transactionAmount = transactionAmount,
                 isEditStep = isEditStep,
                 splitIndex = splitIndex,
-                isConsoleMode = isConsoleMode,
                 isDevelopmentMode = isDevelopmentMode,
                 isCyclicViaStep = isCyclicViaStep
             )
@@ -1958,7 +1897,6 @@ object InsertOperationsInteractive {
         toAccount: AccountResponse,
         isEditStep: Boolean,
         transactionId: UInt,
-        isConsoleMode: Boolean,
         isDevelopmentMode: Boolean,
         isTwoWayStep: Boolean,
         userId: UInt,
@@ -2107,7 +2045,6 @@ object InsertOperationsInteractive {
                                         amount = localTransactionAmount,
                                         fromAccountId = fromAccount.id,
                                         toAccountId = toAccount.id,
-                                        isConsoleMode = isConsoleMode,
                                         isDevelopmentMode = isDevelopmentMode
                                     ),
                                     dateTimeInText = dateTimeInText,
@@ -2136,7 +2073,6 @@ object InsertOperationsInteractive {
                                 amount = localTransactionAmount,
                                 fromAccount = toAccount,
                                 toAccount = fromAccount,
-                                isConsoleMode = isConsoleMode,
                                 isDevelopmentMode = isDevelopmentMode
                             ),
                             dateTimeInText = dateTimeInText,
@@ -2158,7 +2094,6 @@ object InsertOperationsInteractive {
                                 amount = localTransactionAmount,
                                 fromAccount = viaAccount,
                                 toAccount = toAccount,
-                                isConsoleMode = isConsoleMode,
                                 isDevelopmentMode = isDevelopmentMode
                             ),
                             dateTimeInText = dateTimeInText,
@@ -2180,7 +2115,6 @@ object InsertOperationsInteractive {
                                 amount = localTransactionAmount,
                                 fromAccount = toAccount,
                                 toAccount = fromAccount,
-                                isConsoleMode = isConsoleMode,
                                 isDevelopmentMode = isDevelopmentMode
                             ),
                             dateTimeInText = dateTimeInText,
@@ -2206,7 +2140,6 @@ object InsertOperationsInteractive {
                                         amount = localTransactionAmount,
                                         fromAccount = fromAccount,
                                         toAccount = toAccount,
-                                        isConsoleMode = isConsoleMode,
                                         isDevelopmentMode = isDevelopmentMode
                                     ),
                                     dateTimeInText = if (splitIndex > 0u) DateTimeUtils.add5MinutesToNormalDateTimeInText(
@@ -2234,7 +2167,6 @@ object InsertOperationsInteractive {
                                         amount = localTransactionAmount,
                                         fromAccount = fromAccount,
                                         toAccount = viaAccount,
-                                        isConsoleMode = isConsoleMode,
                                         isDevelopmentMode = isDevelopmentMode
                                     ),
                                     dateTimeInText = if (splitIndex > 0u) DateTimeUtils.add5MinutesToNormalDateTimeInText(
@@ -2270,7 +2202,6 @@ object InsertOperationsInteractive {
                     transactionAmount = localTransactionAmount,
                     isEditStep = isEditStep,
                     splitIndex = splitIndex,
-                    isConsoleMode = isConsoleMode,
                     isDevelopmentMode = isDevelopmentMode,
                     isCyclicViaStep = isCyclicViaStep
                 )
@@ -2294,7 +2225,6 @@ object InsertOperationsInteractive {
                             isViaStep = isViaStep,
                             isTwoWayStep = isTwoWayStep,
                             transactionId = transactionId,
-                            isConsoleMode = isConsoleMode,
                             isDevelopmentMode = isDevelopmentMode,
                             isCyclicViaStep = isCyclicViaStep
                         )
@@ -2324,7 +2254,6 @@ object InsertOperationsInteractive {
                             isViaStep = isViaStep,
                             isTwoWayStep = isTwoWayStep,
                             transactionId = transactionId,
-                            isConsoleMode = isConsoleMode,
                             isDevelopmentMode = isDevelopmentMode,
                             isCyclicViaStep = isCyclicViaStep
                         )
@@ -2354,7 +2283,6 @@ object InsertOperationsInteractive {
                             isViaStep = isViaStep,
                             isTwoWayStep = isTwoWayStep,
                             transactionId = transactionId,
-                            isConsoleMode = isConsoleMode,
                             isDevelopmentMode = isDevelopmentMode,
                             isCyclicViaStep = isCyclicViaStep
                         )
@@ -2383,7 +2311,6 @@ object InsertOperationsInteractive {
                             isViaStep = isViaStep,
                             isTwoWayStep = isTwoWayStep,
                             transactionId = transactionId,
-                            isConsoleMode = isConsoleMode,
                             isDevelopmentMode = isDevelopmentMode,
                             isCyclicViaStep = isCyclicViaStep
                         )
@@ -2436,7 +2363,6 @@ object InsertOperationsInteractive {
         isViaStep: Boolean,
         isTwoWayStep: Boolean,
         transactionId: UInt,
-        isConsoleMode: Boolean,
         isDevelopmentMode: Boolean,
         isCyclicViaStep: Boolean
 
@@ -2461,7 +2387,6 @@ object InsertOperationsInteractive {
                     transactionParticulars = transactionParticulars,
                     transactionAmount = transactionAmount,
                     isEditStep = isEditStep,
-                    isConsoleMode = isConsoleMode,
                     isDevelopmentMode = isDevelopmentMode,
                     isCyclicViaStep = isCyclicViaStep
                 )
@@ -2484,7 +2409,6 @@ object InsertOperationsInteractive {
                     transactionParticulars = transactionParticulars,
                     transactionAmount = transactionAmount,
                     isEditStep = isEditStep,
-                    isConsoleMode = isConsoleMode,
                     isDevelopmentMode = isDevelopmentMode,
                     isCyclicViaStep = isCyclicViaStep
                 )
@@ -2507,7 +2431,6 @@ object InsertOperationsInteractive {
                     transactionParticulars = transactionParticulars,
                     transactionAmount = transactionAmount,
                     isEditStep = isEditStep,
-                    isConsoleMode = isConsoleMode,
                     isDevelopmentMode = isDevelopmentMode,
                     isCyclicViaStep = isCyclicViaStep
                 )
@@ -2520,7 +2443,7 @@ object InsertOperationsInteractive {
         transactionManipulationApiRequest: () -> Result<TransactionManipulationResponse>,
         transactionManipulationSuccessActions: () -> Unit = {},
         transactionManipulationFailureActions: (String) -> Unit = {},
-        isConsoleMode: Boolean,
+        isConsoleMode: Boolean = true,
         isDevelopmentMode: Boolean
 
     ): Boolean {
@@ -2538,7 +2461,7 @@ object InsertOperationsInteractive {
                 CommonApiUtils.printServerExecutionErrorMessage(data)
                 transactionManipulationFailureActions.invoke(data)
             },
-            isConsoleMode = isConsoleMode,
+            isConsoleMode = true,
             isDevelopmentMode = isDevelopmentMode
         )
     }
@@ -2551,7 +2474,6 @@ object InsertOperationsInteractive {
         amount: Float,
         fromAccount: AccountResponse,
         toAccount: AccountResponse,
-        isConsoleMode: Boolean,
         isDevelopmentMode: Boolean
 
     ): Boolean {
@@ -2564,7 +2486,7 @@ object InsertOperationsInteractive {
             amount = amount,
             fromAccountId = fromAccount.id,
             toAccountId = toAccount.id,
-            isConsoleMode = isConsoleMode,
+            isConsoleMode = true,
             isDevelopmentMode = isDevelopmentMode,
             eventDateTimeConversionFunction = {
 
@@ -2664,7 +2586,6 @@ object InsertOperationsInteractive {
         fromAccountId: UInt,
         toAccountId: UInt,
         isDateTimeUpdateOperation: Boolean = false,
-        isConsoleMode: Boolean,
         isDevelopmentMode: Boolean
 
     ): Boolean {
@@ -2678,7 +2599,7 @@ object InsertOperationsInteractive {
             fromAccountId = fromAccountId,
             toAccountId = toAccountId,
             isDateTimeUpdateOperation = isDateTimeUpdateOperation,
-            isConsoleMode = isConsoleMode,
+            isConsoleMode = true,
             isDevelopmentMode = isDevelopmentMode,
             manipulateTransactionOperation = ::manipulateTransactionInteractive,
             eventDateTimeConversionOperation = fun(): IsOkModel<String> {
@@ -2699,7 +2620,6 @@ object InsertOperationsInteractive {
     internal fun deleteTransaction(
 
         transactionId: UInt,
-        isConsoleMode: Boolean,
         isDevelopmentMode: Boolean
 
     ): Boolean {
@@ -2712,7 +2632,6 @@ object InsertOperationsInteractive {
                 }
             },
             transactionManipulationSuccessActions = fun() {},
-            isConsoleMode = isConsoleMode,
             isDevelopmentMode = isDevelopmentMode
         )
     }

@@ -306,7 +306,6 @@ internal fun viewChildAccounts(
                     dateTimeInText = dateTimeInText,
                     transactionParticulars = transactionParticulars,
                     transactionAmount = transactionAmount,
-                    isConsoleMode = isConsoleMode,
                     isDevelopmentMode = isDevelopmentMode
                 )
 

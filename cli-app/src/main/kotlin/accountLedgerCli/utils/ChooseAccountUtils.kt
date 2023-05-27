@@ -18,7 +18,6 @@ object ChooseAccountUtils {
 
         userId: UInt,
         accountType: AccountTypeEnum,
-        isConsoleMode: Boolean,
         isDevelopmentMode: Boolean
 
     ): ChooseAccountResult {
@@ -31,12 +30,12 @@ object ChooseAccountUtils {
                 return ApiUtils.getAccountsFull(
 
                     userId = userId,
-                    isConsoleMode = isConsoleMode,
+                    isConsoleMode = true,
                     isDevelopmentMode = isDevelopmentMode
                 )
             },
             prefixForPrompt = "${EnumUtils.getEnumNameForPrint(localEnum = accountType)} ",
-            isConsoleMode = isConsoleMode,
+            isConsoleMode = true,
             isDevelopmentMode = isDevelopmentMode
         )
         if (chooseByIdResult.isOkWithData.isOK) {

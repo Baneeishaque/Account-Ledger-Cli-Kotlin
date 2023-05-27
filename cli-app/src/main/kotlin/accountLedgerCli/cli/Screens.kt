@@ -34,7 +34,6 @@ object Screens {
         dateTimeInText: String,
         transactionParticulars: String,
         transactionAmount: Float,
-        isConsoleMode: Boolean,
         isDevelopmentMode: Boolean,
         dotEnv:Dotenv
 
@@ -113,13 +112,12 @@ object Screens {
                         apiResponse = getAccounts(
 
                             userId = userId,
-                            isConsoleMode = isConsoleMode,
+                            isConsoleMode = true,
                             isDevelopmentMode = isDevelopmentMode
                         ),
                         username = username,
                         userId = userId,
                         previousTransactionData = insertTransactionResult,
-                        isConsoleMode = isConsoleMode,
                         isDevelopmentMode = isDevelopmentMode
                     )
                 }
@@ -131,7 +129,6 @@ object Screens {
                         previousTransactionData = insertTransactionResult,
                         userId = userId,
                         username = username,
-                        isConsoleMode = isConsoleMode,
                         isDevelopmentMode = isDevelopmentMode
                     )
                 }
@@ -143,7 +140,6 @@ object Screens {
                         userId = userId,
                         username = username,
                         previousTransactionData = insertTransactionResult,
-                        isConsoleMode = isConsoleMode,
                         isDevelopmentMode = isDevelopmentMode
                     )
                 }
@@ -155,7 +151,6 @@ object Screens {
                         userId = userId,
                         username = username,
                         previousTransactionData = insertTransactionResult,
-                        isConsoleMode = isConsoleMode,
                         isDevelopmentMode = isDevelopmentMode
                     )
                 }
@@ -167,7 +162,6 @@ object Screens {
                         userId = userId,
                         username = username,
                         previousTransactionData = insertTransactionResult,
-                        isConsoleMode = isConsoleMode,
                         isDevelopmentMode = isDevelopmentMode
                     )
                 }
@@ -179,7 +173,6 @@ object Screens {
                         userId = userId,
                         username = username,
                         previousTransactionData = insertTransactionResult,
-                        isConsoleMode = isConsoleMode,
                         isDevelopmentMode = isDevelopmentMode
                     )
                 }
@@ -191,7 +184,6 @@ object Screens {
                         userId = userId,
                         username = username,
                         previousTransactionData = insertTransactionResult,
-                        isConsoleMode = isConsoleMode,
                         isDevelopmentMode = isDevelopmentMode
                     )
                 }
@@ -203,7 +195,6 @@ object Screens {
                         userId = userId,
                         username = username,
                         previousTransactionData = insertTransactionResult,
-                        isConsoleMode = isConsoleMode,
                         isDevelopmentMode = isDevelopmentMode
                     )
                 }
@@ -215,7 +206,6 @@ object Screens {
                         userId = userId,
                         username = username,
                         previousTransactionData = insertTransactionResult,
-                        isConsoleMode = isConsoleMode,
                         isDevelopmentMode = isDevelopmentMode
                     )
                 }
@@ -227,7 +217,6 @@ object Screens {
                         userId = userId,
                         username = username,
                         previousTransactionData = insertTransactionResult,
-                        isConsoleMode = isConsoleMode,
                         isDevelopmentMode = isDevelopmentMode
                     )
                 }
@@ -239,7 +228,6 @@ object Screens {
                         userId = userId,
                         username = username,
                         previousTransactionData = insertTransactionResult,
-                        isConsoleMode = isConsoleMode,
                         isDevelopmentMode = isDevelopmentMode
                     )
                 }
@@ -251,7 +239,6 @@ object Screens {
                         userId = userId,
                         username = username,
                         previousTransactionData = insertTransactionResult,
-                        isConsoleMode = isConsoleMode,
                         isDevelopmentMode = isDevelopmentMode
                     )
                 }
@@ -263,13 +250,12 @@ object Screens {
                         apiResponse = ApiUtils.getAccountsFull(
 
                             userId = userId,
-                            isConsoleMode = isConsoleMode,
+                            isConsoleMode = true,
                             isDevelopmentMode = isDevelopmentMode
                         ),
                         username = username,
                         userId = userId,
                         previousTransactionData = insertTransactionResult,
-                        isConsoleMode = isConsoleMode,
                         isDevelopmentMode = isDevelopmentMode
                     )
                 }
@@ -287,7 +273,7 @@ object Screens {
                         userId = userId,
                         username = username,
                         previousTransactionData = insertTransactionResult,
-                        isConsoleMode = isConsoleMode,
+                        isConsoleMode = true,
                         isDevelopmentMode = isDevelopmentMode
                     )
                 }
@@ -299,7 +285,7 @@ object Screens {
                         userId = userId,
                         username = username,
                         previousTransactionData = insertTransactionResult,
-                        isConsoleMode = isConsoleMode,
+                        isConsoleMode = true,
                         isDevelopmentMode = isDevelopmentMode
                     )
                 }
@@ -311,7 +297,7 @@ object Screens {
                         currentUserName = username,
                         currentUserId = userId,
                         refineLevel = BalanceSheetRefineLevelEnum.ALL,
-                        isConsoleMode = isConsoleMode,
+                        isConsoleMode = true,
                         isDevelopmentMode = isDevelopmentMode
                     )
                 }
@@ -323,7 +309,7 @@ object Screens {
                         currentUserName = username,
                         currentUserId = userId,
                         refineLevel = BalanceSheetRefineLevelEnum.WITHOUT_OPEN_BALANCES,
-                        isConsoleMode = isConsoleMode,
+                        isConsoleMode = true,
                         isDevelopmentMode = isDevelopmentMode
                     )
                 }
@@ -335,7 +321,7 @@ object Screens {
                         currentUserName = username,
                         currentUserId = userId,
                         refineLevel = BalanceSheetRefineLevelEnum.WITHOUT_MISC_INCOMES,
-                        isConsoleMode = isConsoleMode,
+                        isConsoleMode = true,
                         isDevelopmentMode = isDevelopmentMode
                     )
                 }
@@ -347,7 +333,7 @@ object Screens {
                         currentUserName = username,
                         currentUserId = userId,
                         refineLevel = BalanceSheetRefineLevelEnum.WITHOUT_INVESTMENT_RETURNS,
-                        isConsoleMode = isConsoleMode,
+                        isConsoleMode = true,
                         isDevelopmentMode = isDevelopmentMode
                     )
                 }
@@ -359,7 +345,7 @@ object Screens {
                         currentUserName = username,
                         currentUserId = userId,
                         refineLevel = BalanceSheetRefineLevelEnum.WITHOUT_FAMILY_ACCOUNTS,
-                        isConsoleMode = isConsoleMode,
+                        isConsoleMode = true,
                         isDevelopmentMode = isDevelopmentMode
                     )
                 }
@@ -371,7 +357,7 @@ object Screens {
                         currentUserName = username,
                         currentUserId = userId,
                         refineLevel = BalanceSheetRefineLevelEnum.WITHOUT_EXPENSE_ACCOUNTS,
-                        isConsoleMode = isConsoleMode,
+                        isConsoleMode = true,
                         isDevelopmentMode = isDevelopmentMode
                     )
                 }
@@ -385,7 +371,6 @@ object Screens {
                         previousTransactionData = insertTransactionResult,
                         username = username,
                         desiredAccountIndex = InsertOperationsInteractive.walletAccount.value!!,
-                        isConsoleMode = isConsoleMode,
                         isDevelopmentMode = isDevelopmentMode
                     )
                 }
@@ -398,7 +383,6 @@ object Screens {
                         previousTransactionData = insertTransactionResult,
                         username = username,
                         desiredAccountIndex = InsertOperationsInteractive.bankAccount.value!!,
-                        isConsoleMode = isConsoleMode,
                         isDevelopmentMode = isDevelopmentMode
                     )
                 }
@@ -411,7 +395,6 @@ object Screens {
                         previousTransactionData = insertTransactionResult,
                         username = username,
                         desiredAccountIndex = InsertOperationsInteractive.frequent1Account.value!!,
-                        isConsoleMode = isConsoleMode,
                         isDevelopmentMode = isDevelopmentMode
                     )
                 }
@@ -424,7 +407,6 @@ object Screens {
                         previousTransactionData = insertTransactionResult,
                         username = username,
                         desiredAccountIndex = InsertOperationsInteractive.frequent2Account.value!!,
-                        isConsoleMode = isConsoleMode,
                         isDevelopmentMode = isDevelopmentMode
                     )
                 }
@@ -437,7 +419,6 @@ object Screens {
                         previousTransactionData = insertTransactionResult,
                         username = username,
                         desiredAccountIndex = InsertOperationsInteractive.frequent3Account.value!!,
-                        isConsoleMode = isConsoleMode,
                         isDevelopmentMode = isDevelopmentMode
                     )
                 }
@@ -451,7 +432,7 @@ object Screens {
                         userId = userId,
                         username = username,
                         previousTransactionData = insertTransactionResult,
-                        isConsoleMode = isConsoleMode,
+                        isConsoleMode = true,
                         isDevelopmentMode = isDevelopmentMode
                     )
                 }
@@ -467,7 +448,7 @@ object Screens {
                                     TransactionsDataSource().selectTransactions(userId = userId)
                                 }
                             },
-                            isConsoleMode = isConsoleMode,
+                            isConsoleMode = true,
                             isDevelopmentMode = isDevelopmentMode
                         )
 
@@ -491,7 +472,7 @@ object Screens {
                                 accountId = 0u,
                                 functionCallSource = FunctionCallSourceEnum.FROM_VIEW_TRANSACTIONS_OF_AN_ACCOUNT,
                                 userId = userId,
-                                isConsoleMode = isConsoleMode,
+                                isConsoleMode = true,
                                 isDevelopmentMode = isDevelopmentMode
 
                             ).addTransactionResult
@@ -510,7 +491,7 @@ object Screens {
                         previousTransactionData = insertTransactionResult,
                         isUpToTimeStamp = true,
                         upToTimeStamp = toTimeStamp,
-                        isConsoleMode = isConsoleMode,
+                        isConsoleMode = true,
                         isDevelopmentMode = isDevelopmentMode
                     )
                 }
@@ -584,7 +565,6 @@ object Screens {
         userId: UInt,
         username: String,
         previousTransactionData: InsertTransactionResult,
-        isConsoleMode: Boolean,
         isDevelopmentMode: Boolean
 
     ) = quickTransactionOnX(
@@ -593,7 +573,6 @@ object Screens {
         previousTransactionData = previousTransactionData,
         userId = userId,
         username = username,
-        isConsoleMode = isConsoleMode,
         isDevelopmentMode = isDevelopmentMode
     )
 
@@ -603,7 +582,6 @@ object Screens {
         userId: UInt,
         username: String,
         previousTransactionData: InsertTransactionResult,
-        isConsoleMode: Boolean,
         isDevelopmentMode: Boolean
 
     ) = quickTransactionOnX(
@@ -612,7 +590,6 @@ object Screens {
         previousTransactionData = previousTransactionData,
         userId = userId,
         username = username,
-        isConsoleMode = isConsoleMode,
         isDevelopmentMode = isDevelopmentMode
     )
 
@@ -622,7 +599,6 @@ object Screens {
         userId: UInt,
         username: String,
         previousTransactionData: InsertTransactionResult,
-        isConsoleMode: Boolean,
         isDevelopmentMode: Boolean
 
     ) = quickTransactionOnX(
@@ -631,7 +607,6 @@ object Screens {
         previousTransactionData = previousTransactionData,
         userId = userId,
         username = username,
-        isConsoleMode = isConsoleMode,
         isDevelopmentMode = isDevelopmentMode
     )
 
@@ -640,7 +615,6 @@ object Screens {
         userId: UInt,
         username: String,
         previousTransactionData: InsertTransactionResult,
-        isConsoleMode: Boolean,
         isDevelopmentMode: Boolean
 
     ) = quickTransactionOnBankToX(
@@ -649,7 +623,6 @@ object Screens {
         userId = userId,
         username = username,
         previousTransactionData = previousTransactionData,
-        isConsoleMode = isConsoleMode,
         isDevelopmentMode = isDevelopmentMode
     )
 
@@ -658,7 +631,6 @@ object Screens {
         userId: UInt,
         username: String,
         previousTransactionData: InsertTransactionResult,
-        isConsoleMode: Boolean,
         isDevelopmentMode: Boolean
 
     ) = quickTransactionOnBankToX(
@@ -667,7 +639,6 @@ object Screens {
         userId = userId,
         username = username,
         previousTransactionData = previousTransactionData,
-        isConsoleMode = isConsoleMode,
         isDevelopmentMode = isDevelopmentMode
     )
 
@@ -676,7 +647,6 @@ object Screens {
         userId: UInt,
         username: String,
         previousTransactionData: InsertTransactionResult,
-        isConsoleMode: Boolean,
         isDevelopmentMode: Boolean
 
     ) = quickTransactionOnBankToX(
@@ -685,7 +655,6 @@ object Screens {
         userId = userId,
         username = username,
         previousTransactionData = previousTransactionData,
-        isConsoleMode = isConsoleMode,
         isDevelopmentMode = isDevelopmentMode
     )
 
@@ -694,7 +663,6 @@ object Screens {
         userId: UInt,
         username: String,
         previousTransactionData: InsertTransactionResult,
-        isConsoleMode: Boolean,
         isDevelopmentMode: Boolean
 
     ) = quickTransactionOnX(
@@ -703,7 +671,6 @@ object Screens {
         previousTransactionData = previousTransactionData,
         userId = userId,
         username = username,
-        isConsoleMode = isConsoleMode,
         isDevelopmentMode = isDevelopmentMode
     )
 
@@ -712,7 +679,6 @@ object Screens {
         userId: UInt,
         username: String,
         previousTransactionData: InsertTransactionResult,
-        isConsoleMode: Boolean,
         isDevelopmentMode: Boolean
 
     ) = quickTransactionOnWalletToX(
@@ -721,7 +687,6 @@ object Screens {
         userId = userId,
         username = username,
         previousTransactionData = previousTransactionData,
-        isConsoleMode = isConsoleMode,
         isDevelopmentMode = isDevelopmentMode
     )
 
@@ -730,7 +695,6 @@ object Screens {
         userId: UInt,
         username: String,
         previousTransactionData: InsertTransactionResult,
-        isConsoleMode: Boolean,
         isDevelopmentMode: Boolean
 
     ) = quickTransactionOnWalletToX(
@@ -739,7 +703,6 @@ object Screens {
         userId = userId,
         username = username,
         previousTransactionData = previousTransactionData,
-        isConsoleMode = isConsoleMode,
         isDevelopmentMode = isDevelopmentMode
     )
 
@@ -748,7 +711,6 @@ object Screens {
         userId: UInt,
         username: String,
         previousTransactionData: InsertTransactionResult,
-        isConsoleMode: Boolean,
         isDevelopmentMode: Boolean
 
     ) = quickTransactionOnWalletToX(
@@ -757,7 +719,6 @@ object Screens {
         userId = userId,
         username = username,
         previousTransactionData = previousTransactionData,
-        isConsoleMode = isConsoleMode,
         isDevelopmentMode = isDevelopmentMode
     )
 
@@ -767,7 +728,6 @@ object Screens {
         userId: UInt,
         username: String,
         previousTransactionData: InsertTransactionResult,
-        isConsoleMode: Boolean,
         isDevelopmentMode: Boolean
 
     ) = quickTransactionOnXToY(
@@ -777,7 +737,6 @@ object Screens {
         userId = userId,
         username = username,
         previousTransactionData = previousTransactionData,
-        isConsoleMode = isConsoleMode,
         isDevelopmentMode = isDevelopmentMode
     )
 
@@ -787,7 +746,6 @@ object Screens {
         userId: UInt,
         username: String,
         previousTransactionData: InsertTransactionResult,
-        isConsoleMode: Boolean,
         isDevelopmentMode: Boolean
 
     ) = quickTransactionOnXToY(
@@ -797,7 +755,6 @@ object Screens {
         userId = userId,
         username = username,
         previousTransactionData = previousTransactionData,
-        isConsoleMode = isConsoleMode,
         isDevelopmentMode = isDevelopmentMode
     )
 
@@ -808,7 +765,6 @@ object Screens {
         userId: UInt,
         username: String,
         previousTransactionData: InsertTransactionResult,
-        isConsoleMode: Boolean,
         isDevelopmentMode: Boolean
 
     ) = InsertOperationsInteractive.insertQuickTransactionFromAccount1toAccount2(
@@ -823,7 +779,6 @@ object Screens {
         dateTimeInText = previousTransactionData.dateTimeInText,
         transactionParticulars = previousTransactionData.transactionParticulars,
         transactionAmount = previousTransactionData.transactionAmount,
-        isConsoleMode = isConsoleMode,
         isDevelopmentMode = isDevelopmentMode
     )
 
@@ -832,7 +787,6 @@ object Screens {
         previousTransactionData: InsertTransactionResult,
         userId: UInt,
         username: String,
-        isConsoleMode: Boolean,
         isDevelopmentMode: Boolean
 
     ) = quickTransactionOnX(
@@ -841,7 +795,6 @@ object Screens {
         previousTransactionData = previousTransactionData,
         userId = userId,
         username = username,
-        isConsoleMode = isConsoleMode,
         isDevelopmentMode = isDevelopmentMode
     )
 
@@ -851,7 +804,6 @@ object Screens {
         previousTransactionData: InsertTransactionResult,
         userId: UInt,
         username: String,
-        isConsoleMode: Boolean,
         isDevelopmentMode: Boolean
 
     ): InsertTransactionResult {
@@ -867,7 +819,6 @@ object Screens {
             dateTimeInText = previousTransactionData.dateTimeInText,
             transactionParticulars = previousTransactionData.transactionParticulars,
             transactionAmount = previousTransactionData.transactionAmount,
-            isConsoleMode = isConsoleMode,
             isDevelopmentMode = isDevelopmentMode
         )
     }
@@ -878,7 +829,6 @@ object Screens {
         previousTransactionData: InsertTransactionResult,
         username: String,
         desiredAccountIndex: UInt,
-        isConsoleMode: Boolean,
         isDevelopmentMode: Boolean
 
     ): InsertTransactionResult {
@@ -890,7 +840,7 @@ object Screens {
                 apiResponse = ApiUtils.getAccountsFull(
 
                     userId = userId,
-                    isConsoleMode = isConsoleMode,
+                    isConsoleMode = true,
                     isDevelopmentMode = isDevelopmentMode
                 )
             )
@@ -906,7 +856,7 @@ object Screens {
                 accountFullName = selectedAccount.fullName,
                 previousTransactionData = previousTransactionData,
                 fromAccount = selectedAccount,
-                isConsoleMode = isConsoleMode,
+                isConsoleMode = true,
                 isDevelopmentMode = isDevelopmentMode
 
             ).addTransactionResult
@@ -932,7 +882,6 @@ object Screens {
         dateTimeInText: String,
         transactionParticulars: String,
         transactionAmount: Float,
-        isConsoleMode: Boolean,
         isDevelopmentMode: Boolean
 
     ): InsertTransactionResult {
@@ -985,7 +934,7 @@ object Screens {
                         accountFullName = fromAccount.fullName,
                         previousTransactionData = localInsertTransactionResult,
                         fromAccount = localInsertTransactionResult.fromAccount,
-                        isConsoleMode = isConsoleMode,
+                        isConsoleMode = true,
                         isDevelopmentMode = isDevelopmentMode
 
                     ).addTransactionResult
@@ -1003,7 +952,6 @@ object Screens {
                         dateTimeInText = localInsertTransactionResult.dateTimeInText,
                         transactionParticulars = localInsertTransactionResult.transactionParticulars,
                         transactionAmount = localInsertTransactionResult.transactionAmount,
-                        isConsoleMode = isConsoleMode,
                         isDevelopmentMode = isDevelopmentMode
                     )
                 }
@@ -1019,7 +967,7 @@ object Screens {
                         dateTimeInText = localInsertTransactionResult.dateTimeInText,
                         transactionParticulars = localInsertTransactionResult.transactionParticulars,
                         transactionAmount = localInsertTransactionResult.transactionAmount,
-                        isConsoleMode = isConsoleMode,
+                        isConsoleMode = true,
                         isDevelopmentMode = isDevelopmentMode
                     )
                 }
@@ -1035,7 +983,6 @@ object Screens {
                         dateTimeInText = localInsertTransactionResult.dateTimeInText,
                         transactionParticulars = localInsertTransactionResult.transactionParticulars,
                         transactionAmount = localInsertTransactionResult.transactionAmount,
-                        isConsoleMode = isConsoleMode,
                         isDevelopmentMode = isDevelopmentMode
                     )
                 }
@@ -1052,7 +999,6 @@ object Screens {
                         dateTimeInText = localInsertTransactionResult.dateTimeInText,
                         transactionParticulars = localInsertTransactionResult.transactionParticulars,
                         transactionAmount = localInsertTransactionResult.transactionAmount,
-                        isConsoleMode = isConsoleMode,
                         isDevelopmentMode = isDevelopmentMode
                     )
                 }
@@ -1069,7 +1015,6 @@ object Screens {
                         dateTimeInText = localInsertTransactionResult.dateTimeInText,
                         transactionParticulars = localInsertTransactionResult.transactionParticulars,
                         transactionAmount = localInsertTransactionResult.transactionAmount,
-                        isConsoleMode = isConsoleMode,
                         isDevelopmentMode = isDevelopmentMode
                     )
                 }
@@ -1081,7 +1026,6 @@ object Screens {
                         previousTransactionData = localInsertTransactionResult,
                         userId = userId,
                         username = username,
-                        isConsoleMode = isConsoleMode,
                         isDevelopmentMode = isDevelopmentMode
                     )
                 }
@@ -1093,7 +1037,6 @@ object Screens {
                         userId = userId,
                         username = username,
                         previousTransactionData = localInsertTransactionResult,
-                        isConsoleMode = isConsoleMode,
                         isDevelopmentMode = isDevelopmentMode
                     )
                 }
@@ -1105,7 +1048,6 @@ object Screens {
                         userId = userId,
                         username = username,
                         previousTransactionData = localInsertTransactionResult,
-                        isConsoleMode = isConsoleMode,
                         isDevelopmentMode = isDevelopmentMode
                     )
                 }
@@ -1117,7 +1059,6 @@ object Screens {
                         userId = userId,
                         username = username,
                         previousTransactionData = localInsertTransactionResult,
-                        isConsoleMode = isConsoleMode,
                         isDevelopmentMode = isDevelopmentMode
                     )
                 }
@@ -1129,7 +1070,6 @@ object Screens {
                         userId = userId,
                         username = username,
                         previousTransactionData = localInsertTransactionResult,
-                        isConsoleMode = isConsoleMode,
                         isDevelopmentMode = isDevelopmentMode
                     )
                 }
@@ -1141,7 +1081,6 @@ object Screens {
                         userId = userId,
                         username = username,
                         previousTransactionData = localInsertTransactionResult,
-                        isConsoleMode = isConsoleMode,
                         isDevelopmentMode = isDevelopmentMode
                     )
                 }
@@ -1153,7 +1092,6 @@ object Screens {
                         userId = userId,
                         username = username,
                         previousTransactionData = localInsertTransactionResult,
-                        isConsoleMode = isConsoleMode,
                         isDevelopmentMode = isDevelopmentMode
                     )
                 }
@@ -1165,7 +1103,6 @@ object Screens {
                         userId = userId,
                         username = username,
                         previousTransactionData = localInsertTransactionResult,
-                        isConsoleMode = isConsoleMode,
                         isDevelopmentMode = isDevelopmentMode
                     )
                 }
@@ -1177,7 +1114,6 @@ object Screens {
                         userId = userId,
                         username = username,
                         previousTransactionData = localInsertTransactionResult,
-                        isConsoleMode = isConsoleMode,
                         isDevelopmentMode = isDevelopmentMode
                     )
                 }
@@ -1189,7 +1125,6 @@ object Screens {
                         userId = userId,
                         username = username,
                         previousTransactionData = localInsertTransactionResult,
-                        isConsoleMode = isConsoleMode,
                         isDevelopmentMode = isDevelopmentMode
                     )
                 }
@@ -1201,7 +1136,6 @@ object Screens {
                         userId = userId,
                         username = username,
                         previousTransactionData = localInsertTransactionResult,
-                        isConsoleMode = isConsoleMode,
                         isDevelopmentMode = isDevelopmentMode
                     )
                 }

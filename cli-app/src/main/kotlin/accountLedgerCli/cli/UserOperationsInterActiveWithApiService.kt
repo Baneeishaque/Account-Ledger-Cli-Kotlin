@@ -200,7 +200,6 @@ class UserOperationsInterActiveWithApiService {
                                 dateTimeInText = dateTimeInText,
                                 transactionParticulars = transactionParticulars,
                                 transactionAmount = transactionAmount,
-                                isConsoleMode = isConsoleMode,
                                 isDevelopmentMode = isDevelopmentMode,
                                 dotEnv = dotEnv
                             )
@@ -458,7 +457,6 @@ class UserOperationsInterActiveWithApiService {
                                         dateTimeInText = dateTimeInText,
                                         transactionParticulars = transactionParticulars,
                                         transactionAmount = transactionAmount,
-                                        isConsoleMode = isConsoleMode,
                                         isDevelopmentMode = isDevelopmentMode,
                                         dotEnv =dotEnv
                                     )
