@@ -3,7 +3,7 @@ val ktorVersion: String = "2.1.2"
 
 plugins {
 
-    val kotlinVersion = "1.9.20-dev-947"
+    val kotlinVersion = "1.9.20-dev-2244"
     kotlin("jvm") version kotlinVersion
     kotlin("plugin.serialization") version kotlinVersion
 
