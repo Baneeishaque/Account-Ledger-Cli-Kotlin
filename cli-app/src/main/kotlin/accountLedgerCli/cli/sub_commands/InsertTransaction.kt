@@ -17,7 +17,7 @@ import kotlinx.cli.Subcommand
 @OptIn(ExperimentalCli::class)
 class InsertTransaction(
 
-    isDevelopmentMode: Boolean
+    val isDevelopmentMode: Boolean = false
 ) :
     Subcommand(
         name = CommandLineApiMethodsEnum.InsertTransaction.name,
@@ -134,8 +134,7 @@ class InsertTransaction(
                                         amount = amount.toFloat(),
                                         fromAccountId = fromAccountId.toUInt(),
                                         toAccountId = toAccountId.toUInt(),
-                                        isConsoleMode = false,
-                                        isDevelopmentMode = false
+                                        isDevelopmentMode = isDevelopmentMode
                                     )
                                 ) {
 
