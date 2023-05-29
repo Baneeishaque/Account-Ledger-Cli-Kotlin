@@ -96,6 +96,7 @@ object Screens {
                     "35 - Check Affected A/Cs : After A Specified Date to A Specified Time Stamp",
                     "36 - Check Affected A/Cs : After A Specified Time Stamp to A Specified Date",
                     "37 - Check Affected A/Cs : After A Specified Time Stamp to A Specified Time Stamp",
+                    "38 - Check Affected A/Cs : After A Specified Date",
                     "0 - Logout",
                     "",
                     "Enter Your Choice : "
@@ -479,7 +480,6 @@ object Screens {
 
                 "33" -> {
 
-                    val toTimeStamp: String = InputUtils.getValidDateTimeInNormalPattern(promptPrefix = "Up to ")
                     insertTransactionResult = checkAffectedAccountsAfterSpecifiedDate(
 
                         desiredDate = getUserInitialTransactionDateFromUsername(username = username).minusDays(1)
@@ -488,7 +488,19 @@ object Screens {
                         username = username,
                         previousTransactionData = insertTransactionResult,
                         isUpToTimeStamp = true,
-                        upToTimeStamp = toTimeStamp,
+                        upToTimeStamp = InputUtils.getValidDateTimeInNormalPattern(promptPrefix = "Up to "),
+                        isConsoleMode = true,
+                        isDevelopmentMode = isDevelopmentMode
+                    )
+                }
+
+                "38" -> {
+                    insertTransactionResult = checkAffectedAccountsAfterSpecifiedDate(
+
+                        desiredDate = InputUtils.getValidDateInNormalPattern(promptPrefix = "After "),
+                        userId = userId,
+                        username = username,
+                        previousTransactionData = insertTransactionResult,
                         isConsoleMode = true,
                         isDevelopmentMode = isDevelopmentMode
                     )
