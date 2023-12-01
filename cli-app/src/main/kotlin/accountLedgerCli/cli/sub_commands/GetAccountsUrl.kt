@@ -3,6 +3,7 @@ package accountLedgerCli.cli.sub_commands
 import account.ledger.library.api.ProjectApiUtils
 import accountLedgerCli.enums.CommandLineApiMethodsEnum
 import common.utils.library.cli.sub_commands.SubCommandWithUserIdAsArgument
+import common.utils.library.utils.ApiUtilsCommon
 import io.github.cdimascio.dotenv.Dotenv
 
 class GetAccountsUrl(
@@ -22,6 +23,10 @@ class GetAccountsUrl(
 
     override fun furtherActions(userIdLocal: Int) {
 
-        println(ProjectApiUtils.getServerApiMethodSelectUserAccountsFullUrlForUser(userId = userIdLocal.toUInt()))
+        ApiUtilsCommon.printSuccessMessageWithDataForApi(
+            textData = ProjectApiUtils.getServerApiMethodSelectUserAccountsFullUrlForUser(
+                userId = userIdLocal.toUInt()
+            )
+        )
     }
 }
