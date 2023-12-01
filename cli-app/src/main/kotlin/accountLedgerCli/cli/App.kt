@@ -5,10 +5,7 @@ import account.ledger.library.constants.EnvironmentalFileEntries
 import account.ledger.library.enums.EnvironmentFileEntryEnum
 import account.ledger.library.models.InsertTransactionResult
 import account.ledger.library.utils.AccountUtils
-import accountLedgerCli.cli.sub_commands.BalanceSheet
-import accountLedgerCli.cli.sub_commands.GetAccounts
-import accountLedgerCli.cli.sub_commands.Gist
-import accountLedgerCli.cli.sub_commands.InsertTransaction
+import accountLedgerCli.cli.sub_commands.*
 import accountLedgerCli.utils.GistUtilsInteractive
 import account_ledger_library.constants.ConstantsNative
 import common.utils.library.constants.CommonConstants
@@ -178,6 +175,10 @@ class App {
                     ),
                     InsertTransaction(isDevelopmentMode = isDevelopmentMode),
                     GetAccounts(
+                        isDevelopmentMode = isDevelopmentMode,
+                        dotEnv = dotEnv
+                    ),
+                    GetAccountsUrl(
                         isDevelopmentMode = isDevelopmentMode,
                         dotEnv = dotEnv
                     )

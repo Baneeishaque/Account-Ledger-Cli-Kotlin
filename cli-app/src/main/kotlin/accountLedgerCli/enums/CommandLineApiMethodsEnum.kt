@@ -1,5 +1,5 @@
 package accountLedgerCli.enums
 
 enum class CommandLineApiMethodsEnum {
-    BalanceSheet, Gist, InsertTransaction, GetAccounts
+    BalanceSheet, Gist, InsertTransaction, GetAccounts, GetAccountsUrl
 }
