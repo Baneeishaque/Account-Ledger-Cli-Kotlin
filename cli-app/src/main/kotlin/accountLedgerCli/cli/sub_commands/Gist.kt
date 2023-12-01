@@ -17,7 +17,7 @@ class Gist(
     SubCommandWithUsernameAndPasswordAsArguments(
 
         name = CommandLineApiMethodsEnum.Gist.name,
-        actionDescription = "Merge properly formatted Gist Account Ledger Entries to Account Ledger Entries of the Specified User, , Environment file may exist & contains missing arguments",
+        actionDescription = "Merge properly formatted Gist Account Ledger Entries to Account Ledger Entries of the Specified User, Environment file may exist & contains missing arguments",
         isDevelopmentMode = isDevelopmentMode,
         dotEnv = dotEnv
     ) {
