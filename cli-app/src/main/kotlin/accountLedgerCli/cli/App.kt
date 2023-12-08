@@ -181,6 +181,10 @@ class App {
                     GetAccountsUrl(
                         isDevelopmentMode = isDevelopmentMode,
                         dotEnv = dotEnv
+                    ),
+                    GistV2(
+                        isDevelopmentMode = isDevelopmentMode,
+                        dotEnv = dotEnv
                     )
                 )
                 parser.parse(args = args)
