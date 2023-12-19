@@ -228,3 +228,4 @@ gradle-app.setting
 cli-app/bin/
 
 .idea/kotlinc.xml
+.kotlin/
