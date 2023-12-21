@@ -30,28 +30,13 @@ steps:
   - script: | 
       cd cli-app/build/distributions
       tar -xzvf cli-app.tar
-      echo -----------------------------------------------------
-      ls
       mv cli-app Account-Ledger-Cli
-      echo -----------------------------------------------------
-      ls
       cd Account-Ledger-Cli/bin
-      echo -----------------------------------------------------
-      ls
       mv cli-app Account-Ledger-Cli
       chmod a+x Account-Ledger-Cli
       mv cli-app.bat Account-Ledger-Cli.bat
-      echo -----------------------------------------------------
-      ls
-      pwd
       cd ../..
-      echo -----------------------------------------------------
-      pwd
-      ls
       tar -czvf Account-Ledger-Cli.tar.gz Account-Ledger-Cli
-      echo -----------------------------------------------------
-      ls
-      tar -ztvf Account-Ledger-Cli.tar.gz
     displayName: Rebuilding Tar Distribution
 
   - publish: cli-app/build/distributions/Account-Ledger-Cli.tar.gz
