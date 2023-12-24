@@ -1,3 +1,6 @@
 [submodule "account-ledger-lib"]
 	path = account-ledger-lib
 	url = https://github.com/Baneeishaque/Account-Ledger-Library-Kotlin-Gradle.git
+[submodule "api"]
+	path = api
+	url = https://github.com/Baneeishaque/Account-Ledger-Server-Api.git
