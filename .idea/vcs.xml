@@ -10,5 +10,6 @@
     <mapping directory="$PROJECT_DIR$/account-ledger-lib" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/account-ledger-lib/account-ledger-lib-multi-platform" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/account-ledger-lib/common-lib" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/api" vcs="Git" />
   </component>
 </project>
