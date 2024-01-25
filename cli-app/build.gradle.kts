@@ -6,8 +6,8 @@ plugins {
     kotlin("jvm")
     kotlin("plugin.serialization")
 
-    application
-    jacoco
+    id("application")
+    id("jacoco")
 }
 
 dependencies {
