@@ -12,9 +12,6 @@ plugins {
 
 dependencies {
 
-    // Align versions of all Kotlin components
-    implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
-
     implementation("org.jetbrains.kotlinx:kotlinx-cli:0.3.6")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
@@ -31,12 +28,6 @@ dependencies {
     implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
 
     implementation("io.github.cdimascio:dotenv-kotlin:6.4.1")
-
-    // Use the Kotlin test library.
-    testImplementation("org.jetbrains.kotlin:kotlin-test")
-
-    // Use the Kotlin JUnit integration.
-    testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
 
     implementation(project(":account-ledger-lib-multi-platform:lib"))
     implementation(project(":account-ledger-lib:account-ledger-lib"))
