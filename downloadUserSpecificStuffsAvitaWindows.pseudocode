@@ -1,0 +1,85 @@
+Function linkFunction
+	symbolically link C:\Lab_Data\configurations-private\AccountLedger\.env to .env in the script folder
+	symbolically link C:\Lab_Data\configurations-private\AccountLedger\frequencyOfAccounts.json to frequencyOfAccounts.json in the script folder
+	symbolically link C:\Lab_Data\configurations-private\AccountLedger\relationOfAccounts.json to relationOfAccounts.json in the script folder
+	symbolically link C:\Lab_Data\configurations-private\AccountLedger\http-client.env.json to http-client.env.json in the api folder in the script folder
+End Function
+
+Function cloneFunction
+	clone https://github.com/Baneeishaque/configurations-private to C:\Lab_Data\configurations-private
+	call linkFunction
+End Function
+
+Function gitActions
+	If C:\Lab_Data\configurations-private folder exists
+		cd into C:\Lab_Data\configurations-private
+		if C:\Lab_Data\configurations-private is a git repository
+			if git remote is configured
+				show git remote
+				git pull with confirmation
+				call linkFunction
+			Else
+				configure remote as https://github.com/Baneeishaque/configurations-private with confirmation
+				git pull with confirmation
+				call linkFunction
+			End
+		Else
+			Delete all the contents of C:\Lab_Data\configurations-private with confirmation
+			call cloneFunction
+		End
+	Else
+		cloneFunction
+	End
+End Function
+
+Function proceedWithoutWinget
+	download git for windows & install
+	If download git for windows & install success
+		call gitActions
+	End
+End Function
+
+Function proceedWithoutChocolatey
+	If winget is installed and ready for execution
+		install git via. winget
+		If git installation via. winget success
+			call gitActions
+		Else
+			call proceedWithoutWinget
+		End
+	Else
+		proceedWithoutWinget
+	End
+End Function
+
+Function proceedWithoutScoop
+	If chocolatey is installed and ready for execution
+		install git via. chocolatey
+		If git installation via. chocolatey success
+			call gitActions
+		Else
+			call proceedWithoutChocolatey
+		End
+	Else
+		call proceedWithoutChocolatey
+	End
+End Function
+
+Function Main
+	If git is installed and ready for execution
+		call gitActions
+	Else
+		If git not installed
+			If scoop is installed and ready for execution
+				install git via. scoop
+				If git installation via. scoop success
+					call gitActions
+				Else
+					call proceedWithoutScoop
+				End
+			Else
+				call proceedWithoutScoop
+			End
+		End
+	End
+End Function
