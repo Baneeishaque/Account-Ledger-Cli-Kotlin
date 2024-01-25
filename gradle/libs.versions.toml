@@ -1,5 +1,5 @@
 [versions]
-kotlin = "2.0.0-test-888"
+kotlin = "2.0.0-Beta3"
 ktor = "2.1.2"
 
 [libraries]
