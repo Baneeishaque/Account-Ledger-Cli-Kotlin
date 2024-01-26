@@ -289,22 +289,6 @@ internal fun printSheetOfUser(
                         )
                     )
                 }
-//                menuItems = menuItems + listOf("0 to Back Enter to Continue: ")
-//                var choice2: String
-//                do {
-//                    commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
-//                        menuItems
-//                    )
-//                    choice2 = readLine()!!
-//                    when (choice2) {
-//                        "0" -> {}
-//                        "" -> {
-//                            break
-//                        }
-//
-//                        else -> invalidOptionMessage()
-//                    }
-//                } while (choice2 != "0")
             }
         }
     } else {
