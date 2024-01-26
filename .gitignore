@@ -230,3 +230,5 @@ cli-app/bin/
 
 .idea/kotlinc.xml
 .kotlin/
+
+/Account-Ledger-Cli/

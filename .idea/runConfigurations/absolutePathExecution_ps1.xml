@@ -1,0 +1,8 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="absolutePathExecution.ps1" type="PowerShellRunType" factoryName="PowerShell" scriptUrl="C:\Lab_Data\Account-Ledger-Cli-Kotlin\absolutePathExecution.ps1" workingDirectory="$ProjectFileDir$" executablePath="$USER_HOME$/scoop/shims/pwsh.exe">
+    <envs />
+    <method v="2">
+      <option name="Gradle.BeforeRunTask" enabled="true" tasks="distTar" externalProjectPath="$PROJECT_DIR$" vmOptions="" scriptParameters="" />
+    </method>
+  </configuration>
+</component>
