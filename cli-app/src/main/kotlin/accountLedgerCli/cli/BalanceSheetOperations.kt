@@ -74,6 +74,83 @@ internal fun printBalanceSheetOfUser(
     )
 }
 
+internal fun printExpenseSheetOfUser(
+
+    currentUserName: String,
+    currentUserId: UInt,
+    isNotApiCall: Boolean = true,
+    isConsoleMode: Boolean,
+    isDevelopmentMode: Boolean
+
+) {
+
+    printSheetOfUser(
+        currentUserName = currentUserName,
+        currentUserId = currentUserId,
+        sheetTitle = "Expense",
+        getDesiredAccountIdsForSheetOfUser = fun(selectUserTransactionsAfterSpecifiedDateResult: MultipleTransactionResponse): MutableMap<UInt, String> {
+            return getDesiredAccountIdsForSheetOfUserBasedOnEnvironment(
+                environmentVariable = "EXPENSE_ACCOUNT_IDS_FOR_SHEET",
+                selectUserTransactionsAfterSpecifiedDateResult = selectUserTransactionsAfterSpecifiedDateResult
+            )
+        },
+        isNotApiCall = isNotApiCall,
+        isConsoleMode = isConsoleMode,
+        isDevelopmentMode = isDevelopmentMode
+    )
+}
+
+internal fun printIncomeSheetOfUser(
+
+    currentUserName: String,
+    currentUserId: UInt,
+    isNotApiCall: Boolean = true,
+    isConsoleMode: Boolean,
+    isDevelopmentMode: Boolean
+
+) {
+
+    printSheetOfUser(
+        currentUserName = currentUserName,
+        currentUserId = currentUserId,
+        sheetTitle = "Income",
+        getDesiredAccountIdsForSheetOfUser = fun(selectUserTransactionsAfterSpecifiedDateResult: MultipleTransactionResponse): MutableMap<UInt, String> {
+            return getDesiredAccountIdsForSheetOfUserBasedOnEnvironment(
+                environmentVariable = "INCOME_ACCOUNT_IDS_FOR_SHEET",
+                selectUserTransactionsAfterSpecifiedDateResult = selectUserTransactionsAfterSpecifiedDateResult
+            )
+        },
+        isNotApiCall = isNotApiCall,
+        isConsoleMode = isConsoleMode,
+        isDevelopmentMode = isDevelopmentMode
+    )
+}
+
+internal fun printProfitSheetOfUser(
+
+    currentUserName: String,
+    currentUserId: UInt,
+    isNotApiCall: Boolean = true,
+    isConsoleMode: Boolean,
+    isDevelopmentMode: Boolean
+
+) {
+
+    printIncomeSheetOfUser(
+        currentUserName = currentUserName,
+        currentUserId = currentUserId,
+        isNotApiCall = isNotApiCall,
+        isConsoleMode = isConsoleMode,
+        isDevelopmentMode = isDevelopmentMode
+    )
+    printExpenseSheetOfUser(
+        currentUserName = currentUserName,
+        currentUserId = currentUserId,
+        isNotApiCall = isNotApiCall,
+        isConsoleMode = isConsoleMode,
+        isDevelopmentMode = isDevelopmentMode
+    )
+}
 
 internal fun printSheetOfUser(
 
@@ -390,3 +467,30 @@ private fun getDesiredAccountIdsForBalanceSheetOfUser(
     return accounts
 }
 
+private fun getDesiredAccountIdsForSheetOfUserBasedOnEnvironment(
+
+    environmentVariable: String,
+    selectUserTransactionsAfterSpecifiedDateResult: MultipleTransactionResponse
+
+): MutableMap<UInt, String> {
+
+    App.dotEnv = App.reloadDotEnv()
+    val accountsToInclude: List<String> = (App.dotEnv[environmentVariable] ?: "0").split(',')
+
+    val accounts: MutableMap<UInt, String> = mutableMapOf()
+    selectUserTransactionsAfterSpecifiedDateResult.transactions.forEach { transaction: TransactionResponse ->
+
+        if (accountsToInclude.contains(transaction.fromAccountId.toString())) {
+
+            accounts.putIfAbsent(transaction.fromAccountId, transaction.fromAccountFullName)
+        }
+
+        if (accountsToInclude.contains(transaction.toAccountId.toString())) {
+
+            accounts.putIfAbsent(transaction.toAccountId, transaction.toAccountFullName)
+        }
+    }
+
+    println("Affected Expense A/Cs : $accounts")
+    return accounts
+}

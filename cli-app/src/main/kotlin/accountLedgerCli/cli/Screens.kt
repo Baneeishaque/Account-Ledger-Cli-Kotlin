@@ -97,6 +97,9 @@ object Screens {
                     "36 - Check Affected A/Cs : After A Specified Time Stamp to A Specified Date",
                     "37 - Check Affected A/Cs : After A Specified Time Stamp to A Specified Time Stamp",
                     "38 - Check Affected A/Cs : After A Specified Date",
+                    "39 - View Income Sheet",
+                    "40 - View Expense Sheet",
+                    "41 - View Profit Sheet",
                     "0 - Logout",
                     "",
                     "Enter Your Choice : "
@@ -501,6 +504,39 @@ object Screens {
                         userId = userId,
                         username = username,
                         previousTransactionData = insertTransactionResult,
+                        isConsoleMode = true,
+                        isDevelopmentMode = isDevelopmentMode
+                    )
+                }
+
+                "39" -> {
+
+                    printIncomeSheetOfUser(
+
+                        currentUserName = username,
+                        currentUserId = userId,
+                        isConsoleMode = true,
+                        isDevelopmentMode = isDevelopmentMode
+                    )
+                }
+
+                "40" -> {
+
+                    printExpenseSheetOfUser(
+
+                        currentUserName = username,
+                        currentUserId = userId,
+                        isConsoleMode = true,
+                        isDevelopmentMode = isDevelopmentMode
+                    )
+                }
+
+                "41" -> {
+
+                    printProfitSheetOfUser(
+
+                        currentUserName = username,
+                        currentUserId = userId,
                         isConsoleMode = true,
                         isDevelopmentMode = isDevelopmentMode
                     )
