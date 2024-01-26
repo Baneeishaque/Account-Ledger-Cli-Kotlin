@@ -58,6 +58,35 @@ internal fun printBalanceSheetOfUser(
 
 ) {
 
+    printSheetOfUser(
+        currentUserName = currentUserName,
+        currentUserId = currentUserId,
+        sheetTitle = "Balance",
+        getDesiredAccountIdsForSheetOfUser = fun(selectUserTransactionsAfterSpecifiedDateResult: MultipleTransactionResponse): MutableMap<UInt, String> {
+            return getDesiredAccountIdsForBalanceSheetOfUser(
+                refineLevel = refineLevel,
+                selectUserTransactionsAfterSpecifiedDateResult = selectUserTransactionsAfterSpecifiedDateResult
+            )
+        },
+        isNotApiCall = isNotApiCall,
+        isConsoleMode = isConsoleMode,
+        isDevelopmentMode = isDevelopmentMode
+    )
+}
+
+
+internal fun printSheetOfUser(
+
+    currentUserName: String,
+    currentUserId: UInt,
+    sheetTitle: String,
+    getDesiredAccountIdsForSheetOfUser: (MultipleTransactionResponse) -> MutableMap<UInt, String>,
+    isNotApiCall: Boolean = true,
+    isConsoleMode: Boolean,
+    isDevelopmentMode: Boolean
+
+) {
+
     if (isConsoleMode) {
 
         print("currentUser : $currentUserName")
@@ -68,6 +97,7 @@ internal fun printBalanceSheetOfUser(
         println("Contacting Server...")
     }
     val apiResponse: Result<MultipleTransactionResponse>
+    //TODO : Only applicable for user_first_entry_date usernames
     val specifiedDate: IsOkModel<String> = MysqlUtils.normalDateTextToMySqlDateText(
         normalDateText = getUserInitialTransactionDateFromUsername(username = currentUserName).minusDays(
             1
@@ -94,10 +124,11 @@ internal fun printBalanceSheetOfUser(
                     print("Retry (Y/N) ? : ")
                     when (readln()) {
                         "Y", "" -> {
-                            printBalanceSheetOfUser(
+                            printSheetOfUser(
                                 currentUserName = currentUserName,
                                 currentUserId = currentUserId,
-                                refineLevel = refineLevel,
+                                sheetTitle = sheetTitle,
+                                getDesiredAccountIdsForSheetOfUser = getDesiredAccountIdsForSheetOfUser,
                                 isConsoleMode = isConsoleMode,
                                 isDevelopmentMode = isDevelopmentMode
                             )
@@ -150,70 +181,12 @@ internal fun printBalanceSheetOfUser(
 
             } else {
 
-                var accountsToExclude: List<String> = emptyList()
-                App.dotEnv = App.reloadDotEnv()
-                if (refineLevel != BalanceSheetRefineLevelEnum.ALL) {
-
-                    when (refineLevel) {
-
-                        BalanceSheetRefineLevelEnum.WITHOUT_OPEN_BALANCES -> {
-                            // TODO : Change to new api methods
-                            accountsToExclude = (App.dotEnv["OPEN_BALANCE_ACCOUNT_IDS"] ?: "0").split(',')
-                        }
-
-                        BalanceSheetRefineLevelEnum.WITHOUT_MISC_INCOMES -> {
-                            accountsToExclude = (App.dotEnv["OPEN_BALANCE_ACCOUNT_IDS"]
-                                ?: "0").split(',') + (App.dotEnv["MISC_INCOME_ACCOUNT_IDS"]
-                                ?: "0").split(',')
-                        }
-
-                        BalanceSheetRefineLevelEnum.WITHOUT_INVESTMENT_RETURNS -> {
-                            accountsToExclude =
-                                (App.dotEnv["OPEN_BALANCE_ACCOUNT_IDS"]
-                                    ?: "0").split(',') + (App.dotEnv["MISC_INCOME_ACCOUNT_IDS"]
-                                    ?: "0").split(',') + (App.dotEnv["INVESTMENT_RETURNS_ACCOUNT_IDS"]
-                                    ?: "0").split(',')
-                        }
-
-                        BalanceSheetRefineLevelEnum.WITHOUT_FAMILY_ACCOUNTS -> {
-                            accountsToExclude =
-                                (App.dotEnv["OPEN_BALANCE_ACCOUNT_IDS"]
-                                    ?: "0").split(',') + (App.dotEnv["MISC_INCOME_ACCOUNT_IDS"]
-                                    ?: "0").split(',') + (App.dotEnv["INVESTMENT_RETURNS_ACCOUNT_IDS"]
-                                    ?: "0").split(',') + (App.dotEnv["FAMILY_ACCOUNT_IDS"]
-                                    ?: "0").split(',')
-                        }
-
-                        BalanceSheetRefineLevelEnum.WITHOUT_EXPENSE_ACCOUNTS -> {
-                            accountsToExclude =
-                                (App.dotEnv["OPEN_BALANCE_ACCOUNT_IDS"]
-                                    ?: "0").split(',') + (App.dotEnv["MISC_INCOME_ACCOUNT_IDS"]
-                                    ?: "0").split(',') + (App.dotEnv["INVESTMENT_RETURNS_ACCOUNT_IDS"]
-                                    ?: "0").split(',') + (App.dotEnv["FAMILY_ACCOUNT_IDS"]
-                                    ?: "0").split(',') + (App.dotEnv["EXPENSE_ACCOUNT_IDS"]
-                                    ?: "0").split(',')
-                        }
-                        //TODO : Report this
-                        else -> {}
-                    }
-                }
-                val accounts: MutableMap<UInt, String> = mutableMapOf()
-                selectUserTransactionsAfterSpecifiedDateResult.transactions.forEach { transaction: TransactionResponse ->
-
-                    if (!accountsToExclude.contains(transaction.fromAccountId.toString())) {
-
-                        accounts.putIfAbsent(transaction.fromAccountId, transaction.fromAccountFullName)
-                    }
-
-                    if (!accountsToExclude.contains(transaction.toAccountId.toString())) {
-
-                        accounts.putIfAbsent(transaction.toAccountId, transaction.toAccountFullName)
-                    }
-                }
-
-//                println("Affected A/Cs : $accounts")
-                val menuItems: MutableList<String> = mutableListOf("\nUser : $currentUserName Balance Sheet Ledger")
-                val balanceSheetDataRows: MutableList<BalanceSheetDataRowModel> = mutableListOf()
+                val accounts: MutableMap<UInt, String> =
+                    getDesiredAccountIdsForSheetOfUser(
+                        selectUserTransactionsAfterSpecifiedDateResult
+                    )
+                val menuItems: MutableList<String> = mutableListOf("\nUser : $currentUserName $sheetTitle Sheet Ledger")
+                val sheetDataRows: MutableList<BalanceSheetDataRowModel> = mutableListOf()
                 for (account: MutableMap.MutableEntry<UInt, String> in accounts) {
 
                     val apiResponse2: Result<MultipleTransactionResponse> =
@@ -269,9 +242,10 @@ internal fun printBalanceSheetOfUser(
                                 }
                             }
                             if (currentBalance != 0.0F) {
+
                                 //TODO : Print Ledger
                                 menuItems.add(element = "\n${account.key} : ${account.value} : $currentBalance")
-                                balanceSheetDataRows.add(
+                                sheetDataRows.add(
                                     element =
                                     BalanceSheetDataRowModel(
                                         accountId = account.key,
@@ -300,6 +274,7 @@ internal fun printBalanceSheetOfUser(
                         }
                     }
                 }
+
                 //TODO : print Balance Sheet on Console
                 if (isNotApiCall) {
                     println(menuItems)
@@ -309,7 +284,7 @@ internal fun printBalanceSheetOfUser(
                             serializer = CommonDataModel.serializer(BalanceSheetDataRowModel.serializer()),
                             value = CommonDataModel(
                                 status = 0,
-                                data = balanceSheetDataRows
+                                data = sheetDataRows
                             )
                         )
                     )
@@ -353,3 +328,81 @@ internal fun printBalanceSheetOfUser(
         }
     }
 }
+
+private fun getDesiredAccountIdsForBalanceSheetOfUser(
+
+    refineLevel: BalanceSheetRefineLevelEnum,
+    selectUserTransactionsAfterSpecifiedDateResult: MultipleTransactionResponse
+
+): MutableMap<UInt, String> {
+
+    var accountsToExclude: List<String> = emptyList()
+    App.dotEnv = App.reloadDotEnv()
+    if (refineLevel != BalanceSheetRefineLevelEnum.ALL) {
+
+        when (refineLevel) {
+
+            BalanceSheetRefineLevelEnum.WITHOUT_OPEN_BALANCES -> {
+
+                // TODO : Change to new api methods
+                accountsToExclude = (App.dotEnv["OPEN_BALANCE_ACCOUNT_IDS"] ?: "0").split(',')
+            }
+
+            BalanceSheetRefineLevelEnum.WITHOUT_MISC_INCOMES -> {
+
+                accountsToExclude = (App.dotEnv["OPEN_BALANCE_ACCOUNT_IDS"]
+                    ?: "0").split(',') + (App.dotEnv["MISC_INCOME_ACCOUNT_IDS"]
+                    ?: "0").split(',')
+            }
+
+            BalanceSheetRefineLevelEnum.WITHOUT_INVESTMENT_RETURNS -> {
+
+                accountsToExclude =
+                    (App.dotEnv["OPEN_BALANCE_ACCOUNT_IDS"]
+                        ?: "0").split(',') + (App.dotEnv["MISC_INCOME_ACCOUNT_IDS"]
+                        ?: "0").split(',') + (App.dotEnv["INVESTMENT_RETURNS_ACCOUNT_IDS"]
+                        ?: "0").split(',')
+            }
+
+            BalanceSheetRefineLevelEnum.WITHOUT_FAMILY_ACCOUNTS -> {
+
+                accountsToExclude =
+                    (App.dotEnv["OPEN_BALANCE_ACCOUNT_IDS"]
+                        ?: "0").split(',') + (App.dotEnv["MISC_INCOME_ACCOUNT_IDS"]
+                        ?: "0").split(',') + (App.dotEnv["INVESTMENT_RETURNS_ACCOUNT_IDS"]
+                        ?: "0").split(',') + (App.dotEnv["FAMILY_ACCOUNT_IDS"]
+                        ?: "0").split(',')
+            }
+
+            BalanceSheetRefineLevelEnum.WITHOUT_EXPENSE_ACCOUNTS -> {
+
+                accountsToExclude =
+                    (App.dotEnv["OPEN_BALANCE_ACCOUNT_IDS"]
+                        ?: "0").split(',') + (App.dotEnv["MISC_INCOME_ACCOUNT_IDS"]
+                        ?: "0").split(',') + (App.dotEnv["INVESTMENT_RETURNS_ACCOUNT_IDS"]
+                        ?: "0").split(',') + (App.dotEnv["FAMILY_ACCOUNT_IDS"]
+                        ?: "0").split(',') + (App.dotEnv["EXPENSE_ACCOUNT_IDS"]
+                        ?: "0").split(',')
+            }
+            //TODO : Report this
+            else -> {}
+        }
+    }
+    val accounts: MutableMap<UInt, String> = mutableMapOf()
+    selectUserTransactionsAfterSpecifiedDateResult.transactions.forEach { transaction: TransactionResponse ->
+
+        if (!accountsToExclude.contains(transaction.fromAccountId.toString())) {
+
+            accounts.putIfAbsent(transaction.fromAccountId, transaction.fromAccountFullName)
+        }
+
+        if (!accountsToExclude.contains(transaction.toAccountId.toString())) {
+
+            accounts.putIfAbsent(transaction.toAccountId, transaction.toAccountFullName)
+        }
+    }
+
+//    println("Affected A/Cs : $accounts")
+    return accounts
+}
+
