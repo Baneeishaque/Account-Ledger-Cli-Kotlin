@@ -36,6 +36,7 @@ object TransactionViews {
         fromAccount: AccountResponse,
         isUpToTimeStamp: Boolean = false,
         upToTimeStamp: String = "",
+        isCreditDebitMode: Boolean = false,
         isConsoleMode: Boolean,
         isDevelopmentMode: Boolean
 
@@ -50,16 +51,17 @@ object TransactionViews {
                 isDevelopmentMode = isDevelopmentMode
             ),
             insertTransactionResult = previousTransactionData,
-            fromAccount = fromAccount,
             accountFullName = accountFullName,
             username = username,
             accountId = accountId,
             functionCallSource = functionCallSource,
             userId = userId,
+            fromAccount = fromAccount,
             isUpToTimeStamp = isUpToTimeStamp,
             upToTimeStamp = upToTimeStamp,
+            isCreditDebitMode = isCreditDebitMode,
             isConsoleMode = isConsoleMode,
-            isDevelopmentMode = isDevelopmentMode
+            isDevelopmentMode = isDevelopmentMode,
         )
     }
 
@@ -76,6 +78,7 @@ object TransactionViews {
         fromAccount: AccountResponse,
         isUpToTimeStamp: Boolean = false,
         upToTimeStamp: String = "",
+        isCreditDebitMode: Boolean = false,
         isConsoleMode: Boolean,
         isDevelopmentMode: Boolean
 
@@ -110,6 +113,7 @@ object TransactionViews {
                     userId = userId,
                     isUpToTimeStamp = isUpToTimeStamp,
                     upToTimeStamp = upToTimeStamp,
+                    isCreditDebitMode = isCreditDebitMode,
                     isConsoleMode = isConsoleMode,
                     isDevelopmentMode = isDevelopmentMode
                 )
@@ -134,6 +138,7 @@ object TransactionViews {
         userId: UInt,
         isUpToTimeStamp: Boolean = false,
         upToTimeStamp: String = "",
+        isCreditDebitMode: Boolean = false,
         isConsoleMode: Boolean,
         isDevelopmentMode: Boolean
 
@@ -179,6 +184,7 @@ object TransactionViews {
 
                     transactions = userTransactionsMap.values.toList(),
                     currentAccountId = fromAccount.id,
+                    isCreditDebitMode = isCreditDebitMode,
                     isDevelopmentMode = isDevelopmentMode
                 )
 
@@ -186,6 +192,7 @@ object TransactionViews {
 
                     "\nUser : $username",
                     "$accountFullName [$accountId] - Transactions",
+                    "==================================================",
                     userTransactionsText
                 )
                 when (functionCallSource) {
