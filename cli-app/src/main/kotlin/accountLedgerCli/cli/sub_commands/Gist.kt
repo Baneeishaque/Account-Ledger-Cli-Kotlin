@@ -34,7 +34,7 @@ class Gist(
         description = "Id of the User"
     )
 
-    override fun localBeforeExecuteActions() {
+    override fun additionalBeforeExecuteActions() {
 
         if (isDevelopmentMode) {
             println("gistId = $gistId")
@@ -42,7 +42,7 @@ class Gist(
         }
     }
 
-    override fun furtherActions(usernameLocal: String, passwordLocal: String) {
+    override fun additionalFurtherActions(usernameLocal: String, passwordLocal: String) {
 
         if (gistId.isNullOrEmpty()) {
 

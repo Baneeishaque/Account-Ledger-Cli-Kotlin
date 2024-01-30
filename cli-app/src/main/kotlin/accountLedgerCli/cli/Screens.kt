@@ -97,6 +97,9 @@ object Screens {
                     "36 - Check Affected A/Cs : After A Specified Time Stamp to A Specified Date",
                     "37 - Check Affected A/Cs : After A Specified Time Stamp to A Specified Time Stamp",
                     "38 - Check Affected A/Cs : After A Specified Date",
+                    "39 - View Income Sheet",
+                    "40 - View Expense Sheet",
+                    "41 - View Profit Sheet",
                     "0 - Logout",
                     "",
                     "Enter Your Choice : "
@@ -501,6 +504,39 @@ object Screens {
                         userId = userId,
                         username = username,
                         previousTransactionData = insertTransactionResult,
+                        isConsoleMode = true,
+                        isDevelopmentMode = isDevelopmentMode
+                    )
+                }
+
+                "39" -> {
+
+                    printIncomeSheetOfUser(
+
+                        currentUserName = username,
+                        currentUserId = userId,
+                        isConsoleMode = true,
+                        isDevelopmentMode = isDevelopmentMode
+                    )
+                }
+
+                "40" -> {
+
+                    printExpenseSheetOfUser(
+
+                        currentUserName = username,
+                        currentUserId = userId,
+                        isConsoleMode = true,
+                        isDevelopmentMode = isDevelopmentMode
+                    )
+                }
+
+                "41" -> {
+
+                    printProfitSheetOfUser(
+
+                        currentUserName = username,
+                        currentUserId = userId,
                         isConsoleMode = true,
                         isDevelopmentMode = isDevelopmentMode
                     )
@@ -911,12 +947,13 @@ object Screens {
                 listOfCommands = listOf(
                     "\nUser : $username",
                     "Account - ${fromAccount.fullName}",
-                    "1 - View Transactions",
-                    "2 - Add Transaction",
-                    "3 - View Child Accounts",
-                    "4 - Add Via. Transaction",
-                    "5 - Add Two Way Transaction",
-                    "6 - Add Cyclic Via. Transaction",
+                    "1 - View Transactions in Ledger Mode",
+                    "2 - View Transactions in Credit - Debit Mode",
+                    "3 - Add Transaction",
+                    "4 - View Child Accounts",
+                    "5 - Add Via. Transaction",
+                    "6 - Add Two Way Transaction",
+                    "7 - Add Cyclic Via. Transaction",
                     "17 - ${getQuickTransactionOnWalletText()}",
                     "18 - ${getQuickTransactionOnWalletToFrequent1Text()}",
                     "19 - ${getQuickTransactionOnWalletToFrequent2Text()}",
@@ -951,6 +988,22 @@ object Screens {
                 }
 
                 "2" -> {
+                    localInsertTransactionResult = TransactionViews.viewTransactionsForAnAccount(
+
+                        userId = userId,
+                        username = username,
+                        accountId = fromAccount.id,
+                        accountFullName = fromAccount.fullName,
+                        previousTransactionData = localInsertTransactionResult,
+                        fromAccount = localInsertTransactionResult.fromAccount,
+                        isCreditDebitMode = true,
+                        isConsoleMode = true,
+                        isDevelopmentMode = isDevelopmentMode
+
+                    ).addTransactionResult
+                }
+
+                "3" -> {
                     localInsertTransactionResult = InsertOperationsInteractive.addTransaction(
 
                         userId = userId,
@@ -966,7 +1019,7 @@ object Screens {
                     )
                 }
 
-                "3" -> {
+                "4" -> {
                     localInsertTransactionResult = viewChildAccounts(
 
                         username = username,
@@ -982,7 +1035,7 @@ object Screens {
                     )
                 }
 
-                "4" -> {
+                "5" -> {
                     localInsertTransactionResult = InsertOperationsInteractive.addTransaction(
                         userId = userId,
                         username = username,
@@ -997,7 +1050,7 @@ object Screens {
                     )
                 }
 
-                "5" -> {
+                "6" -> {
                     localInsertTransactionResult = InsertOperationsInteractive.addTransaction(
 
                         userId = userId,
@@ -1013,7 +1066,7 @@ object Screens {
                     )
                 }
 
-                "6" -> {
+                "7" -> {
                     localInsertTransactionResult = InsertOperationsInteractive.addTransaction(
 
                         userId = userId,

@@ -11,6 +11,7 @@ import common.utils.library.utils.ApiUtilsCommon
 import io.github.cdimascio.dotenv.Dotenv
 
 class GistV2(
+
     override val isDevelopmentMode: Boolean,
     override val dotEnv: Dotenv
 ) :
@@ -34,7 +35,7 @@ class GistV2(
         description = "Id of the User"
     )
 
-    override fun localBeforeExecuteActions() {
+    override fun additionalBeforeExecuteActions() {
 
         if (isDevelopmentMode) {
             println("gistId = $gistId")
@@ -42,7 +43,7 @@ class GistV2(
         }
     }
 
-    override fun furtherActions(usernameLocal: String, passwordLocal: String) {
+    override fun additionalFurtherActions(usernameLocal: String, passwordLocal: String) {
 
         if (gistId.isNullOrEmpty()) {
 

@@ -1,0 +1,6 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="downloadUserSpecificStuffsAvitaWindows.ps1" type="PowerShellRunType" factoryName="PowerShell" scriptUrl="$PROJECT_DIR$/downloadUserSpecificStuffsAvitaWindows.ps1" workingDirectory="$ProjectFileDir$" executablePath="$USER_HOME$/scoop/shims/pwsh.exe">
+    <envs />
+    <method v="2" />
+  </configuration>
+</component>

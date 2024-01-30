@@ -42,7 +42,7 @@ class BalanceSheet(
 
     ).default(BalanceSheetOutputFormatsEnum.JSON)
 
-    override fun localBeforeExecuteActions() {
+    override fun additionalBeforeExecuteActions() {
 
         println("userName = $username")
         println("passWord = $password")
@@ -50,7 +50,7 @@ class BalanceSheet(
         println("outputFormat = $outputFormat")
     }
 
-    override fun furtherActions(usernameLocal: String, passwordLocal: String) {
+    override fun additionalFurtherActions(usernameLocal: String, passwordLocal: String) {
 
         invokeUserLoginByApi(
 

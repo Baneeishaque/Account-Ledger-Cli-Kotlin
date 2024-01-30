@@ -224,8 +224,11 @@ gradle-app.setting
 .env
 /api/http-client.env.json
 /frequencyOfAccounts.json
+/relationOfAccounts.json
 
 cli-app/bin/
 
 .idea/kotlinc.xml
 .kotlin/
+
+/Account-Ledger-Cli/

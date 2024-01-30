@@ -1,0 +1,11 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="App ViewTransactionsOfAnAccount" type="JetRunConfigurationType">
+    <option name="MAIN_CLASS_NAME" value="accountLedgerCli.cli.App" />
+    <module name="Account-Ledger-Cli-Kotlin.cli-app.main" />
+    <option name="PROGRAM_PARAMETERS" value="ViewTransactionsOfAnAccount" />
+    <shortenClasspath name="NONE" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
