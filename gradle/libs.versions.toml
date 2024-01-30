@@ -1,6 +1,6 @@
 [versions]
 kotlin = "2.0.0-Beta3"
-ktor = "2.1.2"
+ktor = "2.3.7"
 
 [libraries]
 kotlinx-cli = { module = "org.jetbrains.kotlinx:kotlinx-cli", version = "0.3.6" }
