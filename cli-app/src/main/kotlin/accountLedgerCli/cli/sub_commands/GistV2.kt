@@ -11,6 +11,7 @@ import common.utils.library.utils.ApiUtilsCommon
 import io.github.cdimascio.dotenv.Dotenv
 
 class GistV2(
+
     override val isDevelopmentMode: Boolean,
     override val dotEnv: Dotenv
 ) :
