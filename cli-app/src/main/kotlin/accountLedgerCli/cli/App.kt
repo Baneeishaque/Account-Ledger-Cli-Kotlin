@@ -185,6 +185,11 @@ class App {
                     GistV2(
                         isDevelopmentMode = isDevelopmentMode,
                         dotEnv = dotEnv
+                    ),
+                    ViewTransactionsOfAnAccount(
+
+                        isDevelopmentMode = isDevelopmentMode,
+                        dotEnv = dotEnv
                     )
                 )
                 parser.parse(args = args)

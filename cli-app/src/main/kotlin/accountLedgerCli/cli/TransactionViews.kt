@@ -38,6 +38,7 @@ object TransactionViews {
         upToTimeStamp: String = "",
         isCreditDebitMode: Boolean = false,
         isConsoleMode: Boolean,
+        isNotApiCall: Boolean = true,
         isDevelopmentMode: Boolean
 
     ): ViewTransactionsOutput {
@@ -61,6 +62,7 @@ object TransactionViews {
             upToTimeStamp = upToTimeStamp,
             isCreditDebitMode = isCreditDebitMode,
             isConsoleMode = isConsoleMode,
+            isNotApiCall = isNotApiCall,
             isDevelopmentMode = isDevelopmentMode,
         )
     }
@@ -80,6 +82,7 @@ object TransactionViews {
         upToTimeStamp: String = "",
         isCreditDebitMode: Boolean = false,
         isConsoleMode: Boolean,
+        isNotApiCall: Boolean = true,
         isDevelopmentMode: Boolean
 
     ): ViewTransactionsOutput {
@@ -115,6 +118,7 @@ object TransactionViews {
                     upToTimeStamp = upToTimeStamp,
                     isCreditDebitMode = isCreditDebitMode,
                     isConsoleMode = isConsoleMode,
+                    isNotApiCall = isNotApiCall,
                     isDevelopmentMode = isDevelopmentMode
                 )
             })
@@ -140,6 +144,7 @@ object TransactionViews {
         upToTimeStamp: String = "",
         isCreditDebitMode: Boolean = false,
         isConsoleMode: Boolean,
+        isNotApiCall: Boolean = true,
         isDevelopmentMode: Boolean
 
     ): ViewTransactionsOutput {
@@ -224,27 +229,48 @@ object TransactionViews {
 
                     else -> {
 
-                        menuItems = menuItems + listOf(
+                        if (isNotApiCall) {
 
-                            "1 - Delete Transaction - By Index Number",
-                            "2 - Delete Transactions - From Index to Index",
-                            "3 - Delete Transaction - By Search",
-                            "4 - Edit Transaction - By Index Number",
-                            "5 - Edit Transaction - By Search",
-                            "6 - Rearrange Transaction - Up a Transaction (Key wise)",
-                            "7 - Rearrange Transaction - Up a Series of Transactions (Key wise)",
-                            "8 - Rearrange Transaction - Down a Transaction (Key wise)",
-                            "9 - Rearrange Transaction - Down a Series of Transactions (Key wise)",
-                            "10 - Add Transaction",
-                            "11 - Rearrange Transaction - Up a Transaction (Time wise)",
-                            "12 - Rearrange Transaction - Up a Series of Transactions (Time wise)",
-                            "13 - Rearrange Transaction - Down a Transaction (Time wise)",
-                            "14 - Rearrange Transaction - Down a Series of Transactions (Time wise)",
-                            "15 - Rearrange Transaction - Transaction to above of Specified Index",
-                            "0 - Back",
-                            "",
-                            "Enter Your Choice : "
-                        )
+                            menuItems = menuItems + listOf(
+
+                                "1 - Delete Transaction - By Index Number",
+                                "2 - Delete Transactions - From Index to Index",
+                                "3 - Delete Transaction - By Search",
+                                "4 - Edit Transaction - By Index Number",
+                                "5 - Edit Transaction - By Search",
+                                "6 - Rearrange Transaction - Up a Transaction (Key wise)",
+                                "7 - Rearrange Transaction - Up a Series of Transactions (Key wise)",
+                                "8 - Rearrange Transaction - Down a Transaction (Key wise)",
+                                "9 - Rearrange Transaction - Down a Series of Transactions (Key wise)",
+                                "10 - Add Transaction",
+                                "11 - Rearrange Transaction - Up a Transaction (Time wise)",
+                                "12 - Rearrange Transaction - Up a Series of Transactions (Time wise)",
+                                "13 - Rearrange Transaction - Down a Transaction (Time wise)",
+                                "14 - Rearrange Transaction - Down a Series of Transactions (Time wise)",
+                                "15 - Rearrange Transaction - Transaction to above of Specified Index",
+                                "0 - Back",
+                                "",
+                                "Enter Your Choice : "
+                            )
+                        } else {
+
+                            commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(menuItems)
+
+                            return ViewTransactionsOutput(
+
+                                output = "",
+                                addTransactionResult = InsertTransactionResult(
+
+                                    isSuccess = false,
+                                    dateTimeInText = dateTimeInText,
+                                    transactionParticulars = transactionParticulars,
+                                    transactionAmount = transactionAmount,
+                                    fromAccount = fromAccount,
+                                    viaAccount = viaAccount,
+                                    toAccount = toAccount
+                                )
+                            )
+                        }
                     }
                 }
                 commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(menuItems)
@@ -881,6 +907,7 @@ object TransactionViews {
 
                     else -> InteractiveUtils.invalidOptionMessage()
                 }
+
             } while (true)
         }
     }
