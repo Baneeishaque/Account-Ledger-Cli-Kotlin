@@ -1037,6 +1037,7 @@ object Screens {
 
                 "5" -> {
                     localInsertTransactionResult = InsertOperationsInteractive.addTransaction(
+
                         userId = userId,
                         username = username,
                         transactionType = TransactionTypeEnum.VIA,

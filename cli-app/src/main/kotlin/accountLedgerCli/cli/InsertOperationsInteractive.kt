@@ -234,13 +234,32 @@ object InsertOperationsInteractive {
                     "6 - Input From Account ID Directly",
                     "7 - Continue Transaction",
 
-                    if ((transactionType == TransactionTypeEnum.VIA) || (transactionType == TransactionTypeEnum.CYCLIC_VIA)) {
+                    *if ((transactionType == TransactionTypeEnum.VIA) || (transactionType == TransactionTypeEnum.CYCLIC_VIA)) {
 
-                        "8 - Exchange From & Via. A/Cs\n" + "9 - Exchange From & Via. A/Cs, Then Continue Transaction\n" + "10 - Exchange Via. & To A/Cs\n" + "11 - Exchange Via & To A/Cs, Then Continue Transaction\n" + "12 - Exchange From & To. A/Cs\n" + "13 - Exchange From & To A/Cs, Then Continue Transaction\n" + "14 - Choose Via. Account From List - Top Levels\n" + "15 - Choose Via. Account From List - Full Names\n" + "16 - Input Via. Account ID Directly"
+                        arrayOf(
+                            "8 - Exchange From & Via. A/Cs",
+                            "9 - Exchange From & Via. A/Cs, Then Continue Transaction",
+                            "10 - Exchange Via. & To A/Cs",
+                            "11 - Exchange Via & To A/Cs, Then Continue Transaction",
+                            "12 - Exchange From & To. A/Cs",
+                            "13 - Exchange From & To A/Cs, Then Continue Transaction",
+                            "14 - Choose Via. Account From List - Top Levels",
+                            "15 - Choose Via. Account From List - Full Names",
+                            "16 - Input Via. Account ID Directly"
+                        )
 
                     } else {
 
-                        "8 - Exchange Accounts\n" + "9 - Exchange Accounts, Then Continue Transaction\n" + "10 - Input To Account ID Directly, Exchange Accounts, Then Continue Transaction\n" + "11 - Input From Account ID Directly, Exchange Accounts, Then Continue Transaction\n" + "12 - Choose To Account From List - Top Levels, Exchange Accounts, Then Continue Transaction\n" + "13 - Choose To Account From List - Full Names, Exchange Accounts, Then Continue Transaction\n" + "14 - Choose From Account From List - Top Levels, Exchange Accounts, Then Continue Transaction\n" + "15 - Choose From Account From List - Full Names, Exchange Accounts, Then Continue Transaction"
+                        arrayOf(
+                            "8 - Exchange Accounts",
+                            "9 - Exchange Accounts, Then Continue Transaction",
+                            "10 - Input To Account ID Directly, Exchange Accounts, Then Continue Transaction",
+                            "11 - Input From Account ID Directly, Exchange Accounts, Then Continue Transaction",
+                            "12 - Choose To Account From List - Top Levels, Exchange Accounts, Then Continue Transaction",
+                            "13 - Choose To Account From List - Full Names, Exchange Accounts, Then Continue Transaction",
+                            "14 - Choose From Account From List - Top Levels, Exchange Accounts, Then Continue Transaction",
+                            "15 - Choose From Account From List - Full Names, Exchange Accounts, Then Continue Transaction"
+                        )
                     },
                     "17 - ${Screens.getQuickTransactionOnWalletText()}",
                     "18 - ${Screens.getQuickTransactionOnWalletToFrequent1Text()}",
