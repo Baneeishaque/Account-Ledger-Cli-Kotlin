@@ -543,6 +543,7 @@ object InsertOperationsInteractive {
                 }
 
                 "10" -> {
+
                     if ((transactionType == TransactionTypeEnum.VIA) || (transactionType == TransactionTypeEnum.CYCLIC_VIA)) {
 
                         localInsertTransactionResult = addTransaction(
@@ -596,6 +597,7 @@ object InsertOperationsInteractive {
                 }
 
                 "11" -> {
+
                     if ((transactionType == TransactionTypeEnum.VIA) || (transactionType == TransactionTypeEnum.CYCLIC_VIA)) {
 
                         localInsertTransactionResult = transactionContinueCheck(
@@ -650,6 +652,7 @@ object InsertOperationsInteractive {
                 }
 
                 "12" -> {
+
                     if ((transactionType == TransactionTypeEnum.VIA) || (transactionType == TransactionTypeEnum.CYCLIC_VIA)) {
 
                         localInsertTransactionResult = addTransaction(
@@ -695,6 +698,7 @@ object InsertOperationsInteractive {
                 }
 
                 "13" -> {
+
                     if ((transactionType == TransactionTypeEnum.VIA) || (transactionType == TransactionTypeEnum.CYCLIC_VIA)) {
 
                         localInsertTransactionResult = transactionContinueCheck(
@@ -1406,7 +1410,6 @@ object InsertOperationsInteractive {
 
             else -> {
 
-
                 val timeResetCommand: MatchResult? =
                     ConstantsNative.timeResetPatternRegex.matchEntire(input = localDateTimeInText)
                 if (timeResetCommand == null) {
@@ -1432,145 +1435,146 @@ object InsertOperationsInteractive {
                         isCyclicViaStep = isCyclicViaStep,
                         splitIndex = splitIndex,
                         username = username,
-                        timePartIncrementOrDecrementCommandIndicator = ConstantsNative.hourIncrementOrDecrementCommandIndicator
-                    ) {
+                        timePartIncrementOrDecrementCommandIndicator = ConstantsNative.hourIncrementOrDecrementCommandIndicator,
+                        timePartIncrementOrDecrementNoMatchAction = {
 
-                        timePartIncrementOrDecrementActions(
+                            timePartIncrementOrDecrementActions(
 
-                            timePartIncrementOrDecrementMatchResult = ConstantsNative.minuteIncrementOrDecrementPatternRegex.matchEntire(
-                                input = localDateTimeInText
-                            ),
-                            transactionParticulars = transactionParticulars,
-                            transactionAmount = transactionAmount,
-                            dateTimeInText = dateTimeInText,
-                            fromAccount = fromAccount,
-                            transactionType = transactionType,
-                            viaAccount = viaAccount,
-                            toAccount = toAccount,
-                            isEditStep = isEditStep,
-                            transactionId = transactionId,
-                            isDevelopmentMode = isDevelopmentMode,
-                            isTwoWayStep = isTwoWayStep,
-                            userId = userId,
-                            isViaStep = isViaStep,
-                            isCyclicViaStep = isCyclicViaStep,
-                            splitIndex = splitIndex,
-                            username = username,
-                            timePartIncrementOrDecrementCommandIndicator = ConstantsNative.minuteIncrementOrDecrementCommandIndicator,
-                            timePartIncrementOrDecrementNoMatchAction = {
+                                timePartIncrementOrDecrementMatchResult = ConstantsNative.minuteIncrementOrDecrementPatternRegex.matchEntire(
+                                    input = localDateTimeInText
+                                ),
+                                transactionParticulars = transactionParticulars,
+                                transactionAmount = transactionAmount,
+                                dateTimeInText = dateTimeInText,
+                                fromAccount = fromAccount,
+                                transactionType = transactionType,
+                                viaAccount = viaAccount,
+                                toAccount = toAccount,
+                                isEditStep = isEditStep,
+                                transactionId = transactionId,
+                                isDevelopmentMode = isDevelopmentMode,
+                                isTwoWayStep = isTwoWayStep,
+                                userId = userId,
+                                isViaStep = isViaStep,
+                                isCyclicViaStep = isCyclicViaStep,
+                                splitIndex = splitIndex,
+                                username = username,
+                                timePartIncrementOrDecrementCommandIndicator = ConstantsNative.minuteIncrementOrDecrementCommandIndicator,
+                                timePartIncrementOrDecrementNoMatchAction = {
 
-                                timePartIncrementOrDecrementActions(
+                                    timePartIncrementOrDecrementActions(
 
-                                    timePartIncrementOrDecrementMatchResult = ConstantsNative.secondIncrementOrDecrementPatternRegex.matchEntire(
-                                        input = localDateTimeInText
-                                    ),
-                                    transactionParticulars = transactionParticulars,
-                                    transactionAmount = transactionAmount,
-                                    dateTimeInText = dateTimeInText,
-                                    fromAccount = fromAccount,
-                                    transactionType = transactionType,
-                                    viaAccount = viaAccount,
-                                    toAccount = toAccount,
-                                    isEditStep = isEditStep,
-                                    transactionId = transactionId,
-                                    isDevelopmentMode = isDevelopmentMode,
-                                    isTwoWayStep = isTwoWayStep,
-                                    userId = userId,
-                                    isViaStep = isViaStep,
-                                    isCyclicViaStep = isCyclicViaStep,
-                                    splitIndex = splitIndex,
-                                    username = username,
-                                    timePartIncrementOrDecrementCommandIndicator = ConstantsNative.secondIncrementOrDecrementCommandIndicator,
-                                    timePartIncrementOrDecrementNoMatchAction = {
+                                        timePartIncrementOrDecrementMatchResult = ConstantsNative.secondIncrementOrDecrementPatternRegex.matchEntire(
+                                            input = localDateTimeInText
+                                        ),
+                                        transactionParticulars = transactionParticulars,
+                                        transactionAmount = transactionAmount,
+                                        dateTimeInText = dateTimeInText,
+                                        fromAccount = fromAccount,
+                                        transactionType = transactionType,
+                                        viaAccount = viaAccount,
+                                        toAccount = toAccount,
+                                        isEditStep = isEditStep,
+                                        transactionId = transactionId,
+                                        isDevelopmentMode = isDevelopmentMode,
+                                        isTwoWayStep = isTwoWayStep,
+                                        userId = userId,
+                                        isViaStep = isViaStep,
+                                        isCyclicViaStep = isCyclicViaStep,
+                                        splitIndex = splitIndex,
+                                        username = username,
+                                        timePartIncrementOrDecrementCommandIndicator = ConstantsNative.secondIncrementOrDecrementCommandIndicator,
+                                        timePartIncrementOrDecrementNoMatchAction = {
 
-                                        timePartIncrementOrDecrementActions(
+                                            timePartIncrementOrDecrementActions(
 
-                                            timePartIncrementOrDecrementMatchResult = ConstantsNative.dayIncrementOrDecrementPatternRegex.matchEntire(
-                                                input = localDateTimeInText
-                                            ),
-                                            transactionParticulars = transactionParticulars,
-                                            transactionAmount = transactionAmount,
-                                            dateTimeInText = dateTimeInText,
-                                            fromAccount = fromAccount,
-                                            transactionType = transactionType,
-                                            viaAccount = viaAccount,
-                                            toAccount = toAccount,
-                                            isEditStep = isEditStep,
-                                            transactionId = transactionId,
-                                            isDevelopmentMode = isDevelopmentMode,
-                                            isTwoWayStep = isTwoWayStep,
-                                            userId = userId,
-                                            isViaStep = isViaStep,
-                                            isCyclicViaStep = isCyclicViaStep,
-                                            splitIndex = splitIndex,
-                                            username = username,
-                                            timePartIncrementOrDecrementCommandIndicator = ConstantsNative.dayIncrementOrDecrementCommandIndicator,
-                                            timePartIncrementOrDecrementNoMatchAction = {
+                                                timePartIncrementOrDecrementMatchResult = ConstantsNative.dayIncrementOrDecrementPatternRegex.matchEntire(
+                                                    input = localDateTimeInText
+                                                ),
+                                                transactionParticulars = transactionParticulars,
+                                                transactionAmount = transactionAmount,
+                                                dateTimeInText = dateTimeInText,
+                                                fromAccount = fromAccount,
+                                                transactionType = transactionType,
+                                                viaAccount = viaAccount,
+                                                toAccount = toAccount,
+                                                isEditStep = isEditStep,
+                                                transactionId = transactionId,
+                                                isDevelopmentMode = isDevelopmentMode,
+                                                isTwoWayStep = isTwoWayStep,
+                                                userId = userId,
+                                                isViaStep = isViaStep,
+                                                isCyclicViaStep = isCyclicViaStep,
+                                                splitIndex = splitIndex,
+                                                username = username,
+                                                timePartIncrementOrDecrementCommandIndicator = ConstantsNative.dayIncrementOrDecrementCommandIndicator,
+                                                timePartIncrementOrDecrementNoMatchAction = {
 
-                                                val timePartIncrementOrDecrementMatchResult =
-                                                    ConstantsNative.dayIncrementOrDecrementWithTimeResetPatternRegex.matchEntire(
-                                                        input = localDateTimeInText
-                                                    )
-                                                if (timePartIncrementOrDecrementMatchResult == null) {
+                                                    val timePartIncrementOrDecrementMatchResult =
+                                                        ConstantsNative.dayIncrementOrDecrementWithTimeResetPatternRegex.matchEntire(
+                                                            input = localDateTimeInText
+                                                        )
+                                                    if (timePartIncrementOrDecrementMatchResult == null) {
 
-                                                    insertTransactionAfterEventDateTimeFix(
+                                                        insertTransactionAfterEventDateTimeFix(
 
-                                                        transactionParticulars = transactionParticulars,
-                                                        transactionAmount = transactionAmount,
-                                                        dateTimeInText = dateTimeInText,
-                                                        fromAccount = fromAccount,
-                                                        transactionType = transactionType,
-                                                        viaAccount = viaAccount,
-                                                        toAccount = toAccount,
-                                                        isEditStep = isEditStep,
-                                                        transactionId = transactionId,
-                                                        isDevelopmentMode = isDevelopmentMode,
-                                                        isTwoWayStep = isTwoWayStep,
-                                                        userId = userId,
-                                                        isViaStep = isViaStep,
-                                                        isCyclicViaStep = isCyclicViaStep,
-                                                        splitIndex = splitIndex,
-                                                        username = username
-                                                    )
-
-                                                } else {
-
-                                                    handleTimeResetPattern(
-
-                                                        dateTimeInText = handleDateIncrementOrDecrementPattern(
-
-                                                            timePart = timePartIncrementOrDecrementMatchResult.groups[1],
+                                                            transactionParticulars = transactionParticulars,
+                                                            transactionAmount = transactionAmount,
                                                             dateTimeInText = dateTimeInText,
-                                                            timePartIncrementOrDecrementMatchResult = timePartIncrementOrDecrementMatchResult,
-                                                            manipulationOperatorPosition = 3
-                                                        ),
-                                                        timeResetCommand = ConstantsNative.timeResetPatternRegex.matchEntire(
-                                                            input = timePartIncrementOrDecrementMatchResult.groups[4]!!.value
-                                                        )!!,
-                                                        userId = userId,
-                                                        username = username,
-                                                        transactionType = transactionType,
-                                                        fromAccount = fromAccount,
-                                                        viaAccount = viaAccount,
-                                                        toAccount = toAccount,
-                                                        isViaStep = isViaStep,
-                                                        isTwoWayStep = isTwoWayStep,
-                                                        transactionId = transactionId,
-                                                        transactionParticulars = transactionParticulars,
-                                                        transactionAmount = transactionAmount,
-                                                        isEditStep = isEditStep,
-                                                        splitIndex = splitIndex,
-                                                        isDevelopmentMode = isDevelopmentMode,
-                                                        isCyclicViaStep = isCyclicViaStep
-                                                    )
-                                                }
-                                            }
-                                        )
-                                    }
-                                )
-                            }
-                        )
-                    }
+                                                            fromAccount = fromAccount,
+                                                            transactionType = transactionType,
+                                                            viaAccount = viaAccount,
+                                                            toAccount = toAccount,
+                                                            isEditStep = isEditStep,
+                                                            transactionId = transactionId,
+                                                            isDevelopmentMode = isDevelopmentMode,
+                                                            isTwoWayStep = isTwoWayStep,
+                                                            userId = userId,
+                                                            isViaStep = isViaStep,
+                                                            isCyclicViaStep = isCyclicViaStep,
+                                                            splitIndex = splitIndex,
+                                                            username = username,
+                                                        )
+
+                                                    } else {
+
+                                                        handleTimeResetPattern(
+
+                                                            dateTimeInText = handleDateIncrementOrDecrementPattern(
+
+                                                                timePart = timePartIncrementOrDecrementMatchResult.groups[1],
+                                                                dateTimeInText = dateTimeInText,
+                                                                timePartIncrementOrDecrementMatchResult = timePartIncrementOrDecrementMatchResult,
+                                                                manipulationOperatorPosition = 3
+                                                            ),
+                                                            timeResetCommand = ConstantsNative.timeResetPatternRegex.matchEntire(
+                                                                input = timePartIncrementOrDecrementMatchResult.groups[4]!!.value
+                                                            )!!,
+                                                            userId = userId,
+                                                            username = username,
+                                                            transactionType = transactionType,
+                                                            fromAccount = fromAccount,
+                                                            viaAccount = viaAccount,
+                                                            toAccount = toAccount,
+                                                            isViaStep = isViaStep,
+                                                            isTwoWayStep = isTwoWayStep,
+                                                            transactionId = transactionId,
+                                                            transactionParticulars = transactionParticulars,
+                                                            transactionAmount = transactionAmount,
+                                                            isEditStep = isEditStep,
+                                                            splitIndex = splitIndex,
+                                                            isDevelopmentMode = isDevelopmentMode,
+                                                            isCyclicViaStep = isCyclicViaStep,
+                                                        )
+                                                    }
+                                                },
+                                            )
+                                        },
+                                    )
+                                },
+                            )
+                        },
+                    )
                 } else {
 
                     return handleTimeResetPattern(
@@ -2258,6 +2262,7 @@ object InsertOperationsInteractive {
                     if ((transactionType == TransactionTypeEnum.VIA) || (transactionType == TransactionTypeEnum.CYCLIC_VIA)) {
 
                         return invokeInsertTransactionVariantsInteractiveAfterExchangeOfAccounts(
+
                             userId = userId,
                             username = username,
                             transactionType = transactionType,
@@ -2287,6 +2292,7 @@ object InsertOperationsInteractive {
                     if ((transactionType == TransactionTypeEnum.VIA) || (transactionType == TransactionTypeEnum.CYCLIC_VIA)) {
 
                         return invokeInsertTransactionVariantsInteractiveAfterExchangeOfAccounts(
+
                             userId = userId,
                             username = username,
                             transactionType = transactionType,
@@ -2315,6 +2321,7 @@ object InsertOperationsInteractive {
                     if ((transactionType == TransactionTypeEnum.VIA) || (transactionType == TransactionTypeEnum.CYCLIC_VIA)) {
 
                         return invokeInsertTransactionVariantsInteractiveAfterExchangeOfAccounts(
+
                             userId = userId,
                             username = username,
                             transactionType = transactionType,
