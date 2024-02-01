@@ -6,9 +6,9 @@ import account.ledger.library.enums.BalanceSheetRefineLevelEnum
 import account.ledger.library.enums.EnvironmentFileEntryEnum
 import account.ledger.library.enums.FunctionCallSourceEnum
 import account.ledger.library.enums.TransactionTypeEnum
-import account.ledger.library.models.InsertTransactionResult
-import account.ledger.library.operations.getAccounts
-import account.ledger.library.operations.getUserInitialTransactionDateFromUsername
+import account.ledger.library.models.*
+import account.ledger.library.operations.DataOperations
+import account.ledger.library.operations.ServerOperations
 import account.ledger.library.retrofit.data.MultipleTransactionDataSource
 import account.ledger.library.utils.AccountUtils
 import account.ledger.library.utils.ApiUtils
@@ -111,7 +111,7 @@ object Screens {
 
                     insertTransactionResult = HandleResponsesInteractive.handleAccountsResponseAndPrintMenu(
 
-                        apiResponse = getAccounts(
+                        apiResponse = ServerOperations.getAccounts(
 
                             userId = userId,
                             isConsoleMode = true,
@@ -429,7 +429,8 @@ object Screens {
 
                     insertTransactionResult = checkAffectedAccountsAfterSpecifiedDate(
 
-                        desiredDate = getUserInitialTransactionDateFromUsername(username = username).minusDays(1)
+                        desiredDate = DataOperations.getUserInitialTransactionDateFromUsername(username = username)
+                            .minusDays(1)
                             .format(DateTimeUtils.normalDatePattern),
                         userId = userId,
                         username = username,
@@ -485,7 +486,8 @@ object Screens {
 
                     insertTransactionResult = checkAffectedAccountsAfterSpecifiedDate(
 
-                        desiredDate = getUserInitialTransactionDateFromUsername(username = username).minusDays(1)
+                        desiredDate = DataOperations.getUserInitialTransactionDateFromUsername(username = username)
+                            .minusDays(1)
                             .format(DateTimeUtils.normalDatePattern),
                         userId = userId,
                         username = username,

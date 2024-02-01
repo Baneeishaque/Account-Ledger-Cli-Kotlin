@@ -4,7 +4,7 @@ import account_ledger_library.constants.ConstantsNative
 import account.ledger.library.enums.AccountTypeEnum
 import account.ledger.library.enums.HandleAccountsApiResponseResult
 import account.ledger.library.enums.TransactionTypeEnum
-import account.ledger.library.operations.getAccounts
+import account.ledger.library.operations.ServerOperations
 import account.ledger.library.utils.ApiUtils
 import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithBackPrompt
 import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
@@ -138,7 +138,7 @@ internal fun chooseDepositTop(
 
     return HandleResponsesInteractive.handleAccountsApiResponse(
 
-        apiResponse = getAccounts(
+        apiResponse = ServerOperations.getAccounts(
 
             userId = userId,
             isConsoleMode = isConsoleMode,
@@ -180,7 +180,7 @@ internal fun chooseWithdrawTop(
 
     return HandleResponsesInteractive.handleAccountsApiResponse(
 
-        apiResponse = getAccounts(
+        apiResponse = ServerOperations.getAccounts(
 
             userId = userId,
             isConsoleMode = isConsoleMode,
@@ -220,7 +220,7 @@ internal fun chooseViaTop(
 
     return HandleResponsesInteractive.handleAccountsApiResponse(
 
-        apiResponse = getAccounts(
+        apiResponse = ServerOperations.getAccounts(
 
             userId = userId,
             isConsoleMode = isConsoleMode,

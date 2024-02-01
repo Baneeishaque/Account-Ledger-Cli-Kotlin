@@ -10,7 +10,7 @@ import account.ledger.library.enums.TransactionTypeEnum
 import account.ledger.library.models.ChooseAccountResult
 import account.ledger.library.models.InsertTransactionResult
 import account.ledger.library.models.ViewTransactionsOutput
-import account.ledger.library.operations.getUserTransactionsForAnAccount
+import account.ledger.library.operations.ServerOperations
 import account.ledger.library.utils.AccountUtils
 import account.ledger.library.utils.ApiUtils
 import account.ledger.library.utils.HandleResponses
@@ -25,6 +25,7 @@ import common.utils.library.utils.*
 
 object TransactionViews {
 
+    @JvmStatic
     fun viewTransactionsForAnAccount(
 
         userId: UInt,
@@ -45,7 +46,7 @@ object TransactionViews {
 
         return viewTransactions(
 
-            apiResponse = getUserTransactionsForAnAccount(
+            apiResponse = ServerOperations.getUserTransactionsForAnAccount(
 
                 userId = userId,
                 accountId = accountId,
@@ -667,12 +668,13 @@ object TransactionViews {
                             )
                             if (addTransactionResult.isSuccess) {
 
-                                val apiResponse: Result<MultipleTransactionResponse> = getUserTransactionsForAnAccount(
+                                val apiResponse: Result<MultipleTransactionResponse> =
+                                    ServerOperations.getUserTransactionsForAnAccount(
 
-                                    userId = userId,
-                                    accountId = accountId,
-                                    isDevelopmentMode = isDevelopmentMode
-                                )
+                                        userId = userId,
+                                        accountId = accountId,
+                                        isDevelopmentMode = isDevelopmentMode
+                                    )
                                 if (apiResponse.isSuccess) {
 
                                     localUserMultipleTransactionResponse = apiResponse.getOrNull()!!

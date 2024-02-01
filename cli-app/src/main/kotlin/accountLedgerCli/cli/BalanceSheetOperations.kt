@@ -6,8 +6,8 @@ import account.ledger.library.api.response.UserResponse
 import account.ledger.library.enums.BalanceSheetRefineLevelEnum
 import account.ledger.library.models.BalanceSheetDataRowModel
 import account.ledger.library.models.ChooseUserResult
-import account.ledger.library.operations.getUserInitialTransactionDateFromUsername
-import account.ledger.library.operations.getUserTransactionsForAnAccount
+import account.ledger.library.operations.DataOperations
+import account.ledger.library.operations.ServerOperations
 import account.ledger.library.retrofit.data.MultipleTransactionDataSource
 import account.ledger.library.utils.UserUtils
 import account_ledger_library.constants.ConstantsNative
@@ -176,7 +176,7 @@ internal fun printSheetOfUser(
     val apiResponse: Result<MultipleTransactionResponse>
     //TODO : Only applicable for user_first_entry_date usernames
     val specifiedDate: IsOkModel<String> = MysqlUtils.normalDateTextToMySqlDateText(
-        normalDateText = getUserInitialTransactionDateFromUsername(username = currentUserName).minusDays(
+        normalDateText = DataOperations.getUserInitialTransactionDateFromUsername(username = currentUserName).minusDays(
             1
         ).format(DateTimeUtils.normalDatePattern)
     )
@@ -267,7 +267,7 @@ internal fun printSheetOfUser(
                 for (account: MutableMap.MutableEntry<UInt, String> in accounts) {
 
                     val apiResponse2: Result<MultipleTransactionResponse> =
-                        getUserTransactionsForAnAccount(
+                        ServerOperations.getUserTransactionsForAnAccount(
 
                             userId = currentUserId,
                             accountId = account.key,

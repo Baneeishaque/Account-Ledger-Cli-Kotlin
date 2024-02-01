@@ -7,7 +7,7 @@ import account.ledger.library.api.response.MultipleTransactionResponse
 import account.ledger.library.enums.FunctionCallSourceEnum
 import account.ledger.library.models.InsertTransactionResult
 import account.ledger.library.models.ViewTransactionsOutput
-import account.ledger.library.operations.getAccounts
+import account.ledger.library.operations.ServerOperations
 import account.ledger.library.retrofit.data.MultipleTransactionDataSource
 import account.ledger.library.utils.AccountUtils
 import account.ledger.library.utils.ApiUtils
@@ -210,7 +210,7 @@ internal fun viewChildAccounts(
 
 ): InsertTransactionResult {
 
-    val apiResponse: Result<AccountsResponse> = getAccounts(
+    val apiResponse: Result<AccountsResponse> = ServerOperations.getAccounts(
 
         userId = userId,
         parentAccountId = fromAccount.id,
