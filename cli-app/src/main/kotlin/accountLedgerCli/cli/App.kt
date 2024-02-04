@@ -95,7 +95,6 @@ class App {
                     )
                     when (readln()) {
                         "1", "" -> {
-                            // "1" -> {
 
                             processInsertTransactionResult(
                                 insertTransactionResult = UserOperationsInterActiveWithApiService.login(

@@ -26,6 +26,7 @@ internal fun transactionContinueCheck(
 
     do {
         commandLinePrintMenuWithContinuePrompt.printMenuWithContinuePromptFromListOfCommands(
+
             listOfCommands = Screens.getUserWithCurrentAccountSelectionsAsText(
 
                 username = username,

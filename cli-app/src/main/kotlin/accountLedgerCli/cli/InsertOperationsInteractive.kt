@@ -108,6 +108,7 @@ object InsertOperationsInteractive {
                 successActions = fun(): InsertTransactionResult {
 
                     return transactionContinueCheck(
+
                         userId = userId,
                         username = username,
                         transactionType = TransactionTypeEnum.NORMAL,
@@ -155,6 +156,7 @@ object InsertOperationsInteractive {
 
             val getUserAccountsMapResult: IsOkModel<LinkedHashMap<UInt, AccountResponse>> =
                 HandleResponses.getUserAccountsMap(
+
                     apiResponse = ApiUtils.getAccountsFull(
 
                         userId = userId,
@@ -214,6 +216,7 @@ object InsertOperationsInteractive {
 
         do {
             commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
+
                 listOfCommands = Screens.getUserWithCurrentAccountSelectionsAsText(
 
                     username = username,
@@ -420,6 +423,7 @@ object InsertOperationsInteractive {
                 }
 
                 "6" -> {
+
                     val chooseFromAccountResult: ChooseAccountResult = chooseFromAccount(
 
                         userId = userId,
@@ -477,6 +481,7 @@ object InsertOperationsInteractive {
                     if ((transactionType == TransactionTypeEnum.VIA) || (transactionType == TransactionTypeEnum.CYCLIC_VIA)) {
 
                         localInsertTransactionResult = addTransaction(
+
                             userId = userId,
                             username = username,
                             transactionType = transactionType,
@@ -492,6 +497,7 @@ object InsertOperationsInteractive {
                     } else {
 
                         localInsertTransactionResult = addTransaction(
+
                             userId = userId,
                             username = username,
                             transactionType = transactionType,
@@ -511,6 +517,7 @@ object InsertOperationsInteractive {
                     if ((transactionType == TransactionTypeEnum.VIA) || (transactionType == TransactionTypeEnum.CYCLIC_VIA)) {
 
                         localInsertTransactionResult = transactionContinueCheck(
+
                             userId = userId,
                             username = username,
                             transactionType = transactionType,
@@ -547,6 +554,7 @@ object InsertOperationsInteractive {
                     if ((transactionType == TransactionTypeEnum.VIA) || (transactionType == TransactionTypeEnum.CYCLIC_VIA)) {
 
                         localInsertTransactionResult = addTransaction(
+
                             userId = userId,
                             username = username,
                             transactionType = transactionType,
@@ -601,6 +609,7 @@ object InsertOperationsInteractive {
                     if ((transactionType == TransactionTypeEnum.VIA) || (transactionType == TransactionTypeEnum.CYCLIC_VIA)) {
 
                         localInsertTransactionResult = transactionContinueCheck(
+
                             userId = userId,
                             username = username,
                             transactionType = transactionType,
