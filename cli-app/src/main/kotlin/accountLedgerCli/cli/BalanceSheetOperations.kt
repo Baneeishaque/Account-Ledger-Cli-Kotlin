@@ -241,6 +241,7 @@ internal fun printSheetOfUser(
 
                         serializer = CommonDataModel.serializer(Unit.serializer()),
                         value = CommonDataModel(
+
                             status = 1,
                             error = "Error : ${(apiResponse.exceptionOrNull() as Exception).localizedMessage}"
                         )
@@ -294,6 +295,7 @@ internal fun printSheetOfUser(
                     if (apiResponse2.isFailure) {
 
                         if (isNotApiCall) {
+
                             println("Error : ${(apiResponse2.exceptionOrNull() as Exception).localizedMessage}")
 //                            do {
 //                                print("Retry (Y/N) ? : ")
@@ -313,6 +315,7 @@ internal fun printSheetOfUser(
 
                                     serializer = CommonDataModel.serializer(Unit.serializer()),
                                     value = CommonDataModel(
+
                                         status = 1,
                                         error = "Error : ${(apiResponse2.exceptionOrNull() as Exception).localizedMessage}"
                                     )
@@ -360,6 +363,7 @@ internal fun printSheetOfUser(
                             } else {
 
                                 print(
+
                                     Json.encodeToString(
 
                                         serializer = CommonDataModel.serializer(Unit.serializer()),
@@ -379,6 +383,7 @@ internal fun printSheetOfUser(
                 if (isNotApiCall) {
 
                     println(menuItems)
+
                 } else {
 
                     print(
