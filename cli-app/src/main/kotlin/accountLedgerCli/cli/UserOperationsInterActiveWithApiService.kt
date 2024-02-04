@@ -163,6 +163,7 @@ class UserOperationsInterActiveWithApiService {
 
                             println("Invalid Credentials...")
                             return InsertTransactionResult(
+
                                 isSuccess = false,
                                 dateTimeInText = dateTimeInText,
                                 transactionParticulars = transactionParticulars,
@@ -175,9 +176,12 @@ class UserOperationsInterActiveWithApiService {
                         } else {
 
                             print(
+
                                 Json.encodeToString(
+
                                     serializer = CommonDataModel.serializer(Unit.serializer()),
                                     value = CommonDataModel(
+
                                         status = 1,
                                         error = "Invalid Credentials"
                                     )
@@ -207,26 +211,38 @@ class UserOperationsInterActiveWithApiService {
 
                         } else {
                             when (apiMethod) {
+
                                 "BalanceSheet" -> {
+
                                     if (apiMethodOptions.containsKey(CommandLineApiMethodBalanceSheetOptionsEnum.refineLevel.name)) {
+
                                         val refineryLevel =
                                             apiMethodOptions[CommandLineApiMethodBalanceSheetOptionsEnum.refineLevel.name]
+
                                         if (refineryLevel is BalanceSheetRefineLevelEnum) {
+
                                             if (apiMethodOptions.containsKey(CommandLineApiMethodBalanceSheetOptionsEnum.outputFormat.name)) {
+
                                                 if (apiMethodOptions[CommandLineApiMethodBalanceSheetOptionsEnum.outputFormat.name] is BalanceSheetOutputFormatsEnum) {
+
                                                     printBalanceSheetOfUser(
+
                                                         currentUserName = username,
                                                         currentUserId = authenticationResponseResult.id,
                                                         refineLevel = refineryLevel,
                                                         isNotApiCall = false,
-                                                        isConsoleMode = isConsoleMode,
+                                                        isConsoleMode = false,
                                                         isDevelopmentMode = isDevelopmentMode
                                                     )
                                                 } else {
+
                                                     print(
+
                                                         Json.encodeToString(
+
                                                             serializer = CommonDataModel.serializer(Unit.serializer()),
                                                             value = CommonDataModel(
+
                                                                 status = 1,
                                                                 error = "Invalid Output Format"
                                                             )
@@ -234,11 +250,14 @@ class UserOperationsInterActiveWithApiService {
                                                     )
                                                 }
                                             } else {
-//                                                println("Output Format is Missing")
+
                                                 print(
+
                                                     Json.encodeToString(
+
                                                         serializer = CommonDataModel.serializer(Unit.serializer()),
                                                         value = CommonDataModel(
+
                                                             status = 1,
                                                             error = "Missing Output Format of the Balance Sheet Ledger"
                                                         )
@@ -246,10 +265,14 @@ class UserOperationsInterActiveWithApiService {
                                                 )
                                             }
                                         } else {
+
                                             print(
+
                                                 Json.encodeToString(
+
                                                     serializer = CommonDataModel.serializer(Unit.serializer()),
                                                     value = CommonDataModel(
+
                                                         status = 1,
                                                         error = "Invalid Refinery Level"
                                                     )
@@ -257,10 +280,14 @@ class UserOperationsInterActiveWithApiService {
                                             )
                                         }
                                     } else {
+
                                         print(
+
                                             Json.encodeToString(
+
                                                 serializer = CommonDataModel.serializer(Unit.serializer()),
                                                 value = CommonDataModel(
+
                                                     status = 1,
                                                     error = "Missing Refinery Level of the Balance Sheet Ledger"
                                                 )
@@ -270,10 +297,14 @@ class UserOperationsInterActiveWithApiService {
                                 }
 
                                 else -> {
+
                                     print(
+
                                         Json.encodeToString(
+
                                             serializer = CommonDataModel.serializer(Unit.serializer()),
                                             value = CommonDataModel(
+
                                                 status = 1,
                                                 error = "Invalid API Method Reference"
                                             )
@@ -285,10 +316,12 @@ class UserOperationsInterActiveWithApiService {
                     }
 
                     else -> {
+
                         if (isNotApiCall) {
 
                             println("Server Execution Error...")
                             return InsertTransactionResult(
+
                                 isSuccess = false,
                                 dateTimeInText = dateTimeInText,
                                 transactionParticulars = transactionParticulars,
@@ -299,10 +332,14 @@ class UserOperationsInterActiveWithApiService {
                             )
 
                         } else {
+
                             print(
+
                                 Json.encodeToString(
+
                                     serializer = CommonDataModel.serializer(Unit.serializer()),
                                     value = CommonDataModel(
+
                                         status = 1,
                                         error = "Server Execution Error, User Count is ${authenticationResponseResult.userCount}"
                                     )
@@ -313,6 +350,7 @@ class UserOperationsInterActiveWithApiService {
                 }
             }
             return InsertTransactionResult(
+
                 isSuccess = false,
                 dateTimeInText = dateTimeInText,
                 transactionParticulars = transactionParticulars,
@@ -324,6 +362,7 @@ class UserOperationsInterActiveWithApiService {
         }
 
         private fun displayCurrentUser(user: UserCredentials) {
+
             println("The recognised user is ${user.username}")
         }
 

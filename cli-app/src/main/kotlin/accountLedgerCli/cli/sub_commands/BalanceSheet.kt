@@ -44,10 +44,13 @@ class BalanceSheet(
 
     override fun additionalBeforeExecuteActions() {
 
-        println("userName = $username")
-        println("passWord = $password")
-        println("refineLevel = $refineLevel")
-        println("outputFormat = $outputFormat")
+        if (isDevelopmentMode) {
+
+            println("userName = $username")
+            println("passWord = $password")
+            println("refineLevel = $refineLevel")
+            println("outputFormat = $outputFormat")
+        }
     }
 
     override fun additionalFurtherActions(usernameLocal: String, passwordLocal: String) {
