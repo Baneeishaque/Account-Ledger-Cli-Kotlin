@@ -101,6 +101,7 @@ object Screens {
                     "39 - View Income Sheet",
                     "40 - View Expense Sheet",
                     "41 - View Profit Sheet",
+                    "42 - View Not Consider for Income / Expense Sheet",
                     "0 - Logout",
                     "",
                     "Enter Your Choice : "
@@ -538,6 +539,17 @@ object Screens {
                 "41" -> {
 
                     LedgerSheetOperations.printProfitSheetOfUser(
+
+                        currentUserName = username,
+                        currentUserId = userId,
+                        isConsoleMode = true,
+                        isDevelopmentMode = isDevelopmentMode
+                    )
+                }
+
+                "42" -> {
+
+                    LedgerSheetOperations.printNotConsiderForIncomeExpenseSheetOfUser(
 
                         currentUserName = username,
                         currentUserId = userId,

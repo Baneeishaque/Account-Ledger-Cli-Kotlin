@@ -286,6 +286,34 @@ object LedgerSheetOperations {
     }
 
     @JvmStatic
+    fun printNotConsiderForIncomeExpenseSheetOfUser(
+
+        currentUserName: String,
+        currentUserId: UInt,
+        isNotApiCall: Boolean = true,
+        isConsoleMode: Boolean,
+        isDevelopmentMode: Boolean
+
+    ): IsOkModel<List<BalanceSheetDataRowModel>> {
+
+        return printSheetOfUserByAccountIdsFromEnvironment(
+
+            currentUserName = currentUserName,
+            currentUserId = currentUserId,
+            sheetTitle = "Not Consider for Income / Expense",
+            isNotApiCall = isNotApiCall,
+            isConsoleMode = isConsoleMode,
+            isDevelopmentMode = isDevelopmentMode,
+            environmentVariable = EnvironmentFileEntryEnum.EXPENSE_INCOME_IGNORE_ACCOUNT_IDS_FOR_SHEET,
+            environmentVariablesForAccountsToIgnore = listOf(
+
+                EnvironmentFileEntryEnum.INCOME_ACCOUNT_IDS_FOR_SHEET,
+                EnvironmentFileEntryEnum.EXPENSE_ACCOUNT_IDS_FOR_SHEET
+            )
+        )
+    }
+
+    @JvmStatic
     fun printProfitSheetOfUser(
 
         currentUserName: String,
