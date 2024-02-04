@@ -621,6 +621,8 @@ object LedgerSheetOperations {
 
     ): IsOkModel<MutableMap<UInt, String>> {
 
+        //TODO : Check duplication of account ids
+
         var accountsToExclude: List<String> = emptyList()
 
         App.dotEnv = App.reloadDotEnv()
@@ -629,6 +631,7 @@ object LedgerSheetOperations {
             BalanceSheetRefineLevelEnum.WITHOUT_OPEN_BALANCES -> {
 
                 // TODO : Change to new api methods
+                // TODO : Change to EnvironmentFileEntryEnum
                 accountsToExclude = (App.dotEnv["OPEN_BALANCE_ACCOUNT_IDS"] ?: "0").split(',')
             }
 
@@ -705,6 +708,8 @@ object LedgerSheetOperations {
         environmentVariablesForAccountsToIgnore: List<EnvironmentFileEntryEnum>
 
     ): IsOkModel<MutableMap<UInt, String>> {
+
+        //TODO : Check duplication of account ids
 
         App.dotEnv = App.reloadDotEnv()
         val accountsToInclude: List<String> = (App.dotEnv[environmentVariable.name] ?: "0").split(',')
