@@ -130,15 +130,14 @@ object HandleResponsesInteractive {
                         "1" -> {
                             return getHandleAccountsResponseFromApiResult(
 
-                                selectedAccountId = getValidIndexWithInputPrompt(
+                                selectedAccountId = InputOperations.getValidIndexFromCollectionWithSelectionPromptAndZeroAsBack(
 
                                     map = userAccountsMap,
                                     itemSpecification = ConstantsNative.accountText,
                                     items = AccountUtils.userAccountsToStringFromList(
 
                                         accounts = userAccountsMap.values.toList()
-                                    ),
-                                    backValue = 0u
+                                    )
                                 ),
                                 userAccountsMap = userAccountsMap
                             )

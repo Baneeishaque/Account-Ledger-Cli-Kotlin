@@ -41,12 +41,11 @@ fun processChildAccountScreenInput(
         "1" -> {
             accountHomeOutput = handleAccountSelection(
 
-                accountId = getValidIndexWithInputPrompt(
+                accountId = InputOperations.getValidIndexFromCollectionWithSelectionPromptAndZeroAsBack(
 
                     map = userAccountsMap,
                     itemSpecification = ConstantsNative.accountText,
-                    items = AccountUtils.userAccountsToStringFromList(accounts = userAccountsMap.values.toList()),
-                    backValue = 0u
+                    items = AccountUtils.userAccountsToStringFromList(accounts = userAccountsMap.values.toList())
                 ),
                 userAccountsMap = userAccountsMap,
                 userId = userId,

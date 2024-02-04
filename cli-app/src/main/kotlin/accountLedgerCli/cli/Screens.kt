@@ -2,6 +2,7 @@ package accountLedgerCli.cli
 
 import account.ledger.library.api.response.AccountResponse
 import account.ledger.library.api.response.MultipleTransactionResponse
+import account.ledger.library.api.response.TransactionResponse
 import account.ledger.library.enums.BalanceSheetRefineLevelEnum
 import account.ledger.library.enums.EnvironmentFileEntryEnum
 import account.ledger.library.enums.FunctionCallSourceEnum
@@ -41,7 +42,7 @@ object Screens {
 
             println("Env. Variables : ${dotEnv.entries()}")
         }
-        var insertTransactionResult = TransactionUtils.getFailedInsertTransactionResult(
+        var insertTransactionResult: InsertTransactionResult = TransactionUtils.getFailedInsertTransactionResult(
 
             dateTimeInText = dateTimeInText,
             transactionParticulars = transactionParticulars,
@@ -615,7 +616,7 @@ object Screens {
         previousTransactionData: InsertTransactionResult,
         isDevelopmentMode: Boolean
 
-    ) = quickTransactionOnX(
+    ): InsertTransactionResult = quickTransactionOnX(
 
         account = InsertOperationsInteractive.frequent3Account,
         previousTransactionData = previousTransactionData,
@@ -632,7 +633,7 @@ object Screens {
         previousTransactionData: InsertTransactionResult,
         isDevelopmentMode: Boolean
 
-    ) = quickTransactionOnX(
+    ): InsertTransactionResult = quickTransactionOnX(
 
         account = InsertOperationsInteractive.frequent2Account,
         previousTransactionData = previousTransactionData,
@@ -649,7 +650,7 @@ object Screens {
         previousTransactionData: InsertTransactionResult,
         isDevelopmentMode: Boolean
 
-    ) = quickTransactionOnX(
+    ): InsertTransactionResult = quickTransactionOnX(
 
         account = InsertOperationsInteractive.frequent1Account,
         previousTransactionData = previousTransactionData,
@@ -663,14 +664,18 @@ object Screens {
         userId: UInt,
         username: String,
         previousTransactionData: InsertTransactionResult,
+        chosenTransactionForSpecial: TransactionResponse? = null,
+        chosenSpecialTransactionType: SpecialTransactionTypeModel? = null,
         isDevelopmentMode: Boolean
 
-    ) = quickTransactionOnBankToX(
+    ): InsertTransactionResult = quickTransactionOnBankToX(
 
         account2 = InsertOperationsInteractive.frequent3Account,
         userId = userId,
         username = username,
         previousTransactionData = previousTransactionData,
+        chosenTransactionForSpecial = chosenTransactionForSpecial,
+        chosenSpecialTransactionType = chosenSpecialTransactionType,
         isDevelopmentMode = isDevelopmentMode
     )
 
@@ -679,14 +684,18 @@ object Screens {
         userId: UInt,
         username: String,
         previousTransactionData: InsertTransactionResult,
+        chosenTransactionForSpecial: TransactionResponse? = null,
+        chosenSpecialTransactionType: SpecialTransactionTypeModel? = null,
         isDevelopmentMode: Boolean
 
-    ) = quickTransactionOnBankToX(
+    ): InsertTransactionResult = quickTransactionOnBankToX(
 
         account2 = InsertOperationsInteractive.frequent2Account,
         userId = userId,
         username = username,
         previousTransactionData = previousTransactionData,
+        chosenTransactionForSpecial = chosenTransactionForSpecial,
+        chosenSpecialTransactionType = chosenSpecialTransactionType,
         isDevelopmentMode = isDevelopmentMode
     )
 
@@ -695,14 +704,18 @@ object Screens {
         userId: UInt,
         username: String,
         previousTransactionData: InsertTransactionResult,
+        chosenTransactionForSpecial: TransactionResponse? = null,
+        chosenSpecialTransactionType: SpecialTransactionTypeModel? = null,
         isDevelopmentMode: Boolean
 
-    ) = quickTransactionOnBankToX(
+    ): InsertTransactionResult = quickTransactionOnBankToX(
 
         account2 = InsertOperationsInteractive.frequent1Account,
         userId = userId,
         username = username,
         previousTransactionData = previousTransactionData,
+        chosenTransactionForSpecial = chosenTransactionForSpecial,
+        chosenSpecialTransactionType = chosenSpecialTransactionType,
         isDevelopmentMode = isDevelopmentMode
     )
 
@@ -713,7 +726,7 @@ object Screens {
         previousTransactionData: InsertTransactionResult,
         isDevelopmentMode: Boolean
 
-    ) = quickTransactionOnX(
+    ): InsertTransactionResult = quickTransactionOnX(
 
         account = InsertOperationsInteractive.bankAccount,
         previousTransactionData = previousTransactionData,
@@ -727,14 +740,18 @@ object Screens {
         userId: UInt,
         username: String,
         previousTransactionData: InsertTransactionResult,
+        chosenTransactionForSpecial: TransactionResponse? = null,
+        chosenSpecialTransactionType: SpecialTransactionTypeModel? = null,
         isDevelopmentMode: Boolean
 
-    ) = quickTransactionOnWalletToX(
+    ): InsertTransactionResult = quickTransactionOnWalletToX(
 
         account2 = InsertOperationsInteractive.frequent3Account,
         userId = userId,
         username = username,
         previousTransactionData = previousTransactionData,
+        chosenTransactionForSpecial = chosenTransactionForSpecial,
+        chosenSpecialTransactionType = chosenSpecialTransactionType,
         isDevelopmentMode = isDevelopmentMode
     )
 
@@ -743,14 +760,18 @@ object Screens {
         userId: UInt,
         username: String,
         previousTransactionData: InsertTransactionResult,
+        chosenTransactionForSpecial: TransactionResponse? = null,
+        chosenSpecialTransactionType: SpecialTransactionTypeModel? = null,
         isDevelopmentMode: Boolean
 
-    ) = quickTransactionOnWalletToX(
+    ): InsertTransactionResult = quickTransactionOnWalletToX(
 
         account2 = InsertOperationsInteractive.frequent2Account,
         userId = userId,
         username = username,
         previousTransactionData = previousTransactionData,
+        chosenTransactionForSpecial = chosenTransactionForSpecial,
+        chosenSpecialTransactionType = chosenSpecialTransactionType,
         isDevelopmentMode = isDevelopmentMode
     )
 
@@ -759,14 +780,18 @@ object Screens {
         userId: UInt,
         username: String,
         previousTransactionData: InsertTransactionResult,
+        chosenTransactionForSpecial: TransactionResponse? = null,
+        chosenSpecialTransactionType: SpecialTransactionTypeModel? = null,
         isDevelopmentMode: Boolean
 
-    ) = quickTransactionOnWalletToX(
+    ): InsertTransactionResult = quickTransactionOnWalletToX(
 
         account2 = InsertOperationsInteractive.frequent1Account,
         userId = userId,
         username = username,
         previousTransactionData = previousTransactionData,
+        chosenTransactionForSpecial = chosenTransactionForSpecial,
+        chosenSpecialTransactionType = chosenSpecialTransactionType,
         isDevelopmentMode = isDevelopmentMode
     )
 
@@ -776,15 +801,19 @@ object Screens {
         userId: UInt,
         username: String,
         previousTransactionData: InsertTransactionResult,
+        chosenTransactionForSpecial: TransactionResponse?,
+        chosenSpecialTransactionType: SpecialTransactionTypeModel?,
         isDevelopmentMode: Boolean
 
-    ) = quickTransactionOnXToY(
+    ): InsertTransactionResult = quickTransactionOnXToY(
 
         account1 = InsertOperationsInteractive.walletAccount,
         account2 = account2,
         userId = userId,
         username = username,
         previousTransactionData = previousTransactionData,
+        chosenTransactionForSpecial = chosenTransactionForSpecial,
+        chosenSpecialTransactionType = chosenSpecialTransactionType,
         isDevelopmentMode = isDevelopmentMode
     )
 
@@ -794,15 +823,19 @@ object Screens {
         userId: UInt,
         username: String,
         previousTransactionData: InsertTransactionResult,
+        chosenTransactionForSpecial: TransactionResponse?,
+        chosenSpecialTransactionType: SpecialTransactionTypeModel?,
         isDevelopmentMode: Boolean
 
-    ) = quickTransactionOnXToY(
+    ): InsertTransactionResult = quickTransactionOnXToY(
 
         account1 = InsertOperationsInteractive.bankAccount,
         account2 = account2,
         userId = userId,
         username = username,
         previousTransactionData = previousTransactionData,
+        chosenTransactionForSpecial = chosenTransactionForSpecial,
+        chosenSpecialTransactionType = chosenSpecialTransactionType,
         isDevelopmentMode = isDevelopmentMode
     )
 
@@ -813,9 +846,11 @@ object Screens {
         userId: UInt,
         username: String,
         previousTransactionData: InsertTransactionResult,
+        chosenTransactionForSpecial: TransactionResponse?,
+        chosenSpecialTransactionType: SpecialTransactionTypeModel?,
         isDevelopmentMode: Boolean
 
-    ) = InsertOperationsInteractive.insertQuickTransactionFromAccount1toAccount2(
+    ): InsertTransactionResult = InsertOperationsInteractive.insertQuickTransactionFromAccount1toAccount2(
 
         account1 = account1,
         account2 = account2,
@@ -827,6 +862,8 @@ object Screens {
         dateTimeInText = previousTransactionData.dateTimeInText,
         transactionParticulars = previousTransactionData.transactionParticulars,
         transactionAmount = previousTransactionData.transactionAmount,
+        chosenTransactionForSpecial = chosenTransactionForSpecial,
+        chosenSpecialTransactionType = chosenSpecialTransactionType,
         isDevelopmentMode = isDevelopmentMode
     )
 
@@ -837,7 +874,7 @@ object Screens {
         username: String,
         isDevelopmentMode: Boolean
 
-    ) = quickTransactionOnX(
+    ): InsertTransactionResult = quickTransactionOnX(
 
         account = InsertOperationsInteractive.walletAccount,
         previousTransactionData = previousTransactionData,
@@ -934,7 +971,7 @@ object Screens {
 
     ): InsertTransactionResult {
 
-        var localInsertTransactionResult = TransactionUtils.getFailedInsertTransactionResult(
+        var localInsertTransactionResult: InsertTransactionResult = TransactionUtils.getFailedInsertTransactionResult(
 
             dateTimeInText = dateTimeInText,
             transactionParticulars = transactionParticulars,
@@ -956,6 +993,7 @@ object Screens {
                     "5 - Add Via. Transaction",
                     "6 - Add Two Way Transaction",
                     "7 - Add Cyclic Via. Transaction",
+                    "8 - Add Special Transaction",
                     "17 - ${getQuickTransactionOnWalletText()}",
                     "18 - ${getQuickTransactionOnWalletToFrequent1Text()}",
                     "19 - ${getQuickTransactionOnWalletToFrequent2Text()}",
@@ -1083,6 +1121,111 @@ object Screens {
                         transactionAmount = localInsertTransactionResult.transactionAmount,
                         isDevelopmentMode = isDevelopmentMode
                     )
+                }
+
+                "8" -> {
+
+                    val readSpecialTransactionTypesFileResult: IsOkModel<SpecialTransactionTypesModel> =
+                        JsonFileUtils.readJsonFile(
+
+                            fileName = ConstantsNative.SPECIAL_TRANSACTION_TYPES_FILE_NAME,
+                            isDevelopmentMode = isDevelopmentMode
+                        )
+
+                    if (isDevelopmentMode) {
+
+                        println("readSpecialTransactionTypesFileResult : $readSpecialTransactionTypesFileResult")
+                    }
+
+                    if (readSpecialTransactionTypesFileResult.isOK && (readSpecialTransactionTypesFileResult.data!!.specialTransactionTypeModels.isNotEmpty())) {
+
+                        val chooseSpecialTransactionTypeResult: ChooseSpecialTransactionTypeResultModel =
+                            HandleSpecialTransactionTypesInteractive.chooseSpecialTransactionType(
+
+                                specialTransactionTypes = (readSpecialTransactionTypesFileResult.data!!).specialTransactionTypeModels,
+                                isDevelopmentMode = isDevelopmentMode
+
+                            )
+                        if (chooseSpecialTransactionTypeResult.isSpecialTransactionTypeSelected
+                        ) {
+
+                            val relatedAccountTransactions: MutableList<TransactionResponse> = mutableListOf()
+                            var isUserTransactionForRelatedAccountFetchingSuccess = true
+
+                            chooseSpecialTransactionTypeResult.selectedSpecialTransactionType!!.relatedAccounts.forEach { relatedAccountId: UInt ->
+
+                                if (isUserTransactionForRelatedAccountFetchingSuccess) {
+
+                                    ApiUtilsCommon.apiResponseHandler(
+
+                                        apiResponse = ServerOperations.getUserTransactionsForAnAccount(
+
+                                            userId = userId,
+                                            accountId = relatedAccountId,
+                                            isDevelopmentMode = isDevelopmentMode
+                                        ),
+                                        apiSuccessActions = fun(apiResponseData: MultipleTransactionResponse) {
+
+                                            if (ApiUtils.isNotNoTransactionResponseWithMessage(
+
+                                                    multipleTransactionResponse = apiResponseData
+                                                )
+                                            ) {
+
+                                                relatedAccountTransactions.addAll(apiResponseData.transactions)
+                                            }
+                                        },
+                                        apiFailureActions = fun() {
+
+                                            isUserTransactionForRelatedAccountFetchingSuccess = false
+                                        }
+                                    )
+                                } else {
+
+                                    return@forEach
+                                }
+                            }
+
+                            if (isUserTransactionForRelatedAccountFetchingSuccess) {
+
+                                val chooseTransactionResult: ChooseTransactionResultModel =
+                                    HandleTransactionsInteractive.chooseTransaction(
+
+                                        transactions = relatedAccountTransactions
+                                            .filter { transaction: TransactionResponse ->
+
+                                                chooseSpecialTransactionTypeResult.selectedSpecialTransactionType!!.particularsPatterns.any { particularsPattern: String ->
+
+                                                    Regex(particularsPattern).containsMatchIn(transaction.particulars)
+                                                }
+                                            },
+                                        isDevelopmentMode = isDevelopmentMode
+                                    )
+
+                                if (chooseTransactionResult.isTransactionSelected) {
+
+                                    localInsertTransactionResult = InsertOperationsInteractive.addTransaction(
+
+                                        userId = userId,
+                                        username = username,
+                                        transactionType = TransactionTypeEnum.SPECIAL,
+                                        fromAccount = localInsertTransactionResult.fromAccount,
+                                        viaAccount = localInsertTransactionResult.viaAccount,
+                                        toAccount = localInsertTransactionResult.toAccount,
+                                        dateTimeInText = localInsertTransactionResult.dateTimeInText,
+                                        transactionParticulars = localInsertTransactionResult.transactionParticulars,
+                                        transactionAmount = localInsertTransactionResult.transactionAmount,
+                                        isDevelopmentMode = isDevelopmentMode,
+                                        chosenTransactionForSpecial = chooseTransactionResult.selectedTransaction!!,
+                                        chosenSpecialTransactionType = chooseSpecialTransactionTypeResult.selectedSpecialTransactionType!!
+                                    )
+                                }
+                            }
+                        }
+                    } else {
+
+                        println("No Special Transaction Types...")
+                    }
                 }
 
                 "17" -> {

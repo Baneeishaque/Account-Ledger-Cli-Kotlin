@@ -2,15 +2,13 @@ package accountLedgerCli.cli
 
 import account.ledger.library.api.response.AccountResponse
 import account.ledger.library.api.response.TransactionManipulationResponse
+import account.ledger.library.api.response.TransactionResponse
 import account.ledger.library.constants.EnvironmentalFileEntries
 import account.ledger.library.enums.AccountExchangeTypeEnum
 import account.ledger.library.enums.AccountTypeEnum
 import account.ledger.library.enums.HandleAccountsApiResponseResult
 import account.ledger.library.enums.TransactionTypeEnum
-import account.ledger.library.models.ChooseAccountResult
-import account.ledger.library.models.FrequencyOfAccountsModel
-import account.ledger.library.models.InsertTransactionResult
-import account.ledger.library.models.UserModel
+import account.ledger.library.models.*
 import account.ledger.library.operations.InsertOperations
 import account.ledger.library.retrofit.data.TransactionDataSource
 import account.ledger.library.utils.ApiUtils
@@ -20,6 +18,7 @@ import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
 import accountLedgerCli.cli.Screens.quickTransactionOnWallet
 import accountLedgerCli.utils.ChooseAccountUtils
 import account_ledger_library.constants.ConstantsNative
+import common.utils.library.enums.PatternQuestionAnswerTypesEnum
 import common.utils.library.models.IsOkModel
 import common.utils.library.utils.*
 import io.github.cdimascio.dotenv.Dotenv
@@ -70,6 +69,8 @@ object InsertOperationsInteractive {
         dateTimeInText: String,
         transactionParticulars: String,
         transactionAmount: Float,
+        chosenTransactionForSpecial: TransactionResponse?,
+        chosenSpecialTransactionType: SpecialTransactionTypeModel?,
         isDevelopmentMode: Boolean
 
     ): InsertTransactionResult {
@@ -119,6 +120,8 @@ object InsertOperationsInteractive {
                         transactionParticulars = transactionParticulars,
                         transactionAmount = transactionAmount,
                         isConsoleMode = true,
+                        chosenTransactionForSpecial = chosenTransactionForSpecial,
+                        chosenSpecialTransactionType = chosenSpecialTransactionType,
                         isDevelopmentMode = isDevelopmentMode
                     )
                 })
@@ -200,11 +203,13 @@ object InsertOperationsInteractive {
         dateTimeInText: String,
         transactionParticulars: String,
         transactionAmount: Float,
-        isDevelopmentMode: Boolean
+        isDevelopmentMode: Boolean,
+        chosenTransactionForSpecial: TransactionResponse? = null,
+        chosenSpecialTransactionType: SpecialTransactionTypeModel? = null
 
     ): InsertTransactionResult {
 
-        var localInsertTransactionResult = TransactionUtils.getFailedInsertTransactionResult(
+        var localInsertTransactionResult: InsertTransactionResult = TransactionUtils.getFailedInsertTransactionResult(
 
             dateTimeInText = dateTimeInText,
             transactionParticulars = transactionParticulars,
@@ -286,7 +291,7 @@ object InsertOperationsInteractive {
 
                     localInsertTransactionResult = processChooseAccountResult(
 
-                        chooseAccountResult = chooseDepositTop(
+                        chooseAccountResult = InputOperations.chooseDepositTop(
 
                             userId = userId,
                             isConsoleMode = true,
@@ -304,7 +309,9 @@ object InsertOperationsInteractive {
                         fromAccount = localInsertTransactionResult.fromAccount,
                         viaAccount = localInsertTransactionResult.viaAccount,
                         toAccount = localInsertTransactionResult.toAccount,
-                        isDevelopmentMode = isDevelopmentMode
+                        chosenTransactionForSpecial = chosenTransactionForSpecial,
+                        chosenSpecialTransactionType = chosenSpecialTransactionType,
+                        isDevelopmentMode = isDevelopmentMode,
                     )
                 }
 
@@ -312,7 +319,7 @@ object InsertOperationsInteractive {
 
                     localInsertTransactionResult = processChooseAccountResult(
 
-                        chooseAccountResult = chooseDepositFull(
+                        chooseAccountResult = InputOperations.chooseDepositFull(
 
                             userId = userId,
                             isConsoleMode = true,
@@ -330,7 +337,9 @@ object InsertOperationsInteractive {
                         fromAccount = localInsertTransactionResult.fromAccount,
                         viaAccount = localInsertTransactionResult.viaAccount,
                         toAccount = localInsertTransactionResult.toAccount,
-                        isDevelopmentMode = isDevelopmentMode
+                        chosenTransactionForSpecial = chosenTransactionForSpecial,
+                        chosenSpecialTransactionType = chosenSpecialTransactionType,
+                        isDevelopmentMode = isDevelopmentMode,
                     )
                 }
 
@@ -355,6 +364,8 @@ object InsertOperationsInteractive {
                             dateTimeInText = localInsertTransactionResult.dateTimeInText,
                             transactionParticulars = localInsertTransactionResult.transactionParticulars,
                             transactionAmount = localInsertTransactionResult.transactionAmount,
+                            chosenTransactionForSpecial = chosenTransactionForSpecial,
+                            chosenSpecialTransactionType = chosenSpecialTransactionType,
                             isDevelopmentMode = isDevelopmentMode
                         )
                         if (processSelectedAccountResult.isSuccess) {
@@ -374,7 +385,7 @@ object InsertOperationsInteractive {
 
                     localInsertTransactionResult = processChooseAccountResult(
 
-                        chooseAccountResult = chooseWithdrawTop(
+                        chooseAccountResult = InputOperations.chooseWithdrawTop(
 
                             userId = userId,
                             isConsoleMode = true,
@@ -392,7 +403,9 @@ object InsertOperationsInteractive {
                         fromAccount = localInsertTransactionResult.fromAccount,
                         viaAccount = localInsertTransactionResult.viaAccount,
                         toAccount = localInsertTransactionResult.toAccount,
-                        isDevelopmentMode = isDevelopmentMode
+                        chosenTransactionForSpecial = chosenTransactionForSpecial,
+                        chosenSpecialTransactionType = chosenSpecialTransactionType,
+                        isDevelopmentMode = isDevelopmentMode,
                     )
                 }
 
@@ -400,7 +413,7 @@ object InsertOperationsInteractive {
 
                     localInsertTransactionResult = processChooseAccountResult(
 
-                        chooseAccountResult = chooseWithdrawFull(
+                        chooseAccountResult = InputOperations.chooseWithdrawFull(
 
                             userId = userId,
                             isConsoleMode = true,
@@ -418,7 +431,9 @@ object InsertOperationsInteractive {
                         fromAccount = localInsertTransactionResult.fromAccount,
                         viaAccount = localInsertTransactionResult.viaAccount,
                         toAccount = localInsertTransactionResult.toAccount,
-                        isDevelopmentMode = isDevelopmentMode
+                        chosenTransactionForSpecial = chosenTransactionForSpecial,
+                        chosenSpecialTransactionType = chosenSpecialTransactionType,
+                        isDevelopmentMode = isDevelopmentMode,
                     )
                 }
 
@@ -443,6 +458,8 @@ object InsertOperationsInteractive {
                             dateTimeInText = localInsertTransactionResult.dateTimeInText,
                             transactionParticulars = localInsertTransactionResult.transactionParticulars,
                             transactionAmount = localInsertTransactionResult.transactionAmount,
+                            chosenTransactionForSpecial = chosenTransactionForSpecial,
+                            chosenSpecialTransactionType = chosenSpecialTransactionType,
                             isDevelopmentMode = isDevelopmentMode
                         )
                         if (processSelectedAccountResult.isSuccess) {
@@ -472,6 +489,8 @@ object InsertOperationsInteractive {
                         transactionParticulars = localInsertTransactionResult.transactionParticulars,
                         transactionAmount = localInsertTransactionResult.transactionAmount,
                         isConsoleMode = true,
+                        chosenTransactionForSpecial = chosenTransactionForSpecial,
+                        chosenSpecialTransactionType = chosenSpecialTransactionType,
                         isDevelopmentMode = isDevelopmentMode
                     )
                 }
@@ -491,7 +510,9 @@ object InsertOperationsInteractive {
                             dateTimeInText = localInsertTransactionResult.dateTimeInText,
                             transactionParticulars = localInsertTransactionResult.transactionParticulars,
                             transactionAmount = localInsertTransactionResult.transactionAmount,
-                            isDevelopmentMode = isDevelopmentMode
+                            isDevelopmentMode = isDevelopmentMode,
+                            chosenTransactionForSpecial = chosenTransactionForSpecial,
+                            chosenSpecialTransactionType = chosenSpecialTransactionType
                         )
 
                     } else {
@@ -507,7 +528,9 @@ object InsertOperationsInteractive {
                             dateTimeInText = localInsertTransactionResult.dateTimeInText,
                             transactionParticulars = localInsertTransactionResult.transactionParticulars,
                             transactionAmount = localInsertTransactionResult.transactionAmount,
-                            isDevelopmentMode = isDevelopmentMode
+                            isDevelopmentMode = isDevelopmentMode,
+                            chosenTransactionForSpecial = chosenTransactionForSpecial,
+                            chosenSpecialTransactionType = chosenSpecialTransactionType
                         )
                     }
                 }
@@ -528,6 +551,8 @@ object InsertOperationsInteractive {
                             transactionParticulars = localInsertTransactionResult.transactionParticulars,
                             transactionAmount = localInsertTransactionResult.transactionAmount,
                             isConsoleMode = true,
+                            chosenTransactionForSpecial = chosenTransactionForSpecial,
+                            chosenSpecialTransactionType = chosenSpecialTransactionType,
                             isDevelopmentMode = isDevelopmentMode
                         )
                     } else {
@@ -544,6 +569,8 @@ object InsertOperationsInteractive {
                             transactionParticulars = localInsertTransactionResult.transactionParticulars,
                             transactionAmount = localInsertTransactionResult.transactionAmount,
                             isConsoleMode = true,
+                            chosenTransactionForSpecial = chosenTransactionForSpecial,
+                            chosenSpecialTransactionType = chosenSpecialTransactionType,
                             isDevelopmentMode = isDevelopmentMode
                         )
                     }
@@ -564,7 +591,9 @@ object InsertOperationsInteractive {
                             dateTimeInText = localInsertTransactionResult.dateTimeInText,
                             transactionParticulars = localInsertTransactionResult.transactionParticulars,
                             transactionAmount = localInsertTransactionResult.transactionAmount,
-                            isDevelopmentMode = isDevelopmentMode
+                            isDevelopmentMode = isDevelopmentMode,
+                            chosenTransactionForSpecial = chosenTransactionForSpecial,
+                            chosenSpecialTransactionType = chosenSpecialTransactionType
                         )
                     } else {
 
@@ -588,6 +617,8 @@ object InsertOperationsInteractive {
                                 transactionParticulars = localInsertTransactionResult.transactionParticulars,
                                 transactionAmount = localInsertTransactionResult.transactionAmount,
                                 wantToExchange = true,
+                                chosenTransactionForSpecial = chosenTransactionForSpecial,
+                                chosenSpecialTransactionType = chosenSpecialTransactionType,
                                 isDevelopmentMode = isDevelopmentMode
                             )
                             if (processSelectedAccountResult.isSuccess) {
@@ -620,6 +651,8 @@ object InsertOperationsInteractive {
                             transactionParticulars = localInsertTransactionResult.transactionParticulars,
                             transactionAmount = localInsertTransactionResult.transactionAmount,
                             isConsoleMode = true,
+                            chosenTransactionForSpecial = chosenTransactionForSpecial,
+                            chosenSpecialTransactionType = chosenSpecialTransactionType,
                             isDevelopmentMode = isDevelopmentMode
                         )
                     } else {
@@ -644,6 +677,8 @@ object InsertOperationsInteractive {
                                 transactionParticulars = localInsertTransactionResult.transactionParticulars,
                                 transactionAmount = localInsertTransactionResult.transactionAmount,
                                 wantToExchange = true,
+                                chosenTransactionForSpecial = chosenTransactionForSpecial,
+                                chosenSpecialTransactionType = chosenSpecialTransactionType,
                                 isDevelopmentMode = isDevelopmentMode
                             )
                             if (processSelectedAccountResult.isSuccess) {
@@ -675,14 +710,16 @@ object InsertOperationsInteractive {
                             dateTimeInText = localInsertTransactionResult.dateTimeInText,
                             transactionParticulars = localInsertTransactionResult.transactionParticulars,
                             transactionAmount = localInsertTransactionResult.transactionAmount,
-                            isDevelopmentMode = isDevelopmentMode
+                            isDevelopmentMode = isDevelopmentMode,
+                            chosenTransactionForSpecial = chosenTransactionForSpecial,
+                            chosenSpecialTransactionType = chosenSpecialTransactionType
                         )
 
                     } else {
 
                         localInsertTransactionResult = processChooseAccountResult(
 
-                            chooseAccountResult = chooseDepositTop(
+                            chooseAccountResult = InputOperations.chooseDepositTop(
 
                                 userId = userId,
                                 isConsoleMode = true,
@@ -701,6 +738,8 @@ object InsertOperationsInteractive {
                             fromAccount = localInsertTransactionResult.fromAccount,
                             viaAccount = localInsertTransactionResult.viaAccount,
                             toAccount = localInsertTransactionResult.toAccount,
+                            chosenTransactionForSpecial = chosenTransactionForSpecial,
+                            chosenSpecialTransactionType = chosenSpecialTransactionType,
                             isDevelopmentMode = isDevelopmentMode
                         )
                     }
@@ -722,13 +761,15 @@ object InsertOperationsInteractive {
                             transactionParticulars = localInsertTransactionResult.transactionParticulars,
                             transactionAmount = localInsertTransactionResult.transactionAmount,
                             isConsoleMode = true,
+                            chosenTransactionForSpecial = chosenTransactionForSpecial,
+                            chosenSpecialTransactionType = chosenSpecialTransactionType,
                             isDevelopmentMode = isDevelopmentMode
                         )
                     } else {
 
                         localInsertTransactionResult = processChooseAccountResult(
 
-                            chooseAccountResult = chooseDepositFull(
+                            chooseAccountResult = InputOperations.chooseDepositFull(
 
                                 userId = userId,
                                 isConsoleMode = true,
@@ -747,6 +788,8 @@ object InsertOperationsInteractive {
                             fromAccount = localInsertTransactionResult.fromAccount,
                             viaAccount = localInsertTransactionResult.viaAccount,
                             toAccount = localInsertTransactionResult.toAccount,
+                            chosenTransactionForSpecial = chosenTransactionForSpecial,
+                            chosenSpecialTransactionType = chosenSpecialTransactionType,
                             isDevelopmentMode = isDevelopmentMode
                         )
                     }
@@ -758,7 +801,7 @@ object InsertOperationsInteractive {
 
                         localInsertTransactionResult = processChooseAccountResult(
 
-                            chooseAccountResult = chooseViaTop(
+                            chooseAccountResult = InputOperations.chooseViaTop(
 
                                 userId = userId,
                                 isConsoleMode = true,
@@ -776,13 +819,15 @@ object InsertOperationsInteractive {
                             fromAccount = localInsertTransactionResult.fromAccount,
                             viaAccount = localInsertTransactionResult.viaAccount,
                             toAccount = localInsertTransactionResult.toAccount,
+                            chosenTransactionForSpecial = chosenTransactionForSpecial,
+                            chosenSpecialTransactionType = chosenSpecialTransactionType,
                             isDevelopmentMode = isDevelopmentMode
                         )
                     } else {
 
                         localInsertTransactionResult = processChooseAccountResult(
 
-                            chooseAccountResult = chooseWithdrawTop(
+                            chooseAccountResult = InputOperations.chooseWithdrawTop(
 
                                 userId = userId,
                                 isConsoleMode = true,
@@ -801,6 +846,8 @@ object InsertOperationsInteractive {
                             fromAccount = localInsertTransactionResult.fromAccount,
                             viaAccount = localInsertTransactionResult.viaAccount,
                             toAccount = localInsertTransactionResult.toAccount,
+                            chosenTransactionForSpecial = chosenTransactionForSpecial,
+                            chosenSpecialTransactionType = chosenSpecialTransactionType,
                             isDevelopmentMode = isDevelopmentMode
                         )
                     }
@@ -812,7 +859,7 @@ object InsertOperationsInteractive {
 
                         localInsertTransactionResult = processChooseAccountResult(
 
-                            chooseAccountResult = chooseViaFull(
+                            chooseAccountResult = InputOperations.chooseViaFull(
 
                                 userId = userId,
                                 isConsoleMode = true,
@@ -830,13 +877,15 @@ object InsertOperationsInteractive {
                             fromAccount = localInsertTransactionResult.fromAccount,
                             viaAccount = localInsertTransactionResult.viaAccount,
                             toAccount = localInsertTransactionResult.toAccount,
+                            chosenTransactionForSpecial = chosenTransactionForSpecial,
+                            chosenSpecialTransactionType = chosenSpecialTransactionType,
                             isDevelopmentMode = isDevelopmentMode
                         )
                     } else {
 
                         localInsertTransactionResult = processChooseAccountResult(
 
-                            chooseAccountResult = chooseWithdrawFull(
+                            chooseAccountResult = InputOperations.chooseWithdrawFull(
 
                                 userId = userId,
                                 isConsoleMode = true,
@@ -855,6 +904,8 @@ object InsertOperationsInteractive {
                             fromAccount = localInsertTransactionResult.fromAccount,
                             viaAccount = localInsertTransactionResult.viaAccount,
                             toAccount = localInsertTransactionResult.toAccount,
+                            chosenTransactionForSpecial = chosenTransactionForSpecial,
+                            chosenSpecialTransactionType = chosenSpecialTransactionType,
                             isDevelopmentMode = isDevelopmentMode
                         )
                     }
@@ -885,6 +936,8 @@ object InsertOperationsInteractive {
                                 dateTimeInText = localInsertTransactionResult.dateTimeInText,
                                 transactionParticulars = localInsertTransactionResult.transactionParticulars,
                                 transactionAmount = localInsertTransactionResult.transactionAmount,
+                                chosenTransactionForSpecial = chosenTransactionForSpecial,
+                                chosenSpecialTransactionType = chosenSpecialTransactionType,
                                 isDevelopmentMode = isDevelopmentMode
                             )
                             if (processSelectedAccountResult.isSuccess) {
@@ -922,6 +975,8 @@ object InsertOperationsInteractive {
                         userId = userId,
                         username = username,
                         previousTransactionData = localInsertTransactionResult,
+                        chosenTransactionForSpecial = chosenTransactionForSpecial,
+                        chosenSpecialTransactionType = chosenSpecialTransactionType,
                         isDevelopmentMode = isDevelopmentMode
                     )
                 }
@@ -933,6 +988,8 @@ object InsertOperationsInteractive {
                         userId = userId,
                         username = username,
                         previousTransactionData = localInsertTransactionResult,
+                        chosenTransactionForSpecial = chosenTransactionForSpecial,
+                        chosenSpecialTransactionType = chosenSpecialTransactionType,
                         isDevelopmentMode = isDevelopmentMode
                     )
                 }
@@ -944,6 +1001,8 @@ object InsertOperationsInteractive {
                         userId = userId,
                         username = username,
                         previousTransactionData = localInsertTransactionResult,
+                        chosenTransactionForSpecial = chosenTransactionForSpecial,
+                        chosenSpecialTransactionType = chosenSpecialTransactionType,
                         isDevelopmentMode = isDevelopmentMode
                     )
                 }
@@ -966,6 +1025,8 @@ object InsertOperationsInteractive {
                         userId = userId,
                         username = username,
                         previousTransactionData = localInsertTransactionResult,
+                        chosenTransactionForSpecial = chosenTransactionForSpecial,
+                        chosenSpecialTransactionType = chosenSpecialTransactionType,
                         isDevelopmentMode = isDevelopmentMode
                     )
                 }
@@ -977,6 +1038,8 @@ object InsertOperationsInteractive {
                         userId = userId,
                         username = username,
                         previousTransactionData = localInsertTransactionResult,
+                        chosenTransactionForSpecial = chosenTransactionForSpecial,
+                        chosenSpecialTransactionType = chosenSpecialTransactionType,
                         isDevelopmentMode = isDevelopmentMode
                     )
                 }
@@ -988,6 +1051,8 @@ object InsertOperationsInteractive {
                         userId = userId,
                         username = username,
                         previousTransactionData = localInsertTransactionResult,
+                        chosenTransactionForSpecial = chosenTransactionForSpecial,
+                        chosenSpecialTransactionType = chosenSpecialTransactionType,
                         isDevelopmentMode = isDevelopmentMode
                     )
                 }
@@ -1076,6 +1141,8 @@ object InsertOperationsInteractive {
         fromAccount: AccountResponse,
         viaAccount: AccountResponse,
         toAccount: AccountResponse,
+        chosenTransactionForSpecial: TransactionResponse?,
+        chosenSpecialTransactionType: SpecialTransactionTypeModel?,
         isDevelopmentMode: Boolean
 
     ): InsertTransactionResult {
@@ -1099,6 +1166,8 @@ object InsertOperationsInteractive {
                 transactionParticulars = transactionParticulars,
                 transactionAmount = transactionAmount,
                 wantToExchange = wantToExchange,
+                chosenTransactionForSpecial = chosenTransactionForSpecial,
+                chosenSpecialTransactionType = chosenSpecialTransactionType,
                 isDevelopmentMode = isDevelopmentMode
             )
             if (processSelectedAccountResult.isSuccess) {
@@ -1137,6 +1206,8 @@ object InsertOperationsInteractive {
         transactionParticulars: String,
         transactionAmount: Float,
         wantToExchange: Boolean = false,
+        chosenTransactionForSpecial: TransactionResponse?,
+        chosenSpecialTransactionType: SpecialTransactionTypeModel?,
         isDevelopmentMode: Boolean
 
     ): InsertTransactionResult {
@@ -1159,6 +1230,8 @@ object InsertOperationsInteractive {
                         transactionParticulars = transactionParticulars,
                         transactionAmount = transactionAmount,
                         isConsoleMode = true,
+                        chosenTransactionForSpecial = chosenTransactionForSpecial,
+                        chosenSpecialTransactionType = chosenSpecialTransactionType,
                         isDevelopmentMode = isDevelopmentMode
                     )
 
@@ -1176,6 +1249,8 @@ object InsertOperationsInteractive {
                         transactionParticulars = transactionParticulars,
                         transactionAmount = transactionAmount,
                         isConsoleMode = true,
+                        chosenTransactionForSpecial = chosenTransactionForSpecial,
+                        chosenSpecialTransactionType = chosenSpecialTransactionType,
                         isDevelopmentMode = isDevelopmentMode
                     )
                 }
@@ -1197,6 +1272,8 @@ object InsertOperationsInteractive {
                         transactionParticulars = transactionParticulars,
                         transactionAmount = transactionAmount,
                         isConsoleMode = true,
+                        chosenTransactionForSpecial = chosenTransactionForSpecial,
+                        chosenSpecialTransactionType = chosenSpecialTransactionType,
                         isDevelopmentMode = isDevelopmentMode
                     )
 
@@ -1214,6 +1291,8 @@ object InsertOperationsInteractive {
                         transactionParticulars = transactionParticulars,
                         transactionAmount = transactionAmount,
                         isConsoleMode = true,
+                        chosenTransactionForSpecial = chosenTransactionForSpecial,
+                        chosenSpecialTransactionType = chosenSpecialTransactionType,
                         isDevelopmentMode = isDevelopmentMode
                     )
                 }
@@ -1233,6 +1312,8 @@ object InsertOperationsInteractive {
                     transactionParticulars = transactionParticulars,
                     transactionAmount = transactionAmount,
                     isConsoleMode = true,
+                    chosenTransactionForSpecial = chosenTransactionForSpecial,
+                    chosenSpecialTransactionType = chosenSpecialTransactionType,
                     isDevelopmentMode = isDevelopmentMode
                 )
             }
@@ -1257,7 +1338,9 @@ object InsertOperationsInteractive {
         splitIndex: UInt = 0u,
         isConsoleMode: Boolean = true,
         isDevelopmentMode: Boolean,
-        isCyclicViaStep: Boolean = false
+        isCyclicViaStep: Boolean = false,
+        chosenTransactionForSpecial: TransactionResponse? = null,
+        chosenSpecialTransactionType: SpecialTransactionTypeModel? = null
 
     ): InsertTransactionResult {
 
@@ -1276,7 +1359,7 @@ object InsertOperationsInteractive {
             "Deposit Account - ${toAccount.id} : ${toAccount.fullName}",
         )
 
-        localDateTimeInText = enterDateWithTime(
+        localDateTimeInText = InputOperations.enterDateWithTime(
 
             promptCommands = menuItems,
             transactionType = transactionType,
@@ -1304,7 +1387,9 @@ object InsertOperationsInteractive {
                     isTwoWayStep = isTwoWayStep,
                     transactionId = transactionId,
                     isDevelopmentMode = isDevelopmentMode,
-                    isCyclicViaStep = isCyclicViaStep
+                    isCyclicViaStep = isCyclicViaStep,
+                    chosenTransactionForSpecial = chosenTransactionForSpecial,
+                    chosenSpecialTransactionType = chosenSpecialTransactionType
                 )
             }
 
@@ -1327,7 +1412,9 @@ object InsertOperationsInteractive {
                     isTwoWayStep = isTwoWayStep,
                     transactionId = transactionId,
                     isDevelopmentMode = isDevelopmentMode,
-                    isCyclicViaStep = isCyclicViaStep
+                    isCyclicViaStep = isCyclicViaStep,
+                    chosenTransactionForSpecial = chosenTransactionForSpecial,
+                    chosenSpecialTransactionType = chosenSpecialTransactionType
                 )
             }
 
@@ -1351,6 +1438,8 @@ object InsertOperationsInteractive {
                     transactionId = transactionId,
                     isDevelopmentMode = isDevelopmentMode,
                     isCyclicViaStep = isCyclicViaStep,
+                    chosenTransactionForSpecial = chosenTransactionForSpecial,
+                    chosenSpecialTransactionType = chosenSpecialTransactionType
                 )
             }
 
@@ -1397,7 +1486,9 @@ object InsertOperationsInteractive {
                         transactionAmount = localInsertTransactionResult.transactionAmount,
                         splitIndex = index,
                         isDevelopmentMode = isDevelopmentMode,
-                        isCyclicViaStep = isCyclicViaStep
+                        isCyclicViaStep = isCyclicViaStep,
+                        chosenTransactionForSpecial = chosenTransactionForSpecial,
+                        chosenSpecialTransactionType = chosenSpecialTransactionType
                     )
                 }
                 return localInsertTransactionResult
@@ -1543,6 +1634,8 @@ object InsertOperationsInteractive {
                                                             isCyclicViaStep = isCyclicViaStep,
                                                             splitIndex = splitIndex,
                                                             username = username,
+                                                            chosenTransactionForSpecial = chosenTransactionForSpecial,
+                                                            chosenSpecialTransactionType = chosenSpecialTransactionType
                                                         )
 
                                                     } else {
@@ -1574,15 +1667,25 @@ object InsertOperationsInteractive {
                                                             splitIndex = splitIndex,
                                                             isDevelopmentMode = isDevelopmentMode,
                                                             isCyclicViaStep = isCyclicViaStep,
+                                                            chosenTransactionForSpecial = chosenTransactionForSpecial,
+                                                            chosenSpecialTransactionType = chosenSpecialTransactionType
                                                         )
                                                     }
                                                 },
+                                                chosenTransactionForSpecial = chosenTransactionForSpecial,
+                                                chosenSpecialTransactionType = chosenSpecialTransactionType
                                             )
                                         },
+                                        chosenTransactionForSpecial = chosenTransactionForSpecial,
+                                        chosenSpecialTransactionType = chosenSpecialTransactionType
                                     )
                                 },
+                                chosenTransactionForSpecial = chosenTransactionForSpecial,
+                                chosenSpecialTransactionType = chosenSpecialTransactionType
                             )
                         },
+                        chosenTransactionForSpecial = chosenTransactionForSpecial,
+                        chosenSpecialTransactionType = chosenSpecialTransactionType
                     )
                 } else {
 
@@ -1604,7 +1707,9 @@ object InsertOperationsInteractive {
                         isEditStep = isEditStep,
                         splitIndex = splitIndex,
                         isDevelopmentMode = isDevelopmentMode,
-                        isCyclicViaStep = isCyclicViaStep
+                        isCyclicViaStep = isCyclicViaStep,
+                        chosenTransactionForSpecial = chosenTransactionForSpecial,
+                        chosenSpecialTransactionType = chosenSpecialTransactionType
                     )
                 }
             }
@@ -1629,7 +1734,9 @@ object InsertOperationsInteractive {
         isEditStep: Boolean,
         splitIndex: UInt,
         isDevelopmentMode: Boolean,
-        isCyclicViaStep: Boolean
+        isCyclicViaStep: Boolean,
+        chosenTransactionForSpecial: TransactionResponse?,
+        chosenSpecialTransactionType: SpecialTransactionTypeModel?
 
     ): InsertTransactionResult {
 
@@ -1693,7 +1800,9 @@ object InsertOperationsInteractive {
             isEditStep = isEditStep,
             splitIndex = splitIndex,
             isDevelopmentMode = isDevelopmentMode,
-            isCyclicViaStep = isCyclicViaStep
+            isCyclicViaStep = isCyclicViaStep,
+            chosenTransactionForSpecial = chosenTransactionForSpecial,
+            chosenSpecialTransactionType = chosenSpecialTransactionType
         )
     }
 
@@ -1717,7 +1826,9 @@ object InsertOperationsInteractive {
         splitIndex: UInt,
         username: String,
         timePartIncrementOrDecrementCommandIndicator: String,
-        timePartIncrementOrDecrementNoMatchAction: () -> InsertTransactionResult
+        timePartIncrementOrDecrementNoMatchAction: () -> InsertTransactionResult,
+        chosenTransactionForSpecial: TransactionResponse?,
+        chosenSpecialTransactionType: SpecialTransactionTypeModel?
 
     ): InsertTransactionResult {
 
@@ -1867,7 +1978,9 @@ object InsertOperationsInteractive {
                 isEditStep = isEditStep,
                 splitIndex = splitIndex,
                 isDevelopmentMode = isDevelopmentMode,
-                isCyclicViaStep = isCyclicViaStep
+                isCyclicViaStep = isCyclicViaStep,
+                chosenTransactionForSpecial = chosenTransactionForSpecial,
+                chosenSpecialTransactionType = chosenSpecialTransactionType
             )
         }
     }
@@ -1934,7 +2047,9 @@ object InsertOperationsInteractive {
         isViaStep: Boolean,
         isCyclicViaStep: Boolean,
         splitIndex: UInt,
-        username: String
+        username: String,
+        chosenTransactionForSpecial: TransactionResponse?,
+        chosenSpecialTransactionType: SpecialTransactionTypeModel?
 
     ): InsertTransactionResult {
 
@@ -1944,99 +2059,198 @@ object InsertOperationsInteractive {
         val reversedTransactionParticulars: String =
             SentenceUtils.reverseOrderOfWords(sentence = localTransactionParticulars)
 
-        print("Enter Particulars (Current Value - $localTransactionParticulars), R to Reverse (Reversed Value - $reversedTransactionParticulars), AS to Add Suffix, AP to Add Prefix : ")
+        if (chosenTransactionForSpecial == null) {
 
-        val transactionParticularsInput: String = readln()
-        if (transactionParticularsInput.isNotEmpty()) {
+            print("Enter Particulars (Current Value - $localTransactionParticulars), R to Reverse (Reversed Value - $reversedTransactionParticulars), AS to Add Suffix, AP to Add Prefix : ")
 
-            localTransactionParticulars = if (transactionParticularsInput == "R") {
+            val transactionParticularsInput: String = readln()
+            if (transactionParticularsInput.isNotEmpty()) {
 
-                reversedTransactionParticulars
+                localTransactionParticulars = if (transactionParticularsInput == "R") {
 
-            } else if (transactionParticularsInput == "AS") {
+                    reversedTransactionParticulars
 
-                print("Enter Suffix : ")
-                val transactionSuffixInput: String = readln()
-                val suffixedTransactionParticulars = "$localTransactionParticulars$transactionSuffixInput"
+                } else if (transactionParticularsInput == "AS") {
 
-                do {
-                    print("Particulars (Current Value - $localTransactionParticulars), (Suffixed Value - $suffixedTransactionParticulars), Do you want to Continue (Y/N) : ")
+                    print("Enter Suffix : ")
+                    val transactionSuffixInput: String = readln()
+                    val suffixedTransactionParticulars = "$localTransactionParticulars$transactionSuffixInput"
 
-                    when (readln()) {
+                    do {
+                        print("Particulars (Current Value - $localTransactionParticulars), (Suffixed Value - $suffixedTransactionParticulars), Do you want to Continue (Y/N) : ")
 
-                        "Y", "" -> {
+                        when (readln()) {
 
-                            localTransactionParticulars = suffixedTransactionParticulars
-                            break
+                            "Y", "" -> {
+
+                                localTransactionParticulars = suffixedTransactionParticulars
+                                break
+                            }
+
+                            "N" -> {
+
+                                break
+                            }
+
+                            else -> {
+
+                                InteractiveUtils.invalidOptionMessage()
+                            }
                         }
+                    } while (true)
 
-                        "N" -> {
+                    localTransactionParticulars
 
-                            break
+                } else if (transactionParticularsInput == "AP") {
+
+                    print("Enter Prefix : ")
+                    val transactionPrefixInput: String = readln()
+                    val prefixedTransactionParticulars = "$transactionPrefixInput$localTransactionParticulars"
+
+                    do {
+                        print("Particulars (Current Value - $localTransactionParticulars), (Prefixed Value - $prefixedTransactionParticulars), Do you want to Continue (Y/N) : ")
+
+                        when (readln()) {
+
+                            "Y" -> {
+
+                                localTransactionParticulars = prefixedTransactionParticulars
+                            }
+
+                            "N" -> {
+
+                                break
+                            }
+
+                            else -> {
+
+                                InteractiveUtils.invalidOptionMessage()
+                            }
                         }
+                    } while (true)
 
-                        else -> {
+                    localTransactionParticulars
 
-                            InteractiveUtils.invalidOptionMessage()
-                        }
-                    }
-                } while (true)
+                } else {
 
-                localTransactionParticulars
-
-            } else if (transactionParticularsInput == "AP") {
-
-                print("Enter Prefix : ")
-                val transactionPrefixInput: String = readln()
-                val prefixedTransactionParticulars = "$transactionPrefixInput$localTransactionParticulars"
-
-                do {
-                    print("Particulars (Current Value - $localTransactionParticulars), (Prefixed Value - $prefixedTransactionParticulars), Do you want to Continue (Y/N) : ")
-
-                    when (readln()) {
-
-                        "Y" -> {
-
-                            localTransactionParticulars = prefixedTransactionParticulars
-                        }
-
-                        "N" -> {
-
-                            break
-                        }
-
-                        else -> {
-
-                            InteractiveUtils.invalidOptionMessage()
-                        }
-                    }
-                } while (true)
-
-                localTransactionParticulars
-
-            } else {
-
-                transactionParticularsInput
+                    transactionParticularsInput
+                }
             }
-        }
 
-        //                if (isTwoWayStep || isViaStep) {
-        //
-        //                    // TODO: Prefix Particulars
-        //                    // TODO: Suffix Particulars
-        //                    // TODO: Other String Manipulations
-        //                }
+            //                if (isTwoWayStep || isViaStep) {
+            //
+            //                    // TODO: Prefix Particulars
+            //                    // TODO: Suffix Particulars
+            //                    // TODO: Other String Manipulations
+            //                }
 
-        print("Enter Amount (Current Value - $localTransactionAmount) : ")
-        val transactionAmountInput: String = readln()
-        if (transactionAmountInput.isNotEmpty()) {
+            print("Enter Amount (Current Value - $localTransactionAmount) : ")
+            val transactionAmountInput: String = readln()
+            if (transactionAmountInput.isNotEmpty()) {
 
-            localTransactionAmount = InputUtils.getValidFloat(
+                localTransactionAmount = InputUtils.getValidFloat(
 
-                inputText = transactionAmountInput,
-                constructInvalidMessage = fun(inputText: String): String {
-                    return "Invalid Amount, Enter Amount (Current Value - $inputText) : "
-                })
+                    inputText = transactionAmountInput,
+                    constructInvalidMessage = fun(inputText: String): String {
+                        return "Invalid Amount, Enter Amount (Current Value - $inputText) : "
+                    })
+            }
+        } else {
+
+            commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
+
+                listOfCommands = listOf(
+
+                    "The Selected Transaction : ${chosenTransactionForSpecial.particulars} => ${chosenTransactionForSpecial.amount}",
+                    "C to continue as it is / P to continue using it's pattern : "
+                )
+            )
+            when (readln()) {
+
+                "C" -> {
+
+                    localTransactionParticulars = chosenTransactionForSpecial.particulars
+                    localTransactionAmount = chosenTransactionForSpecial.amount
+                }
+
+                "P" -> {
+
+                    val answers: MutableList<String> = mutableListOf()
+                    var totalNoOfTransactions = 1u
+                    chosenSpecialTransactionType!!.patternQuestions.forEach { patternQuestion: PatternQuestionModel ->
+
+                        val answer: String
+                        when (patternQuestion.answerType) {
+
+                            PatternQuestionAnswerTypesEnum.TextFromListOfOptions -> {
+
+                                val optionsList: List<String> = patternQuestion.question.split('/')
+                                answer = optionsList[
+                                    (InputOperations.getValidIndexWithSelectionPromptForNonCollections(
+
+                                        list = optionsList,
+                                        itemSpecification = "${patternQuestion.question}?",
+                                        items = ListUtils.indexedListTextFromList(list = optionsList)
+
+                                    ).toInt() - 1)
+                                ].trim()
+                            }
+
+                            PatternQuestionAnswerTypesEnum.Number -> {
+
+                                print("Enter ${patternQuestion.question} : ")
+                                answer = InputUtils.getValidUnsignedInt(inputText = readln()).toString()
+
+                            }
+
+                            PatternQuestionAnswerTypesEnum.Float -> {
+
+                                print("Enter ${patternQuestion.question} : ")
+                                answer = InputUtils.getValidFloat(inputText = readln()).toString()
+
+                            }
+
+                            PatternQuestionAnswerTypesEnum.TextFromPrefixListOfOptions -> {
+
+                                val optionsList: List<String> = patternQuestion.question.substring(
+
+                                    patternQuestion.question.indexOf('{') + 1,
+                                    patternQuestion.question.indexOf('}')
+
+                                ).split('/')
+
+                                val position: Int = InputOperations.getValidIndexWithSelectionPromptForNonCollections(
+
+                                    list = optionsList,
+                                    itemSpecification = "${
+                                        patternQuestion.question.substring(
+                                            0,
+                                            patternQuestion.question.indexOf('{')
+                                        )
+                                    } __________________",
+                                    items = ListUtils.indexedListTextFromList(list = optionsList)
+
+                                ).toInt() - 1
+
+                                if (chosenSpecialTransactionType.isRepeatingTransaction) {
+
+                                    if (patternQuestion.isSizeIndicator) {
+
+                                        totalNoOfTransactions = patternQuestion.positionValues[position].toUInt()
+                                    }
+                                }
+                                answer = optionsList[position].trim()
+                            }
+                        }
+                        answers.add(answer)
+                    }
+                }
+
+                else -> {
+
+                    InteractiveUtils.invalidOptionMessage()
+                }
+            }
         }
 
         do {
@@ -2064,7 +2278,7 @@ object InsertOperationsInteractive {
 
                         when (transactionType) {
 
-                            TransactionTypeEnum.NORMAL -> {
+                            TransactionTypeEnum.NORMAL, TransactionTypeEnum.SPECIAL -> {
 
                                 return InsertTransactionResult(
 
@@ -2159,7 +2373,7 @@ object InsertOperationsInteractive {
 
                         when (transactionType) {
 
-                            TransactionTypeEnum.NORMAL, TransactionTypeEnum.TWO_WAY -> {
+                            TransactionTypeEnum.NORMAL, TransactionTypeEnum.TWO_WAY, TransactionTypeEnum.SPECIAL -> {
 
                                 return InsertTransactionResult(
 
@@ -2234,7 +2448,9 @@ object InsertOperationsInteractive {
                     isEditStep = isEditStep,
                     splitIndex = splitIndex,
                     isDevelopmentMode = isDevelopmentMode,
-                    isCyclicViaStep = isCyclicViaStep
+                    isCyclicViaStep = isCyclicViaStep,
+                    chosenTransactionForSpecial = chosenTransactionForSpecial,
+                    chosenSpecialTransactionType = chosenSpecialTransactionType
                 )
 
                 "Ex" -> {
@@ -2257,7 +2473,9 @@ object InsertOperationsInteractive {
                             isTwoWayStep = isTwoWayStep,
                             transactionId = transactionId,
                             isDevelopmentMode = isDevelopmentMode,
-                            isCyclicViaStep = isCyclicViaStep
+                            isCyclicViaStep = isCyclicViaStep,
+                            chosenTransactionForSpecial = chosenTransactionForSpecial,
+                            chosenSpecialTransactionType = chosenSpecialTransactionType
                         )
 
                     } else {
@@ -2287,7 +2505,9 @@ object InsertOperationsInteractive {
                             isTwoWayStep = isTwoWayStep,
                             transactionId = transactionId,
                             isDevelopmentMode = isDevelopmentMode,
-                            isCyclicViaStep = isCyclicViaStep
+                            isCyclicViaStep = isCyclicViaStep,
+                            chosenTransactionForSpecial = chosenTransactionForSpecial,
+                            chosenSpecialTransactionType = chosenSpecialTransactionType
                         )
 
                     } else {
@@ -2317,7 +2537,9 @@ object InsertOperationsInteractive {
                             isTwoWayStep = isTwoWayStep,
                             transactionId = transactionId,
                             isDevelopmentMode = isDevelopmentMode,
-                            isCyclicViaStep = isCyclicViaStep
+                            isCyclicViaStep = isCyclicViaStep,
+                            chosenTransactionForSpecial = chosenTransactionForSpecial,
+                            chosenSpecialTransactionType = chosenSpecialTransactionType
                         )
                     } else {
 
@@ -2346,7 +2568,9 @@ object InsertOperationsInteractive {
                             isTwoWayStep = isTwoWayStep,
                             transactionId = transactionId,
                             isDevelopmentMode = isDevelopmentMode,
-                            isCyclicViaStep = isCyclicViaStep
+                            isCyclicViaStep = isCyclicViaStep,
+                            chosenTransactionForSpecial = chosenTransactionForSpecial,
+                            chosenSpecialTransactionType = chosenSpecialTransactionType
                         )
                     } else {
 
@@ -2398,7 +2622,9 @@ object InsertOperationsInteractive {
         isTwoWayStep: Boolean,
         transactionId: UInt,
         isDevelopmentMode: Boolean,
-        isCyclicViaStep: Boolean
+        isCyclicViaStep: Boolean,
+        chosenTransactionForSpecial: TransactionResponse?,
+        chosenSpecialTransactionType: SpecialTransactionTypeModel?
 
     ): InsertTransactionResult {
 
@@ -2422,7 +2648,9 @@ object InsertOperationsInteractive {
                     transactionAmount = transactionAmount,
                     isEditStep = isEditStep,
                     isDevelopmentMode = isDevelopmentMode,
-                    isCyclicViaStep = isCyclicViaStep
+                    isCyclicViaStep = isCyclicViaStep,
+                    chosenTransactionForSpecial = chosenTransactionForSpecial,
+                    chosenSpecialTransactionType = chosenSpecialTransactionType
                 )
             }
 
@@ -2444,7 +2672,9 @@ object InsertOperationsInteractive {
                     transactionAmount = transactionAmount,
                     isEditStep = isEditStep,
                     isDevelopmentMode = isDevelopmentMode,
-                    isCyclicViaStep = isCyclicViaStep
+                    isCyclicViaStep = isCyclicViaStep,
+                    chosenTransactionForSpecial = chosenTransactionForSpecial,
+                    chosenSpecialTransactionType = chosenSpecialTransactionType
                 )
             }
 
@@ -2466,7 +2696,9 @@ object InsertOperationsInteractive {
                     transactionAmount = transactionAmount,
                     isEditStep = isEditStep,
                     isDevelopmentMode = isDevelopmentMode,
-                    isCyclicViaStep = isCyclicViaStep
+                    isCyclicViaStep = isCyclicViaStep,
+                    chosenTransactionForSpecial = chosenTransactionForSpecial,
+                    chosenSpecialTransactionType = chosenSpecialTransactionType
                 )
             }
         }

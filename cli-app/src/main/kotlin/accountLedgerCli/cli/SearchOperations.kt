@@ -67,15 +67,14 @@ fun searchAccount(
             val input: String = readln()
             if (input == "1") {
 
-                return getValidIndexWithInputPrompt(
+                return InputOperations.getValidIndexFromCollectionWithSelectionPromptAndZeroAsBack(
 
                     map = searchResult,
                     itemSpecification = ConstantsNative.accountText,
                     items = AccountUtils.userAccountsToStringFromList(
 
                         accounts = searchResult.values.toList()
-                    ),
-                    backValue = 0u
+                    )
                 )
             } else if (input != "0") {
 

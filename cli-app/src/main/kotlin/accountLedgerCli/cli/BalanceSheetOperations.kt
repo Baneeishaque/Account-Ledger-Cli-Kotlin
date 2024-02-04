@@ -27,12 +27,12 @@ internal fun balanceSheetOfUser(
 ) {
 
     val chooseUserResult: ChooseUserResult = handleUserSelection(
-        chosenUserId = getValidIndexWithInputPrompt(
+        chosenUserId = InputOperations.getValidIndexFromCollectionWithSelectionPromptAndZeroAsBack(
 
             map = usersMap,
             itemSpecification = ConstantsNative.userText,
-            items = UserUtils.usersToStringFromLinkedHashMap(usersMap = usersMap),
-            backValue = 0u
+            items = UserUtils.usersToStringFromLinkedHashMap(usersMap = usersMap)
+
         ), usersMap = usersMap
     )
     if (chooseUserResult.isChosen) {

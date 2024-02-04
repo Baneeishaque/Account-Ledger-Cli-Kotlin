@@ -225,6 +225,7 @@ gradle-app.setting
 /api/http-client.env.json
 /frequencyOfAccounts.json
 /relationOfAccounts.json
+/specialTransactionTypes.json
 
 cli-app/bin/
 

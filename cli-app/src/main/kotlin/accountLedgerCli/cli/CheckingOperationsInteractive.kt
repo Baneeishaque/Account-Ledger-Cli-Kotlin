@@ -1,8 +1,10 @@
 package accountLedgerCli.cli
 
 import account.ledger.library.api.response.AccountResponse
+import account.ledger.library.api.response.TransactionResponse
 import account.ledger.library.enums.TransactionTypeEnum
 import account.ledger.library.models.InsertTransactionResult
+import account.ledger.library.models.SpecialTransactionTypeModel
 import account.ledger.library.operations.CheckingOperations
 import account.ledger.library.utils.TransactionUtils
 import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithContinuePrompt
@@ -20,6 +22,8 @@ internal fun transactionContinueCheck(
     transactionParticulars: String,
     transactionAmount: Float,
     isConsoleMode: Boolean,
+    chosenTransactionForSpecial: TransactionResponse? = null,
+    chosenSpecialTransactionType: SpecialTransactionTypeModel?,
     isDevelopmentMode: Boolean
 
 ): InsertTransactionResult {
@@ -60,7 +64,9 @@ internal fun transactionContinueCheck(
                     fromAccountMissingActions = { println("Please choose from account...") },
                     toAccountMissingActions = { println("Please choose deposit account...") },
                     viaAccountMissingActions = { println("Please choose via. account...") },
-                    addTransactionOperation = InsertOperationsInteractive::insertTransactionVariantsInteractive
+                    addTransactionOperation = InsertOperationsInteractive::insertTransactionVariantsInteractive,
+                    chosenTransactionForSpecial = chosenTransactionForSpecial,
+                    chosenSpecialTransactionType = chosenSpecialTransactionType
                 )
             }
 

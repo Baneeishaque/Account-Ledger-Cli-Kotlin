@@ -400,7 +400,8 @@ class UserOperationsInterActiveWithApiService {
 
                 } else {
 
-                    val usersMap: LinkedHashMap<UInt, UserResponse> = UserUtils.prepareUsersMap(multipleUserResponse.users)
+                    val usersMap: LinkedHashMap<UInt, UserResponse> =
+                        UserUtils.prepareUsersMap(multipleUserResponse.users)
                     var insertTransactionResult = InsertTransactionResult(
                         isSuccess = false,
                         dateTimeInText = dateTimeInText,
@@ -436,12 +437,11 @@ class UserOperationsInterActiveWithApiService {
 
                             "2" -> {
                                 val chooseUserResult: ChooseUserResult = handleUserSelection(
-                                    chosenUserId = getValidIndexWithInputPrompt(
+                                    chosenUserId = InputOperations.getValidIndexFromCollectionWithSelectionPromptAndZeroAsBack(
 
                                         map = usersMap,
                                         itemSpecification = ConstantsNative.userText,
-                                        items = UserUtils.usersToStringFromLinkedHashMap(usersMap = usersMap),
-                                        backValue = 0u
+                                        items = UserUtils.usersToStringFromLinkedHashMap(usersMap = usersMap)
 
                                     ), usersMap = usersMap
                                 )
@@ -458,7 +458,7 @@ class UserOperationsInterActiveWithApiService {
                                         transactionParticulars = transactionParticulars,
                                         transactionAmount = transactionAmount,
                                         isDevelopmentMode = isDevelopmentMode,
-                                        dotEnv =dotEnv
+                                        dotEnv = dotEnv
                                     )
                                 }
                             }

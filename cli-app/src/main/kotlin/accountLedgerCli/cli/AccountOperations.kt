@@ -185,7 +185,7 @@ private fun printUserTransactionAfterSpecifiedDate(
 ) {
     println(
         "userTransactionsAfterSpecifiedDate = ${
-            TransactionUtils.userTransactionsToTextFromList(
+            TransactionUtils.userTransactionsToTextFromListForLedger(
 
                 transactions = userTransactionsAfterSpecifiedDate,
                 currentAccountId = 0u,
