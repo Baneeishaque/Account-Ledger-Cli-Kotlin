@@ -466,6 +466,7 @@ class UserOperationsInterActiveWithApiService {
                             )
                         )
                         when (readln()) {
+
                             "1" -> {
                                 balanceSheetOfUser(
 
@@ -476,6 +477,7 @@ class UserOperationsInterActiveWithApiService {
                             }
 
                             "2" -> {
+
                                 val chooseUserResult: ChooseUserResult = handleUserSelection(
                                     chosenUserId = InputOperations.getValidIndexFromCollectionWithSelectionPromptAndZeroAsBack(
 
