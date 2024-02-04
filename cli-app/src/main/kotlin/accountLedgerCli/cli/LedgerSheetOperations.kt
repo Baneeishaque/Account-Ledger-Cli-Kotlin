@@ -64,7 +64,8 @@ object LedgerSheetOperations {
         isNotApiCall: Boolean = true,
         isConsoleMode: Boolean,
         isDevelopmentMode: Boolean,
-        operationsAfterPrint: (List<BalanceSheetDataRowModel>) -> Unit = fun(_: List<BalanceSheetDataRowModel>) {}
+        operationsAfterPrint: (List<BalanceSheetDataRowModel>) -> Unit = fun(_: List<BalanceSheetDataRowModel>) {},
+        operationsWithData: (List<BalanceSheetDataRowModel>, Boolean, String, String, (List<BalanceSheetDataRowModel>) -> Unit) -> List<BalanceSheetDataRowModel> = ::printSheetOfUserDefaultOperation
 
     ): IsOkModel<List<BalanceSheetDataRowModel>> {
 
@@ -83,31 +84,22 @@ object LedgerSheetOperations {
             ),
             dataOperation = fun(data: String) {
 
-                val balanceSheetDataRows = Json.decodeFromString(
-
-                    deserializer = CommonDataModel.serializer(BalanceSheetDataRowModel.serializer()),
-                    string = data
-
-                ).data!!
-
-                if (isConsoleMode) {
-
-                    println("\nUser : $currentUserName $sheetTitle Sheet Ledger")
-                    println(CommonConstants.dashedLineSeparator)
-                    for (balanceSheetDataRow: BalanceSheetDataRowModel in balanceSheetDataRows) {
-
-                        println("${balanceSheetDataRow.accountId} : ${balanceSheetDataRow.accountName} : ${balanceSheetDataRow.accountBalance}")
-                    }
-                    operationsAfterPrint.invoke(balanceSheetDataRows)
-
-                } else {
-
-                    println(data)
-                }
                 isOkModel = IsOkModel(
 
                     isOK = true,
-                    data = balanceSheetDataRows
+                    data = operationsWithData.invoke(
+
+                        Json.decodeFromString(
+
+                            deserializer = CommonDataModel.serializer(BalanceSheetDataRowModel.serializer()),
+                            string = data
+
+                        ).data!!,
+                        isConsoleMode,
+                        currentUserName,
+                        sheetTitle,
+                        operationsAfterPrint
+                    )
                 )
             },
             errorOperation = fun(error: String) {
@@ -117,6 +109,45 @@ object LedgerSheetOperations {
             }
         )
         return isOkModel
+    }
+
+    @JvmStatic
+    fun printSheetOfUserDefaultOperation(
+
+        balanceSheetDataRows: List<BalanceSheetDataRowModel>,
+        isConsoleMode: Boolean,
+        currentUserName: String,
+        sheetTitle: String,
+        operationsAfterPrint: (List<BalanceSheetDataRowModel>) -> Unit
+
+    ): List<BalanceSheetDataRowModel> {
+
+        if (isConsoleMode) {
+
+            println("\nUser : $currentUserName $sheetTitle Sheet Ledger")
+            println(CommonConstants.dashedLineSeparator)
+            for (balanceSheetDataRow: BalanceSheetDataRowModel in balanceSheetDataRows) {
+
+                println("${balanceSheetDataRow.accountId} : ${balanceSheetDataRow.accountName} : ${balanceSheetDataRow.accountBalance}")
+            }
+            operationsAfterPrint.invoke(balanceSheetDataRows)
+
+        } else {
+
+            println(
+
+                Json.encodeToString(
+
+                    serializer = CommonDataModel.serializer(BalanceSheetDataRowModel.serializer()),
+                    value = CommonDataModel(
+
+                        status = 0,
+                        data = balanceSheetDataRows
+                    )
+                )
+            )
+        }
+        return balanceSheetDataRows
     }
 
     @JvmStatic
@@ -206,7 +237,8 @@ object LedgerSheetOperations {
         isDevelopmentMode: Boolean,
         operationsAfterPrint: (List<BalanceSheetDataRowModel>) -> Unit = fun(_: List<BalanceSheetDataRowModel>) {},
         environmentVariable: EnvironmentFileEntryEnum,
-        environmentVariablesForAccountsToIgnore: List<EnvironmentFileEntryEnum>
+        environmentVariablesForAccountsToIgnore: List<EnvironmentFileEntryEnum>,
+        operationsWithData: (List<BalanceSheetDataRowModel>, Boolean, String, String, (List<BalanceSheetDataRowModel>) -> Unit) -> List<BalanceSheetDataRowModel>
 
     ): IsOkModel<List<BalanceSheetDataRowModel>> {
 
@@ -228,7 +260,8 @@ object LedgerSheetOperations {
             isNotApiCall = isNotApiCall,
             isConsoleMode = isConsoleMode,
             isDevelopmentMode = isDevelopmentMode,
-            operationsAfterPrint = operationsAfterPrint
+            operationsAfterPrint = operationsAfterPrint,
+            operationsWithData = operationsWithData
         )
     }
 
@@ -242,7 +275,8 @@ object LedgerSheetOperations {
         isConsoleMode: Boolean,
         isDevelopmentMode: Boolean,
         environmentVariable: EnvironmentFileEntryEnum,
-        environmentVariablesForAccountsToIgnore: List<EnvironmentFileEntryEnum>
+        environmentVariablesForAccountsToIgnore: List<EnvironmentFileEntryEnum>,
+        operationsWithData: (List<BalanceSheetDataRowModel>, Boolean, String, String, (List<BalanceSheetDataRowModel>) -> Unit) -> List<BalanceSheetDataRowModel>
 
     ): IsOkModel<List<BalanceSheetDataRowModel>> = printSheetOfUserByAccountIdsFromEnvironment(
 
@@ -254,7 +288,8 @@ object LedgerSheetOperations {
         isDevelopmentMode = isDevelopmentMode,
         operationsAfterPrint = ::printFinalBalanceOfBalanceSheetDataRows,
         environmentVariable = environmentVariable,
-        environmentVariablesForAccountsToIgnore = environmentVariablesForAccountsToIgnore
+        environmentVariablesForAccountsToIgnore = environmentVariablesForAccountsToIgnore,
+        operationsWithData = operationsWithData
     )
 
     @JvmStatic
@@ -283,7 +318,8 @@ object LedgerSheetOperations {
                 EnvironmentFileEntryEnum.INCOME_ACCOUNT_IDS_FOR_SHEET,
                 EnvironmentFileEntryEnum.DEBIT_OR_CREDIT_ACCOUNT_IDS_FOR_SHEET,
                 EnvironmentFileEntryEnum.ASSET_ACCOUNT_IDS_FOR_SHEET
-            )
+            ),
+            operationsWithData = ::printSheetOfUserDefaultOperation
         )
     }
 
@@ -313,7 +349,8 @@ object LedgerSheetOperations {
                 EnvironmentFileEntryEnum.EXPENSE_ACCOUNT_IDS_FOR_SHEET,
                 EnvironmentFileEntryEnum.DEBIT_OR_CREDIT_ACCOUNT_IDS_FOR_SHEET,
                 EnvironmentFileEntryEnum.ASSET_ACCOUNT_IDS_FOR_SHEET
-            )
+            ),
+            operationsWithData = ::printSheetOfUserDefaultOperation
         )
     }
 
@@ -343,7 +380,8 @@ object LedgerSheetOperations {
                 EnvironmentFileEntryEnum.EXPENSE_ACCOUNT_IDS_FOR_SHEET,
                 EnvironmentFileEntryEnum.DEBIT_OR_CREDIT_ACCOUNT_IDS_FOR_SHEET,
                 EnvironmentFileEntryEnum.ASSET_ACCOUNT_IDS_FOR_SHEET
-            )
+            ),
+            operationsWithData = ::printSheetOfUserDefaultOperation
         )
     }
 
@@ -373,7 +411,8 @@ object LedgerSheetOperations {
                 EnvironmentFileEntryEnum.EXPENSE_ACCOUNT_IDS_FOR_SHEET,
                 EnvironmentFileEntryEnum.DEBIT_OR_CREDIT_ACCOUNT_IDS_FOR_SHEET,
                 EnvironmentFileEntryEnum.ASSET_ACCOUNT_IDS_FOR_SHEET
-            )
+            ),
+            operationsWithData = ::printSheetOfUserDefaultOperation
         )
     }
 
@@ -403,7 +442,112 @@ object LedgerSheetOperations {
                 EnvironmentFileEntryEnum.EXPENSE_ACCOUNT_IDS_FOR_SHEET,
                 EnvironmentFileEntryEnum.ASSET_ACCOUNT_IDS_FOR_SHEET,
                 EnvironmentFileEntryEnum.EXPENSE_INCOME_DEBIT_CREDIT_IGNORE_ACCOUNT_IDS_FOR_SHEET
-            )
+            ),
+            operationsWithData = ::printSheetOfUserDefaultOperation
+        )
+    }
+
+    @JvmStatic
+    fun printDebitSheetOfUser(
+
+        currentUserName: String,
+        currentUserId: UInt,
+        isNotApiCall: Boolean = true,
+        isConsoleMode: Boolean,
+        isDevelopmentMode: Boolean
+
+    ): IsOkModel<List<BalanceSheetDataRowModel>> {
+
+        return printSheetOfUserWithFinalBalanceByAccountIdsFromEnvironment(
+
+            currentUserName = currentUserName,
+            currentUserId = currentUserId,
+            sheetTitle = "Debit",
+            isNotApiCall = isNotApiCall,
+            isConsoleMode = isConsoleMode,
+            isDevelopmentMode = isDevelopmentMode,
+            environmentVariable = EnvironmentFileEntryEnum.DEBIT_OR_CREDIT_ACCOUNT_IDS_FOR_SHEET,
+            environmentVariablesForAccountsToIgnore = listOf(
+
+                EnvironmentFileEntryEnum.INCOME_ACCOUNT_IDS_FOR_SHEET,
+                EnvironmentFileEntryEnum.EXPENSE_ACCOUNT_IDS_FOR_SHEET,
+                EnvironmentFileEntryEnum.ASSET_ACCOUNT_IDS_FOR_SHEET,
+                EnvironmentFileEntryEnum.EXPENSE_INCOME_DEBIT_CREDIT_IGNORE_ACCOUNT_IDS_FOR_SHEET
+            ),
+            operationsWithData = fun(
+
+                balanceSheetDataRows: List<BalanceSheetDataRowModel>,
+                isConsoleMode: Boolean,
+                currentUserName: String,
+                sheetTitle: String,
+                operationsAfterPrint: (List<BalanceSheetDataRowModel>) -> Unit
+
+            ): List<BalanceSheetDataRowModel> {
+
+                return printSheetOfUserDefaultOperation(
+
+                    balanceSheetDataRows = balanceSheetDataRows.filter { balanceSheetDataRow: BalanceSheetDataRowModel ->
+
+                        balanceSheetDataRow.accountBalance > 0
+                    },
+                    isConsoleMode = isConsoleMode,
+                    currentUserName = currentUserName,
+                    sheetTitle = sheetTitle,
+                    operationsAfterPrint = operationsAfterPrint
+                )
+            }
+        )
+    }
+
+    @JvmStatic
+    fun printCreditSheetOfUser(
+
+        currentUserName: String,
+        currentUserId: UInt,
+        isNotApiCall: Boolean = true,
+        isConsoleMode: Boolean,
+        isDevelopmentMode: Boolean
+
+    ): IsOkModel<List<BalanceSheetDataRowModel>> {
+
+        return printSheetOfUserWithFinalBalanceByAccountIdsFromEnvironment(
+
+            currentUserName = currentUserName,
+            currentUserId = currentUserId,
+            sheetTitle = "Credit",
+            isNotApiCall = isNotApiCall,
+            isConsoleMode = isConsoleMode,
+            isDevelopmentMode = isDevelopmentMode,
+            environmentVariable = EnvironmentFileEntryEnum.DEBIT_OR_CREDIT_ACCOUNT_IDS_FOR_SHEET,
+            environmentVariablesForAccountsToIgnore = listOf(
+
+                EnvironmentFileEntryEnum.INCOME_ACCOUNT_IDS_FOR_SHEET,
+                EnvironmentFileEntryEnum.EXPENSE_ACCOUNT_IDS_FOR_SHEET,
+                EnvironmentFileEntryEnum.ASSET_ACCOUNT_IDS_FOR_SHEET,
+                EnvironmentFileEntryEnum.EXPENSE_INCOME_DEBIT_CREDIT_IGNORE_ACCOUNT_IDS_FOR_SHEET
+            ),
+            operationsWithData = fun(
+
+                balanceSheetDataRows: List<BalanceSheetDataRowModel>,
+                isConsoleMode: Boolean,
+                currentUserName: String,
+                sheetTitle: String,
+                operationsAfterPrint: (List<BalanceSheetDataRowModel>) -> Unit
+
+            ): List<BalanceSheetDataRowModel> {
+
+                return printSheetOfUserDefaultOperation(
+
+                    balanceSheetDataRows = balanceSheetDataRows.filter { balanceSheetDataRow: BalanceSheetDataRowModel ->
+
+                        balanceSheetDataRow.accountBalance < 0
+                    },
+                    isConsoleMode = isConsoleMode,
+                    currentUserName = currentUserName,
+                    sheetTitle = sheetTitle,
+                    operationsAfterPrint = operationsAfterPrint
+                )
+            }
         )
     }
 
@@ -433,7 +577,8 @@ object LedgerSheetOperations {
                 EnvironmentFileEntryEnum.EXPENSE_ACCOUNT_IDS_FOR_SHEET,
                 EnvironmentFileEntryEnum.DEBIT_OR_CREDIT_ACCOUNT_IDS_FOR_SHEET,
                 EnvironmentFileEntryEnum.EXPENSE_INCOME_DEBIT_CREDIT_ASSET_IGNORE_ACCOUNT_IDS_FOR_SHEET
-            )
+            ),
+            operationsWithData = ::printSheetOfUserDefaultOperation
         )
     }
 
@@ -447,30 +592,77 @@ object LedgerSheetOperations {
         isDevelopmentMode: Boolean
 
     ) {
-        val printIncomeSheetOfUserResult: IsOkModel<List<BalanceSheetDataRowModel>> = printIncomeSheetOfUser(
+        printSheetOfUserWithSummarizedBalance(
 
             currentUserName = currentUserName,
             currentUserId = currentUserId,
             isNotApiCall = isNotApiCall,
             isConsoleMode = isConsoleMode,
-            isDevelopmentMode = isDevelopmentMode
+            isDevelopmentMode = isDevelopmentMode,
+            balanceSheetOkModelFromSubtract = ::printIncomeSheetOfUser,
+            balanceSheetOkModelToSubtract = ::printExpenseSheetOfUser
         )
-        val printExpenseSheetOfUserResult: IsOkModel<List<BalanceSheetDataRowModel>> = printExpenseSheetOfUser(
+    }
+
+    @JvmStatic
+    fun printDebitCreditBalanceSheetOfUser(
+
+        currentUserName: String,
+        currentUserId: UInt,
+        isNotApiCall: Boolean = true,
+        isConsoleMode: Boolean,
+        isDevelopmentMode: Boolean
+
+    ) {
+        printSheetOfUserWithSummarizedBalance(
 
             currentUserName = currentUserName,
             currentUserId = currentUserId,
             isNotApiCall = isNotApiCall,
             isConsoleMode = isConsoleMode,
-            isDevelopmentMode = isDevelopmentMode
+            isDevelopmentMode = isDevelopmentMode,
+            balanceSheetOkModelFromSubtract = ::printDebitSheetOfUser,
+            balanceSheetOkModelToSubtract = ::printCreditSheetOfUser
         )
-        if (printIncomeSheetOfUserResult.isOK && printExpenseSheetOfUserResult.isOK) {
+    }
+
+    @JvmStatic
+    fun printSheetOfUserWithSummarizedBalance(
+
+        currentUserName: String,
+        currentUserId: UInt,
+        isNotApiCall: Boolean = true,
+        isConsoleMode: Boolean,
+        isDevelopmentMode: Boolean,
+        balanceSheetOkModelFromSubtract: (String, UInt, Boolean, Boolean, Boolean) -> IsOkModel<List<BalanceSheetDataRowModel>>,
+        balanceSheetOkModelToSubtract: (String, UInt, Boolean, Boolean, Boolean) -> IsOkModel<List<BalanceSheetDataRowModel>>
+    ) {
+        val balanceSheetOkModelFromSubtractResult: IsOkModel<List<BalanceSheetDataRowModel>> =
+            balanceSheetOkModelFromSubtract.invoke(
+
+                currentUserName,
+                currentUserId,
+                isNotApiCall,
+                isConsoleMode,
+                isDevelopmentMode
+            )
+        val balanceSheetOkModelToSubtractResult: IsOkModel<List<BalanceSheetDataRowModel>> =
+            balanceSheetOkModelToSubtract.invoke(
+
+                currentUserName,
+                currentUserId,
+                isNotApiCall,
+                isConsoleMode,
+                isDevelopmentMode
+            )
+        if (balanceSheetOkModelFromSubtractResult.isOK && balanceSheetOkModelToSubtractResult.isOK) {
 
             println(CommonConstants.DOUBLE_DASHED_LINE_SEPARATOR)
 
-            val finalIncome = calculateFinalBalanceOfBalanceSheetDataRows(printIncomeSheetOfUserResult.data!!)
-            val finalExpense = calculateFinalBalanceOfBalanceSheetDataRows(printExpenseSheetOfUserResult.data!!)
+            val fromBalance = calculateFinalBalanceOfBalanceSheetDataRows(balanceSheetOkModelFromSubtractResult.data!!)
+            val toBalance = calculateFinalBalanceOfBalanceSheetDataRows(balanceSheetOkModelToSubtractResult.data!!)
 
-            println("$finalIncome - $finalExpense = ${finalIncome - finalExpense}")
+            println("$fromBalance - $toBalance = ${fromBalance - toBalance}")
         }
     }
 
@@ -500,7 +692,8 @@ object LedgerSheetOperations {
                 EnvironmentFileEntryEnum.EXPENSE_ACCOUNT_IDS_FOR_SHEET,
                 EnvironmentFileEntryEnum.ASSET_ACCOUNT_IDS_FOR_SHEET,
                 EnvironmentFileEntryEnum.DEBIT_OR_CREDIT_ACCOUNT_IDS_FOR_SHEET
-            )
+            ),
+            operationsWithData = ::printSheetOfUserDefaultOperation
         )
     }
 

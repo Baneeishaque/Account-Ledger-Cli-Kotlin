@@ -106,6 +106,9 @@ object Screens {
                     "44 - View Not Consider for Income / Expense / Debit / Credit Sheet",
                     "45 - View Assets Sheet",
                     "46 - View Not Consider for Income / Expense / Debit / Credit / Assets Sheet",
+                    "47 - View Debit Sheet",
+                    "48 - View Credit Sheet",
+                    "49 - View Debit - Credit Sheet",
                     "0 - Logout",
                     "",
                     "Enter Your Choice : "
@@ -598,6 +601,39 @@ object Screens {
                 "46" -> {
 
                     LedgerSheetOperations.printNotConsiderForIncomeExpenseDebitCreditOrAssetSheetOfUser(
+
+                        currentUserName = username,
+                        currentUserId = userId,
+                        isConsoleMode = true,
+                        isDevelopmentMode = isDevelopmentMode
+                    )
+                }
+
+                "47" -> {
+
+                    LedgerSheetOperations.printDebitSheetOfUser(
+
+                        currentUserName = username,
+                        currentUserId = userId,
+                        isConsoleMode = true,
+                        isDevelopmentMode = isDevelopmentMode
+                    )
+                }
+
+                "48" -> {
+
+                    LedgerSheetOperations.printCreditSheetOfUser(
+
+                        currentUserName = username,
+                        currentUserId = userId,
+                        isConsoleMode = true,
+                        isDevelopmentMode = isDevelopmentMode
+                    )
+                }
+
+                "49" -> {
+
+                    LedgerSheetOperations.printDebitCreditBalanceSheetOfUser(
 
                         currentUserName = username,
                         currentUserId = userId,
