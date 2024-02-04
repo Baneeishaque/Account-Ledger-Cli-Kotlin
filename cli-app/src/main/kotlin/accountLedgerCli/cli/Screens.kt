@@ -102,6 +102,10 @@ object Screens {
                     "40 - View Expense Sheet",
                     "41 - View Profit Sheet",
                     "42 - View Not Consider for Income / Expense Sheet",
+                    "43 - View Debit Credit Sheet",
+                    "44 - View Not Consider for Income / Expense / Debit / Credit Sheet",
+                    "45 - View Assets Sheet",
+                    "46 - View Not Consider for Income / Expense / Debit / Credit / Assets Sheet",
                     "0 - Logout",
                     "",
                     "Enter Your Choice : "
@@ -550,6 +554,50 @@ object Screens {
                 "42" -> {
 
                     LedgerSheetOperations.printNotConsiderForIncomeExpenseSheetOfUser(
+
+                        currentUserName = username,
+                        currentUserId = userId,
+                        isConsoleMode = true,
+                        isDevelopmentMode = isDevelopmentMode
+                    )
+                }
+
+                "43" -> {
+
+                    LedgerSheetOperations.printDebitCreditSheetOfUser(
+
+                        currentUserName = username,
+                        currentUserId = userId,
+                        isConsoleMode = true,
+                        isDevelopmentMode = isDevelopmentMode
+                    )
+                }
+
+                "44" -> {
+
+                    LedgerSheetOperations.printNotConsiderForIncomeExpenseOrDebitCreditSheetOfUser(
+
+                        currentUserName = username,
+                        currentUserId = userId,
+                        isConsoleMode = true,
+                        isDevelopmentMode = isDevelopmentMode
+                    )
+                }
+
+                "45" -> {
+
+                    LedgerSheetOperations.printAssetSheetOfUser(
+
+                        currentUserName = username,
+                        currentUserId = userId,
+                        isConsoleMode = true,
+                        isDevelopmentMode = isDevelopmentMode
+                    )
+                }
+
+                "46" -> {
+
+                    LedgerSheetOperations.printNotConsiderForIncomeExpenseDebitCreditOrAssetSheetOfUser(
 
                         currentUserName = username,
                         currentUserId = userId,

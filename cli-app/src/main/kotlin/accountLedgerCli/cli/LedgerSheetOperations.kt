@@ -280,7 +280,9 @@ object LedgerSheetOperations {
             environmentVariablesForAccountsToIgnore = listOf(
 
                 EnvironmentFileEntryEnum.EXPENSE_INCOME_IGNORE_ACCOUNT_IDS_FOR_SHEET,
-                EnvironmentFileEntryEnum.INCOME_ACCOUNT_IDS_FOR_SHEET
+                EnvironmentFileEntryEnum.INCOME_ACCOUNT_IDS_FOR_SHEET,
+                EnvironmentFileEntryEnum.DEBIT_OR_CREDIT_ACCOUNT_IDS_FOR_SHEET,
+                EnvironmentFileEntryEnum.ASSET_ACCOUNT_IDS_FOR_SHEET
             )
         )
     }
@@ -308,7 +310,129 @@ object LedgerSheetOperations {
             environmentVariablesForAccountsToIgnore = listOf(
 
                 EnvironmentFileEntryEnum.INCOME_ACCOUNT_IDS_FOR_SHEET,
-                EnvironmentFileEntryEnum.EXPENSE_ACCOUNT_IDS_FOR_SHEET
+                EnvironmentFileEntryEnum.EXPENSE_ACCOUNT_IDS_FOR_SHEET,
+                EnvironmentFileEntryEnum.DEBIT_OR_CREDIT_ACCOUNT_IDS_FOR_SHEET,
+                EnvironmentFileEntryEnum.ASSET_ACCOUNT_IDS_FOR_SHEET
+            )
+        )
+    }
+
+    @JvmStatic
+    fun printNotConsiderForIncomeExpenseOrDebitCreditSheetOfUser(
+
+        currentUserName: String,
+        currentUserId: UInt,
+        isNotApiCall: Boolean = true,
+        isConsoleMode: Boolean,
+        isDevelopmentMode: Boolean
+
+    ): IsOkModel<List<BalanceSheetDataRowModel>> {
+
+        return printSheetOfUserByAccountIdsFromEnvironment(
+
+            currentUserName = currentUserName,
+            currentUserId = currentUserId,
+            sheetTitle = "Not Consider for Income / Expense / Debit / Credit",
+            isNotApiCall = isNotApiCall,
+            isConsoleMode = isConsoleMode,
+            isDevelopmentMode = isDevelopmentMode,
+            environmentVariable = EnvironmentFileEntryEnum.EXPENSE_INCOME_DEBIT_CREDIT_IGNORE_ACCOUNT_IDS_FOR_SHEET,
+            environmentVariablesForAccountsToIgnore = listOf(
+
+                EnvironmentFileEntryEnum.INCOME_ACCOUNT_IDS_FOR_SHEET,
+                EnvironmentFileEntryEnum.EXPENSE_ACCOUNT_IDS_FOR_SHEET,
+                EnvironmentFileEntryEnum.DEBIT_OR_CREDIT_ACCOUNT_IDS_FOR_SHEET,
+                EnvironmentFileEntryEnum.ASSET_ACCOUNT_IDS_FOR_SHEET
+            )
+        )
+    }
+
+    @JvmStatic
+    fun printNotConsiderForIncomeExpenseDebitCreditOrAssetSheetOfUser(
+
+        currentUserName: String,
+        currentUserId: UInt,
+        isNotApiCall: Boolean = true,
+        isConsoleMode: Boolean,
+        isDevelopmentMode: Boolean
+
+    ): IsOkModel<List<BalanceSheetDataRowModel>> {
+
+        return printSheetOfUserByAccountIdsFromEnvironment(
+
+            currentUserName = currentUserName,
+            currentUserId = currentUserId,
+            sheetTitle = "Not Consider for Income / Expense / Debit / Credit / Asset",
+            isNotApiCall = isNotApiCall,
+            isConsoleMode = isConsoleMode,
+            isDevelopmentMode = isDevelopmentMode,
+            environmentVariable = EnvironmentFileEntryEnum.EXPENSE_INCOME_DEBIT_CREDIT_ASSET_IGNORE_ACCOUNT_IDS_FOR_SHEET,
+            environmentVariablesForAccountsToIgnore = listOf(
+
+                EnvironmentFileEntryEnum.INCOME_ACCOUNT_IDS_FOR_SHEET,
+                EnvironmentFileEntryEnum.EXPENSE_ACCOUNT_IDS_FOR_SHEET,
+                EnvironmentFileEntryEnum.DEBIT_OR_CREDIT_ACCOUNT_IDS_FOR_SHEET,
+                EnvironmentFileEntryEnum.ASSET_ACCOUNT_IDS_FOR_SHEET
+            )
+        )
+    }
+
+    @JvmStatic
+    fun printDebitCreditSheetOfUser(
+
+        currentUserName: String,
+        currentUserId: UInt,
+        isNotApiCall: Boolean = true,
+        isConsoleMode: Boolean,
+        isDevelopmentMode: Boolean
+
+    ): IsOkModel<List<BalanceSheetDataRowModel>> {
+
+        return printSheetOfUserByAccountIdsFromEnvironment(
+
+            currentUserName = currentUserName,
+            currentUserId = currentUserId,
+            sheetTitle = "Debit / Credit",
+            isNotApiCall = isNotApiCall,
+            isConsoleMode = isConsoleMode,
+            isDevelopmentMode = isDevelopmentMode,
+            environmentVariable = EnvironmentFileEntryEnum.DEBIT_OR_CREDIT_ACCOUNT_IDS_FOR_SHEET,
+            environmentVariablesForAccountsToIgnore = listOf(
+
+                EnvironmentFileEntryEnum.INCOME_ACCOUNT_IDS_FOR_SHEET,
+                EnvironmentFileEntryEnum.EXPENSE_ACCOUNT_IDS_FOR_SHEET,
+                EnvironmentFileEntryEnum.ASSET_ACCOUNT_IDS_FOR_SHEET,
+                EnvironmentFileEntryEnum.EXPENSE_INCOME_DEBIT_CREDIT_IGNORE_ACCOUNT_IDS_FOR_SHEET
+            )
+        )
+    }
+
+    @JvmStatic
+    fun printAssetSheetOfUser(
+
+        currentUserName: String,
+        currentUserId: UInt,
+        isNotApiCall: Boolean = true,
+        isConsoleMode: Boolean,
+        isDevelopmentMode: Boolean
+
+    ): IsOkModel<List<BalanceSheetDataRowModel>> {
+
+        return printSheetOfUserWithFinalBalanceByAccountIdsFromEnvironment(
+
+            currentUserName = currentUserName,
+            currentUserId = currentUserId,
+            sheetTitle = "Asset",
+            isNotApiCall = isNotApiCall,
+            isConsoleMode = isConsoleMode,
+            isDevelopmentMode = isDevelopmentMode,
+            environmentVariable = EnvironmentFileEntryEnum.ASSET_ACCOUNT_IDS_FOR_SHEET,
+            environmentVariablesForAccountsToIgnore = listOf(
+
+                EnvironmentFileEntryEnum.INCOME_ACCOUNT_IDS_FOR_SHEET,
+                EnvironmentFileEntryEnum.EXPENSE_ACCOUNT_IDS_FOR_SHEET,
+                EnvironmentFileEntryEnum.DEBIT_OR_CREDIT_ACCOUNT_IDS_FOR_SHEET,
+                EnvironmentFileEntryEnum.EXPENSE_INCOME_DEBIT_CREDIT_ASSET_IGNORE_ACCOUNT_IDS_FOR_SHEET
             )
         )
     }
@@ -373,7 +497,9 @@ object LedgerSheetOperations {
             environmentVariablesForAccountsToIgnore = listOf(
 
                 EnvironmentFileEntryEnum.EXPENSE_INCOME_IGNORE_ACCOUNT_IDS_FOR_SHEET,
-                EnvironmentFileEntryEnum.EXPENSE_ACCOUNT_IDS_FOR_SHEET
+                EnvironmentFileEntryEnum.EXPENSE_ACCOUNT_IDS_FOR_SHEET,
+                EnvironmentFileEntryEnum.ASSET_ACCOUNT_IDS_FOR_SHEET,
+                EnvironmentFileEntryEnum.DEBIT_OR_CREDIT_ACCOUNT_IDS_FOR_SHEET
             )
         )
     }
@@ -608,7 +734,10 @@ object LedgerSheetOperations {
                                 value = CommonDataModel(
 
                                     status = 0,
-                                    data = sheetDataRows
+                                    data = sheetDataRows.sortedBy { balanceSheetDataRow: BalanceSheetDataRowModel ->
+
+                                        balanceSheetDataRow.accountId
+                                    }
                                 )
                             )
                         )
