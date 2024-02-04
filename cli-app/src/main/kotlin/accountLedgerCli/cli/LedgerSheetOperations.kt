@@ -65,7 +65,10 @@ object LedgerSheetOperations {
         isDevelopmentMode: Boolean,
         operationsAfterPrint: (List<BalanceSheetDataRowModel>) -> Unit = fun(_: List<BalanceSheetDataRowModel>) {}
 
-    ) {
+    ): IsOkModel<List<BalanceSheetDataRowModel>> {
+
+        var isOkModel = IsOkModel<List<BalanceSheetDataRowModel>>(isOK = false)
+
         IsOkUtils.handleIsOkObject(
 
             isOkModel = generateSheetOfUser(
@@ -79,16 +82,17 @@ object LedgerSheetOperations {
             ),
             dataOperation = fun(data: String) {
 
+                val balanceSheetDataRows = Json.decodeFromString(
+
+                    deserializer = CommonDataModel.serializer(BalanceSheetDataRowModel.serializer()),
+                    string = data
+
+                ).data!!
+
                 if (isConsoleMode) {
 
                     println("\nUser : $currentUserName $sheetTitle Sheet Ledger")
                     println(CommonConstants.dashedLineSeparator)
-                    val balanceSheetDataRows = Json.decodeFromString(
-
-                        deserializer = CommonDataModel.serializer(BalanceSheetDataRowModel.serializer()),
-                        string = data
-
-                    ).data!!
                     for (balanceSheetDataRow: BalanceSheetDataRowModel in balanceSheetDataRows) {
 
                         println("${balanceSheetDataRow.accountId} : ${balanceSheetDataRow.accountName} : ${balanceSheetDataRow.accountBalance}")
@@ -99,12 +103,19 @@ object LedgerSheetOperations {
 
                     println(data)
                 }
+                isOkModel = IsOkModel(
+
+                    isOK = true,
+                    data = balanceSheetDataRows
+                )
             },
             errorOperation = fun(error: String) {
 
                 println(error)
+                isOkModel.error = error
             }
         )
+        return isOkModel
     }
 
     @JvmStatic
@@ -117,8 +128,9 @@ object LedgerSheetOperations {
         isConsoleMode: Boolean,
         isDevelopmentMode: Boolean
 
-    ) {
-        printSheetOfUser(
+    ): IsOkModel<List<BalanceSheetDataRowModel>> {
+
+        return printSheetOfUser(
 
             currentUserName = currentUserName,
             currentUserId = currentUserId,
@@ -147,8 +159,10 @@ object LedgerSheetOperations {
         isNotApiCall: Boolean = true,
         isConsoleMode: Boolean,
         isDevelopmentMode: Boolean
-    ) {
-        printSheetOfUser(
+
+    ): IsOkModel<List<BalanceSheetDataRowModel>> {
+
+        return printSheetOfUser(
 
             currentUserName = currentUserName,
             currentUserId = currentUserId,
@@ -190,8 +204,10 @@ object LedgerSheetOperations {
         isDevelopmentMode: Boolean,
         operationsAfterPrint: (List<BalanceSheetDataRowModel>) -> Unit = fun(_: List<BalanceSheetDataRowModel>) {},
         environmentVariable: String
-    ) {
-        printSheetOfUser(
+
+    ): IsOkModel<List<BalanceSheetDataRowModel>> {
+
+        return printSheetOfUser(
 
             currentUserName = currentUserName,
             currentUserId = currentUserId,
@@ -222,7 +238,7 @@ object LedgerSheetOperations {
         isDevelopmentMode: Boolean,
         environmentVariable: String
 
-    ) = printSheetOfUserByAccountIdsFromEnvironment(
+    ): IsOkModel<List<BalanceSheetDataRowModel>> = printSheetOfUserByAccountIdsFromEnvironment(
 
         currentUserName = currentUserName,
         currentUserId = currentUserId,
@@ -242,8 +258,10 @@ object LedgerSheetOperations {
         isNotApiCall: Boolean = true,
         isConsoleMode: Boolean,
         isDevelopmentMode: Boolean
-    ) {
-        printSheetOfUserWithFinalBalanceByAccountIdsFromEnvironment(
+
+    ): IsOkModel<List<BalanceSheetDataRowModel>> {
+
+        return printSheetOfUserWithFinalBalanceByAccountIdsFromEnvironment(
 
             currentUserName = currentUserName,
             currentUserId = currentUserId,
@@ -265,16 +283,7 @@ object LedgerSheetOperations {
         isDevelopmentMode: Boolean
 
     ) {
-
-        printIncomeSheetOfUser(
-
-            currentUserName = currentUserName,
-            currentUserId = currentUserId,
-            isNotApiCall = isNotApiCall,
-            isConsoleMode = isConsoleMode,
-            isDevelopmentMode = isDevelopmentMode
-        )
-        printExpenseSheetOfUser(
+        val printIncomeSheetOfUserResult: IsOkModel<List<BalanceSheetDataRowModel>> = printIncomeSheetOfUser(
 
             currentUserName = currentUserName,
             currentUserId = currentUserId,
@@ -282,6 +291,23 @@ object LedgerSheetOperations {
             isConsoleMode = isConsoleMode,
             isDevelopmentMode = isDevelopmentMode
         )
+        val printExpenseSheetOfUserResult: IsOkModel<List<BalanceSheetDataRowModel>> = printExpenseSheetOfUser(
+
+            currentUserName = currentUserName,
+            currentUserId = currentUserId,
+            isNotApiCall = isNotApiCall,
+            isConsoleMode = isConsoleMode,
+            isDevelopmentMode = isDevelopmentMode
+        )
+        if (printIncomeSheetOfUserResult.isOK && printExpenseSheetOfUserResult.isOK) {
+
+            println(CommonConstants.DOUBLE_DASHED_LINE_SEPARATOR)
+
+            val finalIncome = calculateFinalBalanceOfBalanceSheetDataRows(printIncomeSheetOfUserResult.data!!)
+            val finalExpense = calculateFinalBalanceOfBalanceSheetDataRows(printExpenseSheetOfUserResult.data!!)
+
+            println("$finalIncome - $finalExpense = ${finalIncome - finalExpense}")
+        }
     }
 
     @JvmStatic
@@ -292,8 +318,10 @@ object LedgerSheetOperations {
         isNotApiCall: Boolean = true,
         isConsoleMode: Boolean,
         isDevelopmentMode: Boolean
-    ) {
-        printSheetOfUserWithFinalBalanceByAccountIdsFromEnvironment(
+
+    ): IsOkModel<List<BalanceSheetDataRowModel>> {
+
+        return printSheetOfUserWithFinalBalanceByAccountIdsFromEnvironment(
 
             currentUserName = currentUserName,
             currentUserId = currentUserId,
