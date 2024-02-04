@@ -21,6 +21,7 @@ import common.utils.library.utils.MysqlUtils
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.builtins.serializer
 import kotlinx.serialization.json.Json
+import kotlin.math.absoluteValue
 
 object LedgerSheetOperations {
 
@@ -61,7 +62,8 @@ object LedgerSheetOperations {
         sheetTitle: String,
         isNotApiCall: Boolean = true,
         isConsoleMode: Boolean,
-        isDevelopmentMode: Boolean
+        isDevelopmentMode: Boolean,
+        operationsAfterPrint: (List<BalanceSheetDataRowModel>) -> Unit = fun(_: List<BalanceSheetDataRowModel>) {}
 
     ) {
         IsOkUtils.handleIsOkObject(
@@ -81,15 +83,18 @@ object LedgerSheetOperations {
 
                     println("\nUser : $currentUserName $sheetTitle Sheet Ledger")
                     println(CommonConstants.dashedLineSeparator)
-                    for (balanceSheetDataRow: BalanceSheetDataRowModel in (Json.decodeFromString(
+                    val balanceSheetDataRows = Json.decodeFromString(
 
                         deserializer = CommonDataModel.serializer(BalanceSheetDataRowModel.serializer()),
                         string = data
 
-                    ).data!!)) {
+                    ).data!!
+                    for (balanceSheetDataRow: BalanceSheetDataRowModel in balanceSheetDataRows) {
 
                         println("${balanceSheetDataRow.accountId} : ${balanceSheetDataRow.accountName} : ${balanceSheetDataRow.accountBalance}")
                     }
+                    operationsAfterPrint.invoke(balanceSheetDataRows)
+
                 } else {
 
                     println(data)
@@ -133,16 +138,59 @@ object LedgerSheetOperations {
     }
 
     @JvmStatic
-    fun printExpenseSheetOfUser(
+    fun printSheetOfUserWithFinalBalance(
 
         currentUserName: String,
         currentUserId: UInt,
+        getDesiredAccountIdsForSheetOfUser: (MultipleTransactionResponse) -> MutableMap<UInt, String>,
+        sheetTitle: String,
         isNotApiCall: Boolean = true,
         isConsoleMode: Boolean,
         isDevelopmentMode: Boolean
-
     ) {
+        printSheetOfUser(
 
+            currentUserName = currentUserName,
+            currentUserId = currentUserId,
+            getDesiredAccountIdsForSheetOfUser = getDesiredAccountIdsForSheetOfUser,
+            sheetTitle = sheetTitle,
+            isNotApiCall = isNotApiCall,
+            isConsoleMode = isConsoleMode,
+            isDevelopmentMode = isDevelopmentMode,
+            operationsAfterPrint = ::printFinalBalanceOfBalanceSheetDataRows
+        )
+    }
+
+    @JvmStatic
+    fun printFinalBalanceOfBalanceSheetDataRows(balanceSheetDataRows: List<BalanceSheetDataRowModel>) {
+
+        println(CommonConstants.dashedLineSeparator)
+        println(calculateFinalBalanceOfBalanceSheetDataRows(balanceSheetDataRows))
+    }
+
+    @JvmStatic
+    fun calculateFinalBalanceOfBalanceSheetDataRows(balanceSheetDataRows: List<BalanceSheetDataRowModel>): Float {
+
+        var finalBalance = 0F
+        balanceSheetDataRows.forEach { balanceSheetDataRow: BalanceSheetDataRowModel ->
+
+            finalBalance += balanceSheetDataRow.accountBalance.absoluteValue
+        }
+        return finalBalance
+    }
+
+    @JvmStatic
+    fun printSheetOfUserByAccountIdsFromEnvironment(
+
+        currentUserName: String,
+        currentUserId: UInt,
+        sheetTitle: String,
+        isNotApiCall: Boolean = true,
+        isConsoleMode: Boolean,
+        isDevelopmentMode: Boolean,
+        operationsAfterPrint: (List<BalanceSheetDataRowModel>) -> Unit = fun(_: List<BalanceSheetDataRowModel>) {},
+        environmentVariable: String
+    ) {
         printSheetOfUser(
 
             currentUserName = currentUserName,
@@ -151,14 +199,59 @@ object LedgerSheetOperations {
 
                 return getDesiredAccountIdsForSheetOfUserBasedOnEnvironment(
 
-                    environmentVariable = "EXPENSE_ACCOUNT_IDS_FOR_SHEET",
+                    environmentVariable = environmentVariable,
                     selectUserTransactionsAfterSpecifiedDateResult = selectUserTransactionsAfterSpecifiedDateResult
                 )
             },
+            sheetTitle = sheetTitle,
+            isNotApiCall = isNotApiCall,
+            isConsoleMode = isConsoleMode,
+            isDevelopmentMode = isDevelopmentMode,
+            operationsAfterPrint = operationsAfterPrint
+        )
+    }
+
+    @JvmStatic
+    fun printSheetOfUserWithFinalBalanceByAccountIdsFromEnvironment(
+
+        currentUserName: String,
+        currentUserId: UInt,
+        sheetTitle: String,
+        isNotApiCall: Boolean = true,
+        isConsoleMode: Boolean,
+        isDevelopmentMode: Boolean,
+        environmentVariable: String
+
+    ) = printSheetOfUserByAccountIdsFromEnvironment(
+
+        currentUserName = currentUserName,
+        currentUserId = currentUserId,
+        sheetTitle = sheetTitle,
+        isNotApiCall = isNotApiCall,
+        isConsoleMode = isConsoleMode,
+        isDevelopmentMode = isDevelopmentMode,
+        operationsAfterPrint = ::printFinalBalanceOfBalanceSheetDataRows,
+        environmentVariable = environmentVariable
+    )
+
+    @JvmStatic
+    fun printExpenseSheetOfUser(
+
+        currentUserName: String,
+        currentUserId: UInt,
+        isNotApiCall: Boolean = true,
+        isConsoleMode: Boolean,
+        isDevelopmentMode: Boolean
+    ) {
+        printSheetOfUserWithFinalBalanceByAccountIdsFromEnvironment(
+
+            currentUserName = currentUserName,
+            currentUserId = currentUserId,
             sheetTitle = "Expense",
             isNotApiCall = isNotApiCall,
             isConsoleMode = isConsoleMode,
-            isDevelopmentMode = isDevelopmentMode
+            isDevelopmentMode = isDevelopmentMode,
+            environmentVariable = "EXPENSE_ACCOUNT_IDS_FOR_SHEET"
         )
     }
 
@@ -199,25 +292,16 @@ object LedgerSheetOperations {
         isNotApiCall: Boolean = true,
         isConsoleMode: Boolean,
         isDevelopmentMode: Boolean
-
     ) {
-
-        printSheetOfUser(
+        printSheetOfUserWithFinalBalanceByAccountIdsFromEnvironment(
 
             currentUserName = currentUserName,
             currentUserId = currentUserId,
-            getDesiredAccountIdsForSheetOfUser = fun(selectUserTransactionsAfterSpecifiedDateResult: MultipleTransactionResponse): MutableMap<UInt, String> {
-
-                return getDesiredAccountIdsForSheetOfUserBasedOnEnvironment(
-
-                    environmentVariable = "INCOME_ACCOUNT_IDS_FOR_SHEET",
-                    selectUserTransactionsAfterSpecifiedDateResult = selectUserTransactionsAfterSpecifiedDateResult
-                )
-            },
             sheetTitle = "Income",
             isNotApiCall = isNotApiCall,
             isConsoleMode = isConsoleMode,
-            isDevelopmentMode = isDevelopmentMode
+            isDevelopmentMode = isDevelopmentMode,
+            environmentVariable = "INCOME_ACCOUNT_IDS_FOR_SHEET"
         )
     }
 
