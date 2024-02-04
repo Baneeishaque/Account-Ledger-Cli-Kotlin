@@ -4,6 +4,7 @@ import account.ledger.library.api.response.MultipleTransactionResponse
 import account.ledger.library.api.response.TransactionResponse
 import account.ledger.library.api.response.UserResponse
 import account.ledger.library.enums.BalanceSheetRefineLevelEnum
+import account.ledger.library.enums.EnvironmentFileEntryEnum
 import account.ledger.library.models.BalanceSheetDataRowModel
 import account.ledger.library.models.ChooseUserResult
 import account.ledger.library.operations.DataOperations
@@ -58,7 +59,7 @@ object LedgerSheetOperations {
 
         currentUserName: String,
         currentUserId: UInt,
-        getDesiredAccountIdsForSheetOfUser: (MultipleTransactionResponse) -> MutableMap<UInt, String>,
+        getDesiredAccountIdsForSheetOfUser: (MultipleTransactionResponse) -> IsOkModel<MutableMap<UInt, String>>,
         sheetTitle: String,
         isNotApiCall: Boolean = true,
         isConsoleMode: Boolean,
@@ -134,12 +135,13 @@ object LedgerSheetOperations {
 
             currentUserName = currentUserName,
             currentUserId = currentUserId,
-            getDesiredAccountIdsForSheetOfUser = fun(selectUserTransactionsAfterSpecifiedDateResult: MultipleTransactionResponse): MutableMap<UInt, String> {
+            getDesiredAccountIdsForSheetOfUser = fun(selectUserTransactionsAfterSpecifiedDateResult: MultipleTransactionResponse): IsOkModel<MutableMap<UInt, String>> {
 
                 return getDesiredAccountIdsForBalanceSheetOfUser(
 
                     refineLevel = refineLevel,
-                    selectUserTransactionsAfterSpecifiedDateResult = selectUserTransactionsAfterSpecifiedDateResult
+                    selectUserTransactionsAfterSpecifiedDateResult = selectUserTransactionsAfterSpecifiedDateResult,
+                    isDevelopmentMode = isDevelopmentMode
                 )
             },
             sheetTitle = "Balance",
@@ -154,7 +156,7 @@ object LedgerSheetOperations {
 
         currentUserName: String,
         currentUserId: UInt,
-        getDesiredAccountIdsForSheetOfUser: (MultipleTransactionResponse) -> MutableMap<UInt, String>,
+        getDesiredAccountIdsForSheetOfUser: (MultipleTransactionResponse) -> IsOkModel<MutableMap<UInt, String>>,
         sheetTitle: String,
         isNotApiCall: Boolean = true,
         isConsoleMode: Boolean,
@@ -203,7 +205,8 @@ object LedgerSheetOperations {
         isConsoleMode: Boolean,
         isDevelopmentMode: Boolean,
         operationsAfterPrint: (List<BalanceSheetDataRowModel>) -> Unit = fun(_: List<BalanceSheetDataRowModel>) {},
-        environmentVariable: String
+        environmentVariable: EnvironmentFileEntryEnum,
+        environmentVariablesForAccountsToIgnore: List<EnvironmentFileEntryEnum>
 
     ): IsOkModel<List<BalanceSheetDataRowModel>> {
 
@@ -211,12 +214,14 @@ object LedgerSheetOperations {
 
             currentUserName = currentUserName,
             currentUserId = currentUserId,
-            getDesiredAccountIdsForSheetOfUser = fun(selectUserTransactionsAfterSpecifiedDateResult: MultipleTransactionResponse): MutableMap<UInt, String> {
+            getDesiredAccountIdsForSheetOfUser = fun(selectUserTransactionsAfterSpecifiedDateResult: MultipleTransactionResponse): IsOkModel<MutableMap<UInt, String>> {
 
                 return getDesiredAccountIdsForSheetOfUserBasedOnEnvironment(
 
                     environmentVariable = environmentVariable,
-                    selectUserTransactionsAfterSpecifiedDateResult = selectUserTransactionsAfterSpecifiedDateResult
+                    selectUserTransactionsAfterSpecifiedDateResult = selectUserTransactionsAfterSpecifiedDateResult,
+                    isDevelopmentMode = isDevelopmentMode,
+                    environmentVariablesForAccountsToIgnore = environmentVariablesForAccountsToIgnore
                 )
             },
             sheetTitle = sheetTitle,
@@ -236,7 +241,8 @@ object LedgerSheetOperations {
         isNotApiCall: Boolean = true,
         isConsoleMode: Boolean,
         isDevelopmentMode: Boolean,
-        environmentVariable: String
+        environmentVariable: EnvironmentFileEntryEnum,
+        environmentVariablesForAccountsToIgnore: List<EnvironmentFileEntryEnum>
 
     ): IsOkModel<List<BalanceSheetDataRowModel>> = printSheetOfUserByAccountIdsFromEnvironment(
 
@@ -247,7 +253,8 @@ object LedgerSheetOperations {
         isConsoleMode = isConsoleMode,
         isDevelopmentMode = isDevelopmentMode,
         operationsAfterPrint = ::printFinalBalanceOfBalanceSheetDataRows,
-        environmentVariable = environmentVariable
+        environmentVariable = environmentVariable,
+        environmentVariablesForAccountsToIgnore = environmentVariablesForAccountsToIgnore
     )
 
     @JvmStatic
@@ -269,7 +276,12 @@ object LedgerSheetOperations {
             isNotApiCall = isNotApiCall,
             isConsoleMode = isConsoleMode,
             isDevelopmentMode = isDevelopmentMode,
-            environmentVariable = "EXPENSE_ACCOUNT_IDS_FOR_SHEET"
+            environmentVariable = EnvironmentFileEntryEnum.EXPENSE_ACCOUNT_IDS_FOR_SHEET,
+            environmentVariablesForAccountsToIgnore = listOf(
+
+                EnvironmentFileEntryEnum.EXPENSE_INCOME_IGNORE_ACCOUNT_IDS_FOR_SHEET,
+                EnvironmentFileEntryEnum.INCOME_ACCOUNT_IDS_FOR_SHEET
+            )
         )
     }
 
@@ -329,7 +341,12 @@ object LedgerSheetOperations {
             isNotApiCall = isNotApiCall,
             isConsoleMode = isConsoleMode,
             isDevelopmentMode = isDevelopmentMode,
-            environmentVariable = "INCOME_ACCOUNT_IDS_FOR_SHEET"
+            environmentVariable = EnvironmentFileEntryEnum.INCOME_ACCOUNT_IDS_FOR_SHEET,
+            environmentVariablesForAccountsToIgnore = listOf(
+
+                EnvironmentFileEntryEnum.EXPENSE_INCOME_IGNORE_ACCOUNT_IDS_FOR_SHEET,
+                EnvironmentFileEntryEnum.EXPENSE_ACCOUNT_IDS_FOR_SHEET
+            )
         )
     }
 
@@ -337,7 +354,7 @@ object LedgerSheetOperations {
 
         currentUserName: String,
         currentUserId: UInt,
-        getDesiredAccountIdsForSheetOfUser: (MultipleTransactionResponse) -> MutableMap<UInt, String>,
+        getDesiredAccountIdsForSheetOfUser: (MultipleTransactionResponse) -> IsOkModel<MutableMap<UInt, String>>,
         isNotApiCall: Boolean = true,
         isConsoleMode: Boolean,
         isDevelopmentMode: Boolean
@@ -453,27 +470,30 @@ object LedgerSheetOperations {
                     )
                 } else {
 
-                    val accounts: MutableMap<UInt, String> =
-                        getDesiredAccountIdsForSheetOfUser(
-                            selectUserTransactionsAfterSpecifiedDateResult
-                        )
-                    val sheetDataRows: MutableList<BalanceSheetDataRowModel> = mutableListOf()
-                    for (account: MutableMap.MutableEntry<UInt, String> in accounts) {
+                    val getDesiredAccountIdsForSheetOfUserResult = getDesiredAccountIdsForSheetOfUser(
+                        selectUserTransactionsAfterSpecifiedDateResult
+                    )
+                    if (getDesiredAccountIdsForSheetOfUserResult.isOK) {
 
-                        //TODO : migrate to ApiUtilsCommon
-                        val apiResponse2: Result<MultipleTransactionResponse> =
-                            ServerOperations.getUserTransactionsForAnAccount(
+                        val accounts: MutableMap<UInt, String> = getDesiredAccountIdsForSheetOfUserResult.data!!
 
-                                userId = currentUserId,
-                                accountId = account.key,
-                                isNotFromBalanceSheet = false,
-                                isDevelopmentMode = isDevelopmentMode
-                            )
-                        if (apiResponse2.isFailure) {
+                        val sheetDataRows: MutableList<BalanceSheetDataRowModel> = mutableListOf()
+                        for (account: MutableMap.MutableEntry<UInt, String> in accounts) {
 
-                            if (isNotApiCall) {
+                            //TODO : migrate to ApiUtilsCommon
+                            val apiResponse2: Result<MultipleTransactionResponse> =
+                                ServerOperations.getUserTransactionsForAnAccount(
 
-                                println("Error : ${(apiResponse2.exceptionOrNull() as Exception).localizedMessage}")
+                                    userId = currentUserId,
+                                    accountId = account.key,
+                                    isNotFromBalanceSheet = false,
+                                    isDevelopmentMode = isDevelopmentMode
+                                )
+                            if (apiResponse2.isFailure) {
+
+                                if (isNotApiCall) {
+
+                                    println("Error : ${(apiResponse2.exceptionOrNull() as Exception).localizedMessage}")
 //                            do {
 //                                print("Retry (Y/N) ? : ")
 //                                val input: String = readLine()!!
@@ -485,85 +505,94 @@ object LedgerSheetOperations {
 //                                    else -> invalidOptionMessage()
 //                                }
 //                            } while (input != "N")
-                            } else {
+                                } else {
 
-                                return IsOkModel(
+                                    return IsOkModel(
 
-                                    isOK = false,
-                                    error = Json.encodeToString(
+                                        isOK = false,
+                                        error = Json.encodeToString(
 
-                                        serializer = CommonDataModel.serializer(Unit.serializer()),
-                                        value = CommonDataModel(
+                                            serializer = CommonDataModel.serializer(Unit.serializer()),
+                                            value = CommonDataModel(
 
-                                            status = 1,
-                                            error = "Error : ${(apiResponse2.exceptionOrNull() as Exception).localizedMessage}"
+                                                status = 1,
+                                                error = "Error : ${(apiResponse2.exceptionOrNull() as Exception).localizedMessage}"
+                                            )
                                         )
                                     )
-                                )
-                            }
-                        } else {
+                                }
+                            } else {
 
-                            val userMultipleTransactionResponseResult: MultipleTransactionResponse =
-                                apiResponse2.getOrNull()!!
-                            if (userMultipleTransactionResponseResult.status == 0u) {
+                                val userMultipleTransactionResponseResult: MultipleTransactionResponse =
+                                    apiResponse2.getOrNull()!!
+                                if (userMultipleTransactionResponseResult.status == 0u) {
 
-                                var currentBalance = 0.0F
-                                userMultipleTransactionResponseResult.transactions.forEach { currentTransaction: TransactionResponse ->
+                                    var currentBalance = 0.0F
+                                    userMultipleTransactionResponseResult.transactions.forEach { currentTransaction: TransactionResponse ->
 
-                                    if (currentTransaction.fromAccountId == account.key) {
+                                        if (currentTransaction.fromAccountId == account.key) {
 
-                                        currentBalance -= currentTransaction.amount
+                                            currentBalance -= currentTransaction.amount
 
-                                    } else {
+                                        } else {
 
-                                        currentBalance += currentTransaction.amount
+                                            currentBalance += currentTransaction.amount
+                                        }
                                     }
-                                }
-                                if (currentBalance != 0.0F) {
+                                    if (currentBalance != 0.0F) {
 
-                                    sheetDataRows.add(
+                                        sheetDataRows.add(
 
-                                        element = BalanceSheetDataRowModel(
+                                            element = BalanceSheetDataRowModel(
 
-                                            accountId = account.key,
-                                            accountName = account.value,
-                                            accountBalance = currentBalance
+                                                accountId = account.key,
+                                                accountName = account.value,
+                                                accountBalance = currentBalance
+                                            )
+                                        )
+                                    }
+                                } else {
+
+                                    return IsOkModel(
+
+                                        isOK = false,
+                                        error = Json.encodeToString(
+
+                                            serializer = CommonDataModel.serializer(Unit.serializer()),
+                                            value = CommonDataModel(
+
+                                                status = 1,
+                                                error = "Server Execution Error, Execution Status is ${userMultipleTransactionResponseResult.status}"
+                                            )
                                         )
                                     )
                                 }
-                            } else {
-
-                                return IsOkModel(
-
-                                    isOK = false,
-                                    error = Json.encodeToString(
-
-                                        serializer = CommonDataModel.serializer(Unit.serializer()),
-                                        value = CommonDataModel(
-
-                                            status = 1,
-                                            error = "Server Execution Error, Execution Status is ${userMultipleTransactionResponseResult.status}"
-                                        )
-                                    )
-                                )
                             }
                         }
-                    }
 
-                    //TODO : print Formatted Sheet on Console
-                    return IsOkModel(
+                        //TODO : print Formatted Sheet on Console
+                        return IsOkModel(
 
-                        isOK = true,
-                        data = Json.encodeToString(
+                            isOK = true,
+                            data = Json.encodeToString(
 
-                            serializer = CommonDataModel.serializer(BalanceSheetDataRowModel.serializer()),
-                            value = CommonDataModel(
+                                serializer = CommonDataModel.serializer(BalanceSheetDataRowModel.serializer()),
+                                value = CommonDataModel(
 
-                                status = 0,
-                                data = sheetDataRows
+                                    status = 0,
+                                    data = sheetDataRows
+                                )
                             )
                         )
-                    )
+                    } else {
+
+                        return IsOkModel(
+
+                            isOK = false,
+                            error = getDesiredAccountIdsForSheetOfUserResult.error
+                        )
+                    }
+
                 }
             }
         } else {
@@ -587,61 +616,60 @@ object LedgerSheetOperations {
     private fun getDesiredAccountIdsForBalanceSheetOfUser(
 
         refineLevel: BalanceSheetRefineLevelEnum,
-        selectUserTransactionsAfterSpecifiedDateResult: MultipleTransactionResponse
+        selectUserTransactionsAfterSpecifiedDateResult: MultipleTransactionResponse,
+        isDevelopmentMode: Boolean
 
-    ): MutableMap<UInt, String> {
+    ): IsOkModel<MutableMap<UInt, String>> {
 
         var accountsToExclude: List<String> = emptyList()
+
         App.dotEnv = App.reloadDotEnv()
-        if (refineLevel != BalanceSheetRefineLevelEnum.ALL) {
+        when (refineLevel) {
 
-            when (refineLevel) {
+            BalanceSheetRefineLevelEnum.WITHOUT_OPEN_BALANCES -> {
 
-                BalanceSheetRefineLevelEnum.WITHOUT_OPEN_BALANCES -> {
-
-                    // TODO : Change to new api methods
-                    accountsToExclude = (App.dotEnv["OPEN_BALANCE_ACCOUNT_IDS"] ?: "0").split(',')
-                }
-
-                BalanceSheetRefineLevelEnum.WITHOUT_MISC_INCOMES -> {
-
-                    accountsToExclude = (App.dotEnv["OPEN_BALANCE_ACCOUNT_IDS"]
-                        ?: "0").split(',') + (App.dotEnv["MISC_INCOME_ACCOUNT_IDS"]
-                        ?: "0").split(',')
-                }
-
-                BalanceSheetRefineLevelEnum.WITHOUT_INVESTMENT_RETURNS -> {
-
-                    accountsToExclude =
-                        (App.dotEnv["OPEN_BALANCE_ACCOUNT_IDS"]
-                            ?: "0").split(',') + (App.dotEnv["MISC_INCOME_ACCOUNT_IDS"]
-                            ?: "0").split(',') + (App.dotEnv["INVESTMENT_RETURNS_ACCOUNT_IDS"]
-                            ?: "0").split(',')
-                }
-
-                BalanceSheetRefineLevelEnum.WITHOUT_FAMILY_ACCOUNTS -> {
-
-                    accountsToExclude =
-                        (App.dotEnv["OPEN_BALANCE_ACCOUNT_IDS"]
-                            ?: "0").split(',') + (App.dotEnv["MISC_INCOME_ACCOUNT_IDS"]
-                            ?: "0").split(',') + (App.dotEnv["INVESTMENT_RETURNS_ACCOUNT_IDS"]
-                            ?: "0").split(',') + (App.dotEnv["FAMILY_ACCOUNT_IDS"]
-                            ?: "0").split(',')
-                }
-
-                BalanceSheetRefineLevelEnum.WITHOUT_EXPENSE_ACCOUNTS -> {
-
-                    accountsToExclude =
-                        (App.dotEnv["OPEN_BALANCE_ACCOUNT_IDS"]
-                            ?: "0").split(',') + (App.dotEnv["MISC_INCOME_ACCOUNT_IDS"]
-                            ?: "0").split(',') + (App.dotEnv["INVESTMENT_RETURNS_ACCOUNT_IDS"]
-                            ?: "0").split(',') + (App.dotEnv["FAMILY_ACCOUNT_IDS"]
-                            ?: "0").split(',') + (App.dotEnv["EXPENSE_ACCOUNT_IDS"]
-                            ?: "0").split(',')
-                }
-                //TODO : Report this
-                else -> {}
+                // TODO : Change to new api methods
+                accountsToExclude = (App.dotEnv["OPEN_BALANCE_ACCOUNT_IDS"] ?: "0").split(',')
             }
+
+            BalanceSheetRefineLevelEnum.WITHOUT_MISC_INCOMES -> {
+
+                accountsToExclude = (App.dotEnv["OPEN_BALANCE_ACCOUNT_IDS"]
+                    ?: "0").split(',') + (App.dotEnv["MISC_INCOME_ACCOUNT_IDS"]
+                    ?: "0").split(',')
+            }
+
+            BalanceSheetRefineLevelEnum.WITHOUT_INVESTMENT_RETURNS -> {
+
+                accountsToExclude =
+                    (App.dotEnv["OPEN_BALANCE_ACCOUNT_IDS"]
+                        ?: "0").split(',') + (App.dotEnv["MISC_INCOME_ACCOUNT_IDS"]
+                        ?: "0").split(',') + (App.dotEnv["INVESTMENT_RETURNS_ACCOUNT_IDS"]
+                        ?: "0").split(',')
+            }
+
+            BalanceSheetRefineLevelEnum.WITHOUT_FAMILY_ACCOUNTS -> {
+
+                accountsToExclude =
+                    (App.dotEnv["OPEN_BALANCE_ACCOUNT_IDS"]
+                        ?: "0").split(',') + (App.dotEnv["MISC_INCOME_ACCOUNT_IDS"]
+                        ?: "0").split(',') + (App.dotEnv["INVESTMENT_RETURNS_ACCOUNT_IDS"]
+                        ?: "0").split(',') + (App.dotEnv["FAMILY_ACCOUNT_IDS"]
+                        ?: "0").split(',')
+            }
+
+            BalanceSheetRefineLevelEnum.WITHOUT_EXPENSE_ACCOUNTS -> {
+
+                accountsToExclude =
+                    (App.dotEnv["OPEN_BALANCE_ACCOUNT_IDS"]
+                        ?: "0").split(',') + (App.dotEnv["MISC_INCOME_ACCOUNT_IDS"]
+                        ?: "0").split(',') + (App.dotEnv["INVESTMENT_RETURNS_ACCOUNT_IDS"]
+                        ?: "0").split(',') + (App.dotEnv["FAMILY_ACCOUNT_IDS"]
+                        ?: "0").split(',') + (App.dotEnv["EXPENSE_ACCOUNT_IDS"]
+                        ?: "0").split(',')
+            }
+
+            BalanceSheetRefineLevelEnum.ALL -> {}
         }
         val accounts: MutableMap<UInt, String> = mutableMapOf()
         selectUserTransactionsAfterSpecifiedDateResult.transactions.forEach { transaction: TransactionResponse ->
@@ -657,35 +685,78 @@ object LedgerSheetOperations {
             }
         }
 
-//    println("Affected A/Cs : $accounts")
-        return accounts
+        if (isDevelopmentMode) {
+
+            println("Affected A/Cs : $accounts")
+        }
+
+        return IsOkModel(
+
+            isOK = true,
+            data = accounts
+        )
     }
 
     private fun getDesiredAccountIdsForSheetOfUserBasedOnEnvironment(
 
-        environmentVariable: String,
-        selectUserTransactionsAfterSpecifiedDateResult: MultipleTransactionResponse
+        environmentVariable: EnvironmentFileEntryEnum,
+        selectUserTransactionsAfterSpecifiedDateResult: MultipleTransactionResponse,
+        isDevelopmentMode: Boolean,
+        environmentVariablesForAccountsToIgnore: List<EnvironmentFileEntryEnum>
 
-    ): MutableMap<UInt, String> {
+    ): IsOkModel<MutableMap<UInt, String>> {
 
         App.dotEnv = App.reloadDotEnv()
-        val accountsToInclude: List<String> = (App.dotEnv[environmentVariable] ?: "0").split(',')
+        val accountsToInclude: List<String> = (App.dotEnv[environmentVariable.name] ?: "0").split(',')
+
+        val accountsToIgnore: List<String> = environmentVariablesForAccountsToIgnore
+            .flatMap { environmentVariableForAccountToIgnore ->
+                App.dotEnv[environmentVariableForAccountToIgnore.name]?.split(',') ?: emptyList()
+            }
 
         val accounts: MutableMap<UInt, String> = mutableMapOf()
         selectUserTransactionsAfterSpecifiedDateResult.transactions.forEach { transaction: TransactionResponse ->
 
-            if (accountsToInclude.contains(transaction.fromAccountId.toString())) {
+            fun validateAccountDetails(accountId: UInt, accountName: String): IsOkModel<MutableMap<UInt, String>>? {
 
-                accounts.putIfAbsent(transaction.fromAccountId, transaction.fromAccountFullName)
+                return if (accountsToInclude.contains(accountId.toString())) {
+
+                    accounts.putIfAbsent(accountId, accountName)
+                    null
+
+                } else if (accountsToIgnore.contains(accountId.toString())) {
+
+                    null
+
+                } else {
+
+                    IsOkModel(
+                        isOK = false,
+                        error = "Account $accountId : $accountName not available in configuration"
+                    )
+                }
             }
 
-            if (accountsToInclude.contains(transaction.toAccountId.toString())) {
+            val validateAccountResult =
+                validateAccountDetails(transaction.fromAccountId, transaction.fromAccountFullName)
+                    ?: validateAccountDetails(transaction.toAccountId, transaction.toAccountFullName)
+                    ?: IsOkModel(isOK = true)
 
-                accounts.putIfAbsent(transaction.toAccountId, transaction.toAccountFullName)
+            if (IsOkUtils.isNotOk(validateAccountResult)) {
+
+                return validateAccountResult
             }
         }
 
-        println("Affected Expense A/Cs : $accounts")
-        return accounts
+        if (isDevelopmentMode) {
+
+            println("Affected Expense A/Cs : $accounts")
+        }
+
+        return IsOkModel(
+
+            isOK = true,
+            data = accounts
+        )
     }
 }
