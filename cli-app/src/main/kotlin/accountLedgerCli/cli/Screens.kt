@@ -295,7 +295,7 @@ object Screens {
 
                 "18" -> {
 
-                    printBalanceSheetOfUser(
+                    LedgerSheetOperations.printBalanceSheetOfUser(
 
                         currentUserName = username,
                         currentUserId = userId,
@@ -307,7 +307,7 @@ object Screens {
 
                 "19" -> {
 
-                    printBalanceSheetOfUser(
+                    LedgerSheetOperations.printBalanceSheetOfUser(
 
                         currentUserName = username,
                         currentUserId = userId,
@@ -319,7 +319,7 @@ object Screens {
 
                 "20" -> {
 
-                    printBalanceSheetOfUser(
+                    LedgerSheetOperations.printBalanceSheetOfUser(
 
                         currentUserName = username,
                         currentUserId = userId,
@@ -331,7 +331,7 @@ object Screens {
 
                 "21" -> {
 
-                    printBalanceSheetOfUser(
+                    LedgerSheetOperations.printBalanceSheetOfUser(
 
                         currentUserName = username,
                         currentUserId = userId,
@@ -343,7 +343,7 @@ object Screens {
 
                 "22" -> {
 
-                    printBalanceSheetOfUser(
+                    LedgerSheetOperations.printBalanceSheetOfUser(
 
                         currentUserName = username,
                         currentUserId = userId,
@@ -355,7 +355,7 @@ object Screens {
 
                 "23" -> {
 
-                    printBalanceSheetOfUser(
+                    LedgerSheetOperations.printBalanceSheetOfUser(
 
                         currentUserName = username,
                         currentUserId = userId,
@@ -515,7 +515,7 @@ object Screens {
 
                 "39" -> {
 
-                    printIncomeSheetOfUser(
+                    LedgerSheetOperations.printIncomeSheetOfUser(
 
                         currentUserName = username,
                         currentUserId = userId,
@@ -526,7 +526,7 @@ object Screens {
 
                 "40" -> {
 
-                    printExpenseSheetOfUser(
+                    LedgerSheetOperations.printExpenseSheetOfUser(
 
                         currentUserName = username,
                         currentUserId = userId,
@@ -537,7 +537,7 @@ object Screens {
 
                 "41" -> {
 
-                    printProfitSheetOfUser(
+                    LedgerSheetOperations.printProfitSheetOfUser(
 
                         currentUserName = username,
                         currentUserId = userId,

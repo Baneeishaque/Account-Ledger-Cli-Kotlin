@@ -225,7 +225,7 @@ class UserOperationsInterActiveWithApiService {
 
                                                 if (apiMethodOptions[CommandLineApiMethodBalanceSheetOptionsEnum.outputFormat.name] is BalanceSheetOutputFormatsEnum) {
 
-                                                    printBalanceSheetOfUser(
+                                                    LedgerSheetOperations.printBalanceSheetOfUser(
 
                                                         currentUserName = username,
                                                         currentUserId = authenticationResponseResult.id,
@@ -468,7 +468,8 @@ class UserOperationsInterActiveWithApiService {
                         when (readln()) {
 
                             "1" -> {
-                                balanceSheetOfUser(
+
+                                LedgerSheetOperations.balanceSheetOfUser(
 
                                     usersMap = usersMap,
                                     isConsoleMode = isConsoleMode,
