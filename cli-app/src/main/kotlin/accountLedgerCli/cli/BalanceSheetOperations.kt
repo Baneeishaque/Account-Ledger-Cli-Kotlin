@@ -210,8 +210,10 @@ internal fun printSheetOfUser(
 
                 println("Error : ${(apiResponse.exceptionOrNull() as Exception).localizedMessage}")
                 do {
+
                     print("Retry (Y/N) ? : ")
                     when (readln()) {
+
                         "Y", "" -> {
 
                             printSheetOfUser(
@@ -379,7 +381,7 @@ internal fun printSheetOfUser(
                     }
                 }
 
-                //TODO : print Balance Sheet on Console
+                //TODO : print Formatted Sheet on Console
                 if (isNotApiCall) {
 
                     println(menuItems)
