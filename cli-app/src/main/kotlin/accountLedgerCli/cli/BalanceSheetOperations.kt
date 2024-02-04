@@ -111,11 +111,14 @@ internal fun printIncomeSheetOfUser(
 ) {
 
     printSheetOfUser(
+
         currentUserName = currentUserName,
         currentUserId = currentUserId,
         sheetTitle = "Income",
         getDesiredAccountIdsForSheetOfUser = fun(selectUserTransactionsAfterSpecifiedDateResult: MultipleTransactionResponse): MutableMap<UInt, String> {
+
             return getDesiredAccountIdsForSheetOfUserBasedOnEnvironment(
+
                 environmentVariable = "INCOME_ACCOUNT_IDS_FOR_SHEET",
                 selectUserTransactionsAfterSpecifiedDateResult = selectUserTransactionsAfterSpecifiedDateResult
             )
@@ -137,6 +140,7 @@ internal fun printProfitSheetOfUser(
 ) {
 
     printIncomeSheetOfUser(
+
         currentUserName = currentUserName,
         currentUserId = currentUserId,
         isNotApiCall = isNotApiCall,
@@ -144,6 +148,7 @@ internal fun printProfitSheetOfUser(
         isDevelopmentMode = isDevelopmentMode
     )
     printExpenseSheetOfUser(
+
         currentUserName = currentUserName,
         currentUserId = currentUserId,
         isNotApiCall = isNotApiCall,
@@ -168,20 +173,27 @@ internal fun printSheetOfUser(
 
         print("currentUser : $currentUserName")
     }
+
     val multipleTransactionDataSource = MultipleTransactionDataSource()
+
     if (isNotApiCall) {
 
         println("Contacting Server...")
     }
+
     val apiResponse: Result<MultipleTransactionResponse>
+
     //TODO : Only applicable for user_first_entry_date usernames
     val specifiedDate: IsOkModel<String> = MysqlUtils.normalDateTextToMySqlDateText(
+
+        //TODO : migrate to DateTimeUtils
         normalDateText = DataOperations.getUserInitialTransactionDateFromUsername(username = currentUserName).minusDays(
-            1
+            /* daysToSubtract = */ 1
         ).format(DateTimeUtils.normalDatePattern)
     )
     if (specifiedDate.isOK) {
 
+        //TODO : migrate to ApiUtilsCommon
         runBlocking {
 
             apiResponse = multipleTransactionDataSource.selectUserTransactionsAfterSpecifiedDate(
@@ -201,7 +213,9 @@ internal fun printSheetOfUser(
                     print("Retry (Y/N) ? : ")
                     when (readln()) {
                         "Y", "" -> {
+
                             printSheetOfUser(
+
                                 currentUserName = currentUserName,
                                 currentUserId = currentUserId,
                                 sheetTitle = sheetTitle,
@@ -224,6 +238,7 @@ internal fun printSheetOfUser(
 
                 print(
                     Json.encodeToString(
+
                         serializer = CommonDataModel.serializer(Unit.serializer()),
                         value = CommonDataModel(
                             status = 1,
@@ -237,6 +252,7 @@ internal fun printSheetOfUser(
             val selectUserTransactionsAfterSpecifiedDateResult: MultipleTransactionResponse = apiResponse.getOrNull()!!
             if (selectUserTransactionsAfterSpecifiedDateResult.status == 1u) {
 
+                // TODO : migrate to ApiUtils
                 if (isNotApiCall) {
 
                     println("No Transactions...")
@@ -266,6 +282,7 @@ internal fun printSheetOfUser(
                 val sheetDataRows: MutableList<BalanceSheetDataRowModel> = mutableListOf()
                 for (account: MutableMap.MutableEntry<UInt, String> in accounts) {
 
+                    //TODO : migrate to ApiUtilsCommon
                     val apiResponse2: Result<MultipleTransactionResponse> =
                         ServerOperations.getUserTransactionsForAnAccount(
 
@@ -293,6 +310,7 @@ internal fun printSheetOfUser(
 
                             print(
                                 Json.encodeToString(
+
                                     serializer = CommonDataModel.serializer(Unit.serializer()),
                                     value = CommonDataModel(
                                         status = 1,
@@ -309,6 +327,7 @@ internal fun printSheetOfUser(
 
                             var currentBalance = 0.0F
                             userMultipleTransactionResponseResult.transactions.forEach { currentTransaction: TransactionResponse ->
+
                                 if (currentTransaction.fromAccountId == account.key) {
 
                                     currentBalance -= currentTransaction.amount
@@ -323,8 +342,9 @@ internal fun printSheetOfUser(
                                 //TODO : Print Ledger
                                 menuItems.add(element = "\n${account.key} : ${account.value} : $currentBalance")
                                 sheetDataRows.add(
-                                    element =
-                                    BalanceSheetDataRowModel(
+
+                                    element = BalanceSheetDataRowModel(
+
                                         accountId = account.key,
                                         accountName = account.value,
                                         accountBalance = currentBalance
@@ -338,10 +358,13 @@ internal fun printSheetOfUser(
                                 println("Server Execution Error...")
 
                             } else {
+
                                 print(
                                     Json.encodeToString(
+
                                         serializer = CommonDataModel.serializer(Unit.serializer()),
                                         value = CommonDataModel(
+
                                             status = 1,
                                             error = "Server Execution Error, Execution Status is ${userMultipleTransactionResponseResult.status}"
                                         )
@@ -354,12 +377,17 @@ internal fun printSheetOfUser(
 
                 //TODO : print Balance Sheet on Console
                 if (isNotApiCall) {
+
                     println(menuItems)
                 } else {
+
                     print(
+
                         Json.encodeToString(
+
                             serializer = CommonDataModel.serializer(BalanceSheetDataRowModel.serializer()),
                             value = CommonDataModel(
+
                                 status = 0,
                                 data = sheetDataRows
                             )
@@ -377,10 +405,12 @@ internal fun printSheetOfUser(
         } else {
 
             print(
+
                 Json.encodeToString(
 
                     serializer = CommonDataModel.serializer(Unit.serializer()),
                     value = CommonDataModel(
+
                         status = 1,
                         error = "Error : ${specifiedDate.data!!}"
                     )

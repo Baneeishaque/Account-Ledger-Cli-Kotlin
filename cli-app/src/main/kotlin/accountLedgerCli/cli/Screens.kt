@@ -501,6 +501,7 @@ object Screens {
                 }
 
                 "38" -> {
+
                     insertTransactionResult = checkAffectedAccountsAfterSpecifiedDate(
 
                         desiredDate = InputUtils.getValidDateInNormalPattern(promptPrefix = "After "),
