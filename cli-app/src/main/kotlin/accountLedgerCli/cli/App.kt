@@ -60,9 +60,11 @@ class App {
         @JvmStatic
         val isDevelopmentMode: Boolean =
             EnvironmentFileOperations.getEnvironmentVariableValueForBooleanWithDefaultValue(
+
                 dotEnv = dotEnv,
                 environmentVariableName = EnvironmentalFileEntries.isDevelopmentMode.entryName.name,
                 defaultValue = false
+
             ).value!!
 
         @OptIn(ExperimentalCli::class)
@@ -140,8 +142,8 @@ class App {
                             return
                         }
 
+                        // "Gist", "" -> {
                         "Gist" -> {
-                            // "Gist", "" -> {
                             GistUtilsInteractive.processGistIdInteractive(
                                 userName = identifiedUser,
                                 userId = if (dotEnv[EnvironmentFileEntryCommonEnum.USER_ID.name] == null) ConstantsNative.defaultValueForIntegerEnvironmentVariables.toUInt() else dotEnv[EnvironmentFileEntryCommonEnum.USER_ID.name].toUInt(),
