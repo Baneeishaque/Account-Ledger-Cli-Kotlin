@@ -6,6 +6,7 @@ import account.ledger.library.utils.TransactionUtils.transactionsToTextFromList
 import account_ledger_library.constants.ConstantsNative
 import common.utils.library.constants.CommonConstants
 import common.utils.library.utils.InteractiveUtils
+import common.utils.library.utils.ListUtils
 
 object HandleTransactionsInteractive {
 
@@ -33,7 +34,7 @@ object HandleTransactionsInteractive {
                 "1" -> {
                     return handleTransactionsWithZeroAsBackValue(
 
-                        selectedTransactionIndex = InputOperations.getValidIndexFromCollectionWithSelectionPromptAndZeroAsBack(
+                        selectedTransactionIndex = ListUtils.getValidIndexFromCollectionWithSelectionPromptAndZeroAsBack(
 
                             list = transactions,
                             itemSpecification = ConstantsNative.TRANSACTION_TEXT,
@@ -163,7 +164,7 @@ object HandleTransactionsInteractive {
 
                 if (input == "1") {
 
-                    return InputOperations.getValidIndexFromCollectionWithSelectionPromptAndZeroAsBack(
+                    return ListUtils.getValidIndexFromCollectionWithSelectionPromptAndZeroAsBack(
 
                         list = searchResult,
                         itemSpecification = ConstantsNative.TRANSACTION_TEXT,

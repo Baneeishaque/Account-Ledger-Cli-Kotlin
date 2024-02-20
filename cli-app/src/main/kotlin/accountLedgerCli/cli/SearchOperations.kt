@@ -5,6 +5,7 @@ import account.ledger.library.utils.AccountUtils
 import account_ledger_library.constants.ConstantsNative
 import common.utils.library.constants.CommonConstants
 import common.utils.library.utils.InteractiveUtils
+import common.utils.library.utils.ListUtils
 
 fun searchAccount(
 
@@ -67,7 +68,7 @@ fun searchAccount(
             val input: String = readln()
             if (input == "1") {
 
-                return InputOperations.getValidIndexFromCollectionWithSelectionPromptAndZeroAsBack(
+                return ListUtils.getValidIndexFromCollectionWithSelectionPromptAndZeroAsBack(
 
                     map = searchResult,
                     itemSpecification = ConstantsNative.accountText,

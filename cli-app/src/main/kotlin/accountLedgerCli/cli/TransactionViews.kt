@@ -13,7 +13,6 @@ import account.ledger.library.models.ViewTransactionsOutput
 import account.ledger.library.operations.ServerOperations
 import account.ledger.library.utils.AccountUtils
 import account.ledger.library.utils.ApiUtils
-import account.ledger.library.utils.HandleResponses
 import account.ledger.library.utils.TransactionUtils
 import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
 import accountLedgerCli.utils.ChooseAccountUtils
@@ -300,7 +299,7 @@ object TransactionViews {
                         ) {
 
                             val transactionIndex: UInt =
-                                InputOperations.getValidIndexFromCollectionWithSelectionPromptAndZeroAsBack(
+                                ListUtils.getValidIndexFromCollectionWithSelectionPromptAndZeroAsBack(
 
                                     map = userTransactionsMap,
                                     itemSpecification = ConstantsNative.transactionText,
@@ -328,7 +327,7 @@ object TransactionViews {
                         ) {
 
                             val transactionStartIndex: UInt =
-                                InputOperations.getValidIndexFromCollectionWithSelectionPromptAndZeroAsBack(
+                                ListUtils.getValidIndexFromCollectionWithSelectionPromptAndZeroAsBack(
 
                                     map = userTransactionsMap,
                                     itemSpecificationPrefix = "Start ",
@@ -342,7 +341,7 @@ object TransactionViews {
                                     userTransactionsMap.filterKeys { transactionId: UInt -> transactionId > transactionStartIndex }
 
                                 val transactionEndIndex: UInt =
-                                    InputOperations.getValidIndexFromCollectionWithSelectionPromptAndZeroAsBack(
+                                    ListUtils.getValidIndexFromCollectionWithSelectionPromptAndZeroAsBack(
 
                                         map = reducedUserTransactionsMap,
                                         itemSpecificationPrefix = "End ",
@@ -402,7 +401,7 @@ object TransactionViews {
                         ) {
 
                             val transactionIndex: UInt =
-                                InputOperations.getValidIndexFromCollectionWithSelectionPromptAndZeroAsBack(
+                                ListUtils.getValidIndexFromCollectionWithSelectionPromptAndZeroAsBack(
 
                                     map = userTransactionsMap,
                                     itemSpecification = ConstantsNative.transactionText,
@@ -949,7 +948,7 @@ object TransactionViews {
         transactionPrefix: String,
         isDevelopmentMode: Boolean
 
-    ): UInt = InputOperations.getValidIndexFromCollectionWithSelectionPromptAndZeroAsBack(
+    ): UInt = ListUtils.getValidIndexFromCollectionWithSelectionPromptAndZeroAsBack(
 
         map = userTransactionsMap,
         itemSpecificationPrefix = transactionPrefix,
@@ -1015,35 +1014,26 @@ object TransactionViews {
         val userInputForAccountIndex: String = readln()
         if (userInputForAccountIndex != "0") {
 
-            val getUserAccountsMapResult: IsOkModel<LinkedHashMap<UInt, AccountResponse>> =
-                HandleResponses.getUserAccountsMap(
-                    apiResponse = ApiUtils.getAccountsFull(
+            AccountUtils.processUserAccountsMap<Any>(
 
-                        userId = userId,
-                        isConsoleMode = isConsoleMode,
-                        isDevelopmentMode = isDevelopmentMode
-                    )
-                )
+                userId = userId,
+                isConsoleMode = isConsoleMode,
+                isDevelopmentMode = isDevelopmentMode,
+                successActions = fun(userAccountsMap: LinkedHashMap<UInt, AccountResponse>) {
 
-            HandleResponsesCommon.isOkModelHandler(
+                    val accountIndex: UInt = ListUtils.getValidIndexFromCollectionWithZeroAsBack(
 
-                isOkModel = getUserAccountsMapResult,
-                data = Unit,
-                successActions = fun() {
-
-                    val accountIndex: UInt = InputOperations.getValidIndexFromCollectionWithZeroAsBack(
-
-                        map = getUserAccountsMapResult.data!!,
+                        map = userAccountsMap,
                         inputForIndex = userInputForAccountIndex,
                         itemSpecification = ConstantsNative.accountText,
                         items = AccountUtils.userAccountsToStringFromList(
 
-                            accounts = getUserAccountsMapResult.data!!.values.toList()
+                            accounts = userAccountsMap.values.toList()
                         )
                     )
                     if (accountIndex != 0u) {
 
-                        val selectedAccount: AccountResponse = getUserAccountsMapResult.data!![accountIndex]!!
+                        val selectedAccount: AccountResponse = userAccountsMap[accountIndex]!!
                         viewTransactionsForAnAccount(
 
                             userId = userId,
@@ -1057,7 +1047,8 @@ object TransactionViews {
                             isDevelopmentMode = isDevelopmentMode
                         )
                     }
-                })
+                }
+            )
         }
     }
 }

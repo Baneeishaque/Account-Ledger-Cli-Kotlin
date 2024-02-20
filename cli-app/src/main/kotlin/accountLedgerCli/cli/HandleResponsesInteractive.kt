@@ -13,8 +13,9 @@ import account_ledger_library.constants.ConstantsNative
 import common.utils.library.constants.CommonConstants
 import common.utils.library.models.IsOkModel
 import common.utils.library.utils.EnumUtils
-import common.utils.library.utils.HandleResponsesCommon
 import common.utils.library.utils.InteractiveUtils
+import common.utils.library.utils.IsOkUtils
+import common.utils.library.utils.ListUtils
 
 object HandleResponsesInteractive {
 
@@ -33,7 +34,7 @@ object HandleResponsesInteractive {
         val getUserAccountsMapResult: IsOkModel<LinkedHashMap<UInt, AccountResponse>> =
             HandleResponses.getUserAccountsMap(apiResponse = apiResponse)
 
-        return HandleResponsesCommon.isOkModelHandler(
+        return IsOkUtils.isOkHandler(
 
             isOkModel = getUserAccountsMapResult,
             data = localInsertTransactionResult,
@@ -130,7 +131,7 @@ object HandleResponsesInteractive {
                         "1" -> {
                             return getHandleAccountsResponseFromApiResult(
 
-                                selectedAccountId = InputOperations.getValidIndexFromCollectionWithSelectionPromptAndZeroAsBack(
+                                selectedAccountId = ListUtils.getValidIndexFromCollectionWithSelectionPromptAndZeroAsBack(
 
                                     map = userAccountsMap,
                                     itemSpecification = ConstantsNative.accountText,

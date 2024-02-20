@@ -1,13 +1,12 @@
 package accountLedgerCli.cli
 
 import account.ledger.library.api.response.AccountResponse
-import account.ledger.library.api.response.UserResponse
 import account_ledger_library.constants.ConstantsNative
-import account.ledger.library.models.ChooseUserResult
 import account.ledger.library.models.InsertTransactionResult
 import account.ledger.library.models.ViewTransactionsOutput
 import account.ledger.library.utils.AccountUtils
 import common.utils.library.utils.InteractiveUtils
+import common.utils.library.utils.ListUtils
 import common.utils.library.utils.ToDoUtils
 
 fun processChildAccountScreenInput(
@@ -41,7 +40,7 @@ fun processChildAccountScreenInput(
         "1" -> {
             accountHomeOutput = handleAccountSelection(
 
-                accountId = InputOperations.getValidIndexFromCollectionWithSelectionPromptAndZeroAsBack(
+                accountId = ListUtils.getValidIndexFromCollectionWithSelectionPromptAndZeroAsBack(
 
                     map = userAccountsMap,
                     itemSpecification = ConstantsNative.accountText,
@@ -142,16 +141,3 @@ private fun handleAccountSelection(
     )
 }
 
-fun handleUserSelection(
-    chosenUserId: UInt, usersMap: LinkedHashMap<UInt, UserResponse>
-): ChooseUserResult {
-
-    if (chosenUserId != 0u) {
-
-        return ChooseUserResult(
-            isChosen = true,
-            chosenUser = usersMap[chosenUserId]!!
-        )
-    }
-    return ChooseUserResult(isChosen = false)
-}

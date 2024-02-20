@@ -102,7 +102,7 @@ object InsertOperationsInteractive {
                     )
                 )
 
-            return HandleResponsesCommon.isOkModelHandler(
+            return IsOkUtils.isOkHandler(
 
                 isOkModel = getUserAccountsMapResult,
                 data = insertTransactionResult,
@@ -168,7 +168,7 @@ object InsertOperationsInteractive {
                     )
                 )
 
-            return HandleResponsesCommon.isOkModelHandler(
+            return IsOkUtils.isOkHandler(
 
                 isOkModel = getUserAccountsMapResult,
                 data = insertTransactionResult,
@@ -1447,9 +1447,9 @@ object InsertOperationsInteractive {
 
                 print("Enter No. of Splits : ")
                 val thresholdValue = 0u
-                val noOfSplits: UInt = InputUtils.getGreaterUnsignedInt(
+                val noOfSplits: UInt = InputUtilsInteractive.getGreaterUnsignedInt(
 
-                    inputUInt = InputUtils.getValidUnsignedInt(
+                    inputUInt = InputUtilsInteractive.getValidUnsignedInt(
 
                         inputText = readln(), invalidMessage = "Please Enter Valid Unsigned Integer"
 
@@ -2148,7 +2148,7 @@ object InsertOperationsInteractive {
             val transactionAmountInput: String = readln()
             if (transactionAmountInput.isNotEmpty()) {
 
-                localTransactionAmount = InputUtils.getValidFloat(
+                localTransactionAmount = InputUtilsInteractive.getValidFloat(
 
                     inputText = transactionAmountInput,
                     constructInvalidMessage = fun(inputText: String): String {
@@ -2186,7 +2186,7 @@ object InsertOperationsInteractive {
 
                                 val optionsList: List<String> = patternQuestion.question.split('/')
                                 answer = optionsList[
-                                    (InputOperations.getValidIndexWithSelectionPromptForNonCollections(
+                                    (ListUtils.getValidIndexWithSelectionPromptForNonCollections(
 
                                         list = optionsList,
                                         itemSpecification = "${patternQuestion.question}?",
@@ -2199,14 +2199,14 @@ object InsertOperationsInteractive {
                             PatternQuestionAnswerTypesEnum.Number -> {
 
                                 print("Enter ${patternQuestion.question} : ")
-                                answer = InputUtils.getValidUnsignedInt(inputText = readln()).toString()
+                                answer = InputUtilsInteractive.getValidUnsignedInt(inputText = readln()).toString()
 
                             }
 
                             PatternQuestionAnswerTypesEnum.Float -> {
 
                                 print("Enter ${patternQuestion.question} : ")
-                                answer = InputUtils.getValidFloat(inputText = readln()).toString()
+                                answer = InputUtilsInteractive.getValidFloat(inputText = readln()).toString()
 
                             }
 
@@ -2219,7 +2219,7 @@ object InsertOperationsInteractive {
 
                                 ).split('/')
 
-                                val position: Int = InputOperations.getValidIndexWithSelectionPromptForNonCollections(
+                                val position: Int = ListUtils.getValidIndexWithSelectionPromptForNonCollections(
 
                                     list = optionsList,
                                     itemSpecification = "${
@@ -2908,10 +2908,11 @@ object InsertOperationsInteractive {
         environmentVariableFormalName: String,
         dotenv: Dotenv
 
-    ): EnvironmentVariableForWholeNumber = EnvironmentFileOperations.getEnvironmentVariableValueForWholeNumber(
+    ): EnvironmentVariableForWholeNumber =
+        EnvironmentFileOperations.getEnvironmentVariableValueForWholeNumberInteractive(
 
-        dotenv = dotenv,
-        environmentVariableName = environmentVariableName,
-        environmentVariableFormalName = environmentVariableFormalName
-    )
+            dotenv = dotenv,
+            environmentVariableName = environmentVariableName,
+            environmentVariableFormalName = environmentVariableFormalName
+        )
 }

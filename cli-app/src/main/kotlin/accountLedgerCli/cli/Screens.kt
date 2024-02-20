@@ -9,12 +9,10 @@ import account.ledger.library.enums.FunctionCallSourceEnum
 import account.ledger.library.enums.TransactionTypeEnum
 import account.ledger.library.models.*
 import account.ledger.library.operations.DataOperations
+import account.ledger.library.operations.LedgerSheetOperations
 import account.ledger.library.operations.ServerOperations
 import account.ledger.library.retrofit.data.MultipleTransactionDataSource
-import account.ledger.library.utils.AccountUtils
-import account.ledger.library.utils.ApiUtils
-import account.ledger.library.utils.HandleResponses
-import account.ledger.library.utils.TransactionUtils
+import account.ledger.library.utils.*
 import account_ledger_library.constants.ConstantsNative
 import common.utils.library.models.IsOkModel
 import common.utils.library.utils.*
@@ -280,7 +278,7 @@ object Screens {
 
                     insertTransactionResult = checkAffectedAccountsAfterSpecifiedDate(
 
-                        desiredDate = InputUtils.getValidDateInNormalPattern(),
+                        desiredDate = InputUtilsInteractive.getValidDateInNormalPattern(),
                         userId = userId,
                         username = username,
                         previousTransactionData = insertTransactionResult,
@@ -309,7 +307,8 @@ object Screens {
                         currentUserId = userId,
                         refineLevel = BalanceSheetRefineLevelEnum.ALL,
                         isConsoleMode = true,
-                        isDevelopmentMode = isDevelopmentMode
+                        isDevelopmentMode = isDevelopmentMode,
+                        dotenv = App.reloadDotEnv()
                     )
                 }
 
@@ -321,7 +320,8 @@ object Screens {
                         currentUserId = userId,
                         refineLevel = BalanceSheetRefineLevelEnum.WITHOUT_OPEN_BALANCES,
                         isConsoleMode = true,
-                        isDevelopmentMode = isDevelopmentMode
+                        isDevelopmentMode = isDevelopmentMode,
+                        dotenv = App.reloadDotEnv()
                     )
                 }
 
@@ -333,7 +333,8 @@ object Screens {
                         currentUserId = userId,
                         refineLevel = BalanceSheetRefineLevelEnum.WITHOUT_MISC_INCOMES,
                         isConsoleMode = true,
-                        isDevelopmentMode = isDevelopmentMode
+                        isDevelopmentMode = isDevelopmentMode,
+                        dotenv = App.reloadDotEnv()
                     )
                 }
 
@@ -345,7 +346,8 @@ object Screens {
                         currentUserId = userId,
                         refineLevel = BalanceSheetRefineLevelEnum.WITHOUT_INVESTMENT_RETURNS,
                         isConsoleMode = true,
-                        isDevelopmentMode = isDevelopmentMode
+                        isDevelopmentMode = isDevelopmentMode,
+                        dotenv = App.reloadDotEnv()
                     )
                 }
 
@@ -357,7 +359,8 @@ object Screens {
                         currentUserId = userId,
                         refineLevel = BalanceSheetRefineLevelEnum.WITHOUT_FAMILY_ACCOUNTS,
                         isConsoleMode = true,
-                        isDevelopmentMode = isDevelopmentMode
+                        isDevelopmentMode = isDevelopmentMode,
+                        dotenv = App.reloadDotEnv()
                     )
                 }
 
@@ -369,7 +372,8 @@ object Screens {
                         currentUserId = userId,
                         refineLevel = BalanceSheetRefineLevelEnum.WITHOUT_EXPENSE_ACCOUNTS,
                         isConsoleMode = true,
-                        isDevelopmentMode = isDevelopmentMode
+                        isDevelopmentMode = isDevelopmentMode,
+                        dotenv = App.reloadDotEnv()
                     )
                 }
 
@@ -464,7 +468,7 @@ object Screens {
                             isDevelopmentMode = isDevelopmentMode
                         )
 
-                    HandleResponsesCommon.isOkModelHandler(
+                    IsOkUtils.isOkHandler(
 
                         isOkModel = getTransactionResult,
                         data = Unit,
@@ -502,7 +506,7 @@ object Screens {
                         username = username,
                         previousTransactionData = insertTransactionResult,
                         isUpToTimeStamp = true,
-                        upToTimeStamp = InputUtils.getValidDateTimeInNormalPattern(promptPrefix = "Up to "),
+                        upToTimeStamp = InputUtilsInteractive.getValidDateTimeInNormalPattern(promptPrefix = "Up to "),
                         isConsoleMode = true,
                         isDevelopmentMode = isDevelopmentMode
                     )
@@ -512,7 +516,7 @@ object Screens {
 
                     insertTransactionResult = checkAffectedAccountsAfterSpecifiedDate(
 
-                        desiredDate = InputUtils.getValidDateInNormalPattern(promptPrefix = "After "),
+                        desiredDate = InputUtilsInteractive.getValidDateInNormalPattern(promptPrefix = "After "),
                         userId = userId,
                         username = username,
                         previousTransactionData = insertTransactionResult,
@@ -528,7 +532,8 @@ object Screens {
                         currentUserName = username,
                         currentUserId = userId,
                         isConsoleMode = true,
-                        isDevelopmentMode = isDevelopmentMode
+                        isDevelopmentMode = isDevelopmentMode,
+                        dotenv = App.reloadDotEnv()
                     )
                 }
 
@@ -539,7 +544,8 @@ object Screens {
                         currentUserName = username,
                         currentUserId = userId,
                         isConsoleMode = true,
-                        isDevelopmentMode = isDevelopmentMode
+                        isDevelopmentMode = isDevelopmentMode,
+                        dotenv = App.reloadDotEnv()
                     )
                 }
 
@@ -550,7 +556,8 @@ object Screens {
                         currentUserName = username,
                         currentUserId = userId,
                         isConsoleMode = true,
-                        isDevelopmentMode = isDevelopmentMode
+                        isDevelopmentMode = isDevelopmentMode,
+                        dotenv = App.reloadDotEnv()
                     )
                 }
 
@@ -561,7 +568,8 @@ object Screens {
                         currentUserName = username,
                         currentUserId = userId,
                         isConsoleMode = true,
-                        isDevelopmentMode = isDevelopmentMode
+                        isDevelopmentMode = isDevelopmentMode,
+                        dotenv = App.reloadDotEnv()
                     )
                 }
 
@@ -572,7 +580,8 @@ object Screens {
                         currentUserName = username,
                         currentUserId = userId,
                         isConsoleMode = true,
-                        isDevelopmentMode = isDevelopmentMode
+                        isDevelopmentMode = isDevelopmentMode,
+                        dotenv = App.reloadDotEnv()
                     )
                 }
 
@@ -583,7 +592,8 @@ object Screens {
                         currentUserName = username,
                         currentUserId = userId,
                         isConsoleMode = true,
-                        isDevelopmentMode = isDevelopmentMode
+                        isDevelopmentMode = isDevelopmentMode,
+                        dotenv = App.reloadDotEnv()
                     )
                 }
 
@@ -594,7 +604,8 @@ object Screens {
                         currentUserName = username,
                         currentUserId = userId,
                         isConsoleMode = true,
-                        isDevelopmentMode = isDevelopmentMode
+                        isDevelopmentMode = isDevelopmentMode,
+                        dotenv = App.reloadDotEnv()
                     )
                 }
 
@@ -605,7 +616,8 @@ object Screens {
                         currentUserName = username,
                         currentUserId = userId,
                         isConsoleMode = true,
-                        isDevelopmentMode = isDevelopmentMode
+                        isDevelopmentMode = isDevelopmentMode,
+                        dotenv = App.reloadDotEnv()
                     )
                 }
 
@@ -616,7 +628,8 @@ object Screens {
                         currentUserName = username,
                         currentUserId = userId,
                         isConsoleMode = true,
-                        isDevelopmentMode = isDevelopmentMode
+                        isDevelopmentMode = isDevelopmentMode,
+                        dotenv = App.reloadDotEnv()
                     )
                 }
 
@@ -627,7 +640,8 @@ object Screens {
                         currentUserName = username,
                         currentUserId = userId,
                         isConsoleMode = true,
-                        isDevelopmentMode = isDevelopmentMode
+                        isDevelopmentMode = isDevelopmentMode,
+                        dotenv = App.reloadDotEnv()
                     )
                 }
 
@@ -638,7 +652,8 @@ object Screens {
                         currentUserName = username,
                         currentUserId = userId,
                         isConsoleMode = true,
-                        isDevelopmentMode = isDevelopmentMode
+                        isDevelopmentMode = isDevelopmentMode,
+                        dotenv = App.reloadDotEnv()
                     )
                 }
 
@@ -1091,6 +1106,7 @@ object Screens {
                     "6 - Add Two Way Transaction",
                     "7 - Add Cyclic Via. Transaction",
                     "8 - Add Special Transaction",
+                    "9 - Add Special Transaction (Advanced Configuration)",
                     "17 - ${getQuickTransactionOnWalletText()}",
                     "18 - ${getQuickTransactionOnWalletToFrequent1Text()}",
                     "19 - ${getQuickTransactionOnWalletToFrequent2Text()}",
@@ -1221,6 +1237,20 @@ object Screens {
                 }
 
                 "8" -> {
+
+                    InsertTransactionForBajajCoins.addTransactionForBajajCoins(
+
+                        sourceAccount = localInsertTransactionResult.fromAccount,
+                        secondPartyAccount = localInsertTransactionResult.toAccount,
+                        eventDateTimeInText = localInsertTransactionResult.dateTimeInText,
+                        dotenv = App.dotEnv,
+                        userId = userId,
+                        isConsoleMode = true,
+                        isDevelopmentMode = isDevelopmentMode
+                    )
+                }
+
+                "9" -> {
 
                     val readSpecialTransactionTypesFileResult: IsOkModel<SpecialTransactionTypesModel> =
                         JsonFileUtils.readJsonFile(

@@ -1,7 +1,6 @@
 package accountLedgerCli.cli
 
 import account.ledger.library.api.response.AccountResponse
-import account.ledger.library.constants.EnvironmentalFileEntries
 import account.ledger.library.enums.EnvironmentFileEntryEnum
 import account.ledger.library.models.InsertTransactionResult
 import account.ledger.library.utils.AccountUtils
@@ -59,10 +58,10 @@ class App {
 
         @JvmStatic
         val isDevelopmentMode: Boolean =
-            EnvironmentFileOperations.getEnvironmentVariableValueForBooleanWithDefaultValue(
+            EnvironmentFileOperations.getEnvironmentVariableValueForBooleanWithDefaultValueInteractive(
 
                 dotEnv = dotEnv,
-                environmentVariableName = EnvironmentalFileEntries.isDevelopmentMode.entryName.name,
+                environmentVariableName = EnvironmentFileEntryEnum.IS_DEVELOPMENT_MODE.name,
                 defaultValue = false
 
             ).value!!

@@ -11,10 +11,12 @@ import accountLedgerCli.enums.CommandLineApiMethodBalanceSheetOptionsEnum
 import account.ledger.library.models.ChooseUserResult
 import account.ledger.library.models.InsertTransactionResult
 import account.ledger.library.models.UserCredentials
+import account.ledger.library.operations.LedgerSheetOperations
 import account.ledger.library.retrofit.ResponseHolder
 import account.ledger.library.retrofit.data.AuthenticationDataSource
 import account.ledger.library.retrofit.data.MultipleUserDataSource
 import account.ledger.library.utils.UserUtils
+import account.ledger.library.utils.handleUserSelection
 import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
 import common.utils.library.models.CommonDataModel
 import common.utils.library.utils.InteractiveUtils
@@ -24,6 +26,7 @@ import kotlinx.serialization.builtins.serializer
 import kotlinx.serialization.json.Json
 import java.nio.file.Paths
 import common.utils.library.constants.CommonConstants
+import common.utils.library.utils.ListUtils
 
 // TODO : Separate into UserOperations, UserOperationsInteractive & UserOperationsApiService
 class UserOperationsInterActiveWithApiService {
@@ -232,7 +235,8 @@ class UserOperationsInterActiveWithApiService {
                                                         refineLevel = refineryLevel,
                                                         isNotApiCall = false,
                                                         isConsoleMode = false,
-                                                        isDevelopmentMode = isDevelopmentMode
+                                                        isDevelopmentMode = isDevelopmentMode,
+                                                        dotenv =  App.reloadDotEnv()
                                                     )
                                                 } else {
 
@@ -473,14 +477,15 @@ class UserOperationsInterActiveWithApiService {
 
                                     usersMap = usersMap,
                                     isConsoleMode = isConsoleMode,
-                                    isDevelopmentMode = isDevelopmentMode
+                                    isDevelopmentMode = isDevelopmentMode,
+                                    dotenv =  App.reloadDotEnv()
                                 )
                             }
 
                             "2" -> {
 
                                 val chooseUserResult: ChooseUserResult = handleUserSelection(
-                                    chosenUserId = InputOperations.getValidIndexFromCollectionWithSelectionPromptAndZeroAsBack(
+                                    chosenUserId = ListUtils.getValidIndexFromCollectionWithSelectionPromptAndZeroAsBack(
 
                                         map = usersMap,
                                         itemSpecification = ConstantsNative.userText,

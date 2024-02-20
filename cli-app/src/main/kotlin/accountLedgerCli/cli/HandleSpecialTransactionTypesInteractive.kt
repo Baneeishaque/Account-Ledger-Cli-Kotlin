@@ -6,6 +6,7 @@ import account.ledger.library.utils.SpecialTransactionTypeUtils
 import account_ledger_library.constants.ConstantsNative
 import common.utils.library.constants.CommonConstants
 import common.utils.library.utils.InteractiveUtils
+import common.utils.library.utils.ListUtils
 
 object HandleSpecialTransactionTypesInteractive {
 
@@ -35,7 +36,7 @@ object HandleSpecialTransactionTypesInteractive {
                 "1" -> {
                     return handleSpecialTransactionTypesWithZeroAsBackValue(
 
-                        selectedSpecialTransactionTypeIndex = InputOperations.getValidIndexFromCollectionWithSelectionPromptAndZeroAsBack(
+                        selectedSpecialTransactionTypeIndex = ListUtils.getValidIndexFromCollectionWithSelectionPromptAndZeroAsBack(
 
                             list = specialTransactionTypes,
                             itemSpecification = ConstantsNative.SPECIAL_TRANSACTION_TYPE_TEXT,
@@ -160,7 +161,7 @@ object HandleSpecialTransactionTypesInteractive {
                 val input: String = readln()
                 if (input == "1") {
 
-                    return InputOperations.getValidIndexFromCollectionWithSelectionPromptAndZeroAsBack(
+                    return ListUtils.getValidIndexFromCollectionWithSelectionPromptAndZeroAsBack(
 
                         list = searchResult,
                         itemSpecification = ConstantsNative.SPECIAL_TRANSACTION_TYPE_TEXT,
