@@ -75,12 +75,15 @@ object Screens {
                     } From XLX",*/
                     "16 - Check Affected A/Cs : After A Specified Date",
                     "17 - View Transactions of a Specific A/C",
+                    //TODO : Move Ledger Sheets to another Menu
                     "18 - View Balance Sheet Ledger (All)",
                     "19 - View Balance Sheet Ledger (Excluding Open Balances)",
                     "20 - View Balance Sheet Ledger (Excluding Open Balances & Misc. Incomes)",
                     "21 - View Balance Sheet Ledger (Excluding Open Balances, Misc. Incomes & Investment Returns)",
                     "22 - View Balance Sheet Ledger (Excluding Open Balances, Misc. Incomes, Investment Returns & Family Accounts)",
                     "23 - View Balance Sheet Ledger (Excluding Open Balances, Misc. Incomes, Investment Returns, Family & Expense Accounts)",
+                    //TODO : Use Env. Variable
+                    //TODO : Use another menu for view transactions of common accounts
                     "24 - View Transactions of Wallet A/C",
                     "25 - View Transactions of ${getEnvironmentVariableValueForUserScreen(environmentVariableName = EnvironmentFileEntryEnum.BANK_ACCOUNT_NAME.name)} A/C",
                     "26 - View Transactions of ${getEnvironmentVariableValueForUserScreen(environmentVariableName = EnvironmentFileEntryEnum.FREQUENT_1_ACCOUNT_NAME.name)} A/C",
@@ -90,15 +93,19 @@ object Screens {
                     "30 - Check Affected A/Cs : From Start Date",
                     "31 - View Last 10 Transactions",
 //                    "32 - Check Affected A/Cs : From Start Date to A Specified Date",
+                    //TODO : Check this
                     "33 - Check Affected A/Cs : From Start Date to A Specified Time Stamp",
                     /*"34 - Check Affected A/Cs : After A Specified Date to A Specified Date",
                     "35 - Check Affected A/Cs : After A Specified Date to A Specified Time Stamp",
                     "36 - Check Affected A/Cs : After A Specified Time Stamp to A Specified Date",
                     "37 - Check Affected A/Cs : After A Specified Time Stamp to A Specified Time Stamp",*/
+                    //TODO : Check this
                     "38 - Check Affected A/Cs : After A Specified Date",
+                    //TODO : Move Ledger Sheets to another Menu - continue
                     "39 - View Income Sheet",
                     "40 - View Expense Sheet",
                     "41 - View Profit Sheet",
+                    //TODO : Move Not Consider Ledger Sheets to another Menu - continue
                     "42 - View Not Consider for Income / Expense Sheet",
                     "43 - View Debit Credit Sheet",
                     "44 - View Not Consider for Income / Expense / Debit / Credit Sheet",
@@ -1355,6 +1362,7 @@ object Screens {
                     }
                 }
 
+                //TODO : Use common function
                 "17" -> {
 
                     localInsertTransactionResult = quickTransactionOnWallet(
