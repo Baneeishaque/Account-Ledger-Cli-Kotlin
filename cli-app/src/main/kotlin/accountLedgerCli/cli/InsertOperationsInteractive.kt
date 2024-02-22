@@ -15,9 +15,9 @@ import account.ledger.library.utils.ApiUtils
 import account.ledger.library.utils.HandleResponses
 import account.ledger.library.utils.TransactionUtils
 import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
-import accountLedgerCli.cli.Screens.quickTransactionOnWallet
 import accountLedgerCli.utils.ChooseAccountUtils
 import account_ledger_library.constants.ConstantsNative
+import account.ledger.library.models.TransactionModel
 import common.utils.library.enums.PatternQuestionAnswerTypesEnum
 import common.utils.library.models.IsOkModel
 import common.utils.library.utils.*
@@ -957,7 +957,8 @@ object InsertOperationsInteractive {
                     }
                 }
 
-                "17" -> {
+                //TODO : Use common function
+                /*"17" -> {
 
                     localInsertTransactionResult = quickTransactionOnWallet(
 
@@ -1088,7 +1089,7 @@ object InsertOperationsInteractive {
                         previousTransactionData = localInsertTransactionResult,
                         isDevelopmentMode = isDevelopmentMode
                     )
-                }
+                }*/
 
                 "0" -> {
 
@@ -2056,243 +2057,453 @@ object InsertOperationsInteractive {
         var localTransactionParticulars = transactionParticulars
         var localTransactionAmount = transactionAmount
 
+        if (transactionType != TransactionTypeEnum.BAJAJ_COINS) {
 
-        val reversedTransactionParticulars: String =
-            SentenceUtils.reverseOrderOfWords(sentence = localTransactionParticulars)
+            val reversedTransactionParticulars: String =
+                SentenceUtils.reverseOrderOfWords(sentence = localTransactionParticulars)
 
-        if (chosenTransactionForSpecial == null) {
+            if (chosenTransactionForSpecial == null) {
 
-            print("Enter Particulars (Current Value - $localTransactionParticulars), R to Reverse (Reversed Value - $reversedTransactionParticulars), AS to Add Suffix, AP to Add Prefix : ")
+                print("Enter Particulars (Current Value - $localTransactionParticulars), R to Reverse (Reversed Value - $reversedTransactionParticulars), AS to Add Suffix, AP to Add Prefix : ")
 
-            val transactionParticularsInput: String = readln()
-            if (transactionParticularsInput.isNotEmpty()) {
+                val transactionParticularsInput: String = readln()
+                if (transactionParticularsInput.isNotEmpty()) {
 
-                localTransactionParticulars = if (transactionParticularsInput == "R") {
+                    localTransactionParticulars = if (transactionParticularsInput == "R") {
 
-                    reversedTransactionParticulars
+                        reversedTransactionParticulars
 
-                } else if (transactionParticularsInput == "AS") {
+                    } else if (transactionParticularsInput == "AS") {
 
-                    print("Enter Suffix : ")
-                    val transactionSuffixInput: String = readln()
-                    val suffixedTransactionParticulars = "$localTransactionParticulars$transactionSuffixInput"
+                        print("Enter Suffix : ")
+                        val transactionSuffixInput: String = readln()
+                        val suffixedTransactionParticulars = "$localTransactionParticulars$transactionSuffixInput"
 
-                    do {
-                        print("Particulars (Current Value - $localTransactionParticulars), (Suffixed Value - $suffixedTransactionParticulars), Do you want to Continue (Y/N) : ")
+                        do {
+                            print("Particulars (Current Value - $localTransactionParticulars), (Suffixed Value - $suffixedTransactionParticulars), Do you want to Continue (Y/N) : ")
 
-                        when (readln()) {
+                            when (readln()) {
 
-                            "Y", "" -> {
+                                "Y", "" -> {
 
-                                localTransactionParticulars = suffixedTransactionParticulars
-                                break
-                            }
-
-                            "N" -> {
-
-                                break
-                            }
-
-                            else -> {
-
-                                InteractiveUtils.invalidOptionMessage()
-                            }
-                        }
-                    } while (true)
-
-                    localTransactionParticulars
-
-                } else if (transactionParticularsInput == "AP") {
-
-                    print("Enter Prefix : ")
-                    val transactionPrefixInput: String = readln()
-                    val prefixedTransactionParticulars = "$transactionPrefixInput$localTransactionParticulars"
-
-                    do {
-                        print("Particulars (Current Value - $localTransactionParticulars), (Prefixed Value - $prefixedTransactionParticulars), Do you want to Continue (Y/N) : ")
-
-                        when (readln()) {
-
-                            "Y" -> {
-
-                                localTransactionParticulars = prefixedTransactionParticulars
-                            }
-
-                            "N" -> {
-
-                                break
-                            }
-
-                            else -> {
-
-                                InteractiveUtils.invalidOptionMessage()
-                            }
-                        }
-                    } while (true)
-
-                    localTransactionParticulars
-
-                } else {
-
-                    transactionParticularsInput
-                }
-            }
-
-            //                if (isTwoWayStep || isViaStep) {
-            //
-            //                    // TODO: Prefix Particulars
-            //                    // TODO: Suffix Particulars
-            //                    // TODO: Other String Manipulations
-            //                }
-
-            print("Enter Amount (Current Value - $localTransactionAmount) : ")
-            val transactionAmountInput: String = readln()
-            if (transactionAmountInput.isNotEmpty()) {
-
-                localTransactionAmount = InputUtilsInteractive.getValidFloat(
-
-                    inputText = transactionAmountInput,
-                    constructInvalidMessage = fun(inputText: String): String {
-                        return "Invalid Amount, Enter Amount (Current Value - $inputText) : "
-                    })
-            }
-        } else {
-
-            commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
-
-                listOfCommands = listOf(
-
-                    "The Selected Transaction : ${chosenTransactionForSpecial.particulars} => ${chosenTransactionForSpecial.amount}",
-                    "C to continue as it is / P to continue using it's pattern : "
-                )
-            )
-            when (readln()) {
-
-                "C" -> {
-
-                    localTransactionParticulars = chosenTransactionForSpecial.particulars
-                    localTransactionAmount = chosenTransactionForSpecial.amount
-                }
-
-                "P" -> {
-
-                    val answers: MutableList<String> = mutableListOf()
-                    var totalNoOfTransactions = 1u
-                    chosenSpecialTransactionType!!.patternQuestions.forEach { patternQuestion: PatternQuestionModel ->
-
-                        val answer: String
-                        when (patternQuestion.answerType) {
-
-                            PatternQuestionAnswerTypesEnum.TextFromListOfOptions -> {
-
-                                val optionsList: List<String> = patternQuestion.question.split('/')
-                                answer = optionsList[
-                                    (ListUtils.getValidIndexWithSelectionPromptForNonCollections(
-
-                                        list = optionsList,
-                                        itemSpecification = "${patternQuestion.question}?",
-                                        items = ListUtils.indexedListTextFromList(list = optionsList)
-
-                                    ).toInt() - 1)
-                                ].trim()
-                            }
-
-                            PatternQuestionAnswerTypesEnum.Number -> {
-
-                                print("Enter ${patternQuestion.question} : ")
-                                answer = InputUtilsInteractive.getValidUnsignedInt(inputText = readln()).toString()
-
-                            }
-
-                            PatternQuestionAnswerTypesEnum.Float -> {
-
-                                print("Enter ${patternQuestion.question} : ")
-                                answer = InputUtilsInteractive.getValidFloat(inputText = readln()).toString()
-
-                            }
-
-                            PatternQuestionAnswerTypesEnum.TextFromPrefixListOfOptions -> {
-
-                                val optionsList: List<String> = patternQuestion.question.substring(
-
-                                    patternQuestion.question.indexOf('{') + 1,
-                                    patternQuestion.question.indexOf('}')
-
-                                ).split('/')
-
-                                val position: Int = ListUtils.getValidIndexWithSelectionPromptForNonCollections(
-
-                                    list = optionsList,
-                                    itemSpecification = "${
-                                        patternQuestion.question.substring(
-                                            0,
-                                            patternQuestion.question.indexOf('{')
-                                        )
-                                    } __________________",
-                                    items = ListUtils.indexedListTextFromList(list = optionsList)
-
-                                ).toInt() - 1
-
-                                if (chosenSpecialTransactionType.isRepeatingTransaction) {
-
-                                    if (patternQuestion.isSizeIndicator) {
-
-                                        totalNoOfTransactions = patternQuestion.positionValues[position].toUInt()
-                                    }
+                                    localTransactionParticulars = suffixedTransactionParticulars
+                                    break
                                 }
-                                answer = optionsList[position].trim()
+
+                                "N" -> {
+
+                                    break
+                                }
+
+                                else -> {
+
+                                    InteractiveUtils.invalidOptionMessage()
+                                }
                             }
-                        }
-                        answers.add(answer)
+                        } while (true)
+
+                        localTransactionParticulars
+
+                    } else if (transactionParticularsInput == "AP") {
+
+                        print("Enter Prefix : ")
+                        val transactionPrefixInput: String = readln()
+                        val prefixedTransactionParticulars = "$transactionPrefixInput$localTransactionParticulars"
+
+                        do {
+                            print("Particulars (Current Value - $localTransactionParticulars), (Prefixed Value - $prefixedTransactionParticulars), Do you want to Continue (Y/N) : ")
+
+                            when (readln()) {
+
+                                "Y" -> {
+
+                                    localTransactionParticulars = prefixedTransactionParticulars
+                                }
+
+                                "N" -> {
+
+                                    break
+                                }
+
+                                else -> {
+
+                                    InteractiveUtils.invalidOptionMessage()
+                                }
+                            }
+                        } while (true)
+
+                        localTransactionParticulars
+
+                    } else {
+
+                        transactionParticularsInput
                     }
                 }
 
-                else -> {
+                if (isViaStep || isTwoWayStep) {
 
-                    InteractiveUtils.invalidOptionMessage()
+                    // TODO: Prefix Particulars
+                    // TODO: Suffix Particulars
+                    // TODO: Other String Manipulations
+                }
+
+                print("Enter Amount (Current Value - $localTransactionAmount) : ")
+                val transactionAmountInput: String = readln()
+                if (transactionAmountInput.isNotEmpty()) {
+
+                    localTransactionAmount = InputUtilsInteractive.getValidFloat(
+
+                        inputText = transactionAmountInput,
+                        constructInvalidMessage = fun(inputText: String): String {
+                            return "Invalid Amount, Enter Amount (Current Value - $inputText) : "
+                        })
+                }
+
+            } else {
+
+                commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
+
+                    listOfCommands = listOf(
+
+                        "The Selected Transaction : ${chosenTransactionForSpecial.particulars} => ${chosenTransactionForSpecial.amount}",
+                        "C to continue as it is / P to continue using it's pattern : "
+                    )
+                )
+                when (readln()) {
+
+                    "C" -> {
+
+                        localTransactionParticulars = chosenTransactionForSpecial.particulars
+                        localTransactionAmount = chosenTransactionForSpecial.amount
+                    }
+
+                    "P" -> {
+
+                        //TODO : Complete the code
+                        val answers: MutableList<String> = mutableListOf()
+                        var totalNoOfTransactions = 1u
+                        chosenSpecialTransactionType!!.patternQuestions.forEach { patternQuestion: PatternQuestionModel ->
+
+                            val answer: String
+                            when (patternQuestion.answerType) {
+
+                                PatternQuestionAnswerTypesEnum.TextFromListOfOptions -> {
+
+                                    val optionsList: List<String> = patternQuestion.question.split('/')
+                                    answer = optionsList[
+                                        (ListUtils.getValidIndexWithSelectionPromptForNonCollections(
+
+                                            list = optionsList,
+                                            itemSpecification = "${patternQuestion.question}?",
+                                            items = ListUtils.indexedListTextFromList(list = optionsList)
+
+                                        ).toInt() - 1)
+                                    ].trim()
+                                }
+
+                                PatternQuestionAnswerTypesEnum.Number -> {
+
+                                    print("Enter ${patternQuestion.question} : ")
+                                    answer = InputUtilsInteractive.getValidUnsignedInt(inputText = readln()).toString()
+
+                                }
+
+                                PatternQuestionAnswerTypesEnum.Float -> {
+
+                                    print("Enter ${patternQuestion.question} : ")
+                                    answer = InputUtilsInteractive.getValidFloat(inputText = readln()).toString()
+
+                                }
+
+                                PatternQuestionAnswerTypesEnum.TextFromPrefixListOfOptions -> {
+
+                                    val optionsList: List<String> = patternQuestion.question.substring(
+
+                                        patternQuestion.question.indexOf('{') + 1,
+                                        patternQuestion.question.indexOf('}')
+
+                                    ).split('/')
+
+                                    val position: Int = ListUtils.getValidIndexWithSelectionPromptForNonCollections(
+
+                                        list = optionsList,
+                                        itemSpecification = "${
+                                            patternQuestion.question.substring(
+                                                0,
+                                                patternQuestion.question.indexOf('{')
+                                            )
+                                        } __________________",
+                                        items = ListUtils.indexedListTextFromList(list = optionsList)
+
+                                    ).toInt() - 1
+
+                                    if (chosenSpecialTransactionType.isRepeatingTransaction) {
+
+                                        if (patternQuestion.isSizeIndicator) {
+
+                                            totalNoOfTransactions = patternQuestion.positionValues[position].toUInt()
+                                        }
+                                    }
+                                    answer = optionsList[position].trim()
+                                }
+                            }
+                            answers.add(answer)
+                        }
+                    }
+
+                    else -> {
+
+                        InteractiveUtils.invalidOptionMessage()
+                    }
                 }
             }
         }
-
         do {
-            var menuItems: List<String> = listOf(
-                "\nTime - $dateTimeInText",
-                "Withdraw Account - ${fromAccount.id} : ${fromAccount.fullName}"
-            )
-            if ((transactionType == TransactionTypeEnum.VIA) || (transactionType == TransactionTypeEnum.CYCLIC_VIA)) {
-                menuItems = menuItems + "Intermediate Account - ${viaAccount.id} : ${viaAccount.fullName}"
+            var menuItems: List<String>
+            var transactions: List<TransactionModel> = emptyList()
+
+            if (transactionType == TransactionTypeEnum.BAJAJ_COINS) {
+
+                val generateTransactionsForBajajCoinsResult: IsOkModel<List<TransactionModel>> =
+                    InsertTransactionForBajajCoins.generateTransactionsForBajajCoins(
+
+                        sourceAccount = fromAccount,
+                        secondPartyAccount = toAccount,
+                        eventDateTimeInText = dateTimeInText,
+                        dotenv = App.dotEnv,
+                        userId = userId,
+                        isConsoleMode = true,
+                        isDevelopmentMode = isDevelopmentMode
+                    )
+                if (generateTransactionsForBajajCoinsResult.isOK) {
+
+                    transactions = generateTransactionsForBajajCoinsResult.data!!
+                    menuItems =
+                        transactions.map { transaction: TransactionModel -> transaction.toString() }
+
+                } else {
+
+                    return TransactionUtils.getFailedInsertTransactionResult(
+
+                        dateTimeInText = dateTimeInText,
+                        transactionParticulars = localTransactionParticulars,
+                        transactionAmount = localTransactionAmount,
+                        fromAccount = fromAccount,
+                        viaAccount = viaAccount,
+                        toAccount = toAccount
+                    )
+                }
+            } else {
+
+                menuItems = listOf(
+                    "\nTime - $dateTimeInText",
+                    "Withdraw Account - ${fromAccount.id} : ${fromAccount.fullName}"
+                )
+                if ((transactionType == TransactionTypeEnum.VIA) || (transactionType == TransactionTypeEnum.CYCLIC_VIA)) {
+                    menuItems = menuItems + "Intermediate Account - ${viaAccount.id} : ${viaAccount.fullName}"
+                }
+                menuItems = menuItems + listOf(
+                    "Deposit Account - ${toAccount.id} : ${toAccount.fullName}",
+                    "Particulars - $localTransactionParticulars",
+                    "Amount - $localTransactionAmount"
+                )
             }
+
             menuItems = menuItems + listOf(
-                "Deposit Account - ${toAccount.id} : ${toAccount.fullName}",
-                "Particulars - $localTransactionParticulars",
-                "Amount - $localTransactionAmount",
-                "\nCorrect ? (Y/N), Enter ${if ((transactionType == TransactionTypeEnum.VIA) || (transactionType == TransactionTypeEnum.CYCLIC_VIA)) "Ex12 to exchange From & Via A/Cs, Ex23 to exchange Via & To A/Cs, Ex13 to exchange From & To A/Cs" else "Ex to exchange From & To A/Cs"} or B to back : "
+                "\nCorrect ? (Y/N), " +
+                        (if (transactionType != TransactionTypeEnum.BAJAJ_COINS)
+                            "Enter " +
+                                    (if ((transactionType == TransactionTypeEnum.VIA) || (transactionType == TransactionTypeEnum.CYCLIC_VIA))
+                                        "Ex12 to exchange From & Via A/Cs, Ex23 to exchange Via & To A/Cs, Ex13 to exchange From & To A/Cs"
+                                    else "Ex to exchange From & To A/Cs") +
+                                    " or "
+                        else "") +
+                        "B to back : "
             )
             commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
+
                 listOfCommands = menuItems
             )
             when (readln()) {
 
                 "Y", "" -> {
 
-                    if (isEditStep) {
+                    if (transactionType != TransactionTypeEnum.BAJAJ_COINS) {
 
-                        when (transactionType) {
+                        if (isEditStep) {
 
-                            TransactionTypeEnum.NORMAL, TransactionTypeEnum.SPECIAL -> {
+                            when (transactionType) {
 
-                                return InsertTransactionResult(
+                                TransactionTypeEnum.NORMAL -> {
 
-                                    isSuccess = updateTransactionInteractive(
+                                    return InsertTransactionResult(
 
-                                        transactionId = transactionId,
-                                        eventDateTime = dateTimeInText,
-                                        particulars = localTransactionParticulars,
-                                        amount = localTransactionAmount,
-                                        fromAccountId = fromAccount.id,
-                                        toAccountId = toAccount.id,
-                                        isDevelopmentMode = isDevelopmentMode
-                                    ),
+                                        isSuccess = updateTransactionInteractive(
+
+                                            transactionId = transactionId,
+                                            eventDateTime = dateTimeInText,
+                                            particulars = localTransactionParticulars,
+                                            amount = localTransactionAmount,
+                                            fromAccountId = fromAccount.id,
+                                            toAccountId = toAccount.id,
+                                            isDevelopmentMode = isDevelopmentMode
+                                        ),
+                                        dateTimeInText = dateTimeInText,
+                                        transactionParticulars = localTransactionParticulars,
+                                        transactionAmount = localTransactionAmount,
+                                        fromAccount = fromAccount,
+                                        viaAccount = viaAccount,
+                                        toAccount = toAccount
+                                    )
+                                }
+
+                                TransactionTypeEnum.VIA, TransactionTypeEnum.TWO_WAY, TransactionTypeEnum.CYCLIC_VIA, TransactionTypeEnum.SPECIAL, TransactionTypeEnum.BAJAJ_COINS -> ToDoUtils.showTodo()
+                            }
+
+                        } else if (isTwoWayStep) {
+
+                            return InsertTransactionResult(
+
+                                isSuccess = insertTransactionInteractive(
+
+                                    userId = userId,
+                                    eventDateTime = dateTimeInText,
+                                    particulars = localTransactionParticulars,
+                                    amount = localTransactionAmount,
+                                    fromAccount = toAccount,
+                                    toAccount = fromAccount,
+                                    isDevelopmentMode = isDevelopmentMode
+                                ),
+                                dateTimeInText = dateTimeInText,
+                                transactionParticulars = localTransactionParticulars,
+                                transactionAmount = localTransactionAmount,
+                                fromAccount = fromAccount,
+                                viaAccount = viaAccount,
+                                toAccount = toAccount
+                            )
+                        } else if (isViaStep) {
+
+                            return InsertTransactionResult(
+
+                                isSuccess = insertTransactionInteractive(
+
+                                    userId = userId,
+                                    eventDateTime = dateTimeInText,
+                                    particulars = localTransactionParticulars,
+                                    amount = localTransactionAmount,
+                                    fromAccount = viaAccount,
+                                    toAccount = toAccount,
+                                    isDevelopmentMode = isDevelopmentMode
+                                ),
+                                dateTimeInText = dateTimeInText,
+                                transactionParticulars = localTransactionParticulars,
+                                transactionAmount = localTransactionAmount,
+                                fromAccount = fromAccount,
+                                viaAccount = viaAccount,
+                                toAccount = toAccount
+                            )
+                        } else if (isCyclicViaStep) {
+
+                            return InsertTransactionResult(
+
+                                isSuccess = insertTransactionInteractive(
+
+                                    userId = userId,
+                                    eventDateTime = dateTimeInText,
+                                    particulars = localTransactionParticulars,
+                                    amount = localTransactionAmount,
+                                    fromAccount = toAccount,
+                                    toAccount = fromAccount,
+                                    isDevelopmentMode = isDevelopmentMode
+                                ),
+                                dateTimeInText = dateTimeInText,
+                                transactionParticulars = localTransactionParticulars,
+                                transactionAmount = localTransactionAmount,
+                                fromAccount = fromAccount,
+                                viaAccount = viaAccount,
+                                toAccount = toAccount
+                            )
+                        } else {
+
+                            when (transactionType) {
+
+                                TransactionTypeEnum.NORMAL, TransactionTypeEnum.TWO_WAY -> {
+
+                                    return InsertTransactionResult(
+
+                                        isSuccess = insertTransactionInteractive(
+
+                                            userId = userId,
+                                            eventDateTime = dateTimeInText,
+                                            particulars = localTransactionParticulars,
+                                            amount = localTransactionAmount,
+                                            fromAccount = fromAccount,
+                                            toAccount = toAccount,
+                                            isDevelopmentMode = isDevelopmentMode
+                                        ),
+                                        dateTimeInText = if (splitIndex > 0u) DateTimeUtils.add5MinutesToNormalDateTimeInText(
+
+                                            dateTimeInText = dateTimeInText
+
+                                        ) else dateTimeInText,
+                                        transactionParticulars = localTransactionParticulars,
+                                        transactionAmount = localTransactionAmount,
+                                        fromAccount = fromAccount,
+                                        viaAccount = viaAccount,
+                                        toAccount = toAccount
+                                    )
+                                }
+
+                                TransactionTypeEnum.VIA, TransactionTypeEnum.CYCLIC_VIA -> {
+
+                                    return InsertTransactionResult(
+
+                                        isSuccess = insertTransactionInteractive(
+
+                                            userId = userId,
+                                            eventDateTime = dateTimeInText,
+                                            particulars = localTransactionParticulars,
+                                            amount = localTransactionAmount,
+                                            fromAccount = fromAccount,
+                                            toAccount = viaAccount,
+                                            isDevelopmentMode = isDevelopmentMode
+                                        ),
+                                        dateTimeInText = if (splitIndex > 0u) DateTimeUtils.add5MinutesToNormalDateTimeInText(
+
+                                            dateTimeInText = dateTimeInText
+
+                                        ) else dateTimeInText,
+                                        transactionParticulars = localTransactionParticulars,
+                                        transactionAmount = localTransactionAmount,
+                                        fromAccount = fromAccount,
+                                        viaAccount = viaAccount,
+                                        toAccount = toAccount
+                                    )
+                                }
+
+                                TransactionTypeEnum.SPECIAL, TransactionTypeEnum.BAJAJ_COINS -> ToDoUtils.showTodo()
+                            }
+                        }
+
+                    } else {
+
+                        for (transaction: TransactionModel in transactions) {
+
+                            if (!insertTransactionInteractive(
+
+                                    userId = userId,
+                                    eventDateTime = transaction.eventDateTimeInText,
+                                    particulars = transaction.particulars,
+                                    amount = transaction.amount,
+                                    fromAccount = transaction.fromAccount,
+                                    toAccount = transaction.toAccount,
+                                    isDevelopmentMode = isDevelopmentMode
+                                )
+                            ) {
+                                //TODO : Get added transaction ids, then we can delete these transactions - just like rollback, may need to rollback frequency of accounts too. - check for other impacts too...
+
+                                return TransactionUtils.getFailedInsertTransactionResult(
+
                                     dateTimeInText = dateTimeInText,
                                     transactionParticulars = localTransactionParticulars,
                                     transactionAmount = localTransactionAmount,
@@ -2301,26 +2512,11 @@ object InsertOperationsInteractive {
                                     toAccount = toAccount
                                 )
                             }
-
-                            TransactionTypeEnum.VIA -> ToDoUtils.showTodo()
-                            TransactionTypeEnum.TWO_WAY -> ToDoUtils.showTodo()
-                            TransactionTypeEnum.CYCLIC_VIA -> ToDoUtils.showTodo()
                         }
 
-                    } else if (isTwoWayStep) {
-
                         return InsertTransactionResult(
 
-                            isSuccess = insertTransactionInteractive(
-
-                                userId = userId,
-                                eventDateTime = dateTimeInText,
-                                particulars = localTransactionParticulars,
-                                amount = localTransactionAmount,
-                                fromAccount = toAccount,
-                                toAccount = fromAccount,
-                                isDevelopmentMode = isDevelopmentMode
-                            ),
+                            isSuccess = true,
                             dateTimeInText = dateTimeInText,
                             transactionParticulars = localTransactionParticulars,
                             transactionAmount = localTransactionAmount,
@@ -2328,106 +2524,6 @@ object InsertOperationsInteractive {
                             viaAccount = viaAccount,
                             toAccount = toAccount
                         )
-                    } else if (isViaStep) {
-
-                        return InsertTransactionResult(
-
-                            isSuccess = insertTransactionInteractive(
-
-                                userId = userId,
-                                eventDateTime = dateTimeInText,
-                                particulars = localTransactionParticulars,
-                                amount = localTransactionAmount,
-                                fromAccount = viaAccount,
-                                toAccount = toAccount,
-                                isDevelopmentMode = isDevelopmentMode
-                            ),
-                            dateTimeInText = dateTimeInText,
-                            transactionParticulars = localTransactionParticulars,
-                            transactionAmount = localTransactionAmount,
-                            fromAccount = fromAccount,
-                            viaAccount = viaAccount,
-                            toAccount = toAccount
-                        )
-                    } else if (isCyclicViaStep) {
-
-                        return InsertTransactionResult(
-
-                            isSuccess = insertTransactionInteractive(
-
-                                userId = userId,
-                                eventDateTime = dateTimeInText,
-                                particulars = localTransactionParticulars,
-                                amount = localTransactionAmount,
-                                fromAccount = toAccount,
-                                toAccount = fromAccount,
-                                isDevelopmentMode = isDevelopmentMode
-                            ),
-                            dateTimeInText = dateTimeInText,
-                            transactionParticulars = localTransactionParticulars,
-                            transactionAmount = localTransactionAmount,
-                            fromAccount = fromAccount,
-                            viaAccount = viaAccount,
-                            toAccount = toAccount
-                        )
-                    } else {
-
-                        when (transactionType) {
-
-                            TransactionTypeEnum.NORMAL, TransactionTypeEnum.TWO_WAY, TransactionTypeEnum.SPECIAL -> {
-
-                                return InsertTransactionResult(
-
-                                    isSuccess = insertTransactionInteractive(
-
-                                        userId = userId,
-                                        eventDateTime = dateTimeInText,
-                                        particulars = localTransactionParticulars,
-                                        amount = localTransactionAmount,
-                                        fromAccount = fromAccount,
-                                        toAccount = toAccount,
-                                        isDevelopmentMode = isDevelopmentMode
-                                    ),
-                                    dateTimeInText = if (splitIndex > 0u) DateTimeUtils.add5MinutesToNormalDateTimeInText(
-
-                                        dateTimeInText = dateTimeInText
-
-                                    ) else dateTimeInText,
-                                    transactionParticulars = localTransactionParticulars,
-                                    transactionAmount = localTransactionAmount,
-                                    fromAccount = fromAccount,
-                                    viaAccount = viaAccount,
-                                    toAccount = toAccount
-                                )
-                            }
-
-                            TransactionTypeEnum.VIA, TransactionTypeEnum.CYCLIC_VIA -> {
-
-                                return InsertTransactionResult(
-
-                                    isSuccess = insertTransactionInteractive(
-
-                                        userId = userId,
-                                        eventDateTime = dateTimeInText,
-                                        particulars = localTransactionParticulars,
-                                        amount = localTransactionAmount,
-                                        fromAccount = fromAccount,
-                                        toAccount = viaAccount,
-                                        isDevelopmentMode = isDevelopmentMode
-                                    ),
-                                    dateTimeInText = if (splitIndex > 0u) DateTimeUtils.add5MinutesToNormalDateTimeInText(
-
-                                        dateTimeInText = dateTimeInText
-
-                                    ) else dateTimeInText,
-                                    transactionParticulars = localTransactionParticulars,
-                                    transactionAmount = localTransactionAmount,
-                                    fromAccount = fromAccount,
-                                    viaAccount = viaAccount,
-                                    toAccount = toAccount
-                                )
-                            }
-                        }
                     }
                 }
 
@@ -2456,29 +2552,35 @@ object InsertOperationsInteractive {
 
                 "Ex" -> {
 
-                    if (transactionType == TransactionTypeEnum.NORMAL) {
+                    if (transactionType != TransactionTypeEnum.BAJAJ_COINS) {
 
-                        return invokeInsertTransactionVariantsInteractiveAfterExchangeOfAccounts(
-                            userId = userId,
-                            username = username,
-                            transactionType = transactionType,
-                            fromAccount = fromAccount,
-                            viaAccount = viaAccount,
-                            toAccount = toAccount,
-                            dateTimeInText = dateTimeInText,
-                            transactionParticulars = localTransactionParticulars,
-                            transactionAmount = localTransactionAmount,
-                            accountExchangeType = AccountExchangeTypeEnum.FROM_AND_TO,
-                            isEditStep = isEditStep,
-                            isViaStep = isViaStep,
-                            isTwoWayStep = isTwoWayStep,
-                            transactionId = transactionId,
-                            isDevelopmentMode = isDevelopmentMode,
-                            isCyclicViaStep = isCyclicViaStep,
-                            chosenTransactionForSpecial = chosenTransactionForSpecial,
-                            chosenSpecialTransactionType = chosenSpecialTransactionType
-                        )
+                        if (transactionType == TransactionTypeEnum.NORMAL) {
 
+                            return invokeInsertTransactionVariantsInteractiveAfterExchangeOfAccounts(
+                                userId = userId,
+                                username = username,
+                                transactionType = transactionType,
+                                fromAccount = fromAccount,
+                                viaAccount = viaAccount,
+                                toAccount = toAccount,
+                                dateTimeInText = dateTimeInText,
+                                transactionParticulars = localTransactionParticulars,
+                                transactionAmount = localTransactionAmount,
+                                accountExchangeType = AccountExchangeTypeEnum.FROM_AND_TO,
+                                isEditStep = isEditStep,
+                                isViaStep = isViaStep,
+                                isTwoWayStep = isTwoWayStep,
+                                transactionId = transactionId,
+                                isDevelopmentMode = isDevelopmentMode,
+                                isCyclicViaStep = isCyclicViaStep,
+                                chosenTransactionForSpecial = chosenTransactionForSpecial,
+                                chosenSpecialTransactionType = chosenSpecialTransactionType
+                            )
+
+                        } else {
+
+                            InteractiveUtils.invalidOptionMessage()
+                        }
                     } else {
 
                         InteractiveUtils.invalidOptionMessage()
@@ -2487,30 +2589,36 @@ object InsertOperationsInteractive {
 
                 "Ex13" -> {
 
-                    if ((transactionType == TransactionTypeEnum.VIA) || (transactionType == TransactionTypeEnum.CYCLIC_VIA)) {
+                    if (transactionType != TransactionTypeEnum.BAJAJ_COINS) {
 
-                        return invokeInsertTransactionVariantsInteractiveAfterExchangeOfAccounts(
+                        if ((transactionType == TransactionTypeEnum.VIA) || (transactionType == TransactionTypeEnum.CYCLIC_VIA)) {
 
-                            userId = userId,
-                            username = username,
-                            transactionType = transactionType,
-                            fromAccount = fromAccount,
-                            viaAccount = viaAccount,
-                            toAccount = toAccount,
-                            dateTimeInText = dateTimeInText,
-                            transactionParticulars = localTransactionParticulars,
-                            transactionAmount = localTransactionAmount,
-                            accountExchangeType = AccountExchangeTypeEnum.FROM_AND_TO,
-                            isEditStep = isEditStep,
-                            isViaStep = isViaStep,
-                            isTwoWayStep = isTwoWayStep,
-                            transactionId = transactionId,
-                            isDevelopmentMode = isDevelopmentMode,
-                            isCyclicViaStep = isCyclicViaStep,
-                            chosenTransactionForSpecial = chosenTransactionForSpecial,
-                            chosenSpecialTransactionType = chosenSpecialTransactionType
-                        )
+                            return invokeInsertTransactionVariantsInteractiveAfterExchangeOfAccounts(
 
+                                userId = userId,
+                                username = username,
+                                transactionType = transactionType,
+                                fromAccount = fromAccount,
+                                viaAccount = viaAccount,
+                                toAccount = toAccount,
+                                dateTimeInText = dateTimeInText,
+                                transactionParticulars = localTransactionParticulars,
+                                transactionAmount = localTransactionAmount,
+                                accountExchangeType = AccountExchangeTypeEnum.FROM_AND_TO,
+                                isEditStep = isEditStep,
+                                isViaStep = isViaStep,
+                                isTwoWayStep = isTwoWayStep,
+                                transactionId = transactionId,
+                                isDevelopmentMode = isDevelopmentMode,
+                                isCyclicViaStep = isCyclicViaStep,
+                                chosenTransactionForSpecial = chosenTransactionForSpecial,
+                                chosenSpecialTransactionType = chosenSpecialTransactionType
+                            )
+
+                        } else {
+
+                            InteractiveUtils.invalidOptionMessage()
+                        }
                     } else {
 
                         InteractiveUtils.invalidOptionMessage()
@@ -2519,29 +2627,35 @@ object InsertOperationsInteractive {
 
                 "Ex12" -> {
 
-                    if ((transactionType == TransactionTypeEnum.VIA) || (transactionType == TransactionTypeEnum.CYCLIC_VIA)) {
+                    if (transactionType != TransactionTypeEnum.BAJAJ_COINS) {
 
-                        return invokeInsertTransactionVariantsInteractiveAfterExchangeOfAccounts(
+                        if ((transactionType == TransactionTypeEnum.VIA) || (transactionType == TransactionTypeEnum.CYCLIC_VIA)) {
 
-                            userId = userId,
-                            username = username,
-                            transactionType = transactionType,
-                            fromAccount = fromAccount,
-                            viaAccount = viaAccount,
-                            toAccount = toAccount,
-                            dateTimeInText = dateTimeInText,
-                            transactionParticulars = localTransactionParticulars,
-                            transactionAmount = localTransactionAmount,
-                            accountExchangeType = AccountExchangeTypeEnum.FROM_AND_VIA,
-                            isEditStep = isEditStep,
-                            isViaStep = isViaStep,
-                            isTwoWayStep = isTwoWayStep,
-                            transactionId = transactionId,
-                            isDevelopmentMode = isDevelopmentMode,
-                            isCyclicViaStep = isCyclicViaStep,
-                            chosenTransactionForSpecial = chosenTransactionForSpecial,
-                            chosenSpecialTransactionType = chosenSpecialTransactionType
-                        )
+                            return invokeInsertTransactionVariantsInteractiveAfterExchangeOfAccounts(
+
+                                userId = userId,
+                                username = username,
+                                transactionType = transactionType,
+                                fromAccount = fromAccount,
+                                viaAccount = viaAccount,
+                                toAccount = toAccount,
+                                dateTimeInText = dateTimeInText,
+                                transactionParticulars = localTransactionParticulars,
+                                transactionAmount = localTransactionAmount,
+                                accountExchangeType = AccountExchangeTypeEnum.FROM_AND_VIA,
+                                isEditStep = isEditStep,
+                                isViaStep = isViaStep,
+                                isTwoWayStep = isTwoWayStep,
+                                transactionId = transactionId,
+                                isDevelopmentMode = isDevelopmentMode,
+                                isCyclicViaStep = isCyclicViaStep,
+                                chosenTransactionForSpecial = chosenTransactionForSpecial,
+                                chosenSpecialTransactionType = chosenSpecialTransactionType
+                            )
+                        } else {
+
+                            InteractiveUtils.invalidOptionMessage()
+                        }
                     } else {
 
                         InteractiveUtils.invalidOptionMessage()
@@ -2550,29 +2664,35 @@ object InsertOperationsInteractive {
 
                 "Ex23" -> {
 
-                    if ((transactionType == TransactionTypeEnum.VIA) || (transactionType == TransactionTypeEnum.CYCLIC_VIA)) {
+                    if (transactionType != TransactionTypeEnum.BAJAJ_COINS) {
 
-                        return invokeInsertTransactionVariantsInteractiveAfterExchangeOfAccounts(
+                        if ((transactionType == TransactionTypeEnum.VIA) || (transactionType == TransactionTypeEnum.CYCLIC_VIA)) {
 
-                            userId = userId,
-                            username = username,
-                            transactionType = transactionType,
-                            fromAccount = fromAccount,
-                            viaAccount = viaAccount,
-                            toAccount = toAccount,
-                            dateTimeInText = dateTimeInText,
-                            transactionParticulars = localTransactionParticulars,
-                            transactionAmount = localTransactionAmount,
-                            accountExchangeType = AccountExchangeTypeEnum.VIA_AND_TO,
-                            isEditStep = isEditStep,
-                            isViaStep = isViaStep,
-                            isTwoWayStep = isTwoWayStep,
-                            transactionId = transactionId,
-                            isDevelopmentMode = isDevelopmentMode,
-                            isCyclicViaStep = isCyclicViaStep,
-                            chosenTransactionForSpecial = chosenTransactionForSpecial,
-                            chosenSpecialTransactionType = chosenSpecialTransactionType
-                        )
+                            return invokeInsertTransactionVariantsInteractiveAfterExchangeOfAccounts(
+
+                                userId = userId,
+                                username = username,
+                                transactionType = transactionType,
+                                fromAccount = fromAccount,
+                                viaAccount = viaAccount,
+                                toAccount = toAccount,
+                                dateTimeInText = dateTimeInText,
+                                transactionParticulars = localTransactionParticulars,
+                                transactionAmount = localTransactionAmount,
+                                accountExchangeType = AccountExchangeTypeEnum.VIA_AND_TO,
+                                isEditStep = isEditStep,
+                                isViaStep = isViaStep,
+                                isTwoWayStep = isTwoWayStep,
+                                transactionId = transactionId,
+                                isDevelopmentMode = isDevelopmentMode,
+                                isCyclicViaStep = isCyclicViaStep,
+                                chosenTransactionForSpecial = chosenTransactionForSpecial,
+                                chosenSpecialTransactionType = chosenSpecialTransactionType
+                            )
+                        } else {
+
+                            InteractiveUtils.invalidOptionMessage()
+                        }
                     } else {
 
                         InteractiveUtils.invalidOptionMessage()

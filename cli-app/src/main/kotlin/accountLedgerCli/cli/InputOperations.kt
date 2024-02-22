@@ -168,7 +168,7 @@ object InputOperations {
                         "\tEx to exchange From & To A/Cs,"
                     }) +
 
-                    (if (isNotFromSplitTransaction) "\tS to Split Transactions," else "") +
+                    (if (isNotFromSplitTransaction && ((transactionType != TransactionTypeEnum.SPECIAL) && (transactionType != TransactionTypeEnum.BAJAJ_COINS))) "\tS to Split Transactions," else "") +
 
                     "\tTr{0-23}*:*{0-59}*:*{0-59}* to Reset Time to {0-23}*:*{0-59}*:*{0-59}* ," +
 

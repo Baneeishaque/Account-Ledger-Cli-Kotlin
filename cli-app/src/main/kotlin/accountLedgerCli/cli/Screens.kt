@@ -1103,17 +1103,18 @@ object Screens {
             App.commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
 
                 listOfCommands = listOf(
-                    "\nUser : $username",
-                    "Account - ${fromAccount.fullName}",
-                    "1 - View Transactions in Ledger Mode",
-                    "2 - View Transactions in Credit - Debit Mode",
-                    "3 - Add Transaction",
-                    "4 - View Child Accounts",
-                    "5 - Add Via. Transaction",
-                    "6 - Add Two Way Transaction",
-                    "7 - Add Cyclic Via. Transaction",
-                    "8 - Add Special Transaction",
-                    "9 - Add Special Transaction (Advanced Configuration)",
+                    "\n${ConstantsNative.userText} : $username",
+                    "${ConstantsNative.accountText} - ${fromAccount.fullName}",
+                    "1 - View ${ConstantsNative.TRANSACTION_TEXT}s in Ledger Mode",
+                    "2 - View ${ConstantsNative.TRANSACTION_TEXT}s in Credit - Debit Mode",
+                    "3 - Add ${ConstantsNative.TRANSACTION_TEXT}",
+                    "4 - View Child ${ConstantsNative.accountText}s",
+                    "5 - Add Via. ${ConstantsNative.TRANSACTION_TEXT}",
+                    "6 - Add Two Way ${ConstantsNative.TRANSACTION_TEXT}",
+                    "7 - Add Cyclic Via. ${ConstantsNative.TRANSACTION_TEXT}",
+                    "8 - Add ${ConstantsNative.SPECIAL_TEXT} ${ConstantsNative.TRANSACTION_TEXT} for ${ConstantsNative.BAJAJ_COINS_TEXT}",
+                    "9 - Add ${ConstantsNative.SPECIAL_TEXT} ${ConstantsNative.TRANSACTION_TEXT} for ${ConstantsNative.BAJAJ_COINS_TEXT} (without source transaction)",
+                    "10 - Add ${ConstantsNative.SPECIAL_TEXT} Transaction (Advanced Configuration)",
                     "17 - ${getQuickTransactionOnWalletText()}",
                     "18 - ${getQuickTransactionOnWalletToFrequent1Text()}",
                     "19 - ${getQuickTransactionOnWalletToFrequent2Text()}",
@@ -1245,8 +1246,26 @@ object Screens {
 
                 "8" -> {
 
-                    InsertTransactionForBajajCoins.addTransactionForBajajCoins(
+                    localInsertTransactionResult = InsertOperationsInteractive.addTransaction(
 
+                        userId = userId,
+                        username = username,
+                        transactionType = TransactionTypeEnum.BAJAJ_COINS,
+                        fromAccount = localInsertTransactionResult.fromAccount,
+                        viaAccount = localInsertTransactionResult.viaAccount,
+                        toAccount = localInsertTransactionResult.toAccount,
+                        dateTimeInText = localInsertTransactionResult.dateTimeInText,
+                        transactionParticulars = localInsertTransactionResult.transactionParticulars,
+                        transactionAmount = localInsertTransactionResult.transactionAmount,
+                        isDevelopmentMode = isDevelopmentMode
+                    )
+                }
+
+                "9" -> {
+
+                    /*InsertTransactionForBajajCoins.addTransactionForBajajCoins(
+
+                        isSourceTransactionPresent = false,
                         sourceAccount = localInsertTransactionResult.fromAccount,
                         secondPartyAccount = localInsertTransactionResult.toAccount,
                         eventDateTimeInText = localInsertTransactionResult.dateTimeInText,
@@ -1254,10 +1273,10 @@ object Screens {
                         userId = userId,
                         isConsoleMode = true,
                         isDevelopmentMode = isDevelopmentMode
-                    )
+                    )*/
                 }
 
-                "9" -> {
+                "10" -> {
 
                     val readSpecialTransactionTypesFileResult: IsOkModel<SpecialTransactionTypesModel> =
                         JsonFileUtils.readJsonFile(

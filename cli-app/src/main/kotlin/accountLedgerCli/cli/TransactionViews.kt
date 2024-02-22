@@ -302,7 +302,7 @@ object TransactionViews {
                                 ListUtils.getValidIndexFromCollectionWithSelectionPromptAndZeroAsBack(
 
                                     map = userTransactionsMap,
-                                    itemSpecification = ConstantsNative.transactionText,
+                                    itemSpecification = ConstantsNative.TRANSACTION_TEXT,
                                     items = userTransactionsText
                                 )
 
@@ -331,7 +331,7 @@ object TransactionViews {
 
                                     map = userTransactionsMap,
                                     itemSpecificationPrefix = "Start ",
-                                    itemSpecification = ConstantsNative.transactionText,
+                                    itemSpecification = ConstantsNative.TRANSACTION_TEXT,
                                     items = userTransactionsText
                                 )
 
@@ -345,7 +345,7 @@ object TransactionViews {
 
                                         map = reducedUserTransactionsMap,
                                         itemSpecificationPrefix = "End ",
-                                        itemSpecification = ConstantsNative.transactionText,
+                                        itemSpecification = ConstantsNative.TRANSACTION_TEXT,
                                         items = TransactionUtils.userTransactionsToTextFromListForLedger(
 
                                             transactions = reducedUserTransactionsMap.values.toList(),
@@ -404,7 +404,7 @@ object TransactionViews {
                                 ListUtils.getValidIndexFromCollectionWithSelectionPromptAndZeroAsBack(
 
                                     map = userTransactionsMap,
-                                    itemSpecification = ConstantsNative.transactionText,
+                                    itemSpecification = ConstantsNative.TRANSACTION_TEXT,
                                     items = userTransactionsText
                                 )
                             val userAccountsMap: LinkedHashMap<UInt, AccountResponse> =
@@ -952,7 +952,7 @@ object TransactionViews {
 
         map = userTransactionsMap,
         itemSpecificationPrefix = transactionPrefix,
-        itemSpecification = ConstantsNative.transactionText,
+        itemSpecification = ConstantsNative.TRANSACTION_TEXT,
         items = TransactionUtils.userTransactionsToTextFromListForLedger(
 
             transactions = userTransactionsMap.values.toList(),

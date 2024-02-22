@@ -459,7 +459,7 @@ class UserOperationsInterActiveWithApiService {
                         commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
                             listOf(
                                 "\nUsers",
-                                UserUtils.usersToStringFromLinkedHashMap(
+                                UserUtils.usersToTextFromLinkedHashMap(
                                     usersMap = usersMap
                                 ),
                                 "1 - Balance Sheet for an User",
@@ -489,7 +489,7 @@ class UserOperationsInterActiveWithApiService {
 
                                         map = usersMap,
                                         itemSpecification = ConstantsNative.userText,
-                                        items = UserUtils.usersToStringFromLinkedHashMap(usersMap = usersMap)
+                                        items = UserUtils.usersToTextFromLinkedHashMap(usersMap = usersMap)
 
                                     ), usersMap = usersMap
                                 )

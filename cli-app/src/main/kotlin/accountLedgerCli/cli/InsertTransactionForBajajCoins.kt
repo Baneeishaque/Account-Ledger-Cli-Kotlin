@@ -5,15 +5,18 @@ import account.ledger.library.enums.EnvironmentFileEntryEnum
 import account.ledger.library.utils.AccountUtils
 import account.ledger.library.utils.TransactionForBajajCoinsUtils
 import account_ledger_library.constants.ConstantsNative
+import account.ledger.library.models.TransactionModel
+import common.utils.library.constants.CommonConstants
 import common.utils.library.models.IsOkModel
 import common.utils.library.utils.EnvironmentFileOperations
 import common.utils.library.utils.InputUtilsInteractive
 import common.utils.library.utils.IsOkUtils
+import common_utils_library.constants.ConstantsCommonNative
 import io.github.cdimascio.dotenv.Dotenv
 
 object InsertTransactionForBajajCoins {
 
-    fun addTransactionForBajajCoins(
+    fun generateTransactionsForBajajCoins(
 
         isSourceTransactionPresent: Boolean = true,
         sourceAccount: AccountResponse,
@@ -23,17 +26,20 @@ object InsertTransactionForBajajCoins {
         userId: UInt,
         isConsoleMode: Boolean,
         isDevelopmentMode: Boolean
-    ) {
+
+    ): IsOkModel<List<TransactionModel>> {
+
+        val result = IsOkModel<List<TransactionModel>>(isOK = false)
+
         fun getValidUnsignedIntOrBackForBajajCoinsTransaction(
 
             dataSpecification: String
 
         ): IsOkModel<UInt> {
 
-            return InputUtilsInteractive.getValidUnsignedIntOrBack(
+            return InputUtilsInteractive.getValidUnsignedIntOrBackWithPrompt(
 
-                inputText = readlnOrNull().toString(),
-                invalidMessage = "Please Enter Correct $dataSpecification"
+                dataSpecification = dataSpecification
             )
         }
 
@@ -59,7 +65,7 @@ object InsertTransactionForBajajCoins {
         var confirmDataResult: IsOkModel<UInt> = confirmWholeNumberEnvironmentVariableDataForBajajCoinsTransaction(
 
             environmentVariableName = EnvironmentFileEntryEnum.BAJAJ_COINS_INCOME_ACCOUNT_ID.name,
-            dataSpecification = ConstantsNative.BAJAJ_COINS_INCOME_ACCOUNT_ID
+            dataSpecification = ConstantsNative.BAJAJ_COINS_INCOME_ACCOUNT_ID_TEXT
         )
 
         if (confirmDataResult.isOK) {
@@ -78,7 +84,7 @@ object InsertTransactionForBajajCoins {
                             userAccountsMap = userAccountsMap,
                             idCorrectionFunction = fun(): IsOkModel<UInt> {
 
-                                return getValidUnsignedIntOrBackForBajajCoinsTransaction(dataSpecification = ConstantsNative.BAJAJ_COINS_INCOME_ACCOUNT_ID)
+                                return getValidUnsignedIntOrBackForBajajCoinsTransaction(dataSpecification = ConstantsNative.BAJAJ_COINS_INCOME_ACCOUNT_ID_TEXT)
                             }
                         )
                     if (getValidBajajCoinsIncomeAccountResult.isOK) {
@@ -86,7 +92,7 @@ object InsertTransactionForBajajCoins {
                         confirmDataResult = confirmWholeNumberEnvironmentVariableDataForBajajCoinsTransaction(
 
                             environmentVariableName = EnvironmentFileEntryEnum.BAJAJ_COINS_WALLET_ACCOUNT_ID.name,
-                            dataSpecification = ConstantsNative.BAJAJ_COINS_WALLET_ACCOUNT_ID
+                            dataSpecification = ConstantsNative.BAJAJ_COINS_WALLET_ACCOUNT_ID_TEXT
                         )
 
                         if (confirmDataResult.isOK) {
@@ -98,7 +104,7 @@ object InsertTransactionForBajajCoins {
                                     userAccountsMap = userAccountsMap,
                                     idCorrectionFunction = fun(): IsOkModel<UInt> {
 
-                                        return getValidUnsignedIntOrBackForBajajCoinsTransaction(dataSpecification = ConstantsNative.BAJAJ_COINS_WALLET_ACCOUNT_ID)
+                                        return getValidUnsignedIntOrBackForBajajCoinsTransaction(dataSpecification = ConstantsNative.BAJAJ_COINS_WALLET_ACCOUNT_ID_TEXT)
                                     }
                                 )
 
@@ -107,7 +113,7 @@ object InsertTransactionForBajajCoins {
                                 confirmDataResult = confirmWholeNumberEnvironmentVariableDataForBajajCoinsTransaction(
 
                                     environmentVariableName = EnvironmentFileEntryEnum.BAJAJ_COINS_CONVERSION_RATE.name,
-                                    dataSpecification = ConstantsNative.BAJAJ_COINS_CONVERSION_RATE
+                                    dataSpecification = ConstantsNative.BAJAJ_COINS_CONVERSION_RATE_TEXT
                                 )
                                 if (confirmDataResult.isOK) {
 
@@ -191,19 +197,29 @@ object InsertTransactionForBajajCoins {
                                                 if (balanceOfSourceAccount < amountToSpendForBajajCoinRewards
                                                         .toFloat()
                                                 ) {
-                                                    println("Insufficient balance in ${sourceAccount.name}. Please ensure ${sourceAccount.name} has at least a balance of $amountToSpendForBajajCoinRewards.")
+                                                    result.error =
+                                                        "Insufficient balance in ${sourceAccount.name}. Please ensure ${sourceAccount.name} has at least a balance of $amountToSpendForBajajCoinRewards."
+
                                                 } else {
 
                                                     // Check if (Y * Z) > X and if a/c 2 has (Y * Z) - X amount as balance
                                                     val perTransactionAmountForBajajCoins = getDataResult.data!![1]
+
+                                                    var secondPartyAccountHasDesiredBalance = true
+                                                    val secondPartyIsHortInBalanceMessage =
+                                                        "Insufficient balance in ${secondPartyAccount.name}. Please ensure ${secondPartyAccount.name} has at least a balance of ${(totalNumberOfTransactionsForBajajCoins * perTransactionAmountForBajajCoins) - amountToSpendForBajajCoinRewards}."
+
                                                     if ((totalNumberOfTransactionsForBajajCoins * perTransactionAmountForBajajCoins) > amountToSpendForBajajCoinRewards) {
 
                                                         val secondPartyAccountBalance =
                                                             getAccountBalancesResult.data!![1]
                                                         if (secondPartyAccountBalance < ((totalNumberOfTransactionsForBajajCoins * perTransactionAmountForBajajCoins).toFloat() - amountToSpendForBajajCoinRewards.toFloat())) {
-                                                            println("Insufficient balance in ${secondPartyAccount.name}. Please ensure ${secondPartyAccount.name} has at least a balance of ${(totalNumberOfTransactionsForBajajCoins * perTransactionAmountForBajajCoins) - amountToSpendForBajajCoinRewards}.")
+
+                                                            println(secondPartyIsHortInBalanceMessage)
+                                                            secondPartyAccountHasDesiredBalance = false
                                                         }
-                                                    } else {
+                                                    }
+                                                    if (secondPartyAccountHasDesiredBalance) {
 
                                                         // Prepare transactions
                                                         val listOfRewardedCoins = getDataLists.data!!.last()
@@ -225,28 +241,58 @@ object InsertTransactionForBajajCoins {
                                                                 bajajCoinConversionRate = bajajCoinConversionRate
                                                             )
 
-                                                        println("transactions = $transactions")
+                                                        if (isDevelopmentMode) {
 
-//                                                        // Confirm transactions with user
-//                                                        val confirmed = confirmTransactions(transactions)
-//
-//                                                        // If user confirmed, insert transactions to server
-//                                                        if (confirmed) {
-//                                                            insertTransactionsToServer(transactions)
-//                                                        }
+                                                            println("transactions = $transactions")
+                                                        }
+                                                        result.isOK = true
+                                                        result.data = transactions
 
+                                                    } else {
+
+                                                        result.error = secondPartyIsHortInBalanceMessage
                                                     }
                                                 }
-                                            }
+                                            } else {
 
+                                                result.error =
+                                                    "${ConstantsNative.accountText} balance calculation error..."
+                                            }
+                                        } else {
+
+                                            result.error =
+                                                CommonConstants.USER_CANCELED_MESSAGE
                                         }
+                                    } else {
+
+                                        result.error =
+                                            CommonConstants.USER_CANCELED_MESSAGE
                                     }
+                                } else {
+
+                                    result.error =
+                                        "${ConstantsCommonNative.DATA_CONFIRMATION_ERROR_TEXT} for ${ConstantsNative.BAJAJ_COINS_CONVERSION_RATE_TEXT}"
                                 }
+                            } else {
+
+                                result.error = "No Valid Bajaj Coins Wallet Account Provided by User"
                             }
+                        } else {
+
+                            result.error =
+                                "${ConstantsCommonNative.DATA_CONFIRMATION_ERROR_TEXT} for ${ConstantsNative.BAJAJ_COINS_WALLET_ACCOUNT_ID_TEXT}"
                         }
+                    } else {
+
+                        result.error = "No Valid Bajaj Coins Income Account Provided by User"
                     }
                 }
             )
+        } else {
+
+            result.error =
+                "${ConstantsCommonNative.DATA_CONFIRMATION_ERROR_TEXT} for ${ConstantsNative.BAJAJ_COINS_INCOME_ACCOUNT_ID_TEXT}"
         }
+        return result
     }
 }
