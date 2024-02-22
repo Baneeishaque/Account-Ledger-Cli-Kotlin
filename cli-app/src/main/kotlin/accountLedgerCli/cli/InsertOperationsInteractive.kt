@@ -2056,6 +2056,7 @@ object InsertOperationsInteractive {
         var localTransactionParticulars = transactionParticulars
         var localTransactionAmount = transactionAmount
 
+
         val reversedTransactionParticulars: String =
             SentenceUtils.reverseOrderOfWords(sentence = localTransactionParticulars)
 
