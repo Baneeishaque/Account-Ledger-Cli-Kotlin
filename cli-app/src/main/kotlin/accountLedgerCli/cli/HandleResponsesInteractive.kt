@@ -40,11 +40,6 @@ object HandleResponsesInteractive {
             data = localInsertTransactionResult,
             successActions = fun(): InsertTransactionResult {
 
-//                if (isDevelopmentMode) {
-//
-////                    println(AccountUtils.userAccountsToStringFromLinkedHashMap(userAccountsMap = getUserAccountsMapResult.data!!))
-//                }
-
                 do {
                     commandLinePrintMenuWithEnterPrompt.printMenuWithEnterPromptFromListOfCommands(
                         listOf(

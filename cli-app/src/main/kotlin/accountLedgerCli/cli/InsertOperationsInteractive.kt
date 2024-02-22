@@ -269,7 +269,7 @@ object InsertOperationsInteractive {
                             "15 - Choose From Account From List - Full Names, Exchange Accounts, Then Continue Transaction"
                         )
                     },
-                    "17 - ${Screens.getQuickTransactionOnWalletText()}",
+                    /*"17 - ${Screens.getQuickTransactionOnWalletText()}",
                     "18 - ${Screens.getQuickTransactionOnWalletToFrequent1Text()}",
                     "19 - ${Screens.getQuickTransactionOnWalletToFrequent2Text()}",
                     "20 - ${Screens.getQuickTransactionOnWalletToFrequent3Text()}",
@@ -279,7 +279,7 @@ object InsertOperationsInteractive {
                     "24 - ${Screens.getQuickTransactionOnBankToFrequent3Text()}",
                     "25 - ${Screens.getQuickTransactionOnFrequent1Text()}",
                     "26 - ${Screens.getQuickTransactionOnFrequent2Text()}",
-                    "27 - ${Screens.getQuickTransactionOnFrequent3Text()}",
+                    "27 - ${Screens.getQuickTransactionOnFrequent3Text()}",*/
                     "0 - Back",
                     "",
                     "Enter Your Choice : "

@@ -67,12 +67,12 @@ object Screens {
                     "11 - ${getQuickTransactionOnFrequent2Text()}",
                     "12 - ${getQuickTransactionOnFrequent3Text()}",
                     "13 - List Accounts : Full Names",
-                    "14 - Import Transactions To : Bank : ${
+                    /*"14 - Import Transactions To : Bank : ${
                         getEnvironmentVariableValueForUserScreen(environmentVariableName = EnvironmentFileEntryEnum.BANK_ACCOUNT_NAME.name)
                     } From CSV",
                     "15 - Import Transactions To : Bank : ${
                         getEnvironmentVariableValueForUserScreen(environmentVariableName = EnvironmentFileEntryEnum.BANK_ACCOUNT_NAME.name)
-                    } From XLX",
+                    } From XLX",*/
                     "16 - Check Affected A/Cs : After A Specified Date",
                     "17 - View Transactions of a Specific A/C",
                     "18 - View Balance Sheet Ledger (All)",
@@ -86,15 +86,15 @@ object Screens {
                     "26 - View Transactions of ${getEnvironmentVariableValueForUserScreen(environmentVariableName = EnvironmentFileEntryEnum.FREQUENT_1_ACCOUNT_NAME.name)} A/C",
                     "27 - View Transactions of ${getEnvironmentVariableValueForUserScreen(environmentVariableName = EnvironmentFileEntryEnum.FREQUENT_2_ACCOUNT_NAME.name)} A/C",
                     "28 - View Transactions of ${getEnvironmentVariableValueForUserScreen(environmentVariableName = EnvironmentFileEntryEnum.FREQUENT_3_ACCOUNT_NAME.name)} A/C",
-                    "29 - Check Affected A/Cs : From First Entry",
+//                    "29 - Check Affected A/Cs : From First Entry",
                     "30 - Check Affected A/Cs : From Start Date",
                     "31 - View Last 10 Transactions",
-                    "32 - Check Affected A/Cs : From Start Date to A Specified Date",
+//                    "32 - Check Affected A/Cs : From Start Date to A Specified Date",
                     "33 - Check Affected A/Cs : From Start Date to A Specified Time Stamp",
-                    "34 - Check Affected A/Cs : After A Specified Date to A Specified Date",
+                    /*"34 - Check Affected A/Cs : After A Specified Date to A Specified Date",
                     "35 - Check Affected A/Cs : After A Specified Date to A Specified Time Stamp",
                     "36 - Check Affected A/Cs : After A Specified Time Stamp to A Specified Date",
-                    "37 - Check Affected A/Cs : After A Specified Time Stamp to A Specified Time Stamp",
+                    "37 - Check Affected A/Cs : After A Specified Time Stamp to A Specified Time Stamp",*/
                     "38 - Check Affected A/Cs : After A Specified Date",
                     "39 - View Income Sheet",
                     "40 - View Expense Sheet",
