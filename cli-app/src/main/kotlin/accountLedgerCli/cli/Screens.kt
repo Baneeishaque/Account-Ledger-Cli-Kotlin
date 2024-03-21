@@ -18,6 +18,7 @@ import common.utils.library.models.IsOkModel
 import common.utils.library.utils.*
 import io.github.cdimascio.dotenv.Dotenv
 import kotlinx.coroutines.runBlocking
+import java.time.LocalDate
 
 object Screens {
 
@@ -447,17 +448,24 @@ object Screens {
 
                 "30" -> {
 
-                    insertTransactionResult = checkAffectedAccountsAfterSpecifiedDate(
+                    val userInitialTransactionDateFromUsernameResult: IsOkModel<LocalDate> =
+                        DataOperations.getUserInitialTransactionDateFromUsername(username = username)
+                    if (userInitialTransactionDateFromUsernameResult.isOK) {
+                        insertTransactionResult = checkAffectedAccountsAfterSpecifiedDate(
 
-                        desiredDate = DataOperations.getUserInitialTransactionDateFromUsername(username = username)
-                            .minusDays(1)
-                            .format(DateTimeUtils.normalDatePattern),
-                        userId = userId,
-                        username = username,
-                        previousTransactionData = insertTransactionResult,
-                        isConsoleMode = true,
-                        isDevelopmentMode = isDevelopmentMode
-                    )
+                            desiredDate = userInitialTransactionDateFromUsernameResult.data!!
+                                .minusDays(1)
+                                .format(DateTimeUtils.normalDatePattern),
+                            userId = userId,
+                            username = username,
+                            previousTransactionData = insertTransactionResult,
+                            isConsoleMode = true,
+                            isDevelopmentMode = isDevelopmentMode
+                        )
+                    } else {
+
+                        println(ConstantsNative.DATE_FROM_USERNAME_ERROR)
+                    }
                 }
 
                 "31" -> {
@@ -504,19 +512,27 @@ object Screens {
 
                 "33" -> {
 
-                    insertTransactionResult = checkAffectedAccountsAfterSpecifiedDate(
+                    val userInitialTransactionDateFromUsernameResult: IsOkModel<LocalDate> =
+                        DataOperations.getUserInitialTransactionDateFromUsername(username = username)
 
-                        desiredDate = DataOperations.getUserInitialTransactionDateFromUsername(username = username)
-                            .minusDays(1)
-                            .format(DateTimeUtils.normalDatePattern),
-                        userId = userId,
-                        username = username,
-                        previousTransactionData = insertTransactionResult,
-                        isUpToTimeStamp = true,
-                        upToTimeStamp = InputUtilsInteractive.getValidDateTimeInNormalPattern(promptPrefix = "Up to "),
-                        isConsoleMode = true,
-                        isDevelopmentMode = isDevelopmentMode
-                    )
+                    if (userInitialTransactionDateFromUsernameResult.isOK) {
+                        insertTransactionResult = checkAffectedAccountsAfterSpecifiedDate(
+
+                            desiredDate = userInitialTransactionDateFromUsernameResult.data!!
+                                .minusDays(1)
+                                .format(DateTimeUtils.normalDatePattern),
+                            userId = userId,
+                            username = username,
+                            previousTransactionData = insertTransactionResult,
+                            isUpToTimeStamp = true,
+                            upToTimeStamp = InputUtilsInteractive.getValidDateTimeInNormalPattern(promptPrefix = "Up to "),
+                            isConsoleMode = true,
+                            isDevelopmentMode = isDevelopmentMode
+                        )
+                    } else {
+
+                        println(ConstantsNative.DATE_FROM_USERNAME_ERROR)
+                    }
                 }
 
                 "38" -> {
