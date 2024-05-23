@@ -115,6 +115,7 @@ object Screens {
                     "47 - View Debit Sheet",
                     "48 - View Credit Sheet",
                     "49 - View Debit - Credit Sheet",
+                    "50 - View All Sheets",
                     "0 - Logout",
                     "",
                     "Enter Your Choice : "
@@ -676,6 +677,72 @@ object Screens {
                         currentUserId = userId,
                         isConsoleMode = true,
                         isDevelopmentMode = isDevelopmentMode,
+                        dotenv = App.reloadDotEnv()
+                    )
+                }
+
+                "50" -> {
+
+                    LedgerSheetOperations.printProfitSheetOfUser(
+
+                        currentUserName = username,
+                        currentUserId = userId,
+                        isConsoleMode = true,
+                        isDevelopmentMode = false,
+                        dotenv = App.reloadDotEnv()
+                    )
+
+                    LedgerSheetOperations.printNotConsiderForIncomeExpenseSheetOfUser(
+
+                        currentUserName = username,
+                        currentUserId = userId,
+                        isConsoleMode = true,
+                        isDevelopmentMode = false,
+                        dotenv = App.reloadDotEnv()
+                    )
+
+                    LedgerSheetOperations.printDebitCreditSheetOfUser(
+
+                        currentUserName = username,
+                        currentUserId = userId,
+                        isConsoleMode = true,
+                        isDevelopmentMode = false,
+                        dotenv = App.reloadDotEnv()
+                    )
+
+                    LedgerSheetOperations.printNotConsiderForIncomeExpenseOrDebitCreditSheetOfUser(
+
+                        currentUserName = username,
+                        currentUserId = userId,
+                        isConsoleMode = true,
+                        isDevelopmentMode = false,
+                        dotenv = App.reloadDotEnv()
+                    )
+
+                    LedgerSheetOperations.printAssetSheetOfUser(
+
+                        currentUserName = username,
+                        currentUserId = userId,
+                        isConsoleMode = true,
+                        isDevelopmentMode = false,
+                        dotenv = App.reloadDotEnv()
+                    )
+
+                    LedgerSheetOperations.printNotConsiderForIncomeExpenseDebitCreditOrAssetSheetOfUser(
+
+                        currentUserName = username,
+                        currentUserId = userId,
+                        isConsoleMode = true,
+                        isDevelopmentMode = false,
+                        dotenv = App.reloadDotEnv()
+                    )
+
+                    LedgerSheetOperations.printDebitCreditBalanceSheetOfUser(
+
+                        currentUserName = username,
+                        currentUserId = userId,
+                        isConsoleMode = true,
+                        isDevelopmentMode = false,
                         dotenv = App.reloadDotEnv()
                     )
                 }
