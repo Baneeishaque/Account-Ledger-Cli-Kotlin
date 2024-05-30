@@ -1,5 +1,5 @@
 [versions]
-kotlin = "2.0.10-346"
+kotlin = "2.0.10-383"
 ktor = "3.0.0-tls-eap-907"
 
 [libraries]
