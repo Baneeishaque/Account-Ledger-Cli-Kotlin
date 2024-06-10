@@ -1614,7 +1614,7 @@ object InsertOperationsInteractive {
                                                 timePartIncrementOrDecrementCommandIndicator = ConstantsNative.dayIncrementOrDecrementCommandIndicator,
                                                 timePartIncrementOrDecrementNoMatchAction = {
 
-                                                    val timePartIncrementOrDecrementMatchResult =
+                                                    val timePartIncrementOrDecrementMatchResult: MatchResult? =
                                                         ConstantsNative.dayIncrementOrDecrementWithTimeResetPatternRegex.matchEntire(
                                                             input = localDateTimeInText
                                                         )
@@ -2057,8 +2057,8 @@ object InsertOperationsInteractive {
 
     ): InsertTransactionResult {
 
-        var localTransactionParticulars = transactionParticulars
-        var localTransactionAmount = transactionAmount
+        var localTransactionParticulars: String = transactionParticulars
+        var localTransactionAmount: Float = transactionAmount
 
         if (!TransactionForBajajUtils.bajajTransactionTypes.contains(transactionType)) {
 
@@ -2365,14 +2365,14 @@ object InsertOperationsInteractive {
                 if ((transactionType == TransactionTypeEnum.VIA) || (transactionType == TransactionTypeEnum.CYCLIC_VIA)) {
                     menuItems = menuItems + "Intermediate Account - ${viaAccount.id} : ${viaAccount.fullName}"
                 }
-                menuItems = menuItems + listOf(
+                menuItems = menuItems + listOf<String>(
                     "Deposit Account - ${toAccount.id} : ${toAccount.fullName}",
                     "Particulars - $localTransactionParticulars",
                     "Amount - $localTransactionAmount"
                 )
             }
 
-            menuItems = menuItems + listOf(
+            menuItems = menuItems + listOf<String>(
                 "\nCorrect ? (Y/N), " +
                         (if (transactionType != TransactionTypeEnum.BAJAJ_COINS)
                             "Enter " +
