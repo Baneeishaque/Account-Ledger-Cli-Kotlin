@@ -1,0 +1,27 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Account-Ledger-Cli-Kotlin:account-ledger-lib [build] with modules" type="GradleRunConfiguration" factoryName="Gradle" editBeforeRun="true" focusToolWindowBeforeRun="true">
+    <ExternalSystemSettings>
+      <option name="executionName" />
+      <option name="externalProjectPath" value="$PROJECT_DIR$/account-ledger-lib" />
+      <option name="externalSystemIdString" value="GRADLE" />
+      <option name="scriptParameters" value="" />
+      <option name="taskDescriptions">
+        <list />
+      </option>
+      <option name="taskNames">
+        <list>
+          <option value="build" />
+        </list>
+      </option>
+      <option name="vmOptions" />
+    </ExternalSystemSettings>
+    <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+    <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+    <DebugAllEnabled>false</DebugAllEnabled>
+    <RunAsTest>false</RunAsTest>
+    <method v="2">
+      <option name="RunConfigurationTask" enabled="true" run_configuration_name="Account-Ledger-Cli-Kotlin:account-ledger-lib/common-lib [build]" run_configuration_type="GradleRunConfiguration" />
+      <option name="RunConfigurationTask" enabled="true" run_configuration_name="Account-Ledger-Cli-Kotlin:account-ledger-lib:account-ledger-lib-multi-platform [build]" run_configuration_type="GradleRunConfiguration" />
+    </method>
+  </configuration>
+</component>
