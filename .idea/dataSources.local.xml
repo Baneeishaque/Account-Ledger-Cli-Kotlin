@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project version="4">
-  <component name="dataSourceStorageLocal" created-in="IU-241.9959.31">
-    <data-source name="MySQL for 5.1 - heroku_0fd2194a537b978@us-cdbr-iron-east-05.cleardb.net" uuid="38fd9a27-f38f-4fcc-98e8-2b5594ed8f96">
-      <database-info product="" version="" jdbc-version="" driver-name="" driver-version="" dbms="MYSQL" />
-      <schema-mapping />
-    </data-source>
-  </component>
-</project>
