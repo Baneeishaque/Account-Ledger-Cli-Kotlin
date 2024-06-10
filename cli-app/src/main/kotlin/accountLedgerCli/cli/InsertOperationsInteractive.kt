@@ -18,6 +18,9 @@ import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
 import accountLedgerCli.utils.ChooseAccountUtils
 import account_ledger_library.constants.ConstantsNative
 import account.ledger.library.models.TransactionModel
+import account.ledger.library.utils.TransactionForBajajCoinsUtils
+import account.ledger.library.utils.TransactionForBajajUtils
+import account.ledger.library.utils.TransactionForBajajWalletUtils
 import common.utils.library.enums.PatternQuestionAnswerTypesEnum
 import common.utils.library.models.IsOkModel
 import common.utils.library.utils.*
@@ -2057,7 +2060,7 @@ object InsertOperationsInteractive {
         var localTransactionParticulars = transactionParticulars
         var localTransactionAmount = transactionAmount
 
-        if (transactionType != TransactionTypeEnum.BAJAJ_COINS) {
+        if (!TransactionForBajajUtils.bajajTransactionTypes.contains(transactionType)) {
 
             val reversedTransactionParticulars: String =
                 SentenceUtils.reverseOrderOfWords(sentence = localTransactionParticulars)
@@ -2262,40 +2265,100 @@ object InsertOperationsInteractive {
             var menuItems: List<String>
             var transactions: List<TransactionModel> = emptyList()
 
-            if (transactionType == TransactionTypeEnum.BAJAJ_COINS) {
+            if (TransactionForBajajUtils.bajajTransactionTypes.contains(transactionType)) {
 
-                val generateTransactionsForBajajCoinsResult: IsOkModel<List<TransactionModel>> =
-                    InsertTransactionForBajajCoins.generateTransactionsForBajajCoins(
+                menuItems = listOf<String>(
+                    "$transactionType [${toAccount.name} -> ${fromAccount.name}] - Transactions",
+                    "==================================================",
+                )
 
-                        sourceAccount = fromAccount,
-                        secondPartyAccount = toAccount,
-                        eventDateTimeInText = dateTimeInText,
-                        dotenv = App.dotEnv,
-                        userId = userId,
-                        isConsoleMode = true,
+                if (TransactionForBajajCoinsUtils.bajajCoinTransactionTypes.contains(transactionType)) {
+
+                    val generateTransactionsForBajajCoinsResult: IsOkModel<List<TransactionModel>> =
+                        InsertTransactionForBajajCoins.generateTransactionsForBajajCoins(
+
+                            isSourceTransactionPresent = transactionType == TransactionTypeEnum.BAJAJ_COINS,
+                            sourceAccount = fromAccount,
+                            secondPartyAccount = toAccount,
+                            eventDateTimeInText = dateTimeInText,
+                            dotenv = App.dotEnv,
+                            userId = userId,
+                            isConsoleMode = true,
+                            isDevelopmentMode = isDevelopmentMode
+                        )
+                    if (generateTransactionsForBajajCoinsResult.isOK) {
+
+                        transactions = generateTransactionsForBajajCoinsResult.data!!
+
+                    } else {
+
+                        return TransactionUtils.getFailedInsertTransactionResult(
+
+                            dateTimeInText = dateTimeInText,
+                            transactionParticulars = localTransactionParticulars,
+                            transactionAmount = localTransactionAmount,
+                            fromAccount = fromAccount,
+                            viaAccount = viaAccount,
+                            toAccount = toAccount
+                        )
+                    }
+                } else if (TransactionForBajajWalletUtils.bajajWalletTransactionTypes.contains(transactionType)) {
+
+                    val generateTransactionsForBajajSubWalletResult: IsOkModel<List<TransactionModel>> =
+                        InsertTransactionForBajajSubWallet.generateTransactionsForBajajSubWallet(
+
+                            isSourceTransactionPresent = transactionType == TransactionTypeEnum.BAJAJ_SUB_WALLET,
+                            sourceAccount = fromAccount,
+                            secondPartyAccount = toAccount,
+                            eventDateTimeInText = dateTimeInText,
+                            dotenv = App.dotEnv,
+                            userId = userId,
+                            isConsoleMode = true,
+                            isDevelopmentMode = isDevelopmentMode
+                        )
+                    if (generateTransactionsForBajajSubWalletResult.isOK) {
+
+                        transactions = generateTransactionsForBajajSubWalletResult.data!!
+
+                    } else {
+
+                        return TransactionUtils.getFailedInsertTransactionResult(
+
+                            dateTimeInText = dateTimeInText,
+                            transactionParticulars = localTransactionParticulars,
+                            transactionAmount = localTransactionAmount,
+                            fromAccount = fromAccount,
+                            viaAccount = viaAccount,
+                            toAccount = toAccount
+                        )
+                    }
+                }
+
+                val userTransactionsToTextFromListForLedgerResult: IsOkModel<String> =
+                    TransactionUtils.userTransactionsToTextFromListForLedger(
+
+                        transactions = TransactionUtils.convertTransactionModelListToToTransactionListForLedger(
+                            transactions = transactions
+                        ),
                         isDevelopmentMode = isDevelopmentMode
                     )
-                if (generateTransactionsForBajajCoinsResult.isOK) {
+                if (userTransactionsToTextFromListForLedgerResult.isOK) {
 
-                    transactions = generateTransactionsForBajajCoinsResult.data!!
-                    menuItems =
-                        transactions.map { transaction: TransactionModel -> transaction.toString() }
+                    menuItems = menuItems + listOf<String>(
+                        element = userTransactionsToTextFromListForLedgerResult.data!!
+                    )
 
                 } else {
 
-                    return TransactionUtils.getFailedInsertTransactionResult(
+                    TransactionUtils.printUserTransactionsToTextFromListForLedgerError(
 
-                        dateTimeInText = dateTimeInText,
-                        transactionParticulars = localTransactionParticulars,
-                        transactionAmount = localTransactionAmount,
-                        fromAccount = fromAccount,
-                        viaAccount = viaAccount,
-                        toAccount = toAccount
+                        dataSpecification = "userTransactionsToTextFromListForLedger 2",
+                        userTransactionsToTextFromListForLedgerInstance = userTransactionsToTextFromListForLedgerResult
                     )
                 }
             } else {
 
-                menuItems = listOf(
+                menuItems = listOf<String>(
                     "\nTime - $dateTimeInText",
                     "Withdraw Account - ${fromAccount.id} : ${fromAccount.fullName}"
                 )
@@ -2328,7 +2391,7 @@ object InsertOperationsInteractive {
 
                 "Y", "" -> {
 
-                    if (transactionType != TransactionTypeEnum.BAJAJ_COINS) {
+                    if (!TransactionForBajajUtils.bajajTransactionTypes.contains(transactionType)) {
 
                         if (isEditStep) {
 
@@ -2357,7 +2420,7 @@ object InsertOperationsInteractive {
                                     )
                                 }
 
-                                TransactionTypeEnum.VIA, TransactionTypeEnum.TWO_WAY, TransactionTypeEnum.CYCLIC_VIA, TransactionTypeEnum.SPECIAL, TransactionTypeEnum.BAJAJ_COINS -> ToDoUtils.showTodo()
+                                TransactionTypeEnum.VIA, TransactionTypeEnum.TWO_WAY, TransactionTypeEnum.CYCLIC_VIA, TransactionTypeEnum.SPECIAL, TransactionTypeEnum.BAJAJ_COINS, TransactionTypeEnum.BAJAJ_COINS_WITHOUT_SOURCE, TransactionTypeEnum.BAJAJ_SUB_WALLET, TransactionTypeEnum.BAJAJ_SUB_WALLET_WITHOUT_SOURCE -> ToDoUtils.showTodo()
                             }
 
                         } else if (isTwoWayStep) {
@@ -2481,7 +2544,7 @@ object InsertOperationsInteractive {
                                     )
                                 }
 
-                                TransactionTypeEnum.SPECIAL, TransactionTypeEnum.BAJAJ_COINS -> ToDoUtils.showTodo()
+                                TransactionTypeEnum.SPECIAL, TransactionTypeEnum.BAJAJ_COINS, TransactionTypeEnum.BAJAJ_COINS_WITHOUT_SOURCE, TransactionTypeEnum.BAJAJ_SUB_WALLET, TransactionTypeEnum.BAJAJ_SUB_WALLET_WITHOUT_SOURCE -> ToDoUtils.showTodo()
                             }
                         }
 

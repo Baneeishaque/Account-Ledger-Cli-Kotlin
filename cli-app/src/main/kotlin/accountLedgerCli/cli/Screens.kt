@@ -1197,7 +1197,9 @@ object Screens {
                     "7 - Add Cyclic Via. ${ConstantsNative.TRANSACTION_TEXT}",
                     "8 - Add ${ConstantsNative.SPECIAL_TEXT} ${ConstantsNative.TRANSACTION_TEXT} for ${ConstantsNative.BAJAJ_COINS_TEXT}",
                     "9 - Add ${ConstantsNative.SPECIAL_TEXT} ${ConstantsNative.TRANSACTION_TEXT} for ${ConstantsNative.BAJAJ_COINS_TEXT} (without source transaction)",
-                    "10 - Add ${ConstantsNative.SPECIAL_TEXT} Transaction (Advanced Configuration)",
+                    "10 - Add ${ConstantsNative.SPECIAL_TEXT} ${ConstantsNative.TRANSACTION_TEXT} for ${ConstantsNative.BAJAJ_SUB_WALLET_TEXT}",
+                    "11 - Add ${ConstantsNative.SPECIAL_TEXT} ${ConstantsNative.TRANSACTION_TEXT} for ${ConstantsNative.BAJAJ_SUB_WALLET_TEXT} (without source transaction)",
+                    "12 - Add ${ConstantsNative.SPECIAL_TEXT} Transaction (Advanced Configuration)",
                     "17 - ${getQuickTransactionOnWalletText()}",
                     "18 - ${getQuickTransactionOnWalletToFrequent1Text()}",
                     "19 - ${getQuickTransactionOnWalletToFrequent2Text()}",
@@ -1346,20 +1348,56 @@ object Screens {
 
                 "9" -> {
 
-                    /*InsertTransactionForBajajCoins.addTransactionForBajajCoins(
+                    localInsertTransactionResult = InsertOperationsInteractive.addTransaction(
 
-                        isSourceTransactionPresent = false,
-                        sourceAccount = localInsertTransactionResult.fromAccount,
-                        secondPartyAccount = localInsertTransactionResult.toAccount,
-                        eventDateTimeInText = localInsertTransactionResult.dateTimeInText,
-                        dotenv = App.dotEnv,
                         userId = userId,
-                        isConsoleMode = true,
+                        username = username,
+                        transactionType = TransactionTypeEnum.BAJAJ_COINS_WITHOUT_SOURCE,
+                        fromAccount = localInsertTransactionResult.fromAccount,
+                        viaAccount = localInsertTransactionResult.viaAccount,
+                        toAccount = localInsertTransactionResult.toAccount,
+                        dateTimeInText = localInsertTransactionResult.dateTimeInText,
+                        transactionParticulars = localInsertTransactionResult.transactionParticulars,
+                        transactionAmount = localInsertTransactionResult.transactionAmount,
                         isDevelopmentMode = isDevelopmentMode
-                    )*/
+                    )
                 }
 
                 "10" -> {
+
+                    localInsertTransactionResult = InsertOperationsInteractive.addTransaction(
+
+                        userId = userId,
+                        username = username,
+                        transactionType = TransactionTypeEnum.BAJAJ_SUB_WALLET,
+                        fromAccount = localInsertTransactionResult.fromAccount,
+                        viaAccount = localInsertTransactionResult.viaAccount,
+                        toAccount = localInsertTransactionResult.toAccount,
+                        dateTimeInText = localInsertTransactionResult.dateTimeInText,
+                        transactionParticulars = localInsertTransactionResult.transactionParticulars,
+                        transactionAmount = localInsertTransactionResult.transactionAmount,
+                        isDevelopmentMode = isDevelopmentMode
+                    )
+                }
+
+                "11" -> {
+
+                    localInsertTransactionResult = InsertOperationsInteractive.addTransaction(
+
+                        userId = userId,
+                        username = username,
+                        transactionType = TransactionTypeEnum.BAJAJ_SUB_WALLET_WITHOUT_SOURCE,
+                        fromAccount = localInsertTransactionResult.fromAccount,
+                        viaAccount = localInsertTransactionResult.viaAccount,
+                        toAccount = localInsertTransactionResult.toAccount,
+                        dateTimeInText = localInsertTransactionResult.dateTimeInText,
+                        transactionParticulars = localInsertTransactionResult.transactionParticulars,
+                        transactionAmount = localInsertTransactionResult.transactionAmount,
+                        isDevelopmentMode = isDevelopmentMode
+                    )
+                }
+
+                "12" -> {
 
                     val readSpecialTransactionTypesFileResult: IsOkModel<SpecialTransactionTypesModel> =
                         JsonFileUtils.readJsonFile(
