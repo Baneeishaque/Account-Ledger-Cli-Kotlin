@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module version="4">
+  <component name="AdditionalModuleElements">
+    <content url="file://$MODULE_DIR$/../../../account-ledger-lib" dumb="true">
+      <excludeFolder url="file://$MODULE_DIR$/../../../account-ledger-lib/.kotlin" />
+      <excludeFolder url="file://$MODULE_DIR$/../../../account-ledger-lib/account-ledger-lib-multi-platform/.gradle" />
+      <excludeFolder url="file://$MODULE_DIR$/../../../account-ledger-lib/account-ledger-lib-multi-platform/.kotlin" />
+      <excludeFolder url="file://$MODULE_DIR$/../../../account-ledger-lib/account-ledger-lib-multi-platform/build" />
+      <excludeFolder url="file://$MODULE_DIR$/../../../account-ledger-lib/common-lib/.gradle" />
+      <excludeFolder url="file://$MODULE_DIR$/../../../account-ledger-lib/common-lib/.kotlin" />
+      <excludeFolder url="file://$MODULE_DIR$/../../../account-ledger-lib/common-lib/build" />
+    </content>
+  </component>
+</module>

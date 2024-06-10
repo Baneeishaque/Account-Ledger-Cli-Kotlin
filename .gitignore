@@ -19,14 +19,14 @@
 # Sensitive or high-churn files
 .idea/**/dataSources/
 .idea/**/dataSources.ids
-.idea/**/dataSources.local.xml
+#.idea/**/dataSources.local.xml
 .idea/**/sqlDataSources.xml
 .idea/**/dynamic.xml
 .idea/**/uiDesigner.xml
 .idea/**/dbnavigator.xml
 
 # Gradle
-.idea/**/gradle.xml
+#.idea/**/gradle.xml
 .idea/**/libraries
 
 # Gradle and Maven with auto-import
@@ -34,11 +34,11 @@
 # since they will be recreated, and may cause churn.  Uncomment if using
 # auto-import.
 # .idea/artifacts
-.idea/compiler.xml
+#.idea/compiler.xml
 # .idea/jarRepositories.xml
-.idea/modules.xml
+#.idea/modules.xml
 # .idea/*.iml
-.idea/modules
+#.idea/modules
 # *.iml
 # *.ipr
 
@@ -80,7 +80,7 @@ fabric.properties
 
 # *.iml
 # modules.xml
-.idea/misc.xml
+#.idea/misc.xml
 # *.ipr
 
 # Sonarlint plugin
@@ -229,7 +229,7 @@ gradle-app.setting
 
 cli-app/bin/
 
-.idea/kotlinc.xml
+#.idea/kotlinc.xml
 .kotlin/
 
 /Account-Ledger-Cli/

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="GradleMigrationSettings" migrationVersion="1" />
+  <component name="GradleSettings">
+    <option name="linkedExternalProjectsSettings">
+      <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/account-ledger-lib" />
+            <option value="$PROJECT_DIR$/account-ledger-lib-multi-platform" />
+            <option value="$PROJECT_DIR$/account-ledger-lib/account-ledger-lib" />
+            <option value="$PROJECT_DIR$/account-ledger-lib/account-ledger-lib-multi-platform/lib" />
+            <option value="$PROJECT_DIR$/account-ledger-lib/common-lib/common-lib" />
+            <option value="$PROJECT_DIR$/cli-app" />
+            <option value="$PROJECT_DIR$/common-lib" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+    </option>
+  </component>
+</project>
