@@ -3,6 +3,7 @@ package accountLedgerCli.cli
 import account.ledger.library.api.response.AccountResponse
 import account.ledger.library.enums.EnvironmentFileEntryEnum
 import account.ledger.library.models.TransactionModel
+import account.ledger.library.to_common_utils.AccountLedgerLibInteractiveUtils
 import account.ledger.library.utils.AccountUtils
 import account.ledger.library.utils.TransactionForBajajWalletUtils
 import account_ledger_library.constants.ConstantsNative
@@ -10,6 +11,7 @@ import common.utils.library.constants.CommonConstants
 import common.utils.library.models.IsOkModel
 import common.utils.library.utils.EnvironmentFileOperations
 import common.utils.library.utils.InputUtilsInteractive
+import common.utils.library.utils.InteractiveUtils
 import common.utils.library.utils.IsOkUtils
 import common_utils_library.constants.ConstantsCommonNative
 import io.github.cdimascio.dotenv.Dotenv
@@ -267,41 +269,31 @@ object InsertTransactionForBajajSubWallet {
                                 } else {
 
                                     result.error =
-                                        generateInvalidInputMessage(inputSpecifier = amountToSpendForBajajSubWalletRewardText)
+                                        InteractiveUtils.generateInvalidInputMessage(inputSpecifier = amountToSpendForBajajSubWalletRewardText)
                                 }
 
                             } else {
 
                                 result.error =
-                                    generateInvalidInputMessage(inputSpecifier = ConstantsNative.BAJAJ_SUB_WALLET_ACCOUNT_ID_TEXT)
+                                    InteractiveUtils.generateInvalidInputMessage(inputSpecifier = ConstantsNative.BAJAJ_SUB_WALLET_ACCOUNT_ID_TEXT)
                             }
                         } else {
 
                             result.error =
-                                generateDataConfirmationErrorMessage(dataSpecifier = ConstantsNative.BAJAJ_SUB_WALLET_ACCOUNT_ID_TEXT)
+                                AccountLedgerLibInteractiveUtils.generateDataConfirmationErrorMessage(dataSpecifier = ConstantsNative.BAJAJ_SUB_WALLET_ACCOUNT_ID_TEXT)
                         }
                     } else {
 
                         result.error =
-                            generateInvalidInputMessage(inputSpecifier = ConstantsNative.BAJAJ_SUB_WALLET_INCOME_ACCOUNT_ID_TEXT)
+                            InteractiveUtils.generateInvalidInputMessage(inputSpecifier = ConstantsNative.BAJAJ_SUB_WALLET_INCOME_ACCOUNT_ID_TEXT)
                     }
                 }
             )
         } else {
 
             result.error =
-                generateDataConfirmationErrorMessage(dataSpecifier = ConstantsNative.BAJAJ_SUB_WALLET_INCOME_ACCOUNT_ID_TEXT)
+                AccountLedgerLibInteractiveUtils.generateDataConfirmationErrorMessage(dataSpecifier = ConstantsNative.BAJAJ_SUB_WALLET_INCOME_ACCOUNT_ID_TEXT)
         }
         return result
-    }
-
-    fun generateInvalidInputMessage(inputSpecifier: String): String {
-
-        return "No Valid \"$inputSpecifier\" Provided by User"
-    }
-
-    fun generateDataConfirmationErrorMessage(dataSpecifier: String): String {
-
-        return "${ConstantsCommonNative.DATA_CONFIRMATION_ERROR_TEXT} for $dataSpecifier"
     }
 }
