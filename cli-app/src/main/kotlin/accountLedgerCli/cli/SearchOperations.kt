@@ -111,7 +111,7 @@ private fun searchOnHashMapValues(
     }
 
     val result = LinkedHashMap<UInt, AccountResponse>()
-    hashMap.forEach { account ->
+    hashMap.forEach { account: Map.Entry<UInt, AccountResponse> ->
 
         if (account.value.fullName.contains(other = searchKey, ignoreCase = true)) {
 
