@@ -440,15 +440,11 @@ object TransactionViews {
 
                                 val selectedTransaction: TransactionResponse = userTransactionsMap[transactionIndex]!!
                                 val selectedTransactionDateTimeConversionResult: IsOkModel<String> =
+                                    MysqlUtilsInteractive.mySqlDateTimeTextToNormalDateTimeTextWithMessage(
 
-                                    MysqlUtilsInteractive.dateTimeTextConversionWithMessage(
-
-                                        inputDateTimeText = selectedTransaction.eventDateTime,
-                                        dateTimeTextConversionFunction = fun(): IsOkModel<String> {
-
-                                            return MysqlUtils.mySqlDateTimeTextToNormalDateTimeText(mySqlDateTimeText = selectedTransaction.eventDateTime)
-                                        },
+                                        mySqlDateTimeText = selectedTransaction.eventDateTime
                                     )
+
                                 if (selectedTransactionDateTimeConversionResult.isOK) {
 
                                     //TODO : Present Transaction

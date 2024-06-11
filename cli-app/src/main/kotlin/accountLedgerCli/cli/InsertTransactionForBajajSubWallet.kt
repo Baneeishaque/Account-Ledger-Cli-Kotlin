@@ -9,18 +9,20 @@ import account.ledger.library.utils.TransactionForBajajWalletUtils
 import account_ledger_library.constants.ConstantsNative
 import common.utils.library.constants.CommonConstants
 import common.utils.library.models.IsOkModel
+import common.utils.library.utils.DateTimeUtils
 import common.utils.library.utils.EnvironmentFileOperations
 import common.utils.library.utils.InputUtilsInteractive
 import common.utils.library.utils.InteractiveUtils
 import common.utils.library.utils.IsOkUtils
 import common_utils_library.constants.ConstantsCommonNative
 import io.github.cdimascio.dotenv.Dotenv
+import java.time.LocalDateTime
 
 object InsertTransactionForBajajSubWallet {
 
     fun generateTransactionsForBajajSubWallet(
 
-        isSourceTransactionPresent: Boolean = true,
+        isFundingTransactionPresent: Boolean = true,
         sourceAccount: AccountResponse,
         secondPartyAccount: AccountResponse,
         eventDateTimeInText: String,
@@ -94,7 +96,7 @@ object InsertTransactionForBajajSubWallet {
                                 val amountToSpendForBajajSubWalletRewardText =
                                     "Amount To Spend for Bajaj Sub Wallet Rewarding Transactions"
                                 val amountToSpendForBajajSubWalletRewardResult: IsOkModel<UInt> =
-                                    if (isSourceTransactionPresent) {
+                                    if (isFundingTransactionPresent) {
 
                                         InputUtilsInteractive.getValidUnsignedIntOrBackWithPrompt(
 
@@ -150,111 +152,118 @@ object InsertTransactionForBajajSubWallet {
                                             val totalNumberOfTransactionsForBajajSubWalletReward: UInt =
                                                 listOfBajajSubWalletRewardingTransactionIndexes.last()
 
-                                            val getAccountBalancesResult: IsOkModel<List<Float>> =
-                                                IsOkUtils.checkListOfOkModels(
+                                            val fundingPartyAccountBalance: IsOkModel<Float> =
+                                                if (isFundingTransactionPresent) {
+                                                    AccountUtils.getAccountBalance(
 
-                                                    isOkModels = listOf(
+                                                        userId = userId,
+                                                        desiredAccountId = secondPartyAccount.id,
+                                                        isDevelopmentMode = isDevelopmentMode
+                                                    )
+                                                } else {
+                                                    IsOkModel(
 
-                                                        AccountUtils.getAccountBalance(
+                                                        isOK = true,
+                                                        data = 0F
+                                                    )
+                                                }
 
-                                                            userId = userId,
-                                                            desiredAccountId = sourceAccount.id,
-                                                            isDevelopmentMode = isDevelopmentMode
-                                                        ),
-                                                        AccountUtils.getAccountBalance(
+                                            val eventDateTime: IsOkModel<LocalDateTime> =
+                                                DateTimeUtils.normalDateTimeInTextToDateTime(normalDateTimeInText = eventDateTimeInText)
+                                            if (eventDateTime.isOK) {
 
-                                                            userId = userId,
-                                                            desiredAccountId = secondPartyAccount.id,
-                                                            isDevelopmentMode = isDevelopmentMode
+                                                val getAccountBalancesResult: IsOkModel<List<Float>> =
+                                                    IsOkUtils.checkListOfOkModels(
+
+                                                        isOkModels = listOf(
+
+                                                            fundingPartyAccountBalance,
+                                                            AccountUtils.getAccountBalance(
+
+                                                                userId = userId,
+                                                                desiredAccountId = sourceAccount.id,
+                                                                isDevelopmentMode = isDevelopmentMode,
+                                                                upToDateTime = eventDateTime.data!!
+                                                            )
                                                         )
                                                     )
-                                                )
 
-                                            if (getAccountBalancesResult.isOK) {
+                                                if (getAccountBalancesResult.isOK) {
 
-                                                // Check if a/c 1 has at least amountToSpendForBajajSubWalletRewards.
-                                                val amountToSpendForBajajSubWalletReward: UInt =
-                                                    amountToSpendForBajajSubWalletRewardResult.data!!
-                                                val balanceOfSourceAccount: Float =
-                                                    getAccountBalancesResult.data!!.first()
-                                                if (isSourceTransactionPresent && (balanceOfSourceAccount < amountToSpendForBajajSubWalletReward
-                                                        .toFloat())
-                                                ) {
-                                                    result.error =
-                                                        "Insufficient balance in ${sourceAccount.name}. Please ensure ${sourceAccount.name} has at least a balance of $amountToSpendForBajajSubWalletReward."
-
-                                                } else {
-
-                                                    // Check (totalNumberOfTransactionsForBajajSubWalletReward * perTransactionAmountForBajajSubWalletReward) > amountToSpendForBajajSubWalletRewards.
-                                                    // Check a/c 2 has ((totalNumberOfTransactionsForBajajSubWalletReward * perTransactionAmountForBajajSubWalletReward) - amountToSpendForBajajSubWalletRewards) amount as balance.
-                                                    val perTransactionAmountForBajajSubWalletReward: UInt =
-                                                        getDataResult.data!!.first()
-
-                                                    var secondPartyAccountHasDesiredBalance = true
-                                                    val totalAmountOfBajajSubWalletRewardTransactions: UInt =
-                                                        totalNumberOfTransactionsForBajajSubWalletReward * perTransactionAmountForBajajSubWalletReward
-                                                    val secondPartyShortInBalanceMessage =
-                                                        "Insufficient balance in ${secondPartyAccount.name}. Please ensure ${secondPartyAccount.name} has at least a balance of ${totalAmountOfBajajSubWalletRewardTransactions - amountToSpendForBajajSubWalletReward}."
-
-                                                    if (isSourceTransactionPresent) {
-
-                                                        val secondPartyAccountBalance: Float =
-                                                            getAccountBalancesResult.data!![1]
-
-                                                        if (totalAmountOfBajajSubWalletRewardTransactions > amountToSpendForBajajSubWalletReward) {
-
-                                                            if (secondPartyAccountBalance < (totalAmountOfBajajSubWalletRewardTransactions.toFloat() - amountToSpendForBajajSubWalletReward.toFloat())) {
-
-                                                                println(secondPartyShortInBalanceMessage)
-                                                                secondPartyAccountHasDesiredBalance = false
-                                                            }
-                                                        } else {
-
-                                                            if(secondPartyAccountBalance < amountToSpendForBajajSubWalletReward.toFloat()) {
-
-                                                                println(secondPartyShortInBalanceMessage)
-                                                                secondPartyAccountHasDesiredBalance = false
-                                                            }
-                                                        }
-                                                    }
-
-                                                    if (secondPartyAccountHasDesiredBalance) {
-
-                                                        // Prepare transactions
-                                                        val listOfBajajSubWalletRewards: List<UInt> =
-                                                            getDataLists.data!!.last()
-                                                        val transactions: List<TransactionModel> =
-                                                            TransactionForBajajWalletUtils.prepareTransactions(
-
-                                                                isSourceTransactionPresent = isSourceTransactionPresent,
-                                                                sourceAccount = sourceAccount,
-                                                                secondPartyAccount = secondPartyAccount,
-                                                                bajajSubWalletIncomeAccount = getValidBajajSubWalletIncomeAccountResult.data!!,
-                                                                bajajSubWalletAccount = getValidBajajSubWalletAccountResult.data!!,
-                                                                amountToSpendForBajajSubWalletReward = amountToSpendForBajajSubWalletReward,
-                                                                perTransactionAmountForBajajSubWalletReward = perTransactionAmountForBajajSubWalletReward,
-                                                                totalNumberOfTransactionsForBajajSubWalletReward = totalNumberOfTransactionsForBajajSubWalletReward,
-                                                                listOfBajajSubWalletRewardingTransactionIndexes = listOfBajajSubWalletRewardingTransactionIndexes,
-                                                                listOfBajajSubWalletRewards = listOfBajajSubWalletRewards,
-                                                                eventDateTimeInText = eventDateTimeInText
-                                                            )
-
-                                                        if (isDevelopmentMode) {
-
-                                                            println("transactions = $transactions")
-                                                        }
-                                                        result.isOK = true
-                                                        result.data = transactions
+                                                    // Check if a/c 1 has at least amountToSpendForBajajSubWalletRewards.
+                                                    val amountToSpendForBajajSubWalletReward: UInt =
+                                                        amountToSpendForBajajSubWalletRewardResult.data!!
+                                                    if (isFundingTransactionPresent && (fundingPartyAccountBalance.data!! < amountToSpendForBajajSubWalletReward.toFloat())
+                                                    ) {
+                                                        result.error =
+                                                            "Insufficient balance in ${secondPartyAccount.name}. Please ensure ${secondPartyAccount.name} has at least a balance of $amountToSpendForBajajSubWalletReward."
 
                                                     } else {
 
-                                                        result.error = secondPartyShortInBalanceMessage
+                                                        // Check (totalNumberOfTransactionsForBajajSubWalletReward * perTransactionAmountForBajajSubWalletReward) > amountToSpendForBajajSubWalletRewards.
+                                                        // Check a/c 2 has ((totalNumberOfTransactionsForBajajSubWalletReward * perTransactionAmountForBajajSubWalletReward) - amountToSpendForBajajSubWalletRewards) amount as balance.
+                                                        val perTransactionAmountForBajajSubWalletReward: UInt =
+                                                            getDataResult.data!!.first()
+
+                                                        var sourceHasEnoughBalance = true
+                                                        val totalAmountOfBajajSubWalletRewardTransactions: UInt =
+                                                            totalNumberOfTransactionsForBajajSubWalletReward * perTransactionAmountForBajajSubWalletReward
+                                                        val sourceShortInBalanceMessage =
+                                                            "Insufficient balance in ${sourceAccount.name}. Please ensure ${sourceAccount.name} has at least a balance of ${totalAmountOfBajajSubWalletRewardTransactions - amountToSpendForBajajSubWalletReward}."
+
+                                                        val secondPartyAccountBalance: Float =
+                                                            getAccountBalancesResult.data!!.last()
+
+                                                        val effectiveTotalAmountOfBajajSubWalletRewardTransactions: Float =
+                                                            totalAmountOfBajajSubWalletRewardTransactions.toFloat() - amountToSpendForBajajSubWalletReward.toFloat()
+
+                                                        if (secondPartyAccountBalance < effectiveTotalAmountOfBajajSubWalletRewardTransactions) {
+
+                                                            sourceHasEnoughBalance = false
+                                                        }
+
+                                                        if (sourceHasEnoughBalance) {
+
+                                                            // Prepare transactions
+                                                            val listOfBajajSubWalletRewards: List<UInt> =
+                                                                getDataLists.data!!.last()
+                                                            val transactions: List<TransactionModel> =
+                                                                TransactionForBajajWalletUtils.prepareTransactions(
+
+                                                                    isSourceTransactionPresent = isFundingTransactionPresent,
+                                                                    sourceAccount = sourceAccount,
+                                                                    secondPartyAccount = secondPartyAccount,
+                                                                    bajajSubWalletIncomeAccount = getValidBajajSubWalletIncomeAccountResult.data!!,
+                                                                    bajajSubWalletAccount = getValidBajajSubWalletAccountResult.data!!,
+                                                                    amountToSpendForBajajSubWalletReward = amountToSpendForBajajSubWalletReward,
+                                                                    perTransactionAmountForBajajSubWalletReward = perTransactionAmountForBajajSubWalletReward,
+                                                                    totalNumberOfTransactionsForBajajSubWalletReward = totalNumberOfTransactionsForBajajSubWalletReward,
+                                                                    listOfBajajSubWalletRewardingTransactionIndexes = listOfBajajSubWalletRewardingTransactionIndexes,
+                                                                    listOfBajajSubWalletRewards = listOfBajajSubWalletRewards,
+                                                                    eventDateTimeInText = eventDateTimeInText
+                                                                )
+
+                                                            if (isDevelopmentMode) {
+
+                                                                println("transactions = $transactions")
+                                                            }
+                                                            result.isOK = true
+                                                            result.data = transactions
+
+                                                        } else {
+
+                                                            result.error = sourceShortInBalanceMessage
+                                                        }
                                                     }
+                                                } else {
+
+                                                    result.error =
+                                                        "${ConstantsNative.accountText} balance calculation error..."
                                                 }
                                             } else {
 
                                                 result.error =
-                                                    "${ConstantsNative.accountText} balance calculation error..."
+                                                    DateTimeUtils.constructDateErrorMessage(message = eventDateTime.error!!)
                                             }
                                         } else {
 

@@ -2307,7 +2307,7 @@ object InsertOperationsInteractive {
                     val generateTransactionsForBajajSubWalletResult: IsOkModel<List<TransactionModel>> =
                         InsertTransactionForBajajSubWallet.generateTransactionsForBajajSubWallet(
 
-                            isSourceTransactionPresent = transactionType == TransactionTypeEnum.BAJAJ_SUB_WALLET,
+                            isFundingTransactionPresent = transactionType == TransactionTypeEnum.BAJAJ_SUB_WALLET,
                             sourceAccount = fromAccount,
                             secondPartyAccount = toAccount,
                             eventDateTimeInText = dateTimeInText,
@@ -2322,6 +2322,10 @@ object InsertOperationsInteractive {
 
                     } else {
 
+                        InteractiveUtils.printErrorMessage(
+                            dataSpecification = "generateTransactionsForBajajSubWalletResult",
+                            message = generateTransactionsForBajajSubWalletResult.error!!
+                        )
                         return TransactionUtils.getFailedInsertTransactionResult(
 
                             dateTimeInText = dateTimeInText,
@@ -2940,17 +2944,7 @@ object InsertOperationsInteractive {
             isDevelopmentMode = isDevelopmentMode,
             eventDateTimeConversionFunction = {
 
-                MysqlUtilsInteractive.dateTimeTextConversionWithMessage(
-
-                    inputDateTimeText = eventDateTime,
-                    dateTimeTextConversionFunction = fun(): IsOkModel<String> {
-
-                        return MysqlUtils.normalDateTimeTextToMySqlDateTimeText(
-
-                            normalDateTimeText = eventDateTime,
-                        )
-                    },
-                )
+                MysqlUtilsInteractive.normalDateTimeTextToMySqlDateTimeTextWithMessage(inputDateTimeText = eventDateTime)
             },
             transactionManipulationSuccessActions = fun() {
 
@@ -3054,15 +3048,7 @@ object InsertOperationsInteractive {
             manipulateTransactionOperation = ::manipulateTransactionInteractive,
             eventDateTimeConversionOperation = fun(): IsOkModel<String> {
 
-                return MysqlUtilsInteractive.dateTimeTextConversionWithMessage(
-
-                    inputDateTimeText = eventDateTime,
-                    dateTimeTextConversionFunction = fun(): IsOkModel<String> {
-                        return MysqlUtils.normalDateTimeTextToMySqlDateTimeText(
-                            normalDateTimeText = eventDateTime,
-                        )
-                    }
-                )
+                return MysqlUtilsInteractive.normalDateTimeTextToMySqlDateTimeTextWithMessage(inputDateTimeText = eventDateTime)
             },
         )
     }
