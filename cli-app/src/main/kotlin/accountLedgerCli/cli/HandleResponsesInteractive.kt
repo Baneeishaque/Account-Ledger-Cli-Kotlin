@@ -3,6 +3,7 @@ package accountLedgerCli.cli
 import account.ledger.library.api.response.AccountResponse
 import account.ledger.library.api.response.AccountsResponse
 import account.ledger.library.enums.AccountTypeEnum
+import account.ledger.library.enums.AccountsListSortMode
 import account.ledger.library.enums.HandleAccountsApiResponseResult
 import account.ledger.library.models.InsertTransactionResult
 import account.ledger.library.models.ViewTransactionsOutput
@@ -116,7 +117,10 @@ object HandleResponsesInteractive {
                                 accounts = userAccountsMap.values.toList()
                             ),
                             "1 - Choose $purposeForPrint Account - By Index Number",
-                            "2 - Search $purposeForPrint Account - By Part Of Name",
+                            "2 - Search $purposeForPrint Account - By Part Of Name (Sort by A/C ID)",
+                            "3 - Search $purposeForPrint Account - By Part Of Name (Sort by A/C Full Name)",
+                            "4 - Search $purposeForPrint Account - By Part Of Name (Sort by A/C Name)",
+                            "5 - Search $purposeForPrint Account - By Part Of Name (Sort by A/C Parent ID)",
                             "0 - Back",
                             "",
                             "Enter Your Choice : "
@@ -146,6 +150,45 @@ object HandleResponsesInteractive {
 
                                     userAccountsMap = userAccountsMap,
                                     isDevelopmentMode = isDevelopmentMode
+                                ),
+                                userAccountsMap = userAccountsMap
+                            )
+                        }
+
+                        "3" -> {
+                            return getHandleAccountsResponseFromApiResult(
+
+                                selectedAccountId = searchAccount(
+
+                                    userAccountsMap = userAccountsMap,
+                                    isDevelopmentMode = isDevelopmentMode,
+                                    searchMode = AccountsListSortMode.BASED_ON_FULL_NAME
+                                ),
+                                userAccountsMap = userAccountsMap
+                            )
+                        }
+
+                        "4" -> {
+                            return getHandleAccountsResponseFromApiResult(
+
+                                selectedAccountId = searchAccount(
+
+                                    userAccountsMap = userAccountsMap,
+                                    isDevelopmentMode = isDevelopmentMode,
+                                    searchMode = AccountsListSortMode.BASED_ON_NAME
+                                ),
+                                userAccountsMap = userAccountsMap
+                            )
+                        }
+
+                        "5" -> {
+                            return getHandleAccountsResponseFromApiResult(
+
+                                selectedAccountId = searchAccount(
+
+                                    userAccountsMap = userAccountsMap,
+                                    isDevelopmentMode = isDevelopmentMode,
+                                    searchMode = AccountsListSortMode.BASED_ON_PARENT_ID
                                 ),
                                 userAccountsMap = userAccountsMap
                             )

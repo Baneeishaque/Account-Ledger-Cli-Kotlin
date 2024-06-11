@@ -1,6 +1,7 @@
 package accountLedgerCli.cli
 
 import account.ledger.library.api.response.AccountResponse
+import account.ledger.library.enums.AccountsListSortMode
 import account.ledger.library.utils.AccountUtils
 import account_ledger_library.constants.ConstantsNative
 import common.utils.library.constants.CommonConstants
@@ -10,7 +11,8 @@ import common.utils.library.utils.ListUtils
 fun searchAccount(
 
     userAccountsMap: LinkedHashMap<UInt, AccountResponse>,
-    isDevelopmentMode: Boolean
+    isDevelopmentMode: Boolean,
+    searchMode: AccountsListSortMode = AccountsListSortMode.BASED_ON_ID
 
 ): UInt {
 
@@ -57,7 +59,8 @@ fun searchAccount(
                     "\nSearch Results",
                     AccountUtils.userAccountsToStringFromList(
 
-                        accounts = searchResult.values.toList()
+                        accounts = searchResult.values.toList(),
+                        sortMode = searchMode
                     ),
                     "1 - Choose Deposit Account - By Index Number",
                     "0 - Back",
