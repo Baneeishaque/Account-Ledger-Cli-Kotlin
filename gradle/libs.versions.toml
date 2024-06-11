@@ -1,6 +1,7 @@
 [versions]
 kotlin = "2.0.10-383"
 ktor = "3.0.0-tls-eap-907"
+agp = "8.6.0-alpha05"
 
 [libraries]
 kotlinx-cli = { module = "org.jetbrains.kotlinx:kotlinx-cli", version = "0.3.6" }
@@ -19,3 +20,4 @@ dotenv-kotlin = { module = "io.github.cdimascio:dotenv-kotlin", version = "6.4.1
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+androidLibrary = { id = "com.android.library", version.ref = "agp" }
