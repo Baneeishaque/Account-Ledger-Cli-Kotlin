@@ -4,9 +4,9 @@ import account.ledger.library.models.ChooseSpecialTransactionTypeResultModel
 import account.ledger.library.models.SpecialTransactionTypeModel
 import account.ledger.library.utils.SpecialTransactionTypeUtils
 import account_ledger_library.constants.ConstantsNative
-import common.utils.library.constants.CommonConstants
-import common.utils.library.utils.InteractiveUtils
-import common.utils.library.utils.ListUtils
+import common.utils.library.constants.ConstantsCommon
+import common.utils.library.utils.ErrorUtilsInteractive
+import common.utils.library.utils.ListUtilsInteractive
 
 object HandleSpecialTransactionTypesInteractive {
 
@@ -36,7 +36,7 @@ object HandleSpecialTransactionTypesInteractive {
                 "1" -> {
                     return handleSpecialTransactionTypesWithZeroAsBackValue(
 
-                        selectedSpecialTransactionTypeIndex = ListUtils.getValidIndexFromCollectionWithSelectionPromptAndZeroAsBack(
+                        selectedSpecialTransactionTypeIndex = ListUtilsInteractive.getValidIndexFromCollectionWithSelectionPromptAndZeroAsBack(
 
                             list = specialTransactionTypes,
                             itemSpecification = ConstantsNative.SPECIAL_TRANSACTION_TYPE_TEXT,
@@ -64,7 +64,7 @@ object HandleSpecialTransactionTypesInteractive {
                     return ChooseSpecialTransactionTypeResultModel(isSpecialTransactionTypeSelected = false)
                 }
 
-                else -> InteractiveUtils.invalidOptionMessage()
+                else -> ErrorUtilsInteractive.printInvalidOptionMessage()
             }
         } while (true)
     }
@@ -102,7 +102,7 @@ object HandleSpecialTransactionTypesInteractive {
         if (isDevelopmentMode) {
 
             println(
-                "List to Search\n${CommonConstants.dashedLineSeparator}\n${
+                "List to Search\n${ConstantsCommon.dashedLineSeparator}\n${
                     SpecialTransactionTypeUtils.specialTransactionTypesToTextFromList(
 
                         specialTransactionTypes = specialTransactionTypes
@@ -141,7 +141,7 @@ object HandleSpecialTransactionTypesInteractive {
                     specialTransactionTypes = specialTransactionTypes,
                     isDevelopmentMode = isDevelopmentMode
                 )
-                else if (input != "0") InteractiveUtils.invalidOptionMessage()
+                else if (input != "0") ErrorUtilsInteractive.printInvalidOptionMessage()
 
             } while (input != "0")
 
@@ -161,7 +161,7 @@ object HandleSpecialTransactionTypesInteractive {
                 val input: String = readln()
                 if (input == "1") {
 
-                    return ListUtils.getValidIndexFromCollectionWithSelectionPromptAndZeroAsBack(
+                    return ListUtilsInteractive.getValidIndexFromCollectionWithSelectionPromptAndZeroAsBack(
 
                         list = searchResult,
                         itemSpecification = ConstantsNative.SPECIAL_TRANSACTION_TYPE_TEXT,
@@ -172,7 +172,7 @@ object HandleSpecialTransactionTypesInteractive {
                     )
                 } else if (input != "0") {
 
-                    InteractiveUtils.invalidOptionMessage()
+                    ErrorUtilsInteractive.printInvalidOptionMessage()
                 }
             } while (input != "0")
         }

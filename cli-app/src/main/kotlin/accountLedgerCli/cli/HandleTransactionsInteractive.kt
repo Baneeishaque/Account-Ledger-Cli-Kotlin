@@ -4,9 +4,9 @@ import account.ledger.library.api.response.TransactionResponse
 import account.ledger.library.models.ChooseTransactionResultModel
 import account.ledger.library.utils.TransactionUtils.transactionsToTextFromList
 import account_ledger_library.constants.ConstantsNative
-import common.utils.library.constants.CommonConstants
-import common.utils.library.utils.InteractiveUtils
-import common.utils.library.utils.ListUtils
+import common.utils.library.constants.ConstantsCommon
+import common.utils.library.utils.ErrorUtilsInteractive
+import common.utils.library.utils.ListUtilsInteractive
 
 object HandleTransactionsInteractive {
 
@@ -34,7 +34,7 @@ object HandleTransactionsInteractive {
                 "1" -> {
                     return handleTransactionsWithZeroAsBackValue(
 
-                        selectedTransactionIndex = ListUtils.getValidIndexFromCollectionWithSelectionPromptAndZeroAsBack(
+                        selectedTransactionIndex = ListUtilsInteractive.getValidIndexFromCollectionWithSelectionPromptAndZeroAsBack(
 
                             list = transactions,
                             itemSpecification = ConstantsNative.TRANSACTION_TEXT,
@@ -60,7 +60,7 @@ object HandleTransactionsInteractive {
                     return ChooseTransactionResultModel(isTransactionSelected = false)
                 }
 
-                else -> InteractiveUtils.invalidOptionMessage()
+                else -> ErrorUtilsInteractive.printInvalidOptionMessage()
             }
         } while (true)
     }
@@ -99,7 +99,7 @@ object HandleTransactionsInteractive {
         if (isDevelopmentMode) {
 
             println(
-                "List to Search\n${CommonConstants.dashedLineSeparator}\n${
+                "List to Search\n${ConstantsCommon.dashedLineSeparator}\n${
 
                     transactionsToTextFromList(transactions = transactions)
                 }"
@@ -139,7 +139,7 @@ object HandleTransactionsInteractive {
                     transactions = transactions,
                     isDevelopmentMode = isDevelopmentMode
                 )
-                else if (input != "0") InteractiveUtils.invalidOptionMessage()
+                else if (input != "0") ErrorUtilsInteractive.printInvalidOptionMessage()
 
             } while (input != "0")
 
@@ -164,7 +164,7 @@ object HandleTransactionsInteractive {
 
                 if (input == "1") {
 
-                    return ListUtils.getValidIndexFromCollectionWithSelectionPromptAndZeroAsBack(
+                    return ListUtilsInteractive.getValidIndexFromCollectionWithSelectionPromptAndZeroAsBack(
 
                         list = searchResult,
                         itemSpecification = ConstantsNative.TRANSACTION_TEXT,
@@ -172,7 +172,7 @@ object HandleTransactionsInteractive {
                     )
                 } else if (input != "0") {
 
-                    InteractiveUtils.invalidOptionMessage()
+                    ErrorUtilsInteractive.printInvalidOptionMessage()
                 }
             } while (input != "0")
         }

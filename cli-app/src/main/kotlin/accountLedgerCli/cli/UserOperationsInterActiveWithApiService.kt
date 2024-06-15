@@ -16,17 +16,17 @@ import account.ledger.library.retrofit.ResponseHolder
 import account.ledger.library.retrofit.data.AuthenticationDataSource
 import account.ledger.library.retrofit.data.MultipleUserDataSource
 import account.ledger.library.utils.UserUtils
-import account.ledger.library.utils.handleUserSelection
+import account.ledger.library.utils.UserUtilsInteractive
 import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
 import common.utils.library.models.CommonDataModel
-import common.utils.library.utils.InteractiveUtils
+import common.utils.library.utils.ErrorUtilsInteractive
 import io.github.cdimascio.dotenv.Dotenv
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.builtins.serializer
 import kotlinx.serialization.json.Json
 import java.nio.file.Paths
-import common.utils.library.constants.CommonConstants
-import common.utils.library.utils.ListUtils
+import common.utils.library.constants.ConstantsCommon
+import common.utils.library.utils.ListUtilsInteractive
 
 // TODO : Separate into UserOperations, UserOperationsInteractive & UserOperationsApiService
 class UserOperationsInterActiveWithApiService {
@@ -59,13 +59,13 @@ class UserOperationsInterActiveWithApiService {
                     println("Directory : ${Paths.get("").toAbsolutePath()}")
                 }
                 println("\nAccount Ledger Authentication")
-                println(CommonConstants.dashedLineSeparator)
+                println(ConstantsCommon.dashedLineSeparator)
             }
 
             var user: UserCredentials
             if (username.isEmpty() || password.isEmpty()) {
 
-                user = UserUtils.getUserCredentials()
+                user = UserUtilsInteractive.getUserCredentials()
 
             } else {
 
@@ -84,10 +84,10 @@ class UserOperationsInterActiveWithApiService {
                             }
 
                             "N" -> {
-                                user = UserUtils.getUserCredentials()
+                                user = UserUtilsInteractive.getUserCredentials()
                             }
 
-                            else -> InteractiveUtils.invalidOptionMessage()
+                            else -> ErrorUtilsInteractive.printInvalidOptionMessage()
                         }
                     } while (true)
                 }
@@ -138,7 +138,7 @@ class UserOperationsInterActiveWithApiService {
                                 )
                             }
 
-                            else -> InteractiveUtils.invalidOptionMessage()
+                            else -> ErrorUtilsInteractive.printInvalidOptionMessage()
                         }
                     } while (true)
 
@@ -209,7 +209,7 @@ class UserOperationsInterActiveWithApiService {
                                 transactionParticulars = transactionParticulars,
                                 transactionAmount = transactionAmount,
                                 isDevelopmentMode = isDevelopmentMode,
-                                dotEnv = dotEnv
+                                dotEnv = dotEnv,
                             )
 
                         } else {
@@ -236,7 +236,7 @@ class UserOperationsInterActiveWithApiService {
                                                         isNotApiCall = false,
                                                         isConsoleMode = false,
                                                         isDevelopmentMode = isDevelopmentMode,
-                                                        dotenv =  App.reloadDotEnv()
+                                                        dotEnv =  App.reloadDotEnv()
                                                     )
                                                 } else {
 
@@ -423,7 +423,7 @@ class UserOperationsInterActiveWithApiService {
                             )
                         }
 
-                        else -> InteractiveUtils.invalidOptionMessage()
+                        else -> ErrorUtilsInteractive.printInvalidOptionMessage()
                     }
                 } while (true)
             } else {
@@ -478,17 +478,17 @@ class UserOperationsInterActiveWithApiService {
                                     usersMap = usersMap,
                                     isConsoleMode = isConsoleMode,
                                     isDevelopmentMode = isDevelopmentMode,
-                                    dotenv =  App.reloadDotEnv()
+                                    dotEnv =  App.reloadDotEnv()
                                 )
                             }
 
                             "2" -> {
 
-                                val chooseUserResult: ChooseUserResult = handleUserSelection(
-                                    chosenUserId = ListUtils.getValidIndexFromCollectionWithSelectionPromptAndZeroAsBack(
+                                val chooseUserResult: ChooseUserResult = UserUtils.handleUserSelection(
+                                    chosenUserId = ListUtilsInteractive.getValidIndexFromCollectionWithSelectionPromptAndZeroAsBack(
 
                                         map = usersMap,
-                                        itemSpecification = ConstantsNative.userText,
+                                        itemSpecification = ConstantsNative.USER_TEXT,
                                         items = UserUtils.usersToTextFromLinkedHashMap(usersMap = usersMap)
 
                                     ), usersMap = usersMap
@@ -506,7 +506,7 @@ class UserOperationsInterActiveWithApiService {
                                         transactionParticulars = transactionParticulars,
                                         transactionAmount = transactionAmount,
                                         isDevelopmentMode = isDevelopmentMode,
-                                        dotEnv = dotEnv
+                                        dotEnv = dotEnv,
                                     )
                                 }
                             }
@@ -515,7 +515,7 @@ class UserOperationsInterActiveWithApiService {
                                 return insertTransactionResult
                             }
 
-                            else -> InteractiveUtils.invalidOptionMessage()
+                            else -> ErrorUtilsInteractive.printInvalidOptionMessage()
                         }
                     } while (true)
                 }

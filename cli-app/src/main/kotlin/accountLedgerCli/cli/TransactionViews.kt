@@ -11,15 +11,14 @@ import account.ledger.library.models.ChooseAccountResult
 import account.ledger.library.models.InsertTransactionResult
 import account.ledger.library.models.ViewTransactionsOutput
 import account.ledger.library.operations.ServerOperations
-import account.ledger.library.utils.AccountUtils
-import account.ledger.library.utils.ApiUtils
-import account.ledger.library.utils.TransactionUtils
+import account.ledger.library.utils.*
 import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
-import accountLedgerCli.utils.ChooseAccountUtils
+import accountLedgerCli.utils.ChooseAccountUtilsInteractive
 import account_ledger_library.constants.ConstantsNative
-import common.utils.library.constants.CommonConstants
+import common.utils.library.constants.ConstantsCommon
 import common.utils.library.models.IsOkModel
 import common.utils.library.utils.*
+import io.github.cdimascio.dotenv.Dotenv
 
 
 object TransactionViews {
@@ -39,7 +38,8 @@ object TransactionViews {
         isCreditDebitMode: Boolean = false,
         isConsoleMode: Boolean,
         isNotApiCall: Boolean = true,
-        isDevelopmentMode: Boolean
+        isDevelopmentMode: Boolean,
+        dotEnv: Dotenv
 
     ): ViewTransactionsOutput {
 
@@ -64,6 +64,7 @@ object TransactionViews {
             isConsoleMode = isConsoleMode,
             isNotApiCall = isNotApiCall,
             isDevelopmentMode = isDevelopmentMode,
+            dotEnv = dotEnv
         )
     }
 
@@ -83,7 +84,8 @@ object TransactionViews {
         isCreditDebitMode: Boolean = false,
         isConsoleMode: Boolean,
         isNotApiCall: Boolean = true,
-        isDevelopmentMode: Boolean
+        isDevelopmentMode: Boolean,
+        dotEnv: Dotenv
 
     ): ViewTransactionsOutput {
 
@@ -119,7 +121,8 @@ object TransactionViews {
                     isCreditDebitMode = isCreditDebitMode,
                     isConsoleMode = isConsoleMode,
                     isNotApiCall = isNotApiCall,
-                    isDevelopmentMode = isDevelopmentMode
+                    isDevelopmentMode = isDevelopmentMode,
+                    dotEnv = dotEnv
                 )
             })
 
@@ -145,12 +148,13 @@ object TransactionViews {
         isCreditDebitMode: Boolean = false,
         isConsoleMode: Boolean,
         isNotApiCall: Boolean = true,
-        isDevelopmentMode: Boolean
+        isDevelopmentMode: Boolean,
+        dotEnv: Dotenv
 
     ): ViewTransactionsOutput {
 
         var localUserMultipleTransactionResponse: MultipleTransactionResponse = userMultipleTransactionResponse
-        if (ApiUtils.isNoTransactionResponseWithMessage(
+        if (ApiUtilsInteractive.isNoTransactionResponseWithMessage(
 
                 responseStatus = localUserMultipleTransactionResponse.status,
                 noDataActions = fun() {
@@ -186,7 +190,7 @@ object TransactionViews {
             var choice: String
             do {
                 val userTransactionsToTextFromListForLedgerResult: IsOkModel<String> =
-                    TransactionUtils.userTransactionsToTextFromListForLedger(
+                    TransactionUtilsInteractive.userTransactionsToTextFromListForLedger(
 
                         transactions = TransactionUtils.convertTransactionResponseListToTransactionListForLedger(
                             transactions = userTransactionsMap.values.toList()
@@ -301,11 +305,11 @@ object TransactionViews {
                             if (isCallNotFromCheckAccounts(
 
                                     functionCallSource = functionCallSource,
-                                    furtherActionsOnFalse = { InteractiveUtils.invalidOptionMessage() })
+                                    furtherActionsOnFalse = { ErrorUtilsInteractive.printInvalidOptionMessage() })
                             ) {
 
                                 val transactionIndex: UInt =
-                                    ListUtils.getValidIndexFromCollectionWithSelectionPromptAndZeroAsBack(
+                                    ListUtilsInteractive.getValidIndexFromCollectionWithSelectionPromptAndZeroAsBack(
 
                                         map = userTransactionsMap,
                                         itemSpecification = ConstantsNative.TRANSACTION_TEXT,
@@ -329,11 +333,11 @@ object TransactionViews {
                             if (isCallNotFromCheckAccounts(
 
                                     functionCallSource = functionCallSource,
-                                    furtherActionsOnFalse = { InteractiveUtils.invalidOptionMessage() })
+                                    furtherActionsOnFalse = { ErrorUtilsInteractive.printInvalidOptionMessage() })
                             ) {
 
                                 val transactionStartIndex: UInt =
-                                    ListUtils.getValidIndexFromCollectionWithSelectionPromptAndZeroAsBack(
+                                    ListUtilsInteractive.getValidIndexFromCollectionWithSelectionPromptAndZeroAsBack(
 
                                         map = userTransactionsMap,
                                         itemSpecificationPrefix = "Start ",
@@ -347,7 +351,7 @@ object TransactionViews {
                                         userTransactionsMap.filterKeys { transactionId: UInt -> transactionId > transactionStartIndex }
 
                                     val userTransactionsToTextFromListForLedgerResult2: IsOkModel<String> =
-                                        TransactionUtils.userTransactionsToTextFromListForLedger(
+                                        TransactionUtilsInteractive.userTransactionsToTextFromListForLedger(
 
                                             transactions = TransactionUtils.convertTransactionResponseListToTransactionListForLedger(
                                                 transactions = reducedUserTransactionsMap.values.toList()
@@ -358,7 +362,7 @@ object TransactionViews {
                                     if (userTransactionsToTextFromListForLedgerResult2.isOK) {
 
                                         val transactionEndIndex: UInt =
-                                            ListUtils.getValidIndexFromCollectionWithSelectionPromptAndZeroAsBack(
+                                            ListUtilsInteractive.getValidIndexFromCollectionWithSelectionPromptAndZeroAsBack(
 
                                                 map = reducedUserTransactionsMap,
                                                 itemSpecificationPrefix = "End ",
@@ -390,7 +394,7 @@ object TransactionViews {
                                         }
                                     } else {
 
-                                        TransactionUtils.printUserTransactionsToTextFromListForLedgerError(
+                                        TransactionUtilsInteractive.printUserTransactionsToTextFromListForLedgerError(
 
                                             dataSpecification = "userTransactionsToTextFromListForLedger 2",
                                             userTransactionsToTextFromListForLedgerInstance = userTransactionsToTextFromListForLedgerResult2
@@ -405,10 +409,10 @@ object TransactionViews {
                             if (isCallNotFromCheckAccounts(
 
                                     functionCallSource = functionCallSource,
-                                    furtherActionsOnFalse = { InteractiveUtils.invalidOptionMessage() })
+                                    furtherActionsOnFalse = { ErrorUtilsInteractive.printInvalidOptionMessage() })
                             ) {
 
-                                ToDoUtils.showTodo()
+                                ToDoUtilsInteractive.showTodo()
                             }
                         }
 
@@ -417,11 +421,11 @@ object TransactionViews {
                             if (isCallNotFromCheckAccounts(
 
                                     functionCallSource = functionCallSource,
-                                    furtherActionsOnFalse = { InteractiveUtils.invalidOptionMessage() })
+                                    furtherActionsOnFalse = { ErrorUtilsInteractive.printInvalidOptionMessage() })
                             ) {
 
                                 val transactionIndex: UInt =
-                                    ListUtils.getValidIndexFromCollectionWithSelectionPromptAndZeroAsBack(
+                                    ListUtilsInteractive.getValidIndexFromCollectionWithSelectionPromptAndZeroAsBack(
 
                                         map = userTransactionsMap,
                                         itemSpecification = ConstantsNative.TRANSACTION_TEXT,
@@ -430,7 +434,7 @@ object TransactionViews {
                                 val userAccountsMap: LinkedHashMap<UInt, AccountResponse> =
                                     AccountUtils.prepareUserAccountsMap(
 
-                                        accounts = ApiUtils.getAccountsFull(
+                                        accounts = ApiUtilsInteractive.getAccountsFull(
 
                                             userId = userId,
                                             isConsoleMode = isConsoleMode,
@@ -470,7 +474,7 @@ object TransactionViews {
                                             "Y" -> {
 
                                                 val chooseAccountResult: ChooseAccountResult =
-                                                    ChooseAccountUtils.chooseAccountById(
+                                                    ChooseAccountUtilsInteractive.chooseAccountById(
 
                                                         userId = userId,
                                                         accountType = AccountTypeEnum.FROM,
@@ -488,7 +492,7 @@ object TransactionViews {
                                                 break
                                             }
 
-                                            else -> InteractiveUtils.invalidOptionMessage()
+                                            else -> ErrorUtilsInteractive.printInvalidOptionMessage()
                                         }
                                     } while (true)
 
@@ -500,7 +504,7 @@ object TransactionViews {
                                             "Y" -> {
 
                                                 val chooseAccountResult: ChooseAccountResult =
-                                                    ChooseAccountUtils.chooseAccountById(
+                                                    ChooseAccountUtilsInteractive.chooseAccountById(
 
                                                         userId = userId,
                                                         accountType = AccountTypeEnum.TO,
@@ -518,7 +522,7 @@ object TransactionViews {
                                                 break
                                             }
 
-                                            else -> InteractiveUtils.invalidOptionMessage()
+                                            else -> ErrorUtilsInteractive.printInvalidOptionMessage()
                                         }
                                     } while (true)
 
@@ -536,7 +540,8 @@ object TransactionViews {
                                             transactionParticulars = selectedTransaction.particulars,
                                             transactionAmount = selectedTransaction.amount,
                                             isEditStep = true,
-                                            isDevelopmentMode = isDevelopmentMode
+                                            isDevelopmentMode = isDevelopmentMode,
+                                            dotEnv = dotEnv
                                         )
 
                                     // TODO : If from or to is not current account, remove the transaction
@@ -623,7 +628,7 @@ object TransactionViews {
                                             println("newDateTime = $newDateTime")
                                         }
                                         val getAccountsFullResult: Result<AccountsResponse> =
-                                            ApiUtils.getAccountsFull(
+                                            ApiUtilsInteractive.getAccountsFull(
 
                                                 userId = userId,
                                                 isConsoleMode = isConsoleMode,
@@ -665,7 +670,7 @@ object TransactionViews {
                                     }
                                 } else {
 
-                                    TransactionUtils.printUserTransactionsToTextFromListForLedgerError(
+                                    TransactionUtilsInteractive.printUserTransactionsToTextFromListForLedgerError(
 
                                         userTransactionsToTextFromListForLedgerInstance = upTransactionKeyResult
                                     )
@@ -678,7 +683,7 @@ object TransactionViews {
                             if (isCallNotFromCheckAccounts(
 
                                     functionCallSource = functionCallSource,
-                                    furtherActionsOnFalse = { InteractiveUtils.invalidOptionMessage() })
+                                    furtherActionsOnFalse = { ErrorUtilsInteractive.printInvalidOptionMessage() })
                             ) {
 
                                 addTransactionResult = Screens.accountHome(
@@ -691,7 +696,8 @@ object TransactionViews {
                                     dateTimeInText = addTransactionResult.dateTimeInText,
                                     transactionParticulars = addTransactionResult.transactionParticulars,
                                     transactionAmount = addTransactionResult.transactionAmount,
-                                    isDevelopmentMode = isDevelopmentMode
+                                    isDevelopmentMode = isDevelopmentMode,
+                                    dotEnv = dotEnv
                                 )
                                 if (addTransactionResult.isSuccess) {
 
@@ -740,7 +746,7 @@ object TransactionViews {
 //                                println("userTransactionsMapSortedByTime = $userTransactionsMapSortedByTime")
 
                                         println("userTransactionsMapSortedByTime Event Timestamps")
-                                        println(CommonConstants.dashedLineSeparator)
+                                        println(ConstantsCommon.dashedLineSeparator)
                                         userTransactionsMapSortedByTime.forEach { transaction: Map.Entry<UInt, TransactionResponse> ->
 
                                             println("${transaction.value.id} - ${transaction.value.eventDateTime}")
@@ -782,7 +788,7 @@ object TransactionViews {
                                             println("newDateTime = $newDateTime")
                                         }
                                         val getAccountsFullResult: Result<AccountsResponse> =
-                                            ApiUtils.getAccountsFull(
+                                            ApiUtilsInteractive.getAccountsFull(
 
                                                 userId = userId,
                                                 isConsoleMode = isConsoleMode,
@@ -824,7 +830,7 @@ object TransactionViews {
                                     }
                                 } else {
 
-                                    TransactionUtils.printUserTransactionsToTextFromListForLedgerError(
+                                    TransactionUtilsInteractive.printUserTransactionsToTextFromListForLedgerError(
 
                                         userTransactionsToTextFromListForLedgerInstance = upTransactionKeyResult
                                     )
@@ -869,7 +875,7 @@ object TransactionViews {
                                             println("newDateTime = $newDateTime")
                                         }
                                         val getAccountsFullResult: Result<AccountsResponse> =
-                                            ApiUtils.getAccountsFull(
+                                            ApiUtilsInteractive.getAccountsFull(
 
                                                 userId = userId,
                                                 isConsoleMode = isConsoleMode,
@@ -910,7 +916,7 @@ object TransactionViews {
                                         }
                                     } else {
 
-                                        TransactionUtils.printUserTransactionsToTextFromListForLedgerError(
+                                        TransactionUtilsInteractive.printUserTransactionsToTextFromListForLedgerError(
 
                                             userTransactionsToTextFromListForLedgerInstance = upToAboveTransactionKeyResult
                                         )
@@ -918,7 +924,7 @@ object TransactionViews {
 
                                 } else {
 
-                                    TransactionUtils.printUserTransactionsToTextFromListForLedgerError(
+                                    TransactionUtilsInteractive.printUserTransactionsToTextFromListForLedgerError(
 
                                         userTransactionsToTextFromListForLedgerInstance = upTransactionKeyResult
                                     )
@@ -941,7 +947,7 @@ object TransactionViews {
                             if (isCallFromCheckAccounts(
 
                                     functionCallSource = functionCallSource,
-                                    furtherActionsOnFalse = { InteractiveUtils.invalidOptionMessage() }
+                                    furtherActionsOnFalse = { ErrorUtilsInteractive.printInvalidOptionMessage() }
                                 )
                             ) {
 
@@ -958,7 +964,7 @@ object TransactionViews {
                             if (isCallFromCheckAccounts(
 
                                     functionCallSource = functionCallSource,
-                                    furtherActionsOnFalse = { InteractiveUtils.invalidOptionMessage() }
+                                    furtherActionsOnFalse = { ErrorUtilsInteractive.printInvalidOptionMessage() }
                                 )
                             ) {
 
@@ -970,7 +976,7 @@ object TransactionViews {
                             }
                         }
 
-                        else -> InteractiveUtils.invalidOptionMessage()
+                        else -> ErrorUtilsInteractive.printInvalidOptionMessage()
                     }
 
                 } else {
@@ -1031,7 +1037,7 @@ object TransactionViews {
     ): IsOkModel<UInt> {
 
         val userTransactionsToTextFromListForLedgerResult: IsOkModel<String> =
-            TransactionUtils.userTransactionsToTextFromListForLedger(
+            TransactionUtilsInteractive.userTransactionsToTextFromListForLedger(
 
                 transactions = TransactionUtils.convertTransactionResponseListToTransactionListForLedger(transactions = userTransactionsMap.values.toList()),
                 currentAccountId = currentAccountId,
@@ -1040,7 +1046,7 @@ object TransactionViews {
         if (userTransactionsToTextFromListForLedgerResult.isOK) {
 
             return IsOkModel(
-                isOK = true, data = ListUtils.getValidIndexFromCollectionWithSelectionPromptAndZeroAsBack(
+                isOK = true, data = ListUtilsInteractive.getValidIndexFromCollectionWithSelectionPromptAndZeroAsBack(
 
                     map = userTransactionsMap,
                     itemSpecificationPrefix = transactionPrefix,
@@ -1061,7 +1067,7 @@ object TransactionViews {
         return isCallNotFromCheckAccounts(
 
             functionCallSource = functionCallSource,
-            furtherActionsOnFalse = { InteractiveUtils.invalidOptionMessage() })
+            furtherActionsOnFalse = { ErrorUtilsInteractive.printInvalidOptionMessage() })
     }
 
     private fun isCallNotFromCheckAccounts(
@@ -1102,25 +1108,26 @@ object TransactionViews {
         username: String,
         previousTransactionData: InsertTransactionResult,
         isConsoleMode: Boolean,
-        isDevelopmentMode: Boolean
+        isDevelopmentMode: Boolean,
+        dotEnv: Dotenv
 
     ) {
         print("Enter Account Index or 0 to Back : A")
         val userInputForAccountIndex: String = readln()
         if (userInputForAccountIndex != "0") {
 
-            AccountUtils.processUserAccountsMap<Any>(
+            AccountUtilsInteractive.processUserAccountsMap<Any>(
 
                 userId = userId,
                 isConsoleMode = isConsoleMode,
                 isDevelopmentMode = isDevelopmentMode,
                 successActions = fun(userAccountsMap: LinkedHashMap<UInt, AccountResponse>) {
 
-                    val accountIndex: UInt = ListUtils.getValidIndexFromCollectionWithZeroAsBack(
+                    val accountIndex: UInt = ListUtilsInteractive.getValidIndexFromCollectionWithZeroAsBack(
 
                         map = userAccountsMap,
                         inputForIndex = userInputForAccountIndex,
-                        itemSpecification = ConstantsNative.accountText,
+                        itemSpecification = ConstantsNative.ACCOUNT_TEXT,
                         items = AccountUtils.userAccountsToStringFromList(
 
                             accounts = userAccountsMap.values.toList()
@@ -1139,7 +1146,8 @@ object TransactionViews {
                             previousTransactionData = previousTransactionData,
                             fromAccount = selectedAccount,
                             isConsoleMode = isConsoleMode,
-                            isDevelopmentMode = isDevelopmentMode
+                            isDevelopmentMode = isDevelopmentMode,
+                            dotEnv = dotEnv
                         )
                     }
                 }

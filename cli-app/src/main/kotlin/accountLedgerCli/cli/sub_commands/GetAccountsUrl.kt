@@ -2,8 +2,9 @@ package accountLedgerCli.cli.sub_commands
 
 import account.ledger.library.api.ProjectApiUtils
 import accountLedgerCli.enums.CommandLineApiMethodsEnum
-import common.utils.library.cli.sub_commands.SubCommandWithUserIdAsArgument
+import common.utils.library.cli.sub_commands.SubCommandEnhancedWithUserIdAsArgument
 import common.utils.library.utils.ApiUtilsCommon
+import common.utils.library.utils.ApiUtilsInteractiveCommon
 import io.github.cdimascio.dotenv.Dotenv
 
 class GetAccountsUrl(
@@ -11,7 +12,7 @@ class GetAccountsUrl(
     override val isDevelopmentMode: Boolean,
     override val dotEnv: Dotenv
 
-) : SubCommandWithUserIdAsArgument(
+) : SubCommandEnhancedWithUserIdAsArgument(
 
     name = CommandLineApiMethodsEnum.GetAccountsUrl.name,
     actionDescription = "Get accounts data URL for a user",
@@ -23,7 +24,7 @@ class GetAccountsUrl(
 
     override fun furtherActions(userIdLocal: Int) {
 
-        ApiUtilsCommon.printSuccessMessageWithDataForApi(
+        ApiUtilsInteractiveCommon.printSuccessMessageWithDataForApi(
             textData = ProjectApiUtils.getServerApiMethodSelectUserAccountsFullUrlForUser(
                 userId = userIdLocal.toUInt()
             )

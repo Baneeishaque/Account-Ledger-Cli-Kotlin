@@ -4,9 +4,9 @@ import account.ledger.library.api.response.AccountResponse
 import account.ledger.library.enums.AccountsListSortMode
 import account.ledger.library.utils.AccountUtils
 import account_ledger_library.constants.ConstantsNative
-import common.utils.library.constants.CommonConstants
-import common.utils.library.utils.InteractiveUtils
-import common.utils.library.utils.ListUtils
+import common.utils.library.constants.ConstantsCommon
+import common.utils.library.utils.ErrorUtilsInteractive
+import common.utils.library.utils.ListUtilsInteractive
 
 fun searchAccount(
 
@@ -47,7 +47,7 @@ fun searchAccount(
                 userAccountsMap = userAccountsMap,
                 isDevelopmentMode = isDevelopmentMode
             )
-            else if (input != "0") InteractiveUtils.invalidOptionMessage()
+            else if (input != "0") ErrorUtilsInteractive.printInvalidOptionMessage()
 
         } while (input != "0")
 
@@ -71,10 +71,10 @@ fun searchAccount(
             val input: String = readln()
             if (input == "1") {
 
-                return ListUtils.getValidIndexFromCollectionWithSelectionPromptAndZeroAsBack(
+                return ListUtilsInteractive.getValidIndexFromCollectionWithSelectionPromptAndZeroAsBack(
 
                     map = searchResult,
-                    itemSpecification = ConstantsNative.accountText,
+                    itemSpecification = ConstantsNative.ACCOUNT_TEXT,
                     items = AccountUtils.userAccountsToStringFromList(
 
                         accounts = searchResult.values.toList()
@@ -82,7 +82,7 @@ fun searchAccount(
                 )
             } else if (input != "0") {
 
-                InteractiveUtils.invalidOptionMessage()
+                ErrorUtilsInteractive.printInvalidOptionMessage()
             }
         } while (input != "0")
     }
@@ -101,7 +101,7 @@ private fun searchOnHashMapValues(
     if (isDevelopmentMode) {
 
         println(
-            "Map to Search\n${CommonConstants.dashedLineSeparator}\n${
+            "Map to Search\n$ConstantsCommon.dashedLineSeparator}\n${
                 AccountUtils.userAccountsToStringFromList(
                     accounts = hashMap.values.toList()
                 )

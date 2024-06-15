@@ -4,6 +4,7 @@ import accountLedgerCli.enums.CommandLineApiMethodInsertTransactionArgumentsEnum
 import accountLedgerCli.enums.CommandLineApiMethodsEnum
 import account.ledger.library.operations.InsertOperations
 import common.utils.library.utils.ApiUtilsCommon
+import common.utils.library.utils.ApiUtilsInteractiveCommon
 import common.utils.library.utils.DateTimeUtils
 import kotlinx.cli.ArgType
 import kotlinx.cli.ExperimentalCli
@@ -71,7 +72,7 @@ class InsertTransaction(
 
         if (userId <= 0) {
 
-            ApiUtilsCommon.printNegativeNumberOrZeroArgumentValueMessageForApi(
+            ApiUtilsInteractiveCommon.printNegativeNumberOrZeroArgumentValueMessageForApi(
 
                 argumentSummary = userIdDescription,
                 searchedInEnvironmentFile = false
@@ -83,7 +84,7 @@ class InsertTransaction(
 
                 if (particulars.isEmpty()) {
 
-                    ApiUtilsCommon.printInvalidArgumentValueMessageForApi(
+                    ApiUtilsInteractiveCommon.printInvalidArgumentValueMessageForApi(
 
                         argumentSummary = particularsDescription,
                         searchedInEnvironmentFile = false
@@ -93,7 +94,7 @@ class InsertTransaction(
 
                     if (amount <= 0) {
 
-                        ApiUtilsCommon.printNegativeDoubleArgumentValueMessageForApi(
+                        ApiUtilsInteractiveCommon.printNegativeDoubleArgumentValueMessageForApi(
 
                             argumentSummary = amountDescription,
                             searchedInEnvironmentFile = false
@@ -103,7 +104,7 @@ class InsertTransaction(
 
                         if (fromAccountId <= 0) {
 
-                            ApiUtilsCommon.printNegativeNumberOrZeroArgumentValueMessageForApi(
+                            ApiUtilsInteractiveCommon.printNegativeNumberOrZeroArgumentValueMessageForApi(
 
                                 argumentSummary = fromAccountIdDescription,
                                 searchedInEnvironmentFile = false
@@ -113,7 +114,7 @@ class InsertTransaction(
 
                             if (toAccountId <= 0) {
 
-                                ApiUtilsCommon.printNegativeNumberOrZeroArgumentValueMessageForApi(
+                                ApiUtilsInteractiveCommon.printNegativeNumberOrZeroArgumentValueMessageForApi(
 
                                     argumentSummary = toAccountIdDescription,
                                     searchedInEnvironmentFile = false
@@ -133,11 +134,11 @@ class InsertTransaction(
                                     )
                                 ) {
 
-                                    ApiUtilsCommon.printSuccessMessageForApi()
+                                    ApiUtilsInteractiveCommon.printSuccessMessageForApi()
 
                                 } else {
 
-                                    ApiUtilsCommon.printErrorMessageForApi()
+                                    ApiUtilsInteractiveCommon.printErrorMessageForApi()
                                 }
                             }
                         }
@@ -145,7 +146,7 @@ class InsertTransaction(
                 }
             } else {
 
-                ApiUtilsCommon.printErrorMessageForApi(errorMessage = "EventDateTime Must be in <${DateTimeUtils.normalDateTimePatternAsText}> pattern")
+                ApiUtilsInteractiveCommon.printErrorMessageForApi(errorMessage = "EventDateTime Must be in <${DateTimeUtils.normalDateTimePatternAsText}> pattern")
             }
         }
     }

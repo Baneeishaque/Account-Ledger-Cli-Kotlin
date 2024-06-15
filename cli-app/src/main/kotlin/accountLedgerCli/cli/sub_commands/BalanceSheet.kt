@@ -6,7 +6,7 @@ import accountLedgerCli.enums.CommandLineApiMethodBalanceSheetOptionsEnum
 import accountLedgerCli.enums.CommandLineApiMethodsEnum
 import accountLedgerCli.cli.App
 import accountLedgerCli.cli.UserOperationsInterActiveWithApiService
-import common.utils.library.cli.sub_commands.SubCommandWithUsernameAndPasswordAsArguments
+import common.utils.library.cli.sub_commands.SubCommandEnhancedWithUsernameAndPasswordAsArguments
 import io.github.cdimascio.dotenv.Dotenv
 import kotlinx.cli.ArgType
 import kotlinx.cli.default
@@ -16,7 +16,7 @@ class BalanceSheet(
     override val isDevelopmentMode: Boolean,
     override val dotEnv: Dotenv
 
-) : SubCommandWithUsernameAndPasswordAsArguments(
+) : SubCommandEnhancedWithUsernameAndPasswordAsArguments(
 
     name = CommandLineApiMethodsEnum.BalanceSheet.name,
     actionDescription = "Provides Balance Sheet Ledger of the Specified User, Currently in JSON format, Default Balance Sheet Refine Level is [Excluding Open Balances, Misc. Incomes, Investment Returns, Family & Expense Accounts], Environment file may exist & contains missing arguments",

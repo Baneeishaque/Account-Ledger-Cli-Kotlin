@@ -1,10 +1,10 @@
 package accountLedgerCli.cli.sub_commands
 
 import account.ledger.library.api.response.AccountResponse
-import account.ledger.library.utils.ApiUtils
-import account.ledger.library.utils.HandleResponses
+import account.ledger.library.utils.ApiUtilsInteractive
+import account.ledger.library.utils.HandleResponsesInteractiveLibrary
 import accountLedgerCli.enums.CommandLineApiMethodsEnum
-import common.utils.library.cli.sub_commands.SubCommandWithUserIdAsArgument
+import common.utils.library.cli.sub_commands.SubCommandEnhancedWithUserIdAsArgument
 import common.utils.library.models.IsOkModel
 import io.github.cdimascio.dotenv.Dotenv
 import kotlinx.serialization.builtins.ListSerializer
@@ -15,7 +15,7 @@ class GetAccounts(
     override val isDevelopmentMode: Boolean = false,
     override val dotEnv: Dotenv
 ) :
-    SubCommandWithUserIdAsArgument(
+    SubCommandEnhancedWithUserIdAsArgument(
         name = CommandLineApiMethodsEnum.GetAccounts.name,
         actionDescription = "Get accounts data for a user",
         isDevelopmentMode = isDevelopmentMode,
@@ -29,8 +29,8 @@ class GetAccounts(
         println(
             Json.encodeToString(
                 serializer = IsOkModel.serializer(typeSerial0 = ListSerializer(elementSerializer = AccountResponse.serializer())),
-                value = HandleResponses.getUserAccountsMapForSerializer(
-                    apiResponse = ApiUtils.getAccountsFull(
+                value = HandleResponsesInteractiveLibrary.getUserAccountsMapForSerializer(
+                    apiResponse = ApiUtilsInteractive.getAccountsFull(
                         userId = userIdLocal.toUInt(),
                         isConsoleMode = false,
                         isDevelopmentMode = isDevelopmentMode

@@ -10,12 +10,14 @@ import account.ledger.library.models.ViewTransactionsOutput
 import account.ledger.library.operations.ServerOperations
 import account.ledger.library.retrofit.data.MultipleTransactionDataSource
 import account.ledger.library.utils.AccountUtils
-import account.ledger.library.utils.ApiUtils
+import account.ledger.library.utils.ApiUtilsInteractive
 import account.ledger.library.utils.TransactionUtils
-import common.utils.library.constants.CommonConstants
+import account.ledger.library.utils.TransactionUtilsInteractive
+import common.utils.library.constants.ConstantsCommon
 import common.utils.library.models.IsOkModel
-import common.utils.library.utils.InteractiveUtils
+import common.utils.library.utils.ErrorUtilsInteractive
 import common.utils.library.utils.MysqlUtils
+import io.github.cdimascio.dotenv.Dotenv
 import kotlinx.coroutines.runBlocking
 
 internal fun checkAffectedAccountsAfterSpecifiedDate(
@@ -27,7 +29,8 @@ internal fun checkAffectedAccountsAfterSpecifiedDate(
     isUpToTimeStamp: Boolean = false,
     upToTimeStamp: String = "",
     isConsoleMode: Boolean,
-    isDevelopmentMode: Boolean
+    isDevelopmentMode: Boolean,
+    dotEnv: Dotenv
 
 ): InsertTransactionResult {
 
@@ -72,7 +75,8 @@ internal fun checkAffectedAccountsAfterSpecifiedDate(
                             isUpToTimeStamp = isUpToTimeStamp,
                             upToTimeStamp = upToTimeStamp,
                             isConsoleMode = isConsoleMode,
-                            isDevelopmentMode = isDevelopmentMode
+                            isDevelopmentMode = isDevelopmentMode,
+                            dotEnv = dotEnv
                         )
                     }
 
@@ -81,14 +85,14 @@ internal fun checkAffectedAccountsAfterSpecifiedDate(
                         break
                     }
 
-                    else -> InteractiveUtils.invalidOptionMessage()
+                    else -> ErrorUtilsInteractive.printInvalidOptionMessage()
                 }
             } while (true)
 
         } else {
 
             val selectUserTransactionsAfterSpecifiedDateResult: MultipleTransactionResponse = apiResponse.getOrNull()!!
-            if (ApiUtils.isNotNoTransactionResponseWithMessage(
+            if (ApiUtilsInteractive.isTransactionResponseWithMessage(
 
                     responseStatus = selectUserTransactionsAfterSpecifiedDateResult.status
                 )
@@ -108,9 +112,9 @@ internal fun checkAffectedAccountsAfterSpecifiedDate(
                     accounts.putIfAbsent(transaction.fromAccountId, transaction.fromAccountFullName)
                     accounts.putIfAbsent(transaction.toAccountId, transaction.toAccountFullName)
                 }
-                println("Affected A/Cs${CommonConstants.dashedLineSeparator}\n${accountsMapToText(accountsMap = accounts)}")
+                println("Affected A/Cs${ConstantsCommon.dashedLineSeparator}\n${accountsMapToText(accountsMap = accounts)}")
 
-                val getAccountsFullResult: Result<AccountsResponse> = ApiUtils.getAccountsFull(
+                val getAccountsFullResult: Result<AccountsResponse> = ApiUtilsInteractive.getAccountsFull(
 
                     userId = userId,
                     isConsoleMode = isConsoleMode,
@@ -136,9 +140,10 @@ internal fun checkAffectedAccountsAfterSpecifiedDate(
                             isUpToTimeStamp = isUpToTimeStamp,
                             upToTimeStamp = upToTimeStamp,
                             isConsoleMode = isConsoleMode,
-                            isDevelopmentMode = isDevelopmentMode
+                            isDevelopmentMode = isDevelopmentMode,
+                            dotEnv = dotEnv
 
-                        ).output) {
+                            ).output) {
 
                             "E", "0" -> {
 
@@ -158,9 +163,10 @@ internal fun checkAffectedAccountsAfterSpecifiedDate(
                                     isUpToTimeStamp = isUpToTimeStamp,
                                     upToTimeStamp = upToTimeStamp,
                                     isConsoleMode = isConsoleMode,
-                                    isDevelopmentMode = isDevelopmentMode
+                                    isDevelopmentMode = isDevelopmentMode,
+                                    dotEnv = dotEnv
 
-                                ).addTransactionResult
+                                    ).addTransactionResult
                             }
                         }
                     }
@@ -178,14 +184,14 @@ fun accountsMapToText(accountsMap: MutableMap<UInt, String>): String {
     return result
 }
 
-private fun printUserTransactionAfterSpecifiedDate(
+fun printUserTransactionAfterSpecifiedDate(
 
     userTransactionsAfterSpecifiedDate: List<TransactionResponse>,
     isDevelopmentMode: Boolean
 ) {
     println(
         "userTransactionsAfterSpecifiedDate = ${
-            TransactionUtils.userTransactionsToTextFromListForLedger(
+            TransactionUtilsInteractive.userTransactionsToTextFromListForLedger(
 
                 transactions = TransactionUtils.convertTransactionResponseListToTransactionListForLedger(transactions = userTransactionsAfterSpecifiedDate),
                 currentAccountId = 0u,
@@ -206,7 +212,8 @@ internal fun viewChildAccounts(
     transactionParticulars: String,
     transactionAmount: Float,
     isConsoleMode: Boolean,
-    isDevelopmentMode: Boolean
+    isDevelopmentMode: Boolean,
+    dotEnv: Dotenv
 
 ): InsertTransactionResult {
 
@@ -244,7 +251,8 @@ internal fun viewChildAccounts(
                         transactionParticulars = transactionParticulars,
                         transactionAmount = transactionAmount,
                         isConsoleMode = isConsoleMode,
-                        isDevelopmentMode = isDevelopmentMode
+                        isDevelopmentMode = isDevelopmentMode,
+                        dotEnv = dotEnv
                     )
                 }
 
@@ -260,7 +268,7 @@ internal fun viewChildAccounts(
                     )
                 }
 
-                else -> InteractiveUtils.invalidOptionMessage()
+                else -> ErrorUtilsInteractive.printInvalidOptionMessage()
             }
         } while (true)
     } else {
@@ -305,7 +313,8 @@ internal fun viewChildAccounts(
                     dateTimeInText = dateTimeInText,
                     transactionParticulars = transactionParticulars,
                     transactionAmount = transactionAmount,
-                    isDevelopmentMode = isDevelopmentMode
+                    isDevelopmentMode = isDevelopmentMode,
+                    dotEnv = dotEnv
                 )
 
                 val choice: String = processChildAccountScreenInputResult.output

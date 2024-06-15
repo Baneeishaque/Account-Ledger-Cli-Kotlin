@@ -5,9 +5,10 @@ import account_ledger_library.constants.ConstantsNative
 import account.ledger.library.models.InsertTransactionResult
 import account.ledger.library.models.ViewTransactionsOutput
 import account.ledger.library.utils.AccountUtils
-import common.utils.library.utils.InteractiveUtils
-import common.utils.library.utils.ListUtils
-import common.utils.library.utils.ToDoUtils
+import common.utils.library.utils.ErrorUtilsInteractive
+import common.utils.library.utils.ListUtilsInteractive
+import common.utils.library.utils.ToDoUtilsInteractive
+import io.github.cdimascio.dotenv.Dotenv
 
 fun processChildAccountScreenInput(
 
@@ -20,7 +21,8 @@ fun processChildAccountScreenInput(
     dateTimeInText: String,
     transactionParticulars: String,
     transactionAmount: Float,
-    isDevelopmentMode: Boolean
+    isDevelopmentMode: Boolean,
+    dotEnv: Dotenv
 
 ): ViewTransactionsOutput {
 
@@ -40,10 +42,10 @@ fun processChildAccountScreenInput(
         "1" -> {
             accountHomeOutput = handleAccountSelection(
 
-                accountId = ListUtils.getValidIndexFromCollectionWithSelectionPromptAndZeroAsBack(
+                accountId = ListUtilsInteractive.getValidIndexFromCollectionWithSelectionPromptAndZeroAsBack(
 
                     map = userAccountsMap,
-                    itemSpecification = ConstantsNative.accountText,
+                    itemSpecification = ConstantsNative.ACCOUNT_TEXT,
                     items = AccountUtils.userAccountsToStringFromList(accounts = userAccountsMap.values.toList())
                 ),
                 userAccountsMap = userAccountsMap,
@@ -55,7 +57,8 @@ fun processChildAccountScreenInput(
                 dateTimeInText = dateTimeInText,
                 transactionParticulars = transactionParticulars,
                 transactionAmount = transactionAmount,
-                isDevelopmentMode = isDevelopmentMode
+                isDevelopmentMode = isDevelopmentMode,
+                dotEnv = dotEnv
             )
         }
 
@@ -77,13 +80,14 @@ fun processChildAccountScreenInput(
                 dateTimeInText = dateTimeInText,
                 transactionParticulars = transactionParticulars,
                 transactionAmount = transactionAmount,
-                isDevelopmentMode = isDevelopmentMode
+                isDevelopmentMode = isDevelopmentMode,
+                dotEnv = dotEnv
             )
         }
 
         "3" -> {
 
-            ToDoUtils.showTodo()
+            ToDoUtilsInteractive.showTodo()
             return ViewTransactionsOutput(output = "3", addTransactionResult = accountHomeOutput)
         }
 
@@ -92,7 +96,7 @@ fun processChildAccountScreenInput(
         }
 
         else -> {
-            InteractiveUtils.invalidOptionMessage()
+            ErrorUtilsInteractive.printInvalidOptionMessage()
         }
     }
     return ViewTransactionsOutput(output = choice, addTransactionResult = accountHomeOutput)
@@ -110,7 +114,8 @@ private fun handleAccountSelection(
     dateTimeInText: String,
     transactionParticulars: String,
     transactionAmount: Float,
-    isDevelopmentMode: Boolean
+    isDevelopmentMode: Boolean,
+    dotEnv: Dotenv
 
 ): InsertTransactionResult {
 
@@ -126,7 +131,8 @@ private fun handleAccountSelection(
             dateTimeInText = dateTimeInText,
             transactionParticulars = transactionParticulars,
             transactionAmount = transactionAmount,
-            isDevelopmentMode = isDevelopmentMode
+            isDevelopmentMode = isDevelopmentMode,
+            dotEnv = dotEnv
         )
     }
     return InsertTransactionResult(
@@ -140,4 +146,3 @@ private fun handleAccountSelection(
         toAccount = toAccount
     )
 }
-

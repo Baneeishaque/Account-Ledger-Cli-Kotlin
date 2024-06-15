@@ -11,9 +11,9 @@ import common.utils.library.models.EnvironmentFileEntryStrictModel
 import common.utils.library.models.IsOkModel
 import io.github.cdimascio.dotenv.Dotenv
 
-object InsertTransactionForBajajCoins {
+object InsertTransactionForBajajCashback {
 
-    fun generateTransactionsForBajajCoins(
+    fun generateTransactionsForBajajSubWallet(
 
         isFundingTransactionPresent: Boolean,
         sourceAccount: AccountResponse,
@@ -40,15 +40,15 @@ object InsertTransactionForBajajCoins {
         isBalanceCheckByPassed = isBalanceCheckByPassed,
         rewardIncomeAccountIdEnvironmentVariable = EnvironmentFileEntryStrictModel(
 
-            entry = EnvironmentFileEntryEnum.BAJAJ_COINS_INCOME_ACCOUNT_ID,
-            formalName = ConstantsNative.BAJAJ_COINS_INCOME_ACCOUNT_ID_TEXT
+            entry = EnvironmentFileEntryEnum.BAJAJ_CASHBACK_INCOME_ACCOUNT_ID,
+            formalName = ConstantsNative.BAJAJ_CASHBACK_INCOME_ACCOUNT_ID_TEXT
         ),
         rewardCollectionAccountIdEnvironmentVariable = EnvironmentFileEntryStrictModel(
 
-            entry = EnvironmentFileEntryEnum.BAJAJ_COINS_WALLET_ACCOUNT_ID,
-            formalName = ConstantsNative.BAJAJ_COINS_WALLET_ACCOUNT_ID_TEXT
+            entry = EnvironmentFileEntryEnum.BAJAJ_CASHBACK_ACCOUNT_ID,
+            formalName = ConstantsNative.BAJAJ_CASHBACK_ACCOUNT_ID_TEXT
         ),
-        rewardType = BajajRewardTypeEnum.COINS,
+        rewardType = BajajRewardTypeEnum.CASHBACK,
         discountType = discountType,
         upToValue = upToValue
     )

@@ -3,16 +3,15 @@ package accountLedgerCli.cli.sub_commands
 import account.ledger.library.api.response.AccountResponse
 import account.ledger.library.enums.EnvironmentFileEntryEnum
 import account.ledger.library.models.InsertTransactionResult
-import account.ledger.library.utils.ApiUtils
-import account.ledger.library.utils.HandleResponses
+import account.ledger.library.utils.ApiUtilsInteractive
+import account.ledger.library.utils.HandleResponsesInteractiveLibrary
 import accountLedgerCli.cli.App
 import accountLedgerCli.cli.TransactionViews.viewTransactionsForAnAccount
-import accountLedgerCli.enums.CommandLineApiMethodInsertTransactionArgumentsEnum
 import accountLedgerCli.enums.CommandLineApiMethodViewTransactionsOfAnAccountArgumentsEnum
 import accountLedgerCli.enums.CommandLineApiMethodsEnum
-import common.utils.library.cli.sub_commands.SubCommandWithUserIdAndUsernameAsArguments
+import common.utils.library.cli.sub_commands.SubCommandEnhancedWithUserIdAndUsernameAsArguments
 import common.utils.library.models.IsOkModel
-import common.utils.library.utils.ApiUtilsCommon
+import common.utils.library.utils.ApiUtilsInteractiveCommon
 import io.github.cdimascio.dotenv.Dotenv
 import kotlinx.cli.ArgType
 import kotlinx.cli.optional
@@ -22,7 +21,7 @@ class ViewTransactionsOfAnAccount(
     override val isDevelopmentMode: Boolean = false,
     override val dotEnv: Dotenv
 
-) : SubCommandWithUserIdAndUsernameAsArguments(
+) : SubCommandEnhancedWithUserIdAndUsernameAsArguments(
 
     name = CommandLineApiMethodsEnum.ViewTransactionsOfAnAccount.name,
     actionDescription = "View transactions of an account",
@@ -40,7 +39,11 @@ class ViewTransactionsOfAnAccount(
 
     override fun additionalBeforeExecuteActions() {}
 
-    override fun additionalActionsWithUserIdAndUsername(userIdLocal: Int, usernameLocal: String) {
+    override fun additionalActionsWithUserIdAndUsername(
+
+        userIdLocal: Int,
+        usernameLocal: String
+    ) {
 
         if (accountId == null) {
 
@@ -49,33 +52,48 @@ class ViewTransactionsOfAnAccount(
                 accountId = dotEnv[EnvironmentFileEntryEnum.WALLET_ACCOUNT_ID.name].toInt()
                 if (accountId!! <= 0) {
 
-                    ApiUtilsCommon.printNegativeNumberOrZeroArgumentValueMessageForApi(
+                    ApiUtilsInteractiveCommon.printNegativeNumberOrZeroArgumentValueMessageForApi(
 
                         argumentSummary = accountIdDescription
                     )
                 } else {
 
-                    operationsAfterAccountId(userIdLocal, usernameLocal)
+                    operationsAfterAccountId(
+
+                        userIdLocal = userIdLocal,
+                        usernameLocal = usernameLocal,
+                        dotEnv = dotEnv
+                    )
                 }
             } catch (exception: NumberFormatException) {
 
-                ApiUtilsCommon.printInvalidArgumentValueMessageForApi(
+                ApiUtilsInteractiveCommon.printInvalidArgumentValueMessageForApi(
 
                     argumentSummary = accountIdDescription
                 )
             }
         } else {
 
-            operationsAfterAccountId(userIdLocal, usernameLocal)
+            operationsAfterAccountId(
+
+                userIdLocal = userIdLocal,
+                usernameLocal = usernameLocal,
+                dotEnv = dotEnv
+            )
         }
     }
 
-    private fun operationsAfterAccountId(userIdLocal: Int, usernameLocal: String) {
+    private fun operationsAfterAccountId(
+
+        userIdLocal: Int,
+        usernameLocal: String,
+        dotEnv: Dotenv
+    ) {
 
         val getUserAccountsMapResult: IsOkModel<LinkedHashMap<UInt, AccountResponse>> =
-            HandleResponses.getUserAccountsMap(
+            HandleResponsesInteractiveLibrary.getUserAccountsMap(
 
-                apiResponse = ApiUtils.getAccountsFull(
+                apiResponse = ApiUtilsInteractive.getAccountsFull(
 
                     userId = userIdLocal.toUInt(),
                     isConsoleMode = true,
@@ -85,10 +103,10 @@ class ViewTransactionsOfAnAccount(
 
         if (getUserAccountsMapResult.isOK) {
 
-            val accountsMap = getUserAccountsMapResult.data
+            val accountsMap: LinkedHashMap<UInt, AccountResponse>? = getUserAccountsMapResult.data
             if (accountsMap != null) {
 
-                val account = accountsMap[accountId!!.toUInt()]
+                val account: AccountResponse? = accountsMap[accountId!!.toUInt()]
                 if (account != null) {
 
                     viewTransactionsForAnAccount(
@@ -110,18 +128,19 @@ class ViewTransactionsOfAnAccount(
                         fromAccount = App.fromAccount,
                         isConsoleMode = true,
                         isNotApiCall = false,
-                        isDevelopmentMode = isDevelopmentMode
+                        isDevelopmentMode = isDevelopmentMode,
+                        dotEnv = dotEnv
                     )
                 } else {
-                    ApiUtilsCommon.printErrorMessageForApi(errorMessage = "Account with ID $accountId not found")
+                    ApiUtilsInteractiveCommon.printErrorMessageForApi(errorMessage = "Account with ID $accountId not found")
                 }
             } else {
 
-                ApiUtilsCommon.printErrorMessageForApi(errorMessage = "No accounts found for user with ID $userIdLocal")
+                ApiUtilsInteractiveCommon.printErrorMessageForApi(errorMessage = "No accounts found for user with ID $userIdLocal")
             }
         } else {
 
-            ApiUtilsCommon.printErrorMessageForApi(errorMessage = "Error : ${getUserAccountsMapResult.error}")
+            ApiUtilsInteractiveCommon.printErrorMessageForApi(errorMessage = "Error : ${getUserAccountsMapResult.error}")
         }
     }
 }

@@ -3,7 +3,6 @@ package accountLedgerCli.cli
 import account.ledger.library.api.response.AccountResponse
 import account.ledger.library.api.response.TransactionManipulationResponse
 import account.ledger.library.api.response.TransactionResponse
-import account.ledger.library.constants.EnvironmentalFileEntries
 import account.ledger.library.enums.AccountExchangeTypeEnum
 import account.ledger.library.enums.AccountTypeEnum
 import account.ledger.library.enums.HandleAccountsApiResponseResult
@@ -11,54 +10,19 @@ import account.ledger.library.enums.TransactionTypeEnum
 import account.ledger.library.models.*
 import account.ledger.library.operations.InsertOperations
 import account.ledger.library.retrofit.data.TransactionDataSource
-import account.ledger.library.utils.ApiUtils
-import account.ledger.library.utils.HandleResponses
-import account.ledger.library.utils.TransactionUtils
 import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithEnterPrompt
-import accountLedgerCli.utils.ChooseAccountUtils
+import accountLedgerCli.utils.ChooseAccountUtilsInteractive
 import account_ledger_library.constants.ConstantsNative
 import account.ledger.library.models.TransactionModel
-import account.ledger.library.utils.TransactionForBajajCoinsUtils
-import account.ledger.library.utils.TransactionForBajajUtils
-import account.ledger.library.utils.TransactionForBajajWalletUtils
+import account.ledger.library.utils.*
 import common.utils.library.enums.PatternQuestionAnswerTypesEnum
 import common.utils.library.models.IsOkModel
+import common.utils.library.models.SuccessWithoutDataBasedOnIsOkModel
 import common.utils.library.utils.*
 import io.github.cdimascio.dotenv.Dotenv
 import kotlinx.coroutines.runBlocking
 
 object InsertOperationsInteractive {
-
-    internal val walletAccount: EnvironmentVariableForWholeNumber = getEnvironmentVariableValueForInsertOperation(
-
-        environmentVariableName = EnvironmentalFileEntries.walletAccountId.entryName.name,
-        environmentVariableFormalName = EnvironmentalFileEntries.walletAccountId.entryFormalName!!,
-        dotenv = App.dotEnv
-    )
-
-    internal val frequent1Account: EnvironmentVariableForWholeNumber = getEnvironmentVariableValueForInsertOperation(
-        environmentVariableName = EnvironmentalFileEntries.frequent1AccountId.entryName.name,
-        environmentVariableFormalName = EnvironmentalFileEntries.frequent1AccountId.entryFormalName!!,
-        dotenv = App.dotEnv
-    )
-
-    internal val frequent2Account: EnvironmentVariableForWholeNumber = getEnvironmentVariableValueForInsertOperation(
-        environmentVariableName = EnvironmentalFileEntries.frequent2AccountId.entryName.name,
-        environmentVariableFormalName = EnvironmentalFileEntries.frequent2AccountId.entryFormalName!!,
-        dotenv = App.dotEnv
-    )
-
-    internal val frequent3Account: EnvironmentVariableForWholeNumber = getEnvironmentVariableValueForInsertOperation(
-        environmentVariableName = EnvironmentalFileEntries.frequent3AccountId.entryName.name,
-        environmentVariableFormalName = EnvironmentalFileEntries.frequent3AccountId.entryFormalName!!,
-        dotenv = App.dotEnv
-    )
-
-    internal val bankAccount: EnvironmentVariableForWholeNumber = getEnvironmentVariableValueForInsertOperation(
-        environmentVariableName = EnvironmentalFileEntries.bankAccountId.entryName.name,
-        environmentVariableFormalName = EnvironmentalFileEntries.bankAccountId.entryFormalName!!,
-        dotenv = App.dotEnv
-    )
 
     internal fun insertQuickTransactionFromAccount1toAccount2(
 
@@ -74,7 +38,8 @@ object InsertOperationsInteractive {
         transactionAmount: Float,
         chosenTransactionForSpecial: TransactionResponse?,
         chosenSpecialTransactionType: SpecialTransactionTypeModel?,
-        isDevelopmentMode: Boolean
+        isDevelopmentMode: Boolean,
+        dotEnv: Dotenv
 
     ): InsertTransactionResult {
 
@@ -96,8 +61,8 @@ object InsertOperationsInteractive {
             )
         ) {
             val getUserAccountsMapResult: IsOkModel<LinkedHashMap<UInt, AccountResponse>> =
-                HandleResponses.getUserAccountsMap(
-                    apiResponse = ApiUtils.getAccountsFull(
+                HandleResponsesInteractiveLibrary.getUserAccountsMap(
+                    apiResponse = ApiUtilsInteractive.getAccountsFull(
 
                         userId = userId,
                         isConsoleMode = true,
@@ -108,7 +73,7 @@ object InsertOperationsInteractive {
             return IsOkUtils.isOkHandler(
 
                 isOkModel = getUserAccountsMapResult,
-                data = insertTransactionResult,
+                dataOnFailure = insertTransactionResult,
                 successActions = fun(): InsertTransactionResult {
 
                     return transactionContinueCheck(
@@ -125,9 +90,10 @@ object InsertOperationsInteractive {
                         isConsoleMode = true,
                         chosenTransactionForSpecial = chosenTransactionForSpecial,
                         chosenSpecialTransactionType = chosenSpecialTransactionType,
-                        isDevelopmentMode = isDevelopmentMode
+                        isDevelopmentMode = isDevelopmentMode,
+                        dotEnv = dotEnv
                     )
-                })
+                })!!
         }
         return insertTransactionResult
     }
@@ -143,7 +109,8 @@ object InsertOperationsInteractive {
         dateTimeInText: String,
         transactionParticulars: String,
         transactionAmount: Float,
-        isDevelopmentMode: Boolean
+        isDevelopmentMode: Boolean,
+        dotEnv: Dotenv
 
     ): InsertTransactionResult {
 
@@ -161,9 +128,9 @@ object InsertOperationsInteractive {
         if (account.isAvailable) {
 
             val getUserAccountsMapResult: IsOkModel<LinkedHashMap<UInt, AccountResponse>> =
-                HandleResponses.getUserAccountsMap(
+                HandleResponsesInteractiveLibrary.getUserAccountsMap(
 
-                    apiResponse = ApiUtils.getAccountsFull(
+                    apiResponse = ApiUtilsInteractive.getAccountsFull(
 
                         userId = userId,
                         isConsoleMode = true,
@@ -174,7 +141,7 @@ object InsertOperationsInteractive {
             return IsOkUtils.isOkHandler(
 
                 isOkModel = getUserAccountsMapResult,
-                data = insertTransactionResult,
+                dataOnFailure = insertTransactionResult,
                 successActions = fun(): InsertTransactionResult {
 
                     return Screens.accountHome(
@@ -187,9 +154,10 @@ object InsertOperationsInteractive {
                         dateTimeInText = dateTimeInText,
                         transactionParticulars = transactionParticulars,
                         transactionAmount = transactionAmount,
-                        isDevelopmentMode = isDevelopmentMode
+                        isDevelopmentMode = isDevelopmentMode,
+                        dotEnv = dotEnv
                     )
-                })
+                })!!
         }
         return insertTransactionResult
     }
@@ -208,7 +176,8 @@ object InsertOperationsInteractive {
         transactionAmount: Float,
         isDevelopmentMode: Boolean,
         chosenTransactionForSpecial: TransactionResponse? = null,
-        chosenSpecialTransactionType: SpecialTransactionTypeModel? = null
+        chosenSpecialTransactionType: SpecialTransactionTypeModel? = null,
+        dotEnv: Dotenv
 
     ): InsertTransactionResult {
 
@@ -315,6 +284,7 @@ object InsertOperationsInteractive {
                         chosenTransactionForSpecial = chosenTransactionForSpecial,
                         chosenSpecialTransactionType = chosenSpecialTransactionType,
                         isDevelopmentMode = isDevelopmentMode,
+                        dotEnv = dotEnv
                     )
                 }
 
@@ -343,6 +313,7 @@ object InsertOperationsInteractive {
                         chosenTransactionForSpecial = chosenTransactionForSpecial,
                         chosenSpecialTransactionType = chosenSpecialTransactionType,
                         isDevelopmentMode = isDevelopmentMode,
+                        dotEnv = dotEnv
                     )
                 }
 
@@ -369,7 +340,8 @@ object InsertOperationsInteractive {
                             transactionAmount = localInsertTransactionResult.transactionAmount,
                             chosenTransactionForSpecial = chosenTransactionForSpecial,
                             chosenSpecialTransactionType = chosenSpecialTransactionType,
-                            isDevelopmentMode = isDevelopmentMode
+                            isDevelopmentMode = isDevelopmentMode,
+                            dotEnv = dotEnv
                         )
                         if (processSelectedAccountResult.isSuccess) {
 
@@ -409,6 +381,7 @@ object InsertOperationsInteractive {
                         chosenTransactionForSpecial = chosenTransactionForSpecial,
                         chosenSpecialTransactionType = chosenSpecialTransactionType,
                         isDevelopmentMode = isDevelopmentMode,
+                        dotEnv = dotEnv
                     )
                 }
 
@@ -437,6 +410,7 @@ object InsertOperationsInteractive {
                         chosenTransactionForSpecial = chosenTransactionForSpecial,
                         chosenSpecialTransactionType = chosenSpecialTransactionType,
                         isDevelopmentMode = isDevelopmentMode,
+                        dotEnv = dotEnv
                     )
                 }
 
@@ -463,7 +437,8 @@ object InsertOperationsInteractive {
                             transactionAmount = localInsertTransactionResult.transactionAmount,
                             chosenTransactionForSpecial = chosenTransactionForSpecial,
                             chosenSpecialTransactionType = chosenSpecialTransactionType,
-                            isDevelopmentMode = isDevelopmentMode
+                            isDevelopmentMode = isDevelopmentMode,
+                            dotEnv = dotEnv
                         )
                         if (processSelectedAccountResult.isSuccess) {
 
@@ -494,7 +469,8 @@ object InsertOperationsInteractive {
                         isConsoleMode = true,
                         chosenTransactionForSpecial = chosenTransactionForSpecial,
                         chosenSpecialTransactionType = chosenSpecialTransactionType,
-                        isDevelopmentMode = isDevelopmentMode
+                        isDevelopmentMode = isDevelopmentMode,
+                        dotEnv = dotEnv
                     )
                 }
 
@@ -515,7 +491,8 @@ object InsertOperationsInteractive {
                             transactionAmount = localInsertTransactionResult.transactionAmount,
                             isDevelopmentMode = isDevelopmentMode,
                             chosenTransactionForSpecial = chosenTransactionForSpecial,
-                            chosenSpecialTransactionType = chosenSpecialTransactionType
+                            chosenSpecialTransactionType = chosenSpecialTransactionType,
+                            dotEnv = dotEnv
                         )
 
                     } else {
@@ -533,7 +510,8 @@ object InsertOperationsInteractive {
                             transactionAmount = localInsertTransactionResult.transactionAmount,
                             isDevelopmentMode = isDevelopmentMode,
                             chosenTransactionForSpecial = chosenTransactionForSpecial,
-                            chosenSpecialTransactionType = chosenSpecialTransactionType
+                            chosenSpecialTransactionType = chosenSpecialTransactionType,
+                            dotEnv = dotEnv
                         )
                     }
                 }
@@ -556,7 +534,8 @@ object InsertOperationsInteractive {
                             isConsoleMode = true,
                             chosenTransactionForSpecial = chosenTransactionForSpecial,
                             chosenSpecialTransactionType = chosenSpecialTransactionType,
-                            isDevelopmentMode = isDevelopmentMode
+                            isDevelopmentMode = isDevelopmentMode,
+                            dotEnv = dotEnv
                         )
                     } else {
 
@@ -574,7 +553,8 @@ object InsertOperationsInteractive {
                             isConsoleMode = true,
                             chosenTransactionForSpecial = chosenTransactionForSpecial,
                             chosenSpecialTransactionType = chosenSpecialTransactionType,
-                            isDevelopmentMode = isDevelopmentMode
+                            isDevelopmentMode = isDevelopmentMode,
+                            dotEnv = dotEnv
                         )
                     }
                 }
@@ -596,7 +576,8 @@ object InsertOperationsInteractive {
                             transactionAmount = localInsertTransactionResult.transactionAmount,
                             isDevelopmentMode = isDevelopmentMode,
                             chosenTransactionForSpecial = chosenTransactionForSpecial,
-                            chosenSpecialTransactionType = chosenSpecialTransactionType
+                            chosenSpecialTransactionType = chosenSpecialTransactionType,
+                            dotEnv = dotEnv
                         )
                     } else {
 
@@ -622,7 +603,8 @@ object InsertOperationsInteractive {
                                 wantToExchange = true,
                                 chosenTransactionForSpecial = chosenTransactionForSpecial,
                                 chosenSpecialTransactionType = chosenSpecialTransactionType,
-                                isDevelopmentMode = isDevelopmentMode
+                                isDevelopmentMode = isDevelopmentMode,
+                                dotEnv = dotEnv
                             )
                             if (processSelectedAccountResult.isSuccess) {
 
@@ -656,7 +638,8 @@ object InsertOperationsInteractive {
                             isConsoleMode = true,
                             chosenTransactionForSpecial = chosenTransactionForSpecial,
                             chosenSpecialTransactionType = chosenSpecialTransactionType,
-                            isDevelopmentMode = isDevelopmentMode
+                            isDevelopmentMode = isDevelopmentMode,
+                            dotEnv = dotEnv
                         )
                     } else {
 
@@ -682,7 +665,8 @@ object InsertOperationsInteractive {
                                 wantToExchange = true,
                                 chosenTransactionForSpecial = chosenTransactionForSpecial,
                                 chosenSpecialTransactionType = chosenSpecialTransactionType,
-                                isDevelopmentMode = isDevelopmentMode
+                                isDevelopmentMode = isDevelopmentMode,
+                                dotEnv = dotEnv
                             )
                             if (processSelectedAccountResult.isSuccess) {
 
@@ -715,7 +699,8 @@ object InsertOperationsInteractive {
                             transactionAmount = localInsertTransactionResult.transactionAmount,
                             isDevelopmentMode = isDevelopmentMode,
                             chosenTransactionForSpecial = chosenTransactionForSpecial,
-                            chosenSpecialTransactionType = chosenSpecialTransactionType
+                            chosenSpecialTransactionType = chosenSpecialTransactionType,
+                            dotEnv = dotEnv
                         )
 
                     } else {
@@ -743,7 +728,8 @@ object InsertOperationsInteractive {
                             toAccount = localInsertTransactionResult.toAccount,
                             chosenTransactionForSpecial = chosenTransactionForSpecial,
                             chosenSpecialTransactionType = chosenSpecialTransactionType,
-                            isDevelopmentMode = isDevelopmentMode
+                            isDevelopmentMode = isDevelopmentMode,
+                            dotEnv = dotEnv
                         )
                     }
                 }
@@ -766,7 +752,8 @@ object InsertOperationsInteractive {
                             isConsoleMode = true,
                             chosenTransactionForSpecial = chosenTransactionForSpecial,
                             chosenSpecialTransactionType = chosenSpecialTransactionType,
-                            isDevelopmentMode = isDevelopmentMode
+                            isDevelopmentMode = isDevelopmentMode,
+                            dotEnv = dotEnv
                         )
                     } else {
 
@@ -793,7 +780,8 @@ object InsertOperationsInteractive {
                             toAccount = localInsertTransactionResult.toAccount,
                             chosenTransactionForSpecial = chosenTransactionForSpecial,
                             chosenSpecialTransactionType = chosenSpecialTransactionType,
-                            isDevelopmentMode = isDevelopmentMode
+                            isDevelopmentMode = isDevelopmentMode,
+                            dotEnv = dotEnv
                         )
                     }
                 }
@@ -824,7 +812,8 @@ object InsertOperationsInteractive {
                             toAccount = localInsertTransactionResult.toAccount,
                             chosenTransactionForSpecial = chosenTransactionForSpecial,
                             chosenSpecialTransactionType = chosenSpecialTransactionType,
-                            isDevelopmentMode = isDevelopmentMode
+                            isDevelopmentMode = isDevelopmentMode,
+                            dotEnv = dotEnv
                         )
                     } else {
 
@@ -851,7 +840,8 @@ object InsertOperationsInteractive {
                             toAccount = localInsertTransactionResult.toAccount,
                             chosenTransactionForSpecial = chosenTransactionForSpecial,
                             chosenSpecialTransactionType = chosenSpecialTransactionType,
-                            isDevelopmentMode = isDevelopmentMode
+                            isDevelopmentMode = isDevelopmentMode,
+                            dotEnv = dotEnv
                         )
                     }
                 }
@@ -882,7 +872,8 @@ object InsertOperationsInteractive {
                             toAccount = localInsertTransactionResult.toAccount,
                             chosenTransactionForSpecial = chosenTransactionForSpecial,
                             chosenSpecialTransactionType = chosenSpecialTransactionType,
-                            isDevelopmentMode = isDevelopmentMode
+                            isDevelopmentMode = isDevelopmentMode,
+                            dotEnv = dotEnv
                         )
                     } else {
 
@@ -909,7 +900,8 @@ object InsertOperationsInteractive {
                             toAccount = localInsertTransactionResult.toAccount,
                             chosenTransactionForSpecial = chosenTransactionForSpecial,
                             chosenSpecialTransactionType = chosenSpecialTransactionType,
-                            isDevelopmentMode = isDevelopmentMode
+                            isDevelopmentMode = isDevelopmentMode,
+                            dotEnv = dotEnv
                         )
                     }
                 }
@@ -919,7 +911,7 @@ object InsertOperationsInteractive {
                     if ((transactionType == TransactionTypeEnum.VIA) || (transactionType == TransactionTypeEnum.CYCLIC_VIA)) {
 
                         val chooseAccountResult: ChooseAccountResult =
-                            ChooseAccountUtils.chooseAccountById(
+                            ChooseAccountUtilsInteractive.chooseAccountById(
 
                                 userId = userId,
                                 accountType = AccountTypeEnum.VIA,
@@ -941,7 +933,8 @@ object InsertOperationsInteractive {
                                 transactionAmount = localInsertTransactionResult.transactionAmount,
                                 chosenTransactionForSpecial = chosenTransactionForSpecial,
                                 chosenSpecialTransactionType = chosenSpecialTransactionType,
-                                isDevelopmentMode = isDevelopmentMode
+                                isDevelopmentMode = isDevelopmentMode,
+                                dotEnv = dotEnv
                             )
                             if (processSelectedAccountResult.isSuccess) {
 
@@ -956,7 +949,7 @@ object InsertOperationsInteractive {
                         }
                     } else {
 
-                        InteractiveUtils.invalidOptionMessage()
+                        ErrorUtilsInteractive.printInvalidOptionMessage()
                     }
                 }
 
@@ -1099,7 +1092,7 @@ object InsertOperationsInteractive {
                     return localInsertTransactionResult
                 }
 
-                else -> InteractiveUtils.invalidOptionMessage()
+                else -> ErrorUtilsInteractive.printInvalidOptionMessage()
             }
         } while (true)
     }
@@ -1111,7 +1104,7 @@ object InsertOperationsInteractive {
 
     ): ChooseAccountResult {
 
-        return ChooseAccountUtils.chooseAccountById(
+        return ChooseAccountUtilsInteractive.chooseAccountById(
 
             userId = userId,
             accountType = AccountTypeEnum.FROM,
@@ -1121,7 +1114,7 @@ object InsertOperationsInteractive {
 
     private fun chooseToAccount(userId: UInt, isDevelopmentMode: Boolean): ChooseAccountResult {
 
-        return ChooseAccountUtils.chooseAccountById(
+        return ChooseAccountUtilsInteractive.chooseAccountById(
 
             userId = userId,
             accountType = AccountTypeEnum.TO,
@@ -1147,7 +1140,8 @@ object InsertOperationsInteractive {
         toAccount: AccountResponse,
         chosenTransactionForSpecial: TransactionResponse?,
         chosenSpecialTransactionType: SpecialTransactionTypeModel?,
-        isDevelopmentMode: Boolean
+        isDevelopmentMode: Boolean,
+        dotEnv: Dotenv
 
     ): InsertTransactionResult {
 
@@ -1172,7 +1166,8 @@ object InsertOperationsInteractive {
                 wantToExchange = wantToExchange,
                 chosenTransactionForSpecial = chosenTransactionForSpecial,
                 chosenSpecialTransactionType = chosenSpecialTransactionType,
-                isDevelopmentMode = isDevelopmentMode
+                isDevelopmentMode = isDevelopmentMode,
+                dotEnv = dotEnv
             )
             if (processSelectedAccountResult.isSuccess) {
 
@@ -1212,7 +1207,8 @@ object InsertOperationsInteractive {
         wantToExchange: Boolean = false,
         chosenTransactionForSpecial: TransactionResponse?,
         chosenSpecialTransactionType: SpecialTransactionTypeModel?,
-        isDevelopmentMode: Boolean
+        isDevelopmentMode: Boolean,
+        dotEnv: Dotenv
 
     ): InsertTransactionResult {
 
@@ -1236,7 +1232,8 @@ object InsertOperationsInteractive {
                         isConsoleMode = true,
                         chosenTransactionForSpecial = chosenTransactionForSpecial,
                         chosenSpecialTransactionType = chosenSpecialTransactionType,
-                        isDevelopmentMode = isDevelopmentMode
+                        isDevelopmentMode = isDevelopmentMode,
+                        dotEnv = dotEnv
                     )
 
                 } else {
@@ -1255,7 +1252,8 @@ object InsertOperationsInteractive {
                         isConsoleMode = true,
                         chosenTransactionForSpecial = chosenTransactionForSpecial,
                         chosenSpecialTransactionType = chosenSpecialTransactionType,
-                        isDevelopmentMode = isDevelopmentMode
+                        isDevelopmentMode = isDevelopmentMode,
+                        dotEnv = dotEnv
                     )
                 }
             }
@@ -1278,7 +1276,8 @@ object InsertOperationsInteractive {
                         isConsoleMode = true,
                         chosenTransactionForSpecial = chosenTransactionForSpecial,
                         chosenSpecialTransactionType = chosenSpecialTransactionType,
-                        isDevelopmentMode = isDevelopmentMode
+                        isDevelopmentMode = isDevelopmentMode,
+                        dotEnv = dotEnv
                     )
 
                 } else {
@@ -1297,7 +1296,8 @@ object InsertOperationsInteractive {
                         isConsoleMode = true,
                         chosenTransactionForSpecial = chosenTransactionForSpecial,
                         chosenSpecialTransactionType = chosenSpecialTransactionType,
-                        isDevelopmentMode = isDevelopmentMode
+                        isDevelopmentMode = isDevelopmentMode,
+                        dotEnv = dotEnv
                     )
                 }
             }
@@ -1318,7 +1318,8 @@ object InsertOperationsInteractive {
                     isConsoleMode = true,
                     chosenTransactionForSpecial = chosenTransactionForSpecial,
                     chosenSpecialTransactionType = chosenSpecialTransactionType,
-                    isDevelopmentMode = isDevelopmentMode
+                    isDevelopmentMode = isDevelopmentMode,
+                    dotEnv = dotEnv
                 )
             }
         }
@@ -1344,7 +1345,8 @@ object InsertOperationsInteractive {
         isDevelopmentMode: Boolean,
         isCyclicViaStep: Boolean = false,
         chosenTransactionForSpecial: TransactionResponse? = null,
-        chosenSpecialTransactionType: SpecialTransactionTypeModel? = null
+        chosenSpecialTransactionType: SpecialTransactionTypeModel? = null,
+        dotEnv: Dotenv
 
     ): InsertTransactionResult {
 
@@ -1393,7 +1395,8 @@ object InsertOperationsInteractive {
                     isDevelopmentMode = isDevelopmentMode,
                     isCyclicViaStep = isCyclicViaStep,
                     chosenTransactionForSpecial = chosenTransactionForSpecial,
-                    chosenSpecialTransactionType = chosenSpecialTransactionType
+                    chosenSpecialTransactionType = chosenSpecialTransactionType,
+                    dotEnv = dotEnv
                 )
             }
 
@@ -1418,7 +1421,8 @@ object InsertOperationsInteractive {
                     isDevelopmentMode = isDevelopmentMode,
                     isCyclicViaStep = isCyclicViaStep,
                     chosenTransactionForSpecial = chosenTransactionForSpecial,
-                    chosenSpecialTransactionType = chosenSpecialTransactionType
+                    chosenSpecialTransactionType = chosenSpecialTransactionType,
+                    dotEnv = dotEnv
                 )
             }
 
@@ -1443,7 +1447,8 @@ object InsertOperationsInteractive {
                     isDevelopmentMode = isDevelopmentMode,
                     isCyclicViaStep = isCyclicViaStep,
                     chosenTransactionForSpecial = chosenTransactionForSpecial,
-                    chosenSpecialTransactionType = chosenSpecialTransactionType
+                    chosenSpecialTransactionType = chosenSpecialTransactionType,
+                    dotEnv = dotEnv
                 )
             }
 
@@ -1492,7 +1497,8 @@ object InsertOperationsInteractive {
                         isDevelopmentMode = isDevelopmentMode,
                         isCyclicViaStep = isCyclicViaStep,
                         chosenTransactionForSpecial = chosenTransactionForSpecial,
-                        chosenSpecialTransactionType = chosenSpecialTransactionType
+                        chosenSpecialTransactionType = chosenSpecialTransactionType,
+                        dotEnv = dotEnv
                     )
                 }
                 return localInsertTransactionResult
@@ -1539,7 +1545,7 @@ object InsertOperationsInteractive {
                         isCyclicViaStep = isCyclicViaStep,
                         splitIndex = splitIndex,
                         username = username,
-                        timePartIncrementOrDecrementCommandIndicator = ConstantsNative.hourIncrementOrDecrementCommandIndicator,
+                        timePartIncrementOrDecrementCommandIndicator = ConstantsNative.HOUR_INCREMENT_OR_DECREMENT_COMMAND_INDICATOR,
                         timePartIncrementOrDecrementNoMatchAction = {
 
                             timePartIncrementOrDecrementActions(
@@ -1563,7 +1569,7 @@ object InsertOperationsInteractive {
                                 isCyclicViaStep = isCyclicViaStep,
                                 splitIndex = splitIndex,
                                 username = username,
-                                timePartIncrementOrDecrementCommandIndicator = ConstantsNative.minuteIncrementOrDecrementCommandIndicator,
+                                timePartIncrementOrDecrementCommandIndicator = ConstantsNative.MINUTE_INCREMENT_OR_DECREMENT_COMMAND_INDICATOR,
                                 timePartIncrementOrDecrementNoMatchAction = {
 
                                     timePartIncrementOrDecrementActions(
@@ -1587,7 +1593,7 @@ object InsertOperationsInteractive {
                                         isCyclicViaStep = isCyclicViaStep,
                                         splitIndex = splitIndex,
                                         username = username,
-                                        timePartIncrementOrDecrementCommandIndicator = ConstantsNative.secondIncrementOrDecrementCommandIndicator,
+                                        timePartIncrementOrDecrementCommandIndicator = ConstantsNative.SECOND_INCREMENT_OR_DECREMENT_COMMAND_INDICATOR,
                                         timePartIncrementOrDecrementNoMatchAction = {
 
                                             timePartIncrementOrDecrementActions(
@@ -1611,7 +1617,7 @@ object InsertOperationsInteractive {
                                                 isCyclicViaStep = isCyclicViaStep,
                                                 splitIndex = splitIndex,
                                                 username = username,
-                                                timePartIncrementOrDecrementCommandIndicator = ConstantsNative.dayIncrementOrDecrementCommandIndicator,
+                                                timePartIncrementOrDecrementCommandIndicator = ConstantsNative.DAY_INCREMENT_OR_DECREMENT_COMMAND_INDICATOR,
                                                 timePartIncrementOrDecrementNoMatchAction = {
 
                                                     val timePartIncrementOrDecrementMatchResult: MatchResult? =
@@ -1639,7 +1645,8 @@ object InsertOperationsInteractive {
                                                             splitIndex = splitIndex,
                                                             username = username,
                                                             chosenTransactionForSpecial = chosenTransactionForSpecial,
-                                                            chosenSpecialTransactionType = chosenSpecialTransactionType
+                                                            chosenSpecialTransactionType = chosenSpecialTransactionType,
+                                                            dotEnv = dotEnv
                                                         )
 
                                                     } else {
@@ -1672,24 +1679,29 @@ object InsertOperationsInteractive {
                                                             isDevelopmentMode = isDevelopmentMode,
                                                             isCyclicViaStep = isCyclicViaStep,
                                                             chosenTransactionForSpecial = chosenTransactionForSpecial,
-                                                            chosenSpecialTransactionType = chosenSpecialTransactionType
+                                                            chosenSpecialTransactionType = chosenSpecialTransactionType,
+                                                            dotEnv = dotEnv
                                                         )
                                                     }
                                                 },
                                                 chosenTransactionForSpecial = chosenTransactionForSpecial,
-                                                chosenSpecialTransactionType = chosenSpecialTransactionType
+                                                chosenSpecialTransactionType = chosenSpecialTransactionType,
+                                                dotEnv = dotEnv
                                             )
                                         },
                                         chosenTransactionForSpecial = chosenTransactionForSpecial,
-                                        chosenSpecialTransactionType = chosenSpecialTransactionType
+                                        chosenSpecialTransactionType = chosenSpecialTransactionType,
+                                        dotEnv = dotEnv
                                     )
                                 },
                                 chosenTransactionForSpecial = chosenTransactionForSpecial,
-                                chosenSpecialTransactionType = chosenSpecialTransactionType
+                                chosenSpecialTransactionType = chosenSpecialTransactionType,
+                                dotEnv = dotEnv
                             )
                         },
                         chosenTransactionForSpecial = chosenTransactionForSpecial,
-                        chosenSpecialTransactionType = chosenSpecialTransactionType
+                        chosenSpecialTransactionType = chosenSpecialTransactionType,
+                        dotEnv = dotEnv
                     )
                 } else {
 
@@ -1713,7 +1725,8 @@ object InsertOperationsInteractive {
                         isDevelopmentMode = isDevelopmentMode,
                         isCyclicViaStep = isCyclicViaStep,
                         chosenTransactionForSpecial = chosenTransactionForSpecial,
-                        chosenSpecialTransactionType = chosenSpecialTransactionType
+                        chosenSpecialTransactionType = chosenSpecialTransactionType,
+                        dotEnv = dotEnv
                     )
                 }
             }
@@ -1740,13 +1753,14 @@ object InsertOperationsInteractive {
         isDevelopmentMode: Boolean,
         isCyclicViaStep: Boolean,
         chosenTransactionForSpecial: TransactionResponse?,
-        chosenSpecialTransactionType: SpecialTransactionTypeModel?
+        chosenSpecialTransactionType: SpecialTransactionTypeModel?,
+        dotEnv: Dotenv
 
     ): InsertTransactionResult {
 
         var localDateTimeInText = dateTimeInText
         val timePart: MatchGroup? = timeResetCommand.groups.first()
-        if (timePart!!.value == ConstantsNative.timeResetCommandIndicator) {
+        if (timePart!!.value == ConstantsNative.TIME_RESET_COMMAND_INDICATOR) {
 
             localDateTimeInText = DateTimeUtils.resetTimeOnNormalDateTimeInTextToX(
                 dateTimeInText = dateTimeInText
@@ -1806,7 +1820,8 @@ object InsertOperationsInteractive {
             isDevelopmentMode = isDevelopmentMode,
             isCyclicViaStep = isCyclicViaStep,
             chosenTransactionForSpecial = chosenTransactionForSpecial,
-            chosenSpecialTransactionType = chosenSpecialTransactionType
+            chosenSpecialTransactionType = chosenSpecialTransactionType,
+            dotEnv = dotEnv
         )
     }
 
@@ -1832,7 +1847,8 @@ object InsertOperationsInteractive {
         timePartIncrementOrDecrementCommandIndicator: String,
         timePartIncrementOrDecrementNoMatchAction: () -> InsertTransactionResult,
         chosenTransactionForSpecial: TransactionResponse?,
-        chosenSpecialTransactionType: SpecialTransactionTypeModel?
+        chosenSpecialTransactionType: SpecialTransactionTypeModel?,
+        dotEnv: Dotenv
 
     ): InsertTransactionResult {
 
@@ -1847,7 +1863,7 @@ object InsertOperationsInteractive {
             var localDateTimeInText = dateTimeInText
             when (timePartIncrementOrDecrementCommandIndicator) {
 
-                ConstantsNative.hourIncrementOrDecrementCommandIndicator -> {
+                ConstantsNative.HOUR_INCREMENT_OR_DECREMENT_COMMAND_INDICATOR -> {
 
                     if (timePart!!.value == ("$timePartIncrementOrDecrementCommandIndicator+")) {
 
@@ -1883,7 +1899,7 @@ object InsertOperationsInteractive {
                     }
                 }
 
-                ConstantsNative.minuteIncrementOrDecrementCommandIndicator -> {
+                ConstantsNative.MINUTE_INCREMENT_OR_DECREMENT_COMMAND_INDICATOR -> {
 
                     if (timePart!!.value == ("$timePartIncrementOrDecrementCommandIndicator+")) {
 
@@ -1919,7 +1935,7 @@ object InsertOperationsInteractive {
                     }
                 }
 
-                ConstantsNative.secondIncrementOrDecrementCommandIndicator -> {
+                ConstantsNative.SECOND_INCREMENT_OR_DECREMENT_COMMAND_INDICATOR -> {
 
                     if (timePart!!.value == ("$timePartIncrementOrDecrementCommandIndicator+")) {
 
@@ -1955,7 +1971,7 @@ object InsertOperationsInteractive {
                     }
                 }
 
-                ConstantsNative.dayIncrementOrDecrementCommandIndicator -> {
+                ConstantsNative.DAY_INCREMENT_OR_DECREMENT_COMMAND_INDICATOR -> {
 
                     localDateTimeInText = handleDateIncrementOrDecrementPattern(
 
@@ -1984,7 +2000,8 @@ object InsertOperationsInteractive {
                 isDevelopmentMode = isDevelopmentMode,
                 isCyclicViaStep = isCyclicViaStep,
                 chosenTransactionForSpecial = chosenTransactionForSpecial,
-                chosenSpecialTransactionType = chosenSpecialTransactionType
+                chosenSpecialTransactionType = chosenSpecialTransactionType,
+                dotEnv = dotEnv
             )
         }
     }
@@ -1998,8 +2015,8 @@ object InsertOperationsInteractive {
 
     ): String {
 
-        var localDateTimeInText = dateTimeInText
-        if (timePart!!.value == ("${ConstantsNative.dayIncrementOrDecrementCommandIndicator}+")) {
+        var localDateTimeInText: String = dateTimeInText
+        if (timePart!!.value == ("${ConstantsNative.DAY_INCREMENT_OR_DECREMENT_COMMAND_INDICATOR}+")) {
 
             localDateTimeInText = DateTimeUtils.addDaysToNormalDateTimeInText(
 
@@ -2007,7 +2024,7 @@ object InsertOperationsInteractive {
                 days = 1
             )
 
-        } else if (timePart.value == ("${ConstantsNative.dayIncrementOrDecrementCommandIndicator}-")) {
+        } else if (timePart.value == ("${ConstantsNative.DAY_INCREMENT_OR_DECREMENT_COMMAND_INDICATOR}-")) {
 
             localDateTimeInText = DateTimeUtils.subtractDaysFromNormalDateTimeInText(
 
@@ -2053,7 +2070,8 @@ object InsertOperationsInteractive {
         splitIndex: UInt,
         username: String,
         chosenTransactionForSpecial: TransactionResponse?,
-        chosenSpecialTransactionType: SpecialTransactionTypeModel?
+        chosenSpecialTransactionType: SpecialTransactionTypeModel?,
+        dotEnv: Dotenv
 
     ): InsertTransactionResult {
 
@@ -2100,7 +2118,7 @@ object InsertOperationsInteractive {
 
                                 else -> {
 
-                                    InteractiveUtils.invalidOptionMessage()
+                                    ErrorUtilsInteractive.printInvalidOptionMessage()
                                 }
                             }
                         } while (true)
@@ -2130,7 +2148,7 @@ object InsertOperationsInteractive {
 
                                 else -> {
 
-                                    InteractiveUtils.invalidOptionMessage()
+                                    ErrorUtilsInteractive.printInvalidOptionMessage()
                                 }
                             }
                         } while (true)
@@ -2194,7 +2212,7 @@ object InsertOperationsInteractive {
 
                                     val optionsList: List<String> = patternQuestion.question.split('/')
                                     answer = optionsList[
-                                        (ListUtils.getValidIndexWithSelectionPromptForNonCollections(
+                                        (ListUtilsInteractive.getValidIndexWithSelectionPromptForNonCollections(
 
                                             list = optionsList,
                                             itemSpecification = "${patternQuestion.question}?",
@@ -2227,18 +2245,19 @@ object InsertOperationsInteractive {
 
                                     ).split('/')
 
-                                    val position: Int = ListUtils.getValidIndexWithSelectionPromptForNonCollections(
+                                    val position: Int =
+                                        ListUtilsInteractive.getValidIndexWithSelectionPromptForNonCollections(
 
-                                        list = optionsList,
-                                        itemSpecification = "${
-                                            patternQuestion.question.substring(
-                                                0,
-                                                patternQuestion.question.indexOf('{')
-                                            )
-                                        } __________________",
-                                        items = ListUtils.indexedListTextFromList(list = optionsList)
+                                            list = optionsList,
+                                            itemSpecification = "${
+                                                patternQuestion.question.substring(
+                                                    0,
+                                                    patternQuestion.question.indexOf('{')
+                                                )
+                                            } __________________",
+                                            items = ListUtils.indexedListTextFromList(list = optionsList)
 
-                                    ).toInt() - 1
+                                        ).toInt() - 1
 
                                     if (chosenSpecialTransactionType.isRepeatingTransaction) {
 
@@ -2256,7 +2275,7 @@ object InsertOperationsInteractive {
 
                     else -> {
 
-                        InteractiveUtils.invalidOptionMessage()
+                        ErrorUtilsInteractive.printInvalidOptionMessage()
                     }
                 }
             }
@@ -2267,31 +2286,136 @@ object InsertOperationsInteractive {
 
             if (TransactionForBajajUtils.bajajTransactionTypes.contains(transactionType)) {
 
-                menuItems = listOf<String>(
-                    "$transactionType [${toAccount.name} -> ${fromAccount.name}] - Transactions",
-                    "==================================================",
-                )
+                if (transactionType.value != null) {
 
-                if (TransactionForBajajCoinsUtils.bajajCoinTransactionTypes.contains(transactionType)) {
+                    menuItems = listOf(
+                        "$transactionType [${toAccount.name} -> ${fromAccount.name}] - Transactions",
+                        "==================================================",
+                    )
 
-                    val generateTransactionsForBajajCoinsResult: IsOkModel<List<TransactionModel>> =
-                        InsertTransactionForBajajCoins.generateTransactionsForBajajCoins(
+                    var upToValueResult: IsOkModel<UInt> = SuccessWithoutDataBasedOnIsOkModel()
+                    if (TransactionForBajajUtils.bajajTransactionTypesForUpToDiscountType.contains(transactionType)) {
 
-                            isSourceTransactionPresent = transactionType == TransactionTypeEnum.BAJAJ_COINS,
-                            sourceAccount = fromAccount,
-                            secondPartyAccount = toAccount,
-                            eventDateTimeInText = dateTimeInText,
-                            dotenv = App.dotEnv,
-                            userId = userId,
-                            isConsoleMode = true,
-                            isDevelopmentMode = isDevelopmentMode
+                        upToValueResult = InputUtilsInteractive.getValidUnsignedIntOrBackWithPrompt(
+
+                            dataSpecification = "upToValue"
                         )
-                    if (generateTransactionsForBajajCoinsResult.isOK) {
+                    }
+                    if (upToValueResult.isOK) {
 
-                        transactions = generateTransactionsForBajajCoinsResult.data!!
+                        if (TransactionForBajajCoinsUtils.bajajCoinTransactionTypes.contains(transactionType)) {
+
+                            val generateTransactionsForBajajCoinsResult: IsOkModel<List<TransactionModel>> =
+                                InsertTransactionForBajajCoins.generateTransactionsForBajajCoins(
+
+                                    isFundingTransactionPresent = transactionType == TransactionTypeEnum.BAJAJ_COINS_FLAT,
+                                    sourceAccount = fromAccount,
+                                    secondPartyAccount = toAccount,
+                                    eventDateTimeInText = dateTimeInText,
+                                    dotEnv = dotEnv,
+                                    userId = userId,
+                                    isConsoleMode = true,
+                                    isDevelopmentMode = isDevelopmentMode,
+                                    isBalanceCheckByPassed = transactionType == TransactionTypeEnum.BAJAJ_COINS_FLAT_WITHOUT_BALANCE_CHECK,
+                                    discountType = transactionType.value!!,
+                                    upToValue = upToValueResult.data
+                                )
+                            if (generateTransactionsForBajajCoinsResult.isOK) {
+
+                                transactions = generateTransactionsForBajajCoinsResult.data!!
+
+                            } else {
+
+                                ErrorUtilsInteractive.printErrorMessage(
+                                    dataSpecification = "generateTransactionsForBajajCoinsResult",
+                                    message = generateTransactionsForBajajCoinsResult.error!!
+                                )
+                                return TransactionUtils.getFailedInsertTransactionResult(
+
+                                    dateTimeInText = dateTimeInText,
+                                    transactionParticulars = localTransactionParticulars,
+                                    transactionAmount = localTransactionAmount,
+                                    fromAccount = fromAccount,
+                                    viaAccount = viaAccount,
+                                    toAccount = toAccount
+                                )
+                            }
+
+                        } else if (TransactionForBajajCashbackUtils.bajajCashbackTransactionTypes.contains(
+                                transactionType
+                            )
+                        ) {
+
+                            val generateTransactionsForBajajCashbackResult: IsOkModel<List<TransactionModel>> =
+                                InsertTransactionForBajajCashback.generateTransactionsForBajajSubWallet(
+
+                                    isFundingTransactionPresent = transactionType == TransactionTypeEnum.BAJAJ_CASHBACK_FLAT,
+                                    sourceAccount = fromAccount,
+                                    secondPartyAccount = toAccount,
+                                    eventDateTimeInText = dateTimeInText,
+                                    dotEnv = dotEnv,
+                                    userId = userId,
+                                    isConsoleMode = true,
+                                    isDevelopmentMode = isDevelopmentMode,
+                                    isBalanceCheckByPassed = transactionType == TransactionTypeEnum.BAJAJ_CASHBACK_FLAT_WITHOUT_BALANCE_CHECK,
+                                    discountType = transactionType.value!!,
+                                    upToValue = upToValueResult.data
+                                )
+                            if (generateTransactionsForBajajCashbackResult.isOK) {
+
+                                transactions = generateTransactionsForBajajCashbackResult.data!!
+
+                            } else {
+
+                                ErrorUtilsInteractive.printErrorMessage(
+
+                                    dataSpecification = "generateTransactionsForBajajCashbackResult",
+                                    message = generateTransactionsForBajajCashbackResult.error!!
+                                )
+                                return TransactionUtils.getFailedInsertTransactionResult(
+
+                                    dateTimeInText = dateTimeInText,
+                                    transactionParticulars = localTransactionParticulars,
+                                    transactionAmount = localTransactionAmount,
+                                    fromAccount = fromAccount,
+                                    viaAccount = viaAccount,
+                                    toAccount = toAccount
+                                )
+                            }
+                        }
+
+                        val userTransactionsToTextFromListForLedgerResult: IsOkModel<String> =
+                            TransactionUtilsInteractive.userTransactionsToTextFromListForLedger(
+
+                                transactions = TransactionUtils.convertTransactionModelListToToTransactionListForLedger(
+
+                                    transactions = transactions
+                                ),
+                                isDevelopmentMode = isDevelopmentMode
+                            )
+                        if (userTransactionsToTextFromListForLedgerResult.isOK) {
+
+                            menuItems = menuItems + listOf(
+
+                                element = userTransactionsToTextFromListForLedgerResult.data!!
+                            )
+
+                        } else {
+
+                            TransactionUtilsInteractive.printUserTransactionsToTextFromListForLedgerError(
+
+                                dataSpecification = "userTransactionsToTextFromListForLedger 2",
+                                userTransactionsToTextFromListForLedgerInstance = userTransactionsToTextFromListForLedgerResult
+                            )
+                        }
 
                     } else {
 
+                        ErrorUtilsInteractive.printErrorMessage(
+
+                            dataSpecification = "upToValueResult",
+                            message = upToValueResult.error
+                        )
                         return TransactionUtils.getFailedInsertTransactionResult(
 
                             dateTimeInText = dateTimeInText,
@@ -2302,83 +2426,38 @@ object InsertOperationsInteractive {
                             toAccount = toAccount
                         )
                     }
-                } else if (TransactionForBajajWalletUtils.bajajWalletTransactionTypes.contains(transactionType)) {
-
-                    val generateTransactionsForBajajSubWalletResult: IsOkModel<List<TransactionModel>> =
-                        InsertTransactionForBajajSubWallet.generateTransactionsForBajajSubWallet(
-
-                            isFundingTransactionPresent = transactionType == TransactionTypeEnum.BAJAJ_SUB_WALLET,
-                            sourceAccount = fromAccount,
-                            secondPartyAccount = toAccount,
-                            eventDateTimeInText = dateTimeInText,
-                            dotenv = App.dotEnv,
-                            userId = userId,
-                            isConsoleMode = true,
-                            isDevelopmentMode = isDevelopmentMode
-                        )
-                    if (generateTransactionsForBajajSubWalletResult.isOK) {
-
-                        transactions = generateTransactionsForBajajSubWalletResult.data!!
-
-                    } else {
-
-                        InteractiveUtils.printErrorMessage(
-                            dataSpecification = "generateTransactionsForBajajSubWalletResult",
-                            message = generateTransactionsForBajajSubWalletResult.error!!
-                        )
-                        return TransactionUtils.getFailedInsertTransactionResult(
-
-                            dateTimeInText = dateTimeInText,
-                            transactionParticulars = localTransactionParticulars,
-                            transactionAmount = localTransactionAmount,
-                            fromAccount = fromAccount,
-                            viaAccount = viaAccount,
-                            toAccount = toAccount
-                        )
-                    }
-                }
-
-                val userTransactionsToTextFromListForLedgerResult: IsOkModel<String> =
-                    TransactionUtils.userTransactionsToTextFromListForLedger(
-
-                        transactions = TransactionUtils.convertTransactionModelListToToTransactionListForLedger(
-                            transactions = transactions
-                        ),
-                        isDevelopmentMode = isDevelopmentMode
-                    )
-                if (userTransactionsToTextFromListForLedgerResult.isOK) {
-
-                    menuItems = menuItems + listOf<String>(
-                        element = userTransactionsToTextFromListForLedgerResult.data!!
-                    )
-
                 } else {
 
-                    TransactionUtils.printUserTransactionsToTextFromListForLedgerError(
+                    ErrorUtilsInteractive.printErrorMessage(dataSpecification = "discountType")
+                    return TransactionUtils.getFailedInsertTransactionResult(
 
-                        dataSpecification = "userTransactionsToTextFromListForLedger 2",
-                        userTransactionsToTextFromListForLedgerInstance = userTransactionsToTextFromListForLedgerResult
+                        dateTimeInText = dateTimeInText,
+                        transactionParticulars = localTransactionParticulars,
+                        transactionAmount = localTransactionAmount,
+                        fromAccount = fromAccount,
+                        viaAccount = viaAccount,
+                        toAccount = toAccount
                     )
                 }
             } else {
 
-                menuItems = listOf<String>(
+                menuItems = listOf(
                     "\nTime - $dateTimeInText",
                     "Withdraw Account - ${fromAccount.id} : ${fromAccount.fullName}"
                 )
                 if ((transactionType == TransactionTypeEnum.VIA) || (transactionType == TransactionTypeEnum.CYCLIC_VIA)) {
                     menuItems = menuItems + "Intermediate Account - ${viaAccount.id} : ${viaAccount.fullName}"
                 }
-                menuItems = menuItems + listOf<String>(
+                menuItems = menuItems + listOf(
                     "Deposit Account - ${toAccount.id} : ${toAccount.fullName}",
                     "Particulars - $localTransactionParticulars",
                     "Amount - $localTransactionAmount"
                 )
             }
 
-            menuItems = menuItems + listOf<String>(
+            menuItems = menuItems + listOf(
                 "\nCorrect ? (Y/N), " +
-                        (if (transactionType != TransactionTypeEnum.BAJAJ_COINS)
+                        (if (transactionType != TransactionTypeEnum.BAJAJ_COINS_FLAT)
                             "Enter " +
                                     (if ((transactionType == TransactionTypeEnum.VIA) || (transactionType == TransactionTypeEnum.CYCLIC_VIA))
                                         "Ex12 to exchange From & Via A/Cs, Ex23 to exchange Via & To A/Cs, Ex13 to exchange From & To A/Cs"
@@ -2424,7 +2503,7 @@ object InsertOperationsInteractive {
                                     )
                                 }
 
-                                TransactionTypeEnum.VIA, TransactionTypeEnum.TWO_WAY, TransactionTypeEnum.CYCLIC_VIA, TransactionTypeEnum.SPECIAL, TransactionTypeEnum.BAJAJ_COINS, TransactionTypeEnum.BAJAJ_COINS_WITHOUT_SOURCE, TransactionTypeEnum.BAJAJ_SUB_WALLET, TransactionTypeEnum.BAJAJ_SUB_WALLET_WITHOUT_SOURCE -> ToDoUtils.showTodo()
+                                else -> ToDoUtilsInteractive.showTodo()
                             }
 
                         } else if (isTwoWayStep) {
@@ -2548,7 +2627,7 @@ object InsertOperationsInteractive {
                                     )
                                 }
 
-                                TransactionTypeEnum.SPECIAL, TransactionTypeEnum.BAJAJ_COINS, TransactionTypeEnum.BAJAJ_COINS_WITHOUT_SOURCE, TransactionTypeEnum.BAJAJ_SUB_WALLET, TransactionTypeEnum.BAJAJ_SUB_WALLET_WITHOUT_SOURCE -> ToDoUtils.showTodo()
+                                else -> ToDoUtilsInteractive.showTodo()
                             }
                         }
 
@@ -2584,7 +2663,10 @@ object InsertOperationsInteractive {
                         return InsertTransactionResult(
 
                             isSuccess = true,
-                            dateTimeInText = dateTimeInText,
+                            dateTimeInText = DateTimeUtils.add5MinutesToNormalDateTimeInText(
+
+                                dateTimeInText = transactions.last().eventDateTimeInText
+                            ),
                             transactionParticulars = localTransactionParticulars,
                             transactionAmount = localTransactionAmount,
                             fromAccount = fromAccount,
@@ -2614,12 +2696,13 @@ object InsertOperationsInteractive {
                     isDevelopmentMode = isDevelopmentMode,
                     isCyclicViaStep = isCyclicViaStep,
                     chosenTransactionForSpecial = chosenTransactionForSpecial,
-                    chosenSpecialTransactionType = chosenSpecialTransactionType
+                    chosenSpecialTransactionType = chosenSpecialTransactionType,
+                    dotEnv = dotEnv
                 )
 
                 "Ex" -> {
 
-                    if (transactionType != TransactionTypeEnum.BAJAJ_COINS) {
+                    if (transactionType != TransactionTypeEnum.BAJAJ_COINS_FLAT) {
 
                         if (transactionType == TransactionTypeEnum.NORMAL) {
 
@@ -2641,22 +2724,23 @@ object InsertOperationsInteractive {
                                 isDevelopmentMode = isDevelopmentMode,
                                 isCyclicViaStep = isCyclicViaStep,
                                 chosenTransactionForSpecial = chosenTransactionForSpecial,
-                                chosenSpecialTransactionType = chosenSpecialTransactionType
+                                chosenSpecialTransactionType = chosenSpecialTransactionType,
+                                dotEnv = dotEnv
                             )
 
                         } else {
 
-                            InteractiveUtils.invalidOptionMessage()
+                            ErrorUtilsInteractive.printInvalidOptionMessage()
                         }
                     } else {
 
-                        InteractiveUtils.invalidOptionMessage()
+                        ErrorUtilsInteractive.printInvalidOptionMessage()
                     }
                 }
 
                 "Ex13" -> {
 
-                    if (transactionType != TransactionTypeEnum.BAJAJ_COINS) {
+                    if (transactionType != TransactionTypeEnum.BAJAJ_COINS_FLAT) {
 
                         if ((transactionType == TransactionTypeEnum.VIA) || (transactionType == TransactionTypeEnum.CYCLIC_VIA)) {
 
@@ -2679,22 +2763,23 @@ object InsertOperationsInteractive {
                                 isDevelopmentMode = isDevelopmentMode,
                                 isCyclicViaStep = isCyclicViaStep,
                                 chosenTransactionForSpecial = chosenTransactionForSpecial,
-                                chosenSpecialTransactionType = chosenSpecialTransactionType
+                                chosenSpecialTransactionType = chosenSpecialTransactionType,
+                                dotEnv = dotEnv
                             )
 
                         } else {
 
-                            InteractiveUtils.invalidOptionMessage()
+                            ErrorUtilsInteractive.printInvalidOptionMessage()
                         }
                     } else {
 
-                        InteractiveUtils.invalidOptionMessage()
+                        ErrorUtilsInteractive.printInvalidOptionMessage()
                     }
                 }
 
                 "Ex12" -> {
 
-                    if (transactionType != TransactionTypeEnum.BAJAJ_COINS) {
+                    if (transactionType != TransactionTypeEnum.BAJAJ_COINS_FLAT) {
 
                         if ((transactionType == TransactionTypeEnum.VIA) || (transactionType == TransactionTypeEnum.CYCLIC_VIA)) {
 
@@ -2717,21 +2802,22 @@ object InsertOperationsInteractive {
                                 isDevelopmentMode = isDevelopmentMode,
                                 isCyclicViaStep = isCyclicViaStep,
                                 chosenTransactionForSpecial = chosenTransactionForSpecial,
-                                chosenSpecialTransactionType = chosenSpecialTransactionType
+                                chosenSpecialTransactionType = chosenSpecialTransactionType,
+                                dotEnv = dotEnv
                             )
                         } else {
 
-                            InteractiveUtils.invalidOptionMessage()
+                            ErrorUtilsInteractive.printInvalidOptionMessage()
                         }
                     } else {
 
-                        InteractiveUtils.invalidOptionMessage()
+                        ErrorUtilsInteractive.printInvalidOptionMessage()
                     }
                 }
 
                 "Ex23" -> {
 
-                    if (transactionType != TransactionTypeEnum.BAJAJ_COINS) {
+                    if (transactionType != TransactionTypeEnum.BAJAJ_COINS_FLAT) {
 
                         if ((transactionType == TransactionTypeEnum.VIA) || (transactionType == TransactionTypeEnum.CYCLIC_VIA)) {
 
@@ -2754,15 +2840,16 @@ object InsertOperationsInteractive {
                                 isDevelopmentMode = isDevelopmentMode,
                                 isCyclicViaStep = isCyclicViaStep,
                                 chosenTransactionForSpecial = chosenTransactionForSpecial,
-                                chosenSpecialTransactionType = chosenSpecialTransactionType
+                                chosenSpecialTransactionType = chosenSpecialTransactionType,
+                                dotEnv = dotEnv
                             )
                         } else {
 
-                            InteractiveUtils.invalidOptionMessage()
+                            ErrorUtilsInteractive.printInvalidOptionMessage()
                         }
                     } else {
 
-                        InteractiveUtils.invalidOptionMessage()
+                        ErrorUtilsInteractive.printInvalidOptionMessage()
                     }
                 }
 
@@ -2779,7 +2866,7 @@ object InsertOperationsInteractive {
                     )
                 }
 
-                else -> InteractiveUtils.invalidOptionMessage()
+                else -> ErrorUtilsInteractive.printInvalidOptionMessage()
             }
         } while (true)
     }
@@ -2812,7 +2899,8 @@ object InsertOperationsInteractive {
         isDevelopmentMode: Boolean,
         isCyclicViaStep: Boolean,
         chosenTransactionForSpecial: TransactionResponse?,
-        chosenSpecialTransactionType: SpecialTransactionTypeModel?
+        chosenSpecialTransactionType: SpecialTransactionTypeModel?,
+        dotEnv: Dotenv
 
     ): InsertTransactionResult {
 
@@ -2838,7 +2926,8 @@ object InsertOperationsInteractive {
                     isDevelopmentMode = isDevelopmentMode,
                     isCyclicViaStep = isCyclicViaStep,
                     chosenTransactionForSpecial = chosenTransactionForSpecial,
-                    chosenSpecialTransactionType = chosenSpecialTransactionType
+                    chosenSpecialTransactionType = chosenSpecialTransactionType,
+                    dotEnv = dotEnv
                 )
             }
 
@@ -2862,7 +2951,8 @@ object InsertOperationsInteractive {
                     isDevelopmentMode = isDevelopmentMode,
                     isCyclicViaStep = isCyclicViaStep,
                     chosenTransactionForSpecial = chosenTransactionForSpecial,
-                    chosenSpecialTransactionType = chosenSpecialTransactionType
+                    chosenSpecialTransactionType = chosenSpecialTransactionType,
+                    dotEnv = dotEnv
                 )
             }
 
@@ -2886,7 +2976,8 @@ object InsertOperationsInteractive {
                     isDevelopmentMode = isDevelopmentMode,
                     isCyclicViaStep = isCyclicViaStep,
                     chosenTransactionForSpecial = chosenTransactionForSpecial,
-                    chosenSpecialTransactionType = chosenSpecialTransactionType
+                    chosenSpecialTransactionType = chosenSpecialTransactionType,
+                    dotEnv = dotEnv
                 )
             }
         }
@@ -2912,7 +3003,7 @@ object InsertOperationsInteractive {
             },
             transactionManipulationFailureActions = { data: String ->
 
-                ApiUtilsCommon.printServerExecutionErrorMessage(data)
+                ApiUtilsInteractiveCommon.printServerExecutionErrorMessage(data)
                 transactionManipulationFailureActions.invoke(data)
             },
             isConsoleMode = true,
@@ -2949,9 +3040,9 @@ object InsertOperationsInteractive {
             transactionManipulationSuccessActions = fun() {
 
                 val readFrequencyOfAccountsFileResult: IsOkModel<FrequencyOfAccountsModel> =
-                    JsonFileUtils.readJsonFile(
+                    JsonFileUtilsInteractive.readJsonFile(
 
-                        fileName = ConstantsNative.frequencyOfAccountsFileName,
+                        fileName = ConstantsNative.FREQUENCY_OF_ACCOUNTS_FILE_NAME,
                         isDevelopmentMode = isDevelopmentMode
                     )
 
@@ -2996,14 +3087,14 @@ object InsertOperationsInteractive {
                     }
                     JsonFileUtils.writeJsonFile(
 
-                        fileName = ConstantsNative.frequencyOfAccountsFileName,
+                        fileName = ConstantsNative.FREQUENCY_OF_ACCOUNTS_FILE_NAME,
                         data = frequencyOfAccounts
                     )
                 } else {
 
                     JsonFileUtils.writeJsonFile(
 
-                        fileName = ConstantsNative.frequencyOfAccountsFileName,
+                        fileName = ConstantsNative.FREQUENCY_OF_ACCOUNTS_FILE_NAME,
                         data = FrequencyOfAccountsModel(
 
                             users = listOf(
@@ -3071,18 +3162,4 @@ object InsertOperationsInteractive {
             isDevelopmentMode = isDevelopmentMode
         )
     }
-
-    private fun getEnvironmentVariableValueForInsertOperation(
-
-        environmentVariableName: String,
-        environmentVariableFormalName: String,
-        dotenv: Dotenv
-
-    ): EnvironmentVariableForWholeNumber =
-        EnvironmentFileOperations.getEnvironmentVariableValueForWholeNumberInteractive(
-
-            dotenv = dotenv,
-            environmentVariableName = environmentVariableName,
-            environmentVariableFormalName = environmentVariableFormalName
-        )
 }

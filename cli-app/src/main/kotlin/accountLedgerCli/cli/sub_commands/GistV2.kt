@@ -4,10 +4,11 @@ import accountLedgerCli.enums.CommandLineApiMethodGistArgumentsEnum
 import accountLedgerCli.enums.CommandLineApiMethodsEnum
 import account.ledger.library.enums.EnvironmentFileEntryEnum
 import account_ledger_library.constants.ConstantsNative
-import account_ledger_library.utils.GistUtils
-import common.utils.library.cli.sub_commands.SubCommandWithUsernameAndPasswordAsArguments
+import account_ledger_library.utils.GistUtilsInteractiveNative
+import common.utils.library.cli.sub_commands.SubCommandEnhancedWithUsernameAndPasswordAsArguments
 import common.utils.library.enums.EnvironmentFileEntryCommonEnum
 import common.utils.library.utils.ApiUtilsCommon
+import common.utils.library.utils.ApiUtilsInteractiveCommon
 import io.github.cdimascio.dotenv.Dotenv
 
 class GistV2(
@@ -15,7 +16,7 @@ class GistV2(
     override val isDevelopmentMode: Boolean,
     override val dotEnv: Dotenv
 ) :
-    SubCommandWithUsernameAndPasswordAsArguments(
+    SubCommandEnhancedWithUsernameAndPasswordAsArguments(
 
         name = CommandLineApiMethodsEnum.GistV2.name,
         actionDescription = "Merge properly formatted Gist Account Ledger Entries to Account Ledger Entries of the Specified User (Version 2), Environment file may exist & contains missing arguments",
@@ -50,7 +51,7 @@ class GistV2(
             val environmentGistId = dotEnv[EnvironmentFileEntryEnum.GIST_ID.name]
             if (environmentGistId.isNullOrEmpty()) {
 
-                ApiUtilsCommon.printMissingArgumentMessageForApi(argumentSummary = "Gist ID")
+                ApiUtilsInteractiveCommon.printMissingArgumentMessageForApi(argumentSummary = "Gist ID")
 
             } else {
 
@@ -59,15 +60,15 @@ class GistV2(
                     val environmentUserId = dotEnv[EnvironmentFileEntryCommonEnum.USER_ID.name]
                     if (environmentUserId.isNullOrEmpty()) {
 
-                        ApiUtilsCommon.printMissingArgumentMessageForApi(argumentSummary = "User ID")
+                        ApiUtilsInteractiveCommon.printMissingArgumentMessageForApi(argumentSummary = "User ID")
 
                     } else {
 
-                        GistUtils().processGistIdForTextData(
+                        GistUtilsInteractiveNative().processGistIdForTextData(
                             userName = usernameLocal,
                             userId = environmentUserId.toUInt(),
                             gitHubAccessToken = dotEnv[EnvironmentFileEntryEnum.GITHUB_TOKEN.name]
-                                ?: ConstantsNative.defaultValueForStringEnvironmentVariables,
+                                ?: ConstantsNative.DEFAULT_VALUE_FOR_STRING_ENVIRONMENT_VARIABLES,
                             gistId = environmentGistId,
                             isDevelopmentMode = isDevelopmentMode
                         )

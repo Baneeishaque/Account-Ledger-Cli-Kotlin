@@ -8,7 +8,8 @@ import account.ledger.library.models.SpecialTransactionTypeModel
 import account.ledger.library.operations.CheckingOperations
 import account.ledger.library.utils.TransactionUtils
 import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithContinuePrompt
-import common.utils.library.utils.InteractiveUtils
+import common.utils.library.utils.ErrorUtilsInteractive
+import io.github.cdimascio.dotenv.Dotenv
 
 internal fun transactionContinueCheck(
 
@@ -24,7 +25,8 @@ internal fun transactionContinueCheck(
     isConsoleMode: Boolean,
     chosenTransactionForSpecial: TransactionResponse? = null,
     chosenSpecialTransactionType: SpecialTransactionTypeModel?,
-    isDevelopmentMode: Boolean
+    isDevelopmentMode: Boolean,
+    dotEnv: Dotenv
 
 ): InsertTransactionResult {
 
@@ -66,7 +68,8 @@ internal fun transactionContinueCheck(
                     viaAccountMissingActions = { println("Please choose via. account...") },
                     addTransactionOperation = InsertOperationsInteractive::insertTransactionVariantsInteractive,
                     chosenTransactionForSpecial = chosenTransactionForSpecial,
-                    chosenSpecialTransactionType = chosenSpecialTransactionType
+                    chosenSpecialTransactionType = chosenSpecialTransactionType,
+                    dotEnv = dotEnv
                 )
             }
 
@@ -82,7 +85,7 @@ internal fun transactionContinueCheck(
                 )
             }
 
-            else -> InteractiveUtils.invalidOptionMessage()
+            else -> ErrorUtilsInteractive.printInvalidOptionMessage()
         }
     } while (true)
 }

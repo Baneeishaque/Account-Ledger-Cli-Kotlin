@@ -4,11 +4,11 @@ import account.ledger.library.enums.AccountTypeEnum
 import account.ledger.library.enums.HandleAccountsApiResponseResult
 import account.ledger.library.enums.TransactionTypeEnum
 import account.ledger.library.operations.ServerOperations
-import account.ledger.library.utils.ApiUtils
+import account.ledger.library.utils.ApiUtilsInteractive
 import accountLedgerCli.cli.App.Companion.commandLinePrintMenuWithBackPrompt
 import account_ledger_library.constants.ConstantsNative
 import common.utils.library.utils.InputUtilsInteractive
-import common.utils.library.utils.InteractiveUtils
+import common.utils.library.utils.ErrorUtilsInteractive
 
 object InputOperations {
 
@@ -21,7 +21,7 @@ object InputOperations {
 
     ): HandleAccountsApiResponseResult {
 
-        return HandleResponsesInteractive.handleAccountsApiResponse(
+        return HandleResponsesInteractiveCli.handleAccountsApiResponse(
 
             apiResponse = ServerOperations.getAccounts(
 
@@ -43,9 +43,9 @@ object InputOperations {
 
     ): HandleAccountsApiResponseResult {
 
-        return HandleResponsesInteractive.handleAccountsApiResponse(
+        return HandleResponsesInteractiveCli.handleAccountsApiResponse(
 
-            apiResponse = ApiUtils.getAccountsFull(
+            apiResponse = ApiUtilsInteractive.getAccountsFull(
 
                 userId = userId,
                 isConsoleMode = isConsoleMode,
@@ -65,7 +65,7 @@ object InputOperations {
 
     ): HandleAccountsApiResponseResult {
 
-        return HandleResponsesInteractive.handleAccountsApiResponse(
+        return HandleResponsesInteractiveCli.handleAccountsApiResponse(
 
             apiResponse = ServerOperations.getAccounts(
 
@@ -85,9 +85,9 @@ object InputOperations {
         isDevelopmentMode: Boolean
     ): HandleAccountsApiResponseResult {
 
-        return HandleResponsesInteractive.handleAccountsApiResponse(
+        return HandleResponsesInteractiveCli.handleAccountsApiResponse(
 
-            apiResponse = ApiUtils.getAccountsFull(
+            apiResponse = ApiUtilsInteractive.getAccountsFull(
 
                 userId = userId,
                 isConsoleMode = isConsoleMode,
@@ -107,7 +107,7 @@ object InputOperations {
 
     ): HandleAccountsApiResponseResult {
 
-        return HandleResponsesInteractive.handleAccountsApiResponse(
+        return HandleResponsesInteractiveCli.handleAccountsApiResponse(
 
             apiResponse = ServerOperations.getAccounts(
 
@@ -129,9 +129,9 @@ object InputOperations {
 
     ): HandleAccountsApiResponseResult {
 
-        return HandleResponsesInteractive.handleAccountsApiResponse(
+        return HandleResponsesInteractiveCli.handleAccountsApiResponse(
 
-            apiResponse = ApiUtils.getAccountsFull(
+            apiResponse = ApiUtilsInteractive.getAccountsFull(
 
                 userId = userId,
                 isConsoleMode = isConsoleMode,
@@ -168,7 +168,7 @@ object InputOperations {
                         "\tEx to exchange From & To A/Cs,"
                     }) +
 
-                    (if (isNotFromSplitTransaction && ((transactionType != TransactionTypeEnum.SPECIAL) && (transactionType != TransactionTypeEnum.BAJAJ_COINS))) "\tS to Split Transactions," else "") +
+                    (if (isNotFromSplitTransaction && ((transactionType != TransactionTypeEnum.SPECIAL) && (transactionType != TransactionTypeEnum.BAJAJ_COINS_FLAT))) "\tS to Split Transactions," else "") +
 
                     "\tTr{0-23}*:*{0-59}*:*{0-59}* to Reset Time to {0-23}*:*{0-59}*:*{0-59}* ," +
 
@@ -312,7 +312,7 @@ object InputOperations {
 
     ): String {
 
-        InteractiveUtils.invalidOptionMessage()
+        ErrorUtilsInteractive.printInvalidOptionMessage()
         return enterDateWithTime(
 
             promptCommands = promptCommands,
