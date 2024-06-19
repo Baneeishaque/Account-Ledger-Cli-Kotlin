@@ -38,7 +38,7 @@ steps:
       targetType: 'inline'
       script: | 
         cd cli-app/build/distributions
-        tar -xzvf cli-app.tar
+        tar -xvf cli-app.tar
         mv cli-app Account-Ledger-Cli
         cd Account-Ledger-Cli/bin
         mv cli-app Account-Ledger-Cli
