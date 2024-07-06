@@ -12,6 +12,7 @@ import common.utils.library.utils.ApiUtilsInteractiveCommon
 import io.github.cdimascio.dotenv.Dotenv
 
 class Gist(
+
     override val isDevelopmentMode: Boolean,
     override val dotEnv: Dotenv
 ) :
