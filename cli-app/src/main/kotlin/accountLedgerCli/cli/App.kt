@@ -222,6 +222,10 @@ class App {
                     GistV3(
                         isDevelopmentMode = isDevelopmentMode,
                         dotEnv = dotEnv
+                    ),
+                    GistV3ToV4(
+                        isDevelopmentMode = isDevelopmentMode,
+                        dotEnv = dotEnv
                     )
                 )
                 parser.parse(args = args)
