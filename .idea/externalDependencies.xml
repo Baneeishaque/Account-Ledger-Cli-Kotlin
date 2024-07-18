@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ExternalDependencies">
+    <plugin id="Batch Scripts Support" />
+    <plugin id="String Manipulation" />
+    <plugin id="com.intellij.database" />
+    <plugin id="com.intellij.jsonpath" />
+    <plugin id="com.intellij.plugin.adernov.powershell" />
+    <plugin id="com.jetbrains.restClient" />
+    <plugin id="ru.adelf.idea.dotenv" />
+  </component>
+</project>
