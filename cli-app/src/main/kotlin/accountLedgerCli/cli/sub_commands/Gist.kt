@@ -15,5 +15,5 @@ class Gist(
     actionDescription = "Merge properly formatted Gist Account Ledger Entries to Account Ledger Entries of the Specified User, Environment file may exist & contains missing arguments",
     isDevelopmentMode = isDevelopmentMode,
     dotEnv = dotEnv,
-    process = GistUtilsInteractiveNative()::processGistIdForData
+    process = GistUtilsInteractiveNative()::processGistIdForDataV2
 )

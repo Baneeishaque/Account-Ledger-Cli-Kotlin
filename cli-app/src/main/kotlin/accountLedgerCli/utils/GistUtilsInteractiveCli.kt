@@ -2,7 +2,7 @@ package accountLedgerCli.utils
 
 import account_ledger_library.constants.ConstantsNative
 import account_ledger_library.models.AccountLedgerGistDateLedgerModel
-import account_ledger_library.models.AccountLedgerGistModel
+import account_ledger_library.models.AccountLedgerGistModelV2
 import account_ledger_library.models.AccountLedgerGistTransactionModel
 import account_ledger_library.utils.GistUtilsInteractiveNative
 
@@ -24,7 +24,7 @@ object GistUtilsInteractiveCli {
 
         } else {
 
-            val accountLedgerGist: AccountLedgerGistModel = GistUtilsInteractiveNative().processGistIdForData(
+            val accountLedgerGist: AccountLedgerGistModelV2 = GistUtilsInteractiveNative().processGistIdForDataV2(
                 userName = userName,
                 userId = userId,
                 gitHubAccessToken = gitHubAccessToken,
