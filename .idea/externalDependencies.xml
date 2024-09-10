@@ -1,8 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ExternalDependencies">
+	<plugin id="com.intellij.grazie.pro" />
+	<plugin id="String Manipulation" />
+	<plugin id="Git4Idea" />
+	<plugin id="org.jetbrains.plugins.github" />
+	<plugin id="org.jetbrains.plugins.yaml" />
+	<plugin id="com.intellij.tasks.timeTracking" />
+	<plugin id="com.intellij.tasks" />
+	<plugin id="intellij.indexing.shared" />
+	<plugin id="com.intellij.completion.ml.ranking" />
+	<plugin id="com.intellij.searcheverywhere.ml" />
     <plugin id="Batch Scripts Support" />
-    <plugin id="String Manipulation" />
     <plugin id="com.intellij.database" />
     <plugin id="com.intellij.jsonpath" />
     <plugin id="com.intellij.plugin.adernov.powershell" />
