@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@6b42224f41ee5dfe5395e27c8b2746f1f9955030
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           submodules: 'recursive'
       - name: Set up JDK 21
