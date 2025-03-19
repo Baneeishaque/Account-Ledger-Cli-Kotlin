@@ -21,7 +21,7 @@ steps:
       versionSpec: '21'
       jdkArchitectureOption: 'x64'
       jdkSourceOption: 'PreInstalled'
-      
+
   - task: Gradle@3.208.0
     displayName: 'Gradle Build : Tar Distribution'
     inputs:
@@ -36,7 +36,7 @@ steps:
   - task: Bash@3
     inputs:
       targetType: 'inline'
-      script: | 
+      script: |
         cd cli-app/build/distributions
         tar -xvf cli-app.tar
         mv cli-app Account-Ledger-Cli
