@@ -1,3 +1,13 @@
+trigger:
+  branches:
+    exclude:
+      - renovate/*
+
+pr:
+  branches:
+    include:
+      - "*"
+
 pool:
   vmImage: 'windows-latest'
 
