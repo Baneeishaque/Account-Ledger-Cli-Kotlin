@@ -6,4 +6,4 @@ else
     git pull
     cd ..
 fi
-cd Account-Ledger-Cli-Kotlin-Gradle && ln -s /workspace/configurations-private/AccountLedger/.env .env && ln -s /workspace/configurations-private/AccountLedger/frequencyOfAccounts.json frequencyOfAccounts.json && ln -s /workspace/configurations-private/AccountLedger/relationOfAccounts.json relationOfAccounts.json && cd api && ln -s /workspace/configurations-private/AccountLedger/http-client.env.json http-client.env.json
+cd Account-Ledger-Cli-Kotlin && ln -s /workspace/configurations-private/AccountLedger/.env .env && ln -s /workspace/configurations-private/AccountLedger/frequencyOfAccounts.json frequencyOfAccounts.json && ln -s /workspace/configurations-private/AccountLedger/relationOfAccounts.json relationOfAccounts.json && cd api && ln -s /workspace/configurations-private/AccountLedger/http-client.env.json http-client.env.json
