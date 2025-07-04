@@ -1,3 +1,4 @@
+# git submodule update --init --recursive || exit
 cd /workspace || exit
 if [ ! -d configurations-private ];then
     git clone https://github.com/Baneeishaque/configurations-private.git
