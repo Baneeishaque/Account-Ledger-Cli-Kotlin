@@ -1,6 +1,6 @@
 [versions]
 kotlin = "2.1.21-322"
-ktor = "3.2.0-eap-1346"
+ktor = "3.3.0-open-api-eap-1382"
 agp = "8.10.1"
 
 [libraries]
