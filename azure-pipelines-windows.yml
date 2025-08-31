@@ -9,7 +9,7 @@ pr:
       - "*"
 
 pool:
-  vmImage: 'windows-latest'
+  vmImage: 'ubuntu-latest'
 
 variables:
   GRADLE_USER_HOME: $(Pipeline.Workspace)/.gradle
@@ -31,6 +31,10 @@ steps:
       versionSpec: '21'
       jdkArchitectureOption: 'x64'
       jdkSourceOption: 'PreInstalled'
+
+  - script: |
+      sed -i "s|https://nomadller.in/http_api/|https://baneeishaque.helioho.st/GitHub_Banee-Ishaque_Account-Ledger-Server-PHP/http_API/|" account-ledger-lib/account-ledger-lib/src/main/kotlin/account/ledger/library/api/ApiConstants.kt
+    displayName: "Inject secret serverApiAddress"
 
   - task: Gradle@3.208.0
     displayName: 'Gradle Build : Tar Distribution'
