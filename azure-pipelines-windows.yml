@@ -42,7 +42,7 @@ steps:
       gradleOptions: '-Xmx3072m'
       tasks: distTar
 
-  - script: 'gradlew --stop'
+  - script: './gradlew --stop'
     displayName: Stop Gradle Daemon
 
   # TODO : If branch is not master : Extract folder, rename cli-app & cli-app.bat to Account-Ledger-CLI-$(Build.SourceName).bat, then repack as Account-Ledger-CLI-$(Build.SourceName).tar (Inner folders too); Otherwise Extract folder, rename cli-app & cli-app.bat to Account-Ledger-CLI.bat, then repack as Account-Ledger-CLI.tar (Inner folders too).

@@ -9,6 +9,7 @@
     "https://raw.githubusercontent.com/microsoft/azure-pipelines-vscode/master/service-schema.json": "./jdk17-windows-azure-pipelines.yml"
   },
   "cSpell.words": [
-    "czvf"
+    "czvf",
+    "gradlew"
   ]
 }
