@@ -1,5 +1,4 @@
 {
-  "java.configuration.updateBuildConfiguration": "automatic",
   "git-assistant.branchWarn-illegalBranches": [],
   "yaml.schemas": {
     "https://raw.githubusercontent.com/microsoft/azure-pipelines-vscode/master/service-schema.json": "./jdk17-windows-azure-pipelines.yml"
