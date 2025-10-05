@@ -3,5 +3,7 @@
     "cloudshell",
     "czvf",
     "gradlew"
-  ]
+  ],
+  "dotenv.enableAutocloaking": false,
+  "dotenv.enableSecretpeeking": false,
 }
