@@ -6,4 +6,5 @@
   ],
   "dotenv.enableAutocloaking": false,
   "dotenv.enableSecretpeeking": false,
+  "gitlens.ai.model": "gemini:gemini-2.5-flash",
 }
