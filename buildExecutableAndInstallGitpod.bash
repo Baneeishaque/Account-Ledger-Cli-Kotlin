@@ -17,4 +17,4 @@ else
     git pull
     cd ..
 fi
-cd Account-Ledger-Cli/bin && ln -s /workspace/configurations-private/AccountLedger/.env && ln -s /workspace/configurations-private/AccountLedger/frequencyOfAccounts.json && ln -s /workspace/configurations-private/AccountLedger/relationOfAccounts.json
+cd Account-Ledger-Cli/bin && ln -s /workspace/configurations-private/AccountLedger/.env . && ln -s /workspace/configurations-private/AccountLedger/frequencyOfAccounts.json . && ln -s /workspace/configurations-private/AccountLedger/relationOfAccounts.json .
