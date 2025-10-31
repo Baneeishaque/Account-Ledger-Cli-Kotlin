@@ -1,0 +1,29 @@
+{
+    "recommendations": [
+        "amazonwebservices.codewhisperer-for-command-line-companion",
+        "eamodio.gitlens",
+        "fittentech.fitten-code",
+        "fwcd.kotlin",
+        "github.copilot",
+        "github.copilot-chat",
+        "github.vscode-pull-request-github",
+        "google.gemini-cli-vscode-ide-companion",
+        "onatm.open-in-new-window",
+        "pkief.material-icon-theme",
+        "sleistner.vscode-fileutils",
+        "streetsidesoftware.code-spell-checker",
+        "vscode.configuration-editing",
+        "vscode.git",
+        "vscode.git-base",
+        "vscode.github",
+        "vscode.github-authentication",
+        "vscode.json",
+        "vscode.json-language-features",
+        "vscode.markdown",
+        "vscode.markdown-language-features",
+        "vscode.references-view",
+        "vscode.search-result",
+        "vscode.terminal-suggest",
+        "vscode.theme-defaults"
+    ]
+}
