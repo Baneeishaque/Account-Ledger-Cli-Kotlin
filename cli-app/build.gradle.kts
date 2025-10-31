@@ -37,6 +37,11 @@ application {
     mainClass.set(/* value = */ "accountLedgerCli.cli.App")
 }
 
+tasks.named<JavaExec>("run") {
+    workingDir = rootDir
+    standardInput = System.`in`
+}
+
 testing {
 
     suites {
