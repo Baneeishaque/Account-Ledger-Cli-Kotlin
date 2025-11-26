@@ -137,27 +137,27 @@ Account-Ledger-Cli-Kotlin/
 ### Dependencies
 
 #### HTTP & Networking
-| Library | Version | Purpose |
-|---------|---------|---------|
-| **Ktor Client** | 3.3.1 | HTTP client with coroutines support |
-| **Ktor Client CIO** | 3.3.1 | CIO engine for Ktor |
-| **Ktor Content Negotiation** | 3.3.1 | Content serialization/deserialization |
-| **Retrofit** | 3.0.0 | Type-safe HTTP client (alternative) |
+| Library | Version | Purpose | Module |
+|---------|---------|---------|--------|
+| **Ktor Client** | 3.3.1 | HTTP client with coroutines support | cli-app, account-ledger-lib |
+| **Ktor Client CIO** | 3.3.1 | CIO engine for Ktor | cli-app, account-ledger-lib |
+| **Ktor Content Negotiation** | 3.3.1 | Content serialization/deserialization | cli-app, account-ledger-lib |
+| **Retrofit** | 3.0.0 | Type-safe HTTP client | account-ledger-lib |
 
 #### Serialization & Data
-| Library | Version | Purpose |
-|---------|---------|---------|
-| **Kotlinx Serialization JSON** | 1.9.0 | JSON serialization |
-| **Kotlinx Coroutines Core** | 1.10.2 | Asynchronous programming |
-| **Kotlinx CLI** | 0.3.6 | Command-line argument parsing |
+| Library | Version | Purpose | Module |
+|---------|---------|---------|--------|
+| **Kotlinx Serialization JSON** | 1.9.0 | JSON serialization | cli-app, account-ledger-lib |
+| **Kotlinx Coroutines Core** | 1.10.2 | Asynchronous programming | cli-app, account-ledger-lib |
+| **Kotlinx CLI** | 0.3.6 | Command-line argument parsing | cli-app, account-ledger-lib |
 
 #### Utilities
-| Library | Version | Purpose |
-|---------|---------|---------|
-| **Dotenv Kotlin** | 6.5.1 | Environment variable management |
-| **Kotlin CSV** | 1.10.0 | CSV file parsing |
-| **J-Text-Utils** | 0.3.4 | Text formatting utilities |
-| **Logback Classic** | 1.5.19 | Logging framework |
+| Library | Version | Purpose | Module |
+|---------|---------|---------|--------|
+| **Dotenv Kotlin** | 6.5.1 | Environment variable management | cli-app, account-ledger-lib |
+| **Kotlin CSV** | 1.10.0 | CSV file parsing | account-ledger-lib |
+| **J-Text-Utils** | 0.3.4 | Text formatting utilities | account-ledger-lib |
+| **Logback Classic** | 1.5.19 | Logging framework | cli-app, account-ledger-lib |
 
 ---
 
@@ -467,11 +467,13 @@ gu install native-image
 
 ### Build Native Image
 
+The project includes a `dynamic-proxies.json` file in the project root that contains proxy configuration required for native image compilation.
+
 ```bash
 # First, build the JAR
 ./gradlew :cli-app:jar
 
-# Build native image
+# Build native image (run from project root directory)
 native-image \
   --static \
   --no-fallback \
@@ -483,6 +485,8 @@ native-image \
   -jar cli-app/build/libs/cli-app.jar \
   AccountLedgerCli.bin
 ```
+
+> **Note:** The `dynamic-proxies.json` file is located in the project root and contains the dynamic proxy configuration needed for API client classes. Make sure to run the command from the project root directory.
 
 ### Run Native Binary
 
@@ -498,7 +502,7 @@ native-image \
 | `--no-fallback` | Fail if native image can't be built |
 | `-H:+AddAllCharsets` | Include all character sets |
 | `-H:EnableURLProtocols` | Enable HTTP/HTTPS protocols |
-| `-H:DynamicProxyConfigurationFiles` | Specify dynamic proxy configuration |
+| `-H:DynamicProxyConfigurationFiles` | Specify dynamic proxy configuration (uses project's dynamic-proxies.json) |
 
 ---
 
