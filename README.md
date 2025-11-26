@@ -467,7 +467,7 @@ gu install native-image
 
 ### Build Native Image
 
-The project includes a `dynamic-proxies.json` file in the project root that contains proxy configuration required for native image compilation.
+The project includes a `dynamic-proxies.json` file in the project root that contains the dynamic proxy configuration required for native image compilation. This file configures the reflection needed for API client classes (specifically `accountLedgerCli.api.Api`).
 
 ```bash
 # First, build the JAR
