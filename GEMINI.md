@@ -49,4 +49,4 @@ native-image --static --no-fallback --allow-incomplete-classpath -H:+AddAllChars
 -   **Build System:** The project uses Gradle for dependency management and build automation. Key build configuration is located in the `build.gradle.kts` files within the root and module directories.
 -   **Testing:** The project is set up with Jacoco for test coverage reporting. Tests can be run as part of the standard build process.
 -   **Dependencies:** The project uses `libs.versions.toml` in the `gradle` directory to manage dependency versions centrally.
--   **CI/CD:** The presence of `.github/workflows/gradle.yml`, `.travis.yml`, and `azure-pipelines-windows.yml` indicates that Continuous Integration is set up on multiple platforms.
+-   **CI/CD:** The presence of `.github/workflows/gradle.yml`, `.travis.yml`, and `azure-pipelines-ubuntu.yml` indicates that Continuous Integration is set up on multiple platforms.

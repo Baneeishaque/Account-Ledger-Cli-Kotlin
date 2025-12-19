@@ -1,0 +1,4 @@
+extends:
+  template: azure-pipelines-main-template.yml
+  parameters:
+    jdkVersion: '17'
