@@ -79,7 +79,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: 'Gradle Build : Tar Distribution'
-        run: ./gradlew :cli-app:distTar --verbose
+        run: ./gradlew :cli-app:distTar
 
       - name: 'Rebuilding Tar Distribution'
         run: ./.github/scripts/rebuild-distribution.bash
