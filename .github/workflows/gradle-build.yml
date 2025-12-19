@@ -1,0 +1,87 @@
+name: Gradle Build
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  build:
+    name: 'Build with JDK 21'
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: 'recursive'
+          fetch-depth: 1
+
+      - name: Ensure Java 21
+        id: java-setup
+        run: ./.github/scripts/ensure-java.bash
+        env:
+          REQUIRED_VERSION: '21'
+        shell: bash
+
+      - name: Install Java 21
+        if: steps.java-setup.outputs.skipped == 'false'
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'oracle'
+          java-version: '21'
+          java-package: 'jdk'
+
+      - name: Inject secret serverApiAddress
+        run: |
+          sed -i "s|http://localhost/http_API/|${{ secrets.SERVER_API_ADDRESS }}/http_API/|" account-ledger-lib/account-ledger-lib/src/main/kotlin/account/ledger/library/api/ApiConstants.kt
+        shell: bash
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: 'wrapper'
+          cache-cleanup: 'on-success'
+          gradle-home-cache-includes: 'caches,notifications,wrapper'
+          cache-encryption-key: ${{ secrets.GRADLE_CACHE_ENCRYPTION_KEY }}
+          build-scan-publish: true
+          build-scan-terms-of-use-url: 'https://gradle.com/terms-of-service'
+          build-scan-terms-of-use-agree: 'yes'
+          dependency-graph: generate-and-submit
+          add-job-summary-as-pr-comment: 'always'
+        continue-on-error: ${{ github.event_name == 'pull_request' }}
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: 'Gradle Build : Tar Distribution'
+        run: ./gradlew :cli-app:distTar --verbose
+
+      - name: 'Rebuilding Tar Distribution'
+        run: ./.github/scripts/rebuild-distribution.bash
+        shell: bash
+
+      - name: 'Upload Artifact'
+        uses: actions/upload-artifact@v4
+        with:
+          name: Account-Ledger-CLI
+          path: cli-app/build/distributions/Account-Ledger-Cli.tar.gz
+
+      - name: 'Stop Gradle Daemon'
+        run: ./gradlew --stop
+
+  lint:
+    name: 'Run Actionlint'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: 'Run actionlint'
+        uses: reviewdog/action-actionlint@v1
+        with:
+          fail_level: error
