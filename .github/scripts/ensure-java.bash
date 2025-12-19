@@ -1,4 +1,4 @@
-#!/bash
+#!/bin/bash
 # Verify variable name online first! (e.g., JAVA_HOME_21_X64)
 VAR_NAME="JAVA_HOME_${REQUIRED_VERSION}_X64"
 if [ -n "${!VAR_NAME}" ]; then
