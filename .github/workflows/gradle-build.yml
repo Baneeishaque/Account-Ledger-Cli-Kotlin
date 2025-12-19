@@ -12,8 +12,26 @@ permissions:
   pull-requests: write
 
 jobs:
+  lint:
+    name: 'Standardized Linting'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 'Run ShellCheck'
+        uses: ludeeus/action-shellcheck@v2
+        with:
+          scandir: './.github/scripts'
+
+      - name: 'Run Actionlint'
+        uses: reviewdog/action-actionlint@v1
+        with:
+          fail_level: error
+
   build:
-    name: 'Build with JDK 21'
+    name: 'Premium Gradle Build (JDK 21)'
+    needs: lint
     runs-on: ubuntu-24.04
 
     steps:
@@ -75,13 +93,3 @@ jobs:
 
       - name: 'Stop Gradle Daemon'
         run: ./gradlew --stop
-
-  lint:
-    name: 'Run Actionlint'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: 'Run actionlint'
-        uses: reviewdog/action-actionlint@v1
-        with:
-          fail_level: error
