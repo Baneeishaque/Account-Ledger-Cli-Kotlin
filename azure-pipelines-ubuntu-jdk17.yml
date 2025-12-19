@@ -1,3 +1,13 @@
+trigger:
+  branches:
+    exclude:
+      - renovate/*
+
+pr:
+  branches:
+    include:
+      - "*"
+
 extends:
   template: azure-pipelines-main-template.yml
   parameters:

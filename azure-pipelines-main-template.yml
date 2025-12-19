@@ -3,26 +3,14 @@ parameters:
   type: string
   default: '21'
 
-trigger:
-  branches:
-    exclude:
-      - renovate/*
-
-pr:
-  branches:
-    include:
-      - "*"
-
-pool:
-  vmImage: 'ubuntu-latest'
-
-variables:
-  GRADLE_USER_HOME: $(Pipeline.Workspace)/.gradle
-  repositoryName: Account-Ledger-Cli-Kotlin-Gradle
-
 jobs:
 - job: Build
   displayName: 'Build with JDK ${{ parameters.jdkVersion }}'
+  pool:
+    vmImage: 'ubuntu-latest'
+  variables:
+    GRADLE_USER_HOME: $(Pipeline.Workspace)/.gradle
+    repositoryName: Account-Ledger-Cli-Kotlin-Gradle
   steps:
   - template: azure-pipelines-steps-template.yml
     parameters:
