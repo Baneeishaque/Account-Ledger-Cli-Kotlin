@@ -3,9 +3,9 @@
 VAR_NAME="JAVA_HOME_${REQUIRED_VERSION}_X64"
 if [ -n "${!VAR_NAME}" ]; then
   echo "Java found at ${!VAR_NAME}. Setting JAVA_HOME."
-  echo "JAVA_HOME=${!VAR_NAME}" >> $GITHUB_ENV
-  echo "skipped=true" >> $GITHUB_OUTPUT
+  echo "JAVA_HOME=${!VAR_NAME}" >> "$GITHUB_ENV"
+  echo "skipped=true" >> "$GITHUB_OUTPUT"
 else
   echo "Java ${REQUIRED_VERSION} not found. Will install."
-  echo "skipped=false" >> $GITHUB_OUTPUT
+  echo "skipped=false" >> "$GITHUB_OUTPUT"
 fi
