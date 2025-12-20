@@ -9,6 +9,6 @@ cd Account-Ledger-Cli/bin
 mv cli-app Account-Ledger-Cli
 chmod a+x Account-Ledger-Cli
 mv cli-app.bat Account-Ledger-Cli.bat
-echo -e "[tools]\njava = \"23.0.1\"" > mise.toml
+echo -e "[tools]\njava = \"21.0.2\"" > mise.toml
 cd ../..
 tar -czvf Account-Ledger-Cli.tar.gz Account-Ledger-Cli
