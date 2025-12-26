@@ -2,6 +2,8 @@
 set -e
 
 # Rebuild Tar Distribution logic
+JAVA_VERSION=$(grep 'java =' "$(dirname "$0")/../../mise.toml" | sed -E 's/java = "(.*)"/\1/')
+
 cd cli-app/build/distributions
 tar -xvf cli-app.tar
 mv cli-app Account-Ledger-Cli
@@ -9,6 +11,6 @@ cd Account-Ledger-Cli/bin
 mv cli-app Account-Ledger-Cli
 chmod a+x Account-Ledger-Cli
 mv cli-app.bat Account-Ledger-Cli.bat
-echo -e "[tools]\njava = \"21.0.2\"" > mise.toml
+echo -e "[tools]\njava = \"$JAVA_VERSION\"" > mise.toml
 cd ../..
 tar -czvf Account-Ledger-Cli.tar.gz Account-Ledger-Cli

@@ -18,6 +18,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
+        with:
+          fetch-depth: 1
 
       - name: 'Run ShellCheck'
         uses: ludeeus/action-shellcheck@00cae500b08a931fb5698e11e79bfbd38e612a38 # 2.0.0
@@ -41,20 +43,15 @@ jobs:
           submodules: 'recursive'
           fetch-depth: 1
 
-      - name: Ensure Java 21
-        id: java-setup
-        run: ./.github/scripts/ensure-java.bash
-        env:
-          REQUIRED_VERSION: '21'
-        shell: bash
-
-      - name: Install Java 21
-        if: steps.java-setup.outputs.skipped == 'false'
-        uses: actions/setup-java@f2beeb24e141e01a676f977032f5a29d81c9e27e # v5
+      - name: Set up tools with mise
+        uses: Baneeishaque/mise-setup-verification-action@bca6635be4dd23f8b7d4a408b8f4ee33fbfb1343
         with:
-          distribution: 'oracle'
-          java-version: '21'
-          java-package: 'jdk'
+          mise_version: '2025.12.9'
+          working_directory: '.'
+          tool_name: 'java'
+          version_command: 'java -version'
+          install: 'true'
+          cache: 'true'
 
       - name: Inject secret serverApiAddress
         run: |
@@ -79,7 +76,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: 'Gradle Build : Tar Distribution'
-        run: ./gradlew :cli-app:distTar
+        run: ./gradlew :cli-app:distTar --info
 
       - name: 'Rebuilding Tar Distribution'
         run: ./.github/scripts/rebuild-distribution.bash
@@ -90,6 +87,3 @@ jobs:
         with:
           name: Account-Ledger-CLI
           path: cli-app/build/distributions/Account-Ledger-Cli.tar.gz
-
-      - name: 'Stop Gradle Daemon'
-        run: ./gradlew --stop
