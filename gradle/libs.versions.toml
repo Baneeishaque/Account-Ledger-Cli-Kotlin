@@ -1,5 +1,5 @@
 [versions]
-kotlin = "2.3.0"
+kotlin = "2.4.0-vega-51"
 ktor = "3.4.0"
 agp = "8.13.2"
 
