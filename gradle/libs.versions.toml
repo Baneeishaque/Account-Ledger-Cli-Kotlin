@@ -1,7 +1,7 @@
 [versions]
 kotlin = "2.4.0-vega-51"
 ktor = "3.5.0-eap-1532"
-agp = "8.13.2"
+agp = "9.0.0"
 
 [libraries]
 kotlinx-cli = { module = "org.jetbrains.kotlinx:kotlinx-cli", version = "0.3.6" }
