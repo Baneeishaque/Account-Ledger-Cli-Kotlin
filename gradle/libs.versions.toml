@@ -1,5 +1,5 @@
 [versions]
-kotlin = "2.4.20-tethys-25"
+kotlin = "2.5.0-saturn-677"
 ktor = "3.6.0-typed-auth-dsl-eap-1641"
 agp = "8.13.2"
 
